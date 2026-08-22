@@ -1,0 +1,231 @@
+<app-breadcrumb></app-breadcrumb>
+<div class="row">
+  <div class="col-sm-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="heading-new">
+          <h5 class="mb-0">Bloomvie Settings</h5>
+        </div>
+
+
+        <form [formGroup]="bloomviesettingsform" (ngSubmit)="manageAreaOfExpertise()">
+          <div class="row">
+            <!-- Student Media Download Input -->
+            <div class="col-12 col-md-4">
+              <div class="form-group local-forms">
+                <label for="studentMediaDownload">
+                  Student Media Download Days <span class="login-danger">*</span>
+                </label>
+                <div class="input-group">
+                  <input type="number" class="form-control" id="studentMediaDownload"
+                    formControlName="studentMediaDownload" name="studentMediaDownload" min="0" />
+                  <span class="input-group-text">Days</span>
+                </div>
+                @if (bloomviesettingsform.controls['studentMediaDownload']?.invalid &&
+                bloomviesettingsform.controls['studentMediaDownload'].touched) {
+                <span class="text-danger">This field is required</span>
+                }
+              </div>
+            </div>
+
+
+
+            <div class="col-12 col-md-4">
+              <div class="form-group local-forms">
+                <label for="costPerGB">
+                  Cost Per GB <span class="login-danger">*</span>
+                </label>
+                <div class="input-group">
+                  <input type="number" class="form-control" id="costPerGB" formControlName="costPerGB" name="costPerGB"
+                    min="0" />
+                  <span class="input-group-text">$</span>
+                </div>
+                @if (bloomviesettingsform.controls['costPerGB']?.invalid &&
+                bloomviesettingsform.controls['costPerGB'].touched) {
+                <span class="text-danger">This field is required</span>
+                }
+              </div>
+            </div>
+
+
+
+  
+            <!-- Submit and Reset Buttons -->
+            <div class="col-12 col-md-4">
+              <div class="student-submit mt-4">
+                <button type="submit" class="btn btn-primary mt-2">
+
+                  {{bloomvieSettings?.studentMediaDownload == null ? 'Submit' : 'Update' }}
+                </button>
+                <!-- <button type="reset" class="btn btn-secondary" (click)="reset()">
+                    Cancel
+                  </button> -->
+              </div>
+            </div>
+          </div>
+        </form>
+
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <div class="heading-new">
+          <h5 class="mb-0">Bloomvie Radius Settings</h5>
+        </div>
+
+
+
+
+
+        <form [formGroup]="bloomvieradiussettingsform" (ngSubmit)="manageBloomvieRadiusSettings()">
+          <div class="row">
+            <!-- Student Media Download Input -->
+            <div class="col-12 col-md-4">
+              <div class="form-group local-forms">
+                <label for="radius">
+                  Radius <span class="login-danger">*</span>
+                </label>
+                <div class="input-group">
+                  <input type="number" class="form-control" id="radius" formControlName="radius" name="radius"
+                    min="0" />
+                  <span class="input-group-text">Days</span>
+                </div>
+                @if (bloomviesettingsform.controls['radius']?.invalid &&
+                bloomviesettingsform.controls['radius'].touched) {
+                <span class="text-danger">This field is required</span>
+                }
+              </div>
+            </div>
+
+
+
+
+
+
+            <!-- Submit and Reset Buttons -->
+            <div class="col-12 col-md-4">
+              <div class="student-submit mt-4">
+                <button type="submit" class="btn btn-primary mt-2">
+                  {{bloomvieSettings?.radius == null ? 'Submit' : 'Update' }}
+
+                </button>
+                <!-- <button type="reset" class="btn btn-secondary" (click)="reset()">
+                    Cancel
+                  </button> -->
+              </div>
+            </div>
+          </div>
+        </form>
+
+
+
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <div class="heading-new">
+          <h5 class="mb-0">Bloomvie General Settings</h5>
+        </div>
+
+
+
+
+
+        <form [formGroup]="bloomvieradiussettingsform" (ngSubmit)="manageBloomvieRadiusSettings()">
+          <div class="row">
+            <!-- Student Media Download Input -->
+
+
+
+
+            <div class="col-12 col-md-4">
+              <div class="form-group local-forms">
+                <label for="email">
+                  Email <span class="login-danger">*</span>
+                </label>
+                <div class="input-group">
+                  <input type="email" class="form-control" id="email" formControlName="email" name="email" min="0" />
+                </div>
+                @if (bloomviesettingsform.controls['email']?.invalid &&
+                bloomviesettingsform.controls['email'].touched) {
+                <span class="text-danger">This field is required</span>
+                }
+              </div>
+            </div>
+
+
+            <!-- Submit and Reset Buttons -->
+            <div class="col-12 col-md-4">
+              <div class="student-submit mt-4">
+                <button type="submit" class="btn btn-primary mt-2">
+                  {{bloomvieSettings?.email == null ? 'Submit' : 'Update' }}
+
+                </button>
+                <!-- <button type="reset" class="btn btn-secondary" (click)="reset()">
+                    Cancel
+                  </button> -->
+              </div>
+            </div>
+          </div>
+        </form>
+
+
+
+      </div>
+    </div>
+
+
+    <form #feeForm="ngForm" (ngSubmit)="submitPlatFormFee(feeForm)">
+      <div class="card">
+        <div class="card-body">
+          <div class="heading-new">
+            <h5 class="mb-0">Platform Fees Settings</h5>
+          </div>
+          <div class="row">
+            <div class="col-12 col-md-4">
+              <div class="form-group local-forms">
+                <label for="platFormFee">
+                  Platform Fee in Percent <span class="login-danger">*</span>
+                </label>
+                <div class="input-group">
+                  <input type="number" class="form-control" id="platFormFee" name="platFormFee"
+                    [(ngModel)]="platformFee" #platFormFeeRef="ngModel" required min="0" max="100" />
+                  <span class="input-group-text">%</span>
+                </div>
+
+                <!-- Validation messages -->
+                <span class="text-danger"
+                  *ngIf="platFormFeeRef.errors?.['required'] && (platFormFeeRef.dirty || platFormFeeRef.touched)">
+                  Platform fee is required.
+                </span>
+
+                <span class="text-danger"
+                  *ngIf="platFormFeeRef.errors?.['min'] && (platFormFeeRef.dirty || platFormFeeRef.touched)">
+                  Platform fee cannot be negative.
+                </span>
+
+                <span class="text-danger"
+                  *ngIf="platFormFeeRef.errors?.['max'] && (platFormFeeRef.dirty || platFormFeeRef.touched)">
+                  Platform fee cannot exceed 100%.
+                </span>
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="col-12 col-md-4">
+              <div class="student-submit mt-4">
+                <button type="submit" class="btn btn-primary mt-2" [disabled]="feeForm.invalid">
+                  {{!bloomvieSettings.id ? 'Submit' : 'Update' }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+
+
+  </div>
+</div>

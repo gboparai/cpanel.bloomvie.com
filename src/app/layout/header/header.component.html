@@ -1,0 +1,272 @@
+<div class="header">
+  <!-- Logo Section for Role 1 -->
+  <div class="header-left" *ngIf="loginUserRoleId == 1 || loginUserRoleId === 6">
+    <a class="logo" [routerLink]="getRouterLink()">
+      <img src="assets/img/logo-new.png" alt="Logo" />
+    </a>
+    <a class="logo logo-small" [routerLink]="getRouterLink()">
+      <img src="assets/img/logo-new.png" alt="Logo" />
+    </a>
+  </div>
+
+  <!-- Logo and Center Name for Other Roles -->
+  <div class="header-left d-flex align-items-center" *ngIf="
+      loginUserRoleId === 3 ||
+      loginUserRoleId === 4 ||
+      loginUserRoleId === 5 ||
+      loginUserRoleId === 8
+    ">
+    @if (skeletonShow === 'Skelton') {
+
+    <app-skeleton-loader skeletonShow="Skelton" viewType="logo">
+    </app-skeleton-loader>
+
+    } @else if (data?.centreName) {
+
+    <!-- <ng-container *ngIf="DaycareLogo; else defaultLogo"> -->
+    @if (DaycareLogo?.length > 0;) {
+    <div>
+      <a class="logo me-2" [routerLink]="getRouterLink()">
+        <img [src]="DaycareLogo" alt="Logo" />
+      </a>
+      <a class="logo logo-small me-2" [routerLink]="getRouterLink()">
+        <img [src]="DaycareLogo" alt="Logo" />
+      </a>
+      <a class="icon-name logo">
+        <h5 class="hedi">{{ data?.centreName ?? centreName ?? "" }}</h5>
+      </a>
+    </div>
+    } @else {
+    <a class="logo logo-small me-2" [routerLink]="getRouterLink()">
+      <img [src]="'assets/img/dummy-avatar.jpg'" alt="Logo" />
+    </a>
+
+    <a class="icon-name logo">
+      <h5 class="hedi">{{ data?.centreName ?? centreName ?? "" }}</h5>
+    </a>
+    } } @else if(loginUserRoleId === 5){
+
+    <a class="logo" [routerLink]="getRouterLink()">
+      <img src="assets/img/logo-new.png" alt="Logo" />
+    </a>
+    } @else {
+    <a class="logo" [routerLink]="getRouterLink()">
+      <img src="assets/img/logo-new.png" alt="Logo" />
+    </a>
+    }
+  </div>
+
+  <!-- Hamburger Menu for Mobile -->
+  <div class="menu-toggle">
+    <a href="javascript:void(0);" id="toggle_btn"><i class="fas fa-bars"></i></a>
+  </div>
+  <a class="mobile_btn" id="mobile_btn"><i class="fas fa-bars"></i></a>
+
+  <!-- Right-side User Menu -->
+  <ul class="nav user-menu">
+    <ng-container *ngIf="
+        [3, 4].includes(loginUserRoleId) &&
+        onBoardingService.onboardingState().isOnboardedAccount
+      ">
+      <button (click)="navigateToStripeDashboard()" class="stripe-btn">
+        Stripe Dashboard
+      </button>
+    </ng-container>
+    <!-- Language Dropdown -->
+    <li class="nav-item dropdown language-drop me-2">
+      <a class="dropdown-toggle nav-link header-nav-list" data-bs-toggle="dropdown">
+        <img src="assets/img/icons/header-icon-01.svg" alt />
+      </a>
+      <div class="dropdown-menu">
+        <a class="dropdown-item" href="javascript:;"><i class="flag flag-lr me-2"></i>English</a>
+        <a class="dropdown-item" href="javascript:;"><i class="flag flag-bl me-2"></i>Francais</a>
+        <a class="dropdown-item" href="javascript:;"><i class="flag flag-cn me-2"></i>Turkce</a>
+      </div>
+    </li>
+
+    <!-- Notifications -->
+    <li class="nav-item dropdown noti-dropdown me-2" *ngIf="[1, 3, 4, 5, 6, 8].includes(loginUserRoleId)">
+      <a class="dropdown-toggle nav-link header-nav-list" data-bs-toggle="dropdown">
+        <img src="assets/img/icons/header-icon-05.svg" alt />
+        <span class="badge badge-pill badge-danger rounded50 notification-number"
+          *ngIf="filteredNotifications().length > 0">
+          {{ filteredNotifications().length }}
+        </span>
+      </a>
+      <div class="dropdown-menu notifications">
+        <div class="topnav-dropdown-header">
+          <span class="notification-title">Notifications</span>
+          <a class="clear-noti" (click)="clearNotifications(notification)">Clear All</a>
+        </div>
+        <div class="noti-content">
+          <ul class="notification-list row" *ngFor="let item of filteredNotifications()">
+            <li class="notification-message col-md-12 p-0">
+              <a>
+                <div class="media d-flex">
+                  <i class="fas fa-circle mt-1" style="font-size: 12px; color: var(--main-color)"></i>
+                  <div class="media-body flex-grow-1" (click)="navigateToAppointments(item.id, item)">
+                    <p class="noti-details">
+                      <span class="noti-title aux-size">
+                        <b>
+                          <span *ngIf="
+                              [1, 2, 7, 10, 28].includes(item.notificationID)
+                            ">{{ item.teacherName }}
+                          </span>
+
+                          <span *ngIf="
+                              [13, 42].includes(
+                                item.notificationID
+                              )
+                            ">{{
+                            item.fullName
+                            }}</span>
+                          <span *ngIf="item.notificationID === 24">
+                            {{ item.studentName }}</span>
+                          <span *ngIf="item.notificationID === 15">{{
+                            item.className?.className ?? "Unknown User"
+                            }}</span>
+                          <span *ngIf="
+                              ![1, 2, 7, 10, 13, 15, 24, 28, 29].includes(
+                                item.notificationID
+                              )
+                            ">{{
+                            item.userName ??
+                            item.className?.className ??
+                            item.fullName ??
+                            item.teacherName ?? "Unknown User"
+                            }}</span>
+                          <span *ngIf="item.notificationID == 24">
+                            {{ item.enrolledStaff }}</span>
+                        </b>
+                        {{ item.notificationRequest }}&nbsp;
+                        <span *ngIf="item.notificationID == 29">
+                          {{ item.userName }}
+                        </span>
+                        <span *ngIf="item.notificationID == 29">on</span>
+                        <span class="noti-title">{{ formatDate(item.createdDate) }}.</span>
+                        <span *ngIf="item.notificationID === 24">
+                          Please assign Class</span><span *ngIf="item.notificationID === 28">
+                          Please schedule the class .</span>
+
+
+                      </span>
+                    </p>
+                    <!-- <span class="notification-time">{{
+                      getTimeAgo(item.createdDate)
+                      }}</span> -->
+                  </div>
+                </div>
+              </a>
+              <span class="close-notification" (click)="navigateToAppointments(item.id, item)">
+                <i class="fa fa-close"></i>
+              </span>
+            </li>
+          </ul>
+        </div>
+        <div class="topnav-dropdown-footer">
+          <a>View all Notifications</a>
+        </div>
+      </div>
+    </li>
+
+    <!-- User Profile Dropdown -->
+    <li class="nav-item dropdown has-arrow new-user-menus">
+      <a class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
+        <div class="user-img">
+          <!-- Non-parent profile -->
+
+          @if (skeletonShow === 'Skelton') {
+
+          <app-skeleton-loader skeletonShow="Skelton" viewType="profile">
+          </app-skeleton-loader>
+
+          } @else if (username) {
+
+          <ng-container *ngIf="loginUserRoleId !== 5 || hideButton; else parentProfile">
+            <img [src]="headerImage ? headerImage : 'assets/img/dummy-avatar.jpg'" class="rounded-circle" width="31"
+              height="31" alt="User Image" />
+            <!-- <img
+              *ngIf="!data?.fileName"
+              src="assets/img/default-avatar.png"
+              class="rounded-circle"
+            /> -->
+          </ng-container>
+
+          <!-- Parent profile -->
+          <ng-template #parentProfile>
+            <img [src]="headerImage ? headerImage : 'assets/img/dummy-avatar.jpg'" class="rounded-circle" width="31"
+              alt="Parent Image" />
+            <!-- <img
+              *ngIf="!data?.parentfileName"
+              src="assets/img/default-avatar.png"
+              class="rounded-circle"
+            /> -->
+          </ng-template>
+
+          <div class="user-text">
+            <h6 id="name">{{ username }}</h6>
+            <p class="non-transform" style="margin-bottom: 0; line-height: 11px">
+              {{ data?.email || "" }}
+            </p>
+          </div>
+
+          } @else {
+
+          <img [src]="'assets/img/dummy-avatar.jpg'" class="rounded-circle" width="31" alt="User Image" />
+
+          }
+        </div>
+      </a>
+      <div class="dropdown-menu">
+        <div class="dropdown-submenu switch-main" *ngIf="loginUserRoleId == 5 && allStudents.length > 1">
+          <a class="dropdown-item" routerLink="/profile" (click)="setBreadCrumb()">
+            <i class="fa fa-exchange"></i> Switch Profile
+          </a>
+          <div class="submenu">
+            <a *ngFor="let item of allStudents" class="dropdown-item d-flex justify-content-between align-items-center"
+              (click)="switchStudentProfile(item.id)">
+              <span class="avatar avatar-sm">
+                <img class="avatar-img rounded-circle" [src]="item.s3UrlImage"
+                  alt="Profile of {{ item.firstName }} {{ item.lastName }}" />
+              </span>
+              {{ item.firstName }} {{ item.lastName }}
+            </a>
+          </div>
+        </div>
+        <a class="dropdown-item" routerLink="/profile" (click)="setBreadCrumb()">
+          <i class="fa fa-user-circle"></i> My Profile
+        </a>
+        <a class="dropdown-item" routerLink="/login" (click)="loginService.logOut()">
+          <i class="fa fa-sign-out"></i> Logout
+        </a>
+      </div>
+    </li>
+  </ul>
+</div>
+
+<!-- Switch Profile Modal -->
+<div class="modal fade" id="switchAccountModal" tabindex="-1" aria-labelledby="switchAccountLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="switchAccountLabel">Switch Account</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <ul class="list-group">
+          <li *ngFor="let item of allStudents"
+            class="list-group-item d-flex justify-content-between align-items-center">
+            <span class="avatar avatar-sm">
+              <img class="avatar-img rounded-circle" [src]="rootUrl + item.profilePhotoPath + item.profilePhoto"
+                alt="Profile of {{ item.firstName }} {{ item.lastName }}" />
+            </span>
+            {{ item.firstName }} {{ item.lastName }}
+            <button class="btn btn-primary btn-sm" (click)="switchStudentProfile(item.id)">
+              Switch
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

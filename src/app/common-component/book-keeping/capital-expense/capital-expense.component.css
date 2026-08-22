@@ -1,0 +1,8 @@
+.bg-danger-light {
+    background-color: #e9e9e9 !important;
+    color: #52536d !important;
+    border-radius: 50%;
+    height: 26px;
+    width: 26px;
+    font-size: 12px;
+}

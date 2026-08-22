@@ -1,0 +1,115 @@
+<app-header></app-header>
+<main class="d-flex min-vh-100">
+  <div class="bd-card">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-3 mb-3">
+          <!-- strip-->
+          <div class="mb-2 flex-column">
+            <div class="pag-div" style="width: 100%">
+              <div class="d-flex align-items-center bock-head" style="width: 100%">
+                <p class="mb-0 text-black text-bold">
+                  <b>Current Plan:</b> {{ planName }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="my-tab-body">
+        <ul class="nav nav-pills" id="pills-tab" role="tablist">
+          <li class="nav-item hvr-float-shadow" role="presentation">
+            <button (click)="onBoardingService.onChangeTab('Tab-1')" class="nav-link btn1"
+              [class]="onBoardingService.currentTab === 'Tab-1' ? 'active' : ''" type="button" role="tab"
+              aria-controls="pills-home" aria-selected="false">
+              <i class="fa fa-user"></i>Basic Details
+            </button>
+          </li>
+          <li class="nav-item hvr-float-shadow" role="presentation">
+            <button [disabled]="!dayCareID" (click)="onBoardingService.onChangeTab('Tab-2')" class="nav-link btn2"
+              [class]="onBoardingService.currentTab === 'Tab-2' ? 'active' : ''" type="button" role="tab"
+              aria-controls="pills-general" aria-selected="false">
+              <i class="fa fa-gear"></i>General Settings
+            </button>
+          </li>
+
+          <li class="nav-item hvr-float-shadow" role="presentation">
+            <button [disabled]="!dayCareID" (click)="onBoardingService.onChangeTab('Tab-3')" class="nav-link btn3"
+              [class]="onBoardingService.currentTab === 'Tab-3' ? 'active' : ''" type="button" role="tab"
+              aria-controls="pills-work" aria-selected="false">
+              <i class="fa fa-clock"></i>Work Calendar
+            </button>
+          </li>
+
+          <li class="nav-item hvr-float-shadow" role="presentation">
+            <button [disabled]="!dayCareID" (click)="onBoardingService.onChangeTab('Tab-4')" class="nav-link btn4"
+              [class]="onBoardingService.currentTab === 'Tab-4' ? 'active' : ''" type="button" role="tab"
+              aria-controls="pills-class" aria-selected="false">
+              <i class="fas fa-chalkboard-teacher"></i>Class Setup
+            </button>
+          </li>
+
+          <li class="nav-item hvr-float-shadow" role="presentation">
+            <button [disabled]="!dayCareID" (click)="onBoardingService.onChangeTab('Tab-5')" class="nav-link btn5"
+              [class]="onBoardingService.currentTab === 'Tab-5' ? 'active' : ''" type="button" role="tab"
+              aria-controls="pills-Staff" aria-selected="false">
+              <i class="fas fas fa-id-badge"></i>Staff Enrollment
+            </button>
+          </li>
+
+          <li class="nav-item hvr-float-shadow" role="presentation">
+            <button [disabled]="!dayCareID" (click)="onBoardingService.onChangeTab('Tab-6')" class="nav-link btn6"
+              [class]="onBoardingService.currentTab === 'Tab-6' ? 'active' : ''" type="button" role="tab"
+              aria-controls="pills-class" aria-selected="false">
+              <i class="fas fa-user-check"></i>Scheduler
+            </button>
+          </li>
+
+
+          <li class="nav-item hvr-float-shadow" role="presentation">
+            <button [disabled]="!dayCareID" (click)="onBoardingService.onChangeTab('Tab-7')" class="nav-link btn7"
+              [class]="onBoardingService.currentTab === 'Tab-7' ? 'active' : ''" type="button" role="tab"
+              aria-controls="pills-Media" aria-selected="false">
+              <i class="fas fa-globe"></i>Social Profiles & Payroll
+            </button>
+          </li>
+
+
+
+          <!-- <li class="nav-item hvr-float-shadow" role="presentation">
+            <button [disabled]="!dayCareID" (click)="onBoardingService.onChangeTab('Tab-8')" class="nav-link btn8"
+              [class]="onBoardingService.currentTab === 'Tab-8' ? 'active' : ''" type="button" role="tab"
+              aria-controls="pills-LeaveManagement" aria-selected="false">
+              <i class="fa fa-calendar"></i>Leave Management
+            </button>
+          </li> -->
+
+          <li class="nav-item hvr-float-shadow" role="presentation">
+
+
+            <button [disabled]="!dayCareID" (click)="onBoardingService.onChangeTab('Tab-8')" class="nav-link btn8"
+              [class]="onBoardingService.currentTab === 'Tab-8' ? 'active' : ''" type="button" role="tab"
+              aria-controls="pills-Assignment" aria-selected="true">
+              <i class="fa fa-calendar"></i>Leave Management
+            </button>
+          </li>
+
+
+
+        </ul>
+        <div class="tab-content pt-0" id="pills-tabContent">
+          <app-manage-daycare *ngIf="onBoardingService.currentTab === 'Tab-1'"></app-manage-daycare>
+          <app-general-setting *ngIf="onBoardingService.currentTab === 'Tab-2'"></app-general-setting>
+          <app-work-timings *ngIf="onBoardingService.currentTab === 'Tab-3'"></app-work-timings>
+          <app-manage-classroom *ngIf="onBoardingService.currentTab === 'Tab-4'"></app-manage-classroom>
+          <app-manage-staff *ngIf="onBoardingService.currentTab === 'Tab-5'" [InActiveImport]="true"></app-manage-staff>
+          <app-scheduler *ngIf="onBoardingService.currentTab=='Tab-6'"></app-scheduler>
+          <!-- <app-assign-class [childActive]="true" *ngIf="onBoardingService.currentTab == 'Tab-6'"></app-assign-class> -->
+          <app-social-links *ngIf="onBoardingService.currentTab === 'Tab-7'"></app-social-links>
+          <app-leave-management *ngIf="onBoardingService.currentTab === 'Tab-8'"></app-leave-management>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

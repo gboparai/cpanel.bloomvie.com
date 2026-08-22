@@ -1,0 +1,17 @@
+select.form-select {
+    font-size: 14px;
+}.settings-btns {
+    display: flex
+;
+    justify-content: end;
+}.add-leave-type {
+    position: absolute;
+    right: 1pc;
+    background: #5c709d;
+    padding: 2px 10px;
+    border-radius: 3px;
+    color: #fff;
+    top: -8px;
+    font-size: 12px;
+    cursor: pointer;
+}

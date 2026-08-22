@@ -1,0 +1,611 @@
+<app-breadcrumb></app-breadcrumb>
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="row mb-3">
+          <div class="col-12">
+            <div class="heading-new">
+              <h5 class="mb-0">My Child Activity</h5>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 fiv-days-button">
+            <div class="today-tomrrow1">
+              <div class="activity-filter-box1">
+                <div class="ng--parent">
+                  <!-- From Date -->
+                  <label>Start Date</label>
+                  <input type="text" id="selectFromDate" placeholder="-Select-" class="form-control w-100"
+                    [(ngModel)]="selectedStartDate" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4 fiv-days-button">
+            <div class="today-tomrrow1">
+              <div class="activity-filter-box1">
+                <div class="ng--parent">
+                  <!-- To Date -->
+                  <label>End Date</label>
+                  <input type="text" id="selectToDate" placeholder="-Select-" class="form-control w-100"
+                    [(ngModel)]="selectedEndDate" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4 mt-4">
+            <div *ngIf="userRoleId === '5'" class="btn-area mt-1">
+              @if(studentData.length > 0){
+              <div class="text-start" *ngIf="showDownloadButton">
+                <button style="float: left" class="btn btn-primary" (click)="autoSelectAndDownload()">
+                  Download All Images
+                </button>
+              </div>
+
+              <div class="text-start" *ngIf="!showDownloadButton">
+                <button tyle="float: left;" class="btn btn-sm down-req" data-bs-toggle="modal"
+                  data-bs-target="#view-del" (click)="clearDatepicker()">
+                  Download Request For Images
+                </button>
+              </div>
+              }
+            </div>
+          </div>
+        </div>
+
+        <div class="modal fade" id="view-del" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true"
+          data-bs-backdrop="static" data-bs-keyboard="false">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="viewModalLabel">
+                  Select Date for Download
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+              <div class="modal-body">
+                <label for="datePicker">Select Date:</label>
+                <div class="row">
+                  <div class="col-md-5 fiv-days-button">
+                    <div class="today-tomrrow">
+                      <div class="activity-filter-box">
+                        <div class="ng--parent">
+                          <!-- From Date -->
+                          <input type="text" id="firstToDate" placeholder="Select To Date" class="form-control w-100"
+                            [(ngModel)]="selectedFirstStartDate" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-5 fiv-days-button">
+                    <div class="today-tomrrow">
+                      <div class="activity-filter-box">
+                        <div class="ng--parent">
+                          <!-- To Date -->
+                          <input type="text" id="firstFromDate" placeholder="Select From Date"
+                            class="form-control w-100" [(ngModel)]="selectedFirstEndDate" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- <div class="col-md-3  sub">
+                      <button type="submit" id="submit-btn" class="btn btn-primary me-2"
+                                  (click)="onSubmit()">Search</button>
+                  </div> -->
+                </div>
+                <br />
+
+                @if(recordNotFound == true){
+                <div class="no-data">
+                  <img src="assets/img/no-data-img.png" alt="No Record Found" />
+                  <span>No Record Found</span>
+                </div>
+                } @else {
+
+                <div class="download-reqest-item">
+                  @if(this.firstStartDate){ @if(!fileSize){ Payment already done
+                  — you can download the media without a request. } @else{
+
+                  <ng-container *ngIf="fileSize !== undefined && fileSize !== null; else loading">
+                    <div *ngIf="fileSize !== ''; else empty">
+                      <p><b>File Size:-</b> {{ fileSize }} MB</p>
+                    </div>
+                  </ng-container>
+
+                  <p class="ml-2">
+                    <!-- <b> Total Cost:-</b> ${{ this.totalCost }}.00 -->
+                    <b> Total Cost:-</b> ${{
+                    this.totalCost | number : "1.2-2"
+                    }}
+                  </p>
+                  } }
+                </div>
+
+                }
+
+
+                <ng-template #loading>
+                  <span class="skeleton-line shimmer w-25 mb-0 d-inline-block"></span>
+                </ng-template>
+
+                <ng-template #empty>
+                  <h5>--</h5>
+                </ng-template>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="clearForm()">
+                  Close
+                </button>
+                <button type="button" class="btn btn-primary" (click)="studentActivityDownloadRequest()" [disabled]="
+                    !firstStartDate || !fileSize || recordNotFound == true
+                  ">
+                  Pay Now
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- <div class="no-data" *ngIf="studentData?.length == 0">
+          <img src="assets/img/no-data-img.png" alt="No Record Found" />
+          <span>No Record Found</span>
+        </div> -->
+
+        @if (skeletonShow === 'Skelton') {
+
+        <app-skeleton-loader skeletonShow="Skelton" viewType="StudentActivity" [activityCount]="3">
+        </app-skeleton-loader>
+
+        } @else if (studentData.length > 0) { @for(student of studentData;track
+        student) {
+        <div class="timeline">
+          @for(day of student.days;track day){
+          <div class="timeline-month">
+            {{ day.date | date : "MMMM-dd-yy" }}
+          </div>
+
+          <div class="d-flex justify-content-start timeline-section">
+            @for(activityID of day.activities;track activityID){
+            <div class=" ">
+              <ul class="d-flex justify-content-start align-items-center gp-12">
+                <!-- nap  -->
+
+                <li *ngIf="activityID.activityName == 1">
+                  <div class="col-md-12" [attr.data-bs-toggle]="'modal'" [attr.data-bs-target]="'#activityModal'"
+                    (click)="openNapModal(activityID?.studentData)">
+                    <ul class="d-flex justify-content-start align-items-center gp-26">
+                      <div
+                        class="box-title box-title1 pos-rel nav-link nav-health justify-content-center align-items-center">
+                        <h6 class="mb-0">
+                          <span class="me-1">
+                            <div class="small-icon">
+                              <img src="assets/img/nap-icon-small.png" alt="Nap" />
+                            </div>
+                          </span>
+                          <span class="act-font">Nap Time</span>
+                        </h6>
+                        <!-- <span *ngIf="activityID.studentData?.length > 0" class="badge bg-danger ms-2">
+                          {{ activityID.studentData.length }}
+                        </span> -->
+                      </div>
+                    </ul>
+                  </div>
+                </li>
+
+                <li class="mb-3" *ngIf="activityID?.activityName == 4">
+                  <div class="col-md-12" [attr.data-bs-toggle]="'modal'" [attr.data-bs-target]="'#activityModal'"
+                    (click)="openNapModal(activityID?.studentData)">
+                    <div
+                      class="box-title box-title9 pos-rel nav-link nav-health justify-content-center align-items-center">
+                      <h6 class="mb-0">
+                        <span class="me-1">
+                          <div class="small-icon">
+                            <img src="assets/img/health-icon-small.png" alt="Nap" />
+                          </div>
+                        </span><span class="act-font">Health</span>
+                      </h6>
+                      <!-- <span *ngIf="activityID.studentData?.length > 0" class="badge bg-danger ms-2">
+                        {{ activityID.studentData.length }}
+                      </span> -->
+                    </div>
+                  </div>
+                </li>
+
+                <li class="mb-3" *ngIf="activityID?.activityName == 6">
+                  <div class="col-md-12" [attr.data-bs-toggle]="'modal'" [attr.data-bs-target]="'#activityModal'"
+                    (click)="openNapModal(activityID?.studentData)">
+                    <div
+                      class="box-title box-title3 pos-rel nav-link nav-health justify-content-center align-items-center">
+                      <h6 class="mb-0">
+                        <span class="me-1">
+                          <div class="small-icon">
+                            <img src="assets/img/med-icon-small.png" alt="Nap" />
+                          </div>
+                        </span><span class="act-font">Meds</span>
+                      </h6>
+                      <!-- <span *ngIf="activityID.studentData?.length > 0" class="badge bg-danger ms-2">
+                        {{ activityID.studentData.length }}
+                      </span> -->
+                    </div>
+                  </div>
+                </li>
+
+                <li class="mb-3" *ngIf="activityID?.activityName == 2">
+                  <div class="col-md-12" [attr.data-bs-toggle]="'modal'" [attr.data-bs-target]="'#activityModal'"
+                    (click)="openNapModal(activityID?.studentData)">
+                    <div
+                      class="box-title box-title4 pos-rel nav-link nav-health justify-content-center align-items-center">
+                      <h6 class="mb-0">
+                        <span class="me-1">
+                          <div class="small-icon">
+                            <img src="assets/img/food-icon-small.png" alt="Nap" />
+                          </div>
+                        </span><span class="act-font">Food</span>
+                      </h6>
+                      <!-- <span *ngIf="activityID.studentData?.length > 0" class="badge bg-danger ms-2">
+                        {{ activityID.studentData.length }}
+                      </span> -->
+                    </div>
+                  </div>
+                </li>
+
+                <li class="mb-3" *ngIf="activityID?.activityName == 3">
+                  <div class="col-md-12" [attr.data-bs-toggle]="'modal'" [attr.data-bs-target]="'#activityModal'"
+                    (click)="openNapModal(activityID?.studentData)">
+                    <div
+                      class="box-title box-title5 pos-rel nav-link nav-health justify-content-center align-items-center">
+                      <h6 class="mb-0">
+                        <span class="me-1">
+                          <div class="small-icon">
+                            <img src="assets/img/note-icon-small.png" alt="Nap" />
+                          </div>
+                        </span><span class="act-font">Note</span>
+                      </h6>
+                      <!-- <span *ngIf="activityID.studentData?.length > 0" class="badge bg-danger ms-2">
+                        {{ activityID.studentData.length }}
+                      </span> -->
+                    </div>
+                  </div>
+                </li>
+
+                <li class="mb-3" *ngIf="activityID?.activityName == 5">
+                  <div class="col-md-12" [attr.data-bs-toggle]="'modal'" [attr.data-bs-target]="'#activityModal'"
+                    (click)="openNapModal(activityID?.studentData)">
+                    <div
+                      class="box-title box-title6 pos-rel nav-link nav-health justify-content-center align-items-center">
+                      <h6 class="mb-0">
+                        <span class="me-1">
+                          <div class="small-icon">
+                            <img src="assets/img/incident-icon-small.png" alt="Nap" />
+                          </div>
+                        </span><span class="act-font">Incident</span>
+                      </h6>
+                    </div>
+                  </div>
+                </li>
+
+                <li class="mb-3" *ngIf="activityID?.activityName == 7">
+                  <div class="col-md-12" [attr.data-bs-toggle]="'modal'" [attr.data-bs-target]="'#activityModal'"
+                    (click)="openNapModal(activityID?.studentData)">
+                    <div
+                      class="box-title box-title7 pos-rel nav-link nav-health justify-content-center align-items-center">
+                      <h6 class="mb-0">
+                        <span class="me-1">
+                          <div class="small-icon">
+                            <img src="assets/img/reminder-icon-small.png" alt="Nap" />
+                          </div>
+                        </span><span class="act-font">Reminder</span>
+                      </h6>
+                    </div>
+                  </div>
+                </li>
+
+                <li *ngIf="activityID.activityName == 8">
+                  <div class="col-md-12" [attr.data-bs-toggle]="'modal'" [attr.data-bs-target]="'#activityModal'"
+                    (click)="openNapModal(activityID?.studentData)">
+                    <ul class="d-flex justify-content-start align-items-center gp-26">
+                      <div
+                        class="box-title box-title8 pos-rel nav-link nav-health justify-content-center align-items-center">
+                        <h6 class="mb-0">
+                          <span class="me-1">
+                            <div class="small-icon">
+                              <img src="assets/img/upload-media-small.png" alt="Nap" />
+                            </div>
+                          </span><span class="act-font">Media</span>
+                        </h6>
+                        <!-- <span *ngIf="activityID.studentData?.length > 0" class="badge bg-danger ms-2">
+                          {{ activityID.studentData.length }}
+                        </span> -->
+                      </div>
+                    </ul>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            }
+          </div>
+
+          }
+        </div>
+        } } @else {
+
+        <div class="no-data">
+          <img src="assets/img/no-data-img.png" alt="No Record Found" />
+          <span>No Record Found</span>
+        </div>
+
+        }
+        <!-- Nap Time  -->
+
+        <!-- Modal -->
+        <div *ngIf="selectedActivity?.length" class="modal fade" id="activityModal" tabindex="-1"
+          aria-labelledby="exampleModal89Label">
+          <div class="modal-dialog modal-md">
+            <div class="modal-content">
+              <!-- Modal Header with Dynamic Tabs -->
+              <div class="modal-header" style="background: transparent">
+                <ul class="nav nav-tabs mb-0" style="margin-bottom: 0px !important" role="tablist">
+                  <li class="nav-item" role="presentation" *ngFor="let activity of selectedActivity; let i = index">
+                    <a class="nav-link" [class.active]="i === 0" [attr.href]="'#tab-' + i" data-bs-toggle="tab"
+                      role="tab">
+                      {{ getActivityName(activity, i) }}
+                    </a>
+                  </li>
+                </ul>
+              </div>
+
+              <div class="modal-body" style="padding-bottom: 0px">
+                <div class="tab-content pt-0">
+                  <div class="tab-pane fade" *ngFor="let activity of selectedActivity; let i = index"
+                    [class.active]="i === 0" [class.show]="i === 0" [attr.id]="'tab-' + i" role="tabpanel">
+                    <!-- Activity Details -->
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="des-box">
+                          <div class="note-content position-relative mb-3">
+                            <div class="box-item">
+                              <div *ngIf="activity.activityId == 1">
+                                <strong>Start Time</strong>:
+                                {{
+                                activity?.activityStartTime | TimeFormatAmPm
+                                }}
+                              </div>
+                              <div *ngIf="activity.activityId == 1" class="box-item">
+                                <strong>End Time</strong>:
+                                {{ activity?.activityEndTime | TimeFormatAmPm }}
+                              </div>
+
+                              <div *ngIf="
+                                  activity.activityId != 1 &&
+                                  activity.activityId != 8
+                                " class="box-item">
+                                <strong>Time</strong>:
+                                {{
+                                activity?.activityStartTime | TimeFormatAmPm
+                                }}
+                              </div>
+
+                              <div *ngIf="activity?.activityId == 2">
+                                <!-- <div class="box-item">
+                                  <strong>Food Type</strong>:
+                                  {{ activity?.foodType }}
+                                </div> -->
+                                <div class="box-item">
+                                  <strong>Meal Completion</strong>:
+                                  {{ activity?.mealCompletion ? activity?.mealCompletion+"%" : "--" }}
+                                </div>
+                                <div class="box-item">
+                                  <strong>Meal Type</strong>:
+                                  {{ activity?.mealType ? activity?.mealType : "--"}}
+                                </div>
+                                <div class="box-item">
+                                  <strong>Meal Items</strong>:
+                                  {{ activity?.mealItem ? activity?.mealItem : "--" }}
+                                </div>
+                              </div>
+
+                              <div *ngIf="activity?.activityId == 4" class="box-item">
+                                <strong>Body Temperature</strong>:
+                                {{ activity?.bodyTemperature }}
+                              </div>
+
+                              <div *ngIf="activity?.activityId != 7" class="box-item">
+                                <strong>Note</strong>:
+                                {{
+                                activity?.activityNote || "No note provided."
+                                }}
+                              </div>
+
+                              <div *ngIf="activity?.activityId == 7" class="box-item">
+                                <strong>Reminder</strong>:
+                                {{
+                                activity?.activityNote || "No note provided."
+                                }}
+                              </div>
+                            </div>
+
+                            <div *ngIf="userRoleId === '4'" class="edit-btn">
+                              <div class="edit-btn">
+                                <!-- <div class="edit-btn">
+                              <span type="button" class="edit-btn-box" (click)="onEdit(activity)">
+                                <i class="fa-solid fa-pen"></i>
+
+                              </span>
+                            </div> -->
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        @if(activity?.imageUrl.length > 0){
+                        <!-- Image Gallery -->
+                        @if (activity?.imageUrl.length > 0) {
+  <div class="row">
+    <div class="img-d d-flex justify-content-between align-items-center">
+      <h6>Image Gallery</h6>
+
+      <button *ngIf="shouldShowDownloadButton(activity)" class="btn btn-sm btn-primary"
+        (click)="downloadImages(activity)">
+        Download All
+      </button>
+    </div>
+    <ng-container *ngIf="activity?.imageUrl">
+      <div class="col-md-12">
+        <div class="ber mt-4 mb-2">
+          <div class="image-scroller-wrapper position-relative">
+
+            <!-- Prev Button -->
+            <button *ngIf="activity?.imageUrl.length > 2" class="scroll-btn prev-btn position-absolute"
+              (click)="scrollPrev(scrollContainer)">
+              <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
+            </button>
+
+            <ul #scrollContainer class="image-list d-flex overflow-auto" style="scroll-behavior: smooth"
+              (wheel)="onMouseWheel($event, scrollContainer)">
+              <li *ngFor="let media of activity.imageUrl; let i = index" class="img-div position-relative me-2">
+
+                <!-- Full Access for Role 4 -->
+                <ng-container *ngIf="userRoleId === '4'; else nonRole4">
+                  <ng-container *ngIf="media.type === 'image'; else videoBlock">
+                    <!-- Image Rendering -->
+                    <a [href]="media.url" data-fancybox="gallery" class="fancybox-link" [attr.data-index]="i"
+                      (contextmenu)="disableRightClick($event)">
+                      <img [src]="media.url" class="img-thumbnail" draggable="false" alt="Gallery Image"
+                        (dragstart)="disableDrag($event)" />
+                    </a>
+                  </ng-container>
+
+                  <!-- Video Rendering -->
+                  <ng-template #videoBlock>
+                    <video width="100%" height="auto" controls preload="metadata">
+                      <source [src]="media.url" />
+                    </video>
+                  </ng-template>
+                </ng-container>
+
+                <!-- Non Role 4 Access -->
+                <ng-template #nonRole4>
+                  <ng-container *ngIf="shouldShowDownloadButton(activity); else blurredMedia">
+                    <ng-container *ngIf="media.type === 'image'; else videoBlock2">
+                      <!-- Image Rendering -->
+                      <a [href]="media.url" data-fancybox="gallery" class="fancybox-link" [attr.data-index]="i"
+                        (contextmenu)="disableRightClick($event)">
+                        <img [src]="media.url" class="img-thumbnail" draggable="false" alt="Gallery Image"
+                          (dragstart)="disableDrag($event)" />
+                      </a>
+                    </ng-container>
+
+                    <!-- Video Rendering -->
+                    <ng-template #videoBlock2>
+                      <video width="100%" height="auto" controls preload="metadata">
+                        <source [src]="media.url" />
+                      </video>
+                    </ng-template>
+                  </ng-container>
+
+                  <!-- Blurred Media -->
+                  <ng-template #blurredMedia>
+                    <a class="fancybox-link" (contextmenu)="disableRightClick($event)">
+                      <ng-container *ngIf="media.type === 'video'; else blurredImg">
+                        <img src="assets/video-thumb.png" class="img-thumbnail blur-image" draggable="false"
+                          alt="Restricted Video"
+                          (click)="blurGalleryDownloadRequest(activity.activityDate)" />
+                        <i class="fa fa-play video-overlay-icon" style="position: absolute; top: 50%; left: 50%;
+                          transform: translate(-50%, -50%); font-size: 40px; color: #a2719e; opacity: 0.8;"></i>
+                      </ng-container>
+                      <ng-template #blurredImg>
+                        <img [src]="media.url" class="img-thumbnail blur-image" draggable="false"
+                          alt="Restricted Image" (click)="blurGalleryDownloadRequest(activity.activityDate)"
+                          (dragstart)="disableDrag($event)" />
+                      </ng-template>
+                    </a>
+                  </ng-template>
+                </ng-template>
+
+                <!-- Download Button -->
+                <button *ngIf="shouldShowDownloadButton(activity)"
+                  class="download-btn position-absolute btn-down" (click)="downloadImages(activity, media)">
+                  <i class="fa fa-download" aria-hidden="true"></i>
+                  <span class="visually-hidden">Download</span>
+                </button>
+              </li>
+            </ul>
+
+            <!-- Next Button -->
+            <button *ngIf="activity?.imageUrl.length > 2" class="scroll-btn next-btn position-absolute"
+              (click)="scrollNext(scrollContainer)">
+              <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+            </button>
+
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+}
+
+                        
+                        } @else {
+
+                        <div class="img-d d-flex justify-content-between align-items-center">
+                          <h6>Image Gallery</h6>
+                        </div>
+                        <!-- No Record Template -->
+                        <div class="no-data text-center">
+                          <img src="assets/img/no-data-img.png" alt="No Record Found" />
+                          <span>No Record Found</span>
+                        </div>
+                        }
+
+                        <!-- edit -->
+                        <div class="row">
+                          <div class="col-md-12 text-end" style="
+                              padding: calc(
+                                var(--bs-modal-padding) -
+                                  var(--bs-modal-footer-gap) * 0.5
+                              );
+                            ">
+                            <button *ngIf="userRoleId === '4'" type="button" class="btn btn-primary me-2"
+                              (click)="onEdit(activity)">
+                              Edit
+                            </button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                              Close
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Modal Footer -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="arrow-controls text-end">
+          <!-- Left (Previous Date) -->
+          <span class="arrow me-2" (click)="goToPreviousDate()">
+            <i class="fa fa-angle-left me-1" aria-hidden="true"></i>
+            <span>Previous</span>
+          </span>
+
+          <!-- Right (Next Date) -->
+          <span class="arrow" [class.disabled]="isNextDateDisabled()" (click)="!isNextDateDisabled() && goToNextDate()">
+            <span class="me-1"> Next</span><i class="fa fa-angle-right" aria-hidden="true"></i>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Button trigger modal -->
+  </div>
+</div>

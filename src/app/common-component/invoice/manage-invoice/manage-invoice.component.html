@@ -1,0 +1,1073 @@
+<app-breadcrumb></app-breadcrumb>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="whole">
+
+
+            <div class="card">
+                <div class="col-md-12">
+                    <div class=" d-flex align-items-center justify-content-between flex-wrap   row p-25">
+                        <div class="col-md-8">
+                            <div class="searcher">
+                            <div class="">
+                            <input type="text" class="form-control" placeholder="Search by ID ...">
+                            </div>
+                            <div class="search-student-btn">
+                                <button type="btn" class="btn btn-primary">Search</button>
+                                </div>
+                            </div>
+                           
+                      
+                            </div>
+            
+            
+                        <div class="d-flex align-items-center flex-wrap col-md-4 justify-content-end">
+                        <div class="input-icon-start  me-2 position-relative">
+                        <span class="icon-addon">
+                        <i class="ti ti-calendar"></i>
+                        </span>
+                        <!-- <input type="text" class="form-control date-range bookingrange" placeholder="Select" value="Academic Year : 2024 / 2025"> -->
+                        </div>
+                        <div class="d-flex align-items-center bg-white border rounded-2 p-1  me-2">
+                        <a href="javascript:void(0);" class="  btn btn-light bg-white dropdown-toggle" data-bs-toggle="dropdown" data-bs-auto-close="outside"  style="border: none;"><i class="fa fa-filter me-2"></i>Filter</a>
+                        <div class="dropdown-menu drop-width">
+                        <form action="javascript:;">
+                        <div class="d-flex align-items-center border-bottom p-3">
+                            
+                        <h4>Filter</h4>
+                        </div>
+                        <div class="p-3 pb-0 border-bottom">
+                        <div class="row">
+                        <div class="col-md-12">
+                        <div class="mb-3">
+                            <div class="check-grid br-btm">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                    <label class="form-check-label" for="flexCheckDefault">
+                                      Category
+                                    </label>
+                                  </div>
+                                  <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                    <label class="form-check-label" for="flexCheckDefault">
+                                      Status
+                                    </label>
+                                  </div>
+                                  <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                    <label class="form-check-label" for="flexCheckDefault">
+                                      Date
+                                    </label>
+                                  </div>
+                                  
+                                 
+            
+                                  
+                               </div>
+                        
+                        </div>
+                        </div>
+                        
+                        </div>
+                        </div>
+                        <div class="p-3 d-flex align-items-center justify-content-end">
+                            <button type="submit" class="btn btn-primary me-3">Apply</button>
+                        <a href="#" class="btn btn-light ">Reset</a>
+                      
+                        </div>
+                        </form>
+                        </div>
+                        </div>
+                        <div class="d-flex align-items-center bg-white border rounded-2 p-1  me-2">
+                        <a href="javascript:;" class="btn btn-icon btn-sm me-1 bg-primary primary-hover"><i class="fa fa-align-left" style="color:#fff;"></i></a>
+                        <a href="javascript:;" class="active btn btn-icon btn-sm primary-hover"><i class="fa fa-bars"></i></a>
+                        </div>
+                        <div class="dropdown mb-3">
+                        
+                        
+                        </div>
+                        </div>
+                        </div>
+            
+                </div>
+            </div>
+            
+            <div class="row" id="row-list">
+                <div class="col-sm-12">
+                <div class="card card-table">
+                <div class="card-body">
+                <div class="table-responsive">
+                <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper no-footer">
+                    
+                
+                
+                
+                <table class="table table-stripped table-hover no-footer" id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info">
+                <thead class="thead-light">
+                <tr><th class="sorting sorting_asc" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Invoice ID: activate to sort column descending" style="width: 190.049px;">Invoice ID</th><th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Category: activate to sort column ascending" style="width: 98.602px;">Category</th><th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Created on: activate to sort column ascending" style="width: 115.269px;">Created on</th><th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Invoice to: activate to sort column ascending" style="width: 224.232px;">Invoice to</th><th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Amount: activate to sort column ascending" style="width: 87.1573px;">Amount</th><th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Due date: activate to sort column ascending" style="width: 110.828px;">Due date</th><th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending" style="width: 83.7856px;">Status</th><th class="text-start sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Action: activate to sort column ascending" style="width: 73.9172px;">Action</th></tr>
+                </thead>
+                <tbody>
+                
+                
+                
+                
+                
+                <tr class="odd">
+                <td class="sorting_1">
+                <label class="custom_check">
+                <input type="checkbox" name="invoice">
+                <span class="checkmark"></span>
+                </label>
+                <a href="view-invoice.html" class="invoice-link">IN093439#09</a>
+                </td>
+                <td>Advertising</td>
+                <td>16 Mar 2022</td>
+                <td>
+                <h2 class="table-avatar">
+                <a href="profile.html"><img class="avatar avatar-sm me-2 avatar-img rounded-circle" src="assets/img/profiles/avatar-04.jpg" alt="User Image"> Barbara Moore</a>
+                </h2>
+                </td>
+                <td class="text-primary">$1,54,220</td>
+                <td>23 Mar 2022</td>
+                <td><span class="badge bg-success-light">Paid</span></td>
+                <td class="text-start">
+                    <div class="actions">
+                        
+                   
+                            
+                     
+                        <a class="action-btn bg-danger-light me-2" >
+                            <i class="feather-download"></i>
+                        </a>
+                        <a class="action-btn bg-danger-light me-2"  href="/view-invoice"  target="_blank" >
+                            <i class="feather-eye" ></i>
+                        </a>
+            
+                    </div>
+                </td>
+                </tr><tr class="even">
+                <td class="sorting_1">
+                <label class="custom_check">
+                <input type="checkbox" name="invoice">
+                <span class="checkmark"></span>
+                </label>
+                <a href="view-invoice.html" class="invoice-link">IN093439#10</a>
+                </td>
+                <td>Food</td>
+                <td>14 Mar 2022</td>
+                <td>
+                <h2 class="table-avatar">
+                <a href="profile.html"><img class="avatar avatar-sm me-2 avatar-img rounded-circle" src="assets/img/profiles/avatar-06.jpg" alt="User Image"> Karlene Chaidez</a>
+                </h2>
+                </td>
+                <td class="text-primary">$1,222</td>
+                <td>18 Mar 2022</td>
+                <td><span class="badge bg-danger-light">Overdue</span></td>
+                <td class="text-start">
+                    <div class="actions">
+                        
+                   
+                            
+                     
+                        <a class="action-btn bg-danger-light me-2" >
+                            <i class="feather-download"></i>
+                        </a>
+                        <a class="action-btn bg-danger-light me-2"   href="/view-invoice"  target="_blank">
+                            <i class="feather-eye" ></i>
+                        </a>
+            
+                    </div>
+                </td>
+                </tr><tr class="odd">
+                <td class="sorting_1">
+                <label class="custom_check">
+                <input type="checkbox" name="invoice">
+                <span class="checkmark"></span>
+                </label>
+                <a href="view-invoice.html" class="invoice-link">IN093439#11</a>
+                </td>
+                <td>Marketing</td>
+                <td>7 Mar 2022</td>
+                <td>
+                <h2 class="table-avatar">
+                <a href="profile.html"><img class="avatar avatar-sm me-2 avatar-img rounded-circle" src="assets/img/profiles/avatar-08.jpg" alt="User Image"> Russell Copeland</a>
+                </h2>
+                </td>
+                <td class="text-primary">$3,470</td>
+                <td>10 Mar 2022</td>
+                <td><span class="badge bg-primary-light">Cancelled</span></td>
+                <td class="text-start">
+                    <div class="actions">
+                        
+                   
+                            
+                     
+                        <a class="action-btn bg-danger-light me-2" >
+                            <i class="feather-download"></i>
+                        </a>
+                        <a class="action-btn bg-danger-light me-2"  href="/view-invoice"  target="_blank">
+                            <i class="feather-eye" ></i>
+                        </a>
+            
+                    </div>
+                </td>
+                </tr><tr class="even">
+                <td class="sorting_1">
+                <label class="custom_check">
+                <input type="checkbox" name="invoice">
+                <span class="checkmark"></span>
+                </label>
+                <a href="view-invoice.html" class="invoice-link">IN093439#12</a>
+                </td>
+                <td>Repairs</td>
+                <td>24 Mar 2022</td>
+                <td>
+                <h2 class="table-avatar">
+                <a href="profile.html"><img class="avatar avatar-sm me-2 avatar-img rounded-circle" src="assets/img/profiles/avatar-10.jpg" alt="User Image"> Joseph Collins</a>
+                </h2>
+                </td>
+                <td class="text-primary">$8,265</td>
+                <td>30 Mar 2022</td>
+                <td><span class="badge bg-success-light">Paid</span></td>
+                <td class="text-start">
+                    <div class="actions">
+                        
+                   
+                            
+                     
+                        <a class="action-btn bg-danger-light me-2" >
+                            <i class="feather-download"></i>
+                        </a>
+                        <a class="action-btn bg-danger-light me-2"  href="/view-invoice"  target="_blank" >
+                            <i class="feather-eye"  ></i>
+                        </a>
+            
+                    </div>
+                </td>
+                </tr><tr class="odd">
+                <td class="sorting_1">
+                <label class="custom_check">
+                <input type="checkbox" name="invoice">
+                <span class="checkmark"></span>
+                </label>
+                <a href="view-invoice.html" class="invoice-link">IN093439#13</a>
+                </td>
+                <td>Software</td>
+                <td>17 Mar 2022</td>
+                <td>
+                <h2 class="table-avatar">
+                <a href="profile.html"><img class="avatar avatar-sm me-2 avatar-img rounded-circle" src="assets/img/profiles/avatar-11.jpg" alt="User Image"> Jennifer Floyd</a>
+                </h2>
+                </td>
+                <td class="text-primary">$5,200</td>
+                <td>20 Mar 2022</td>
+                <td><span class="badge bg-danger-light">Overdue</span></td>
+                <td class="text-start">
+                    <div class="actions">
+                        
+                   
+                            
+                     
+                        <a class="action-btn bg-danger-light me-2" >
+                            <i class="feather-download"></i>
+                        </a>
+                        <a class="action-btn bg-danger-light me-2"  href="/view-invoice"  target="_blank" >
+                            <i class="feather-eye"  ></i>
+                        </a>
+            
+                    </div>
+                </td>
+                </tr></tbody>
+                </table>
+                
+                
+                
+            
+            
+            
+            </div>
+                </div>
+                </div>
+                </div>
+                </div>
+                </div>
+            
+                <div class="row" id="grid-row">
+            
+                           
+                       
+                       
+                       
+                    <div class="col-xxl-3 col-xl-4 col-md-6 d-flex">
+                    <div class="card flex-fill">
+                    <div class="card-header d-flex align-items-center justify-content-between">
+                    <a href="student-details.html" class="link-primary">AD9892434</a>
+                    <div class="d-flex align-items-center">
+                    <span class="badge badge-soft-success d-inline-flex align-items-center me-1"><i class="ti ti-circle-filled fs-5 me-1"></i>Active</span>
+                    <div class="dropdown">
+                    <a href="#" class="btn  btn-icon btn-sm d-flex align-items-center justify-content-center rounded-circle p-0" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa fa-ellipsis-v"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-right p-3">
+                    <li>
+                    <a class="dropdown-item rounded-1" href="student-details.html"><i class="ti ti-menu me-2"></i>View Student</a>
+                    </li>
+                    <li>
+                    <a class="dropdown-item rounded-1" href="edit-student.html"><i class="ti ti-edit-circle me-2"></i>Edit</a>
+                    </li>
+                    <li>
+                    <a class="dropdown-item rounded-1" href="student-promotion.html"><i class="ti ti-arrow-ramp-right-2 me-2"></i>Promote Student</a>
+                    </li>
+                    <li>
+                    <a class="dropdown-item rounded-1" href="#" data-bs-toggle="modal" data-bs-target="#delete-modal"><i class="ti ti-trash-x me-2"></i>Delete</a>
+                    </li>
+                    </ul>
+                    </div>
+                    </div>
+                    </div>
+                    <div class="card-body">
+                    <div class="bg-light-300 rounded-2 p-3 mb-3">
+                    <div class="d-flex align-items-center">
+                    <a href="student-details.html" class="avatar avatar-lg flex-shrink-0"><img src="assets/img/user-5.jpg" class="img-fluid rounded-circle" alt="img"></a>
+                    <div class="ms-2">
+                    <h5 class="mb-0"><a href="student-details.html">Janet Daniel</a></h5>
+                    <p>III, A</p>
+                    </div>
+                    </div>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between gx-2">
+                    <div>
+                    <p class="mb-0">Status</p>
+                    <p class="text-dark">Paid</p>
+                    </div>
+                    <div>
+                    <p class="mb-0">Category</p>
+                    <p class="text-dark">Marketing</p>
+                    </div>
+                    <div>
+                    <p class="mb-0">Due date</p>
+                    <p class="text-dark">10 Jan 2015</p>
+                    </div>
+                    </div>
+                    </div>
+                    <div class="card-footer d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center">
+                    <a href="#" class="btn btn-outline-light bg-white btn-icon d-flex align-items-center justify-content-center rounded-circle  p-0 me-2"><i class="fa fa-comment"></i></a>
+                   
+                    <a href="#" class="btn btn-outline-light bg-white btn-icon d-flex align-items-center justify-content-center rounded-circle p-0 me-3"><i class="fa fa-envelope"></i></a>
+                    </div>
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#add_fees_collect" class="btn btn-light btn-sm fw-semibold">Add Fees</a>
+                    </div>
+                    </div>
+                    </div>
+                    
+                    
+                    <div class="col-xxl-3 col-xl-4 col-md-6 d-flex">
+                    <div class="card flex-fill">
+                    <div class="card-header d-flex align-items-center justify-content-between">
+                    <a href="student-details.html" class="link-primary">AD9892433</a>
+                    <div class="d-flex align-items-center">
+                    <span class="badge badge-soft-success d-inline-flex align-items-center me-1"><i class="ti ti-circle-filled fs-5 me-1"></i>Active</span>
+                    <div class="dropdown">
+                    <a href="#" class="btn  btn-icon btn-sm d-flex align-items-center justify-content-center rounded-circle p-0" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa fa-ellipsis-v"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-right p-3">
+                    <li>
+                    <a class="dropdown-item rounded-1" href="student-details.html"><i class="ti ti-menu me-2"></i>View Student</a>
+                    </li>
+                    <li>
+                    <a class="dropdown-item rounded-1" href="edit-student.html"><i class="ti ti-edit-circle me-2"></i>Edit</a>
+                    </li>
+                    <li>
+                    <a class="dropdown-item rounded-1" href="student-promotion.html"><i class="ti ti-arrow-ramp-right-2 me-2"></i>Promote Student</a>
+                    </li>
+                    <li>
+                    <a class="dropdown-item rounded-1" href="#" data-bs-toggle="modal" data-bs-target="#delete-modal"><i class="ti ti-trash-x me-2"></i>Delete</a>
+                    </li>
+                    </ul>
+                    </div>
+                    </div>
+                    </div>
+                    <div class="card-body">
+                    <div class="bg-light-300 rounded-2 p-3 mb-3">
+                    <div class="d-flex align-items-center">
+                    <a href="student-details.html" class="avatar avatar-lg flex-shrink-0"><img src="assets/img/user-6.jpg" class="img-fluid rounded-circle" alt="img"></a>
+                    <div class="ms-2">
+                    <h6 class="mb-0"><a href="student-details.html">Joann Michael</a></h6>
+                    <p>IV, B</p>
+                    </div>
+                    </div>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between gx-2">
+                    <div>
+                    <p class="mb-0">Status</p>
+                    <p class="text-dark">Overdue</p>
+                    </div>
+                    <div>
+                    <p class="mb-0">Category</p>
+                    <p class="text-dark">Food</p>
+                    </div>
+                    <div>
+                    <p class="mb-0">Due date</p>
+                    <p class="text-dark">19 Aug 2014</p>
+                    </div>
+                    </div>
+                    </div>
+                    <div class="card-footer d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center">
+                    <a href="#" class="btn btn-outline-light bg-white btn-icon d-flex align-items-center justify-content-center rounded-circle  p-0 me-2"><i class="fa fa-comment"></i></a>
+                   
+                    <a href="#" class="btn btn-outline-light bg-white btn-icon d-flex align-items-center justify-content-center rounded-circle p-0 me-3"><i class="fa fa-envelope"></i></a>
+                    </div>
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#add_fees_collect" class="btn btn-light btn-sm fw-semibold">Add Fees</a>
+                    </div>
+                    </div>
+                    </div>
+                    
+                    
+                    <div class="col-xxl-3 col-xl-4 col-md-6 d-flex">
+                    <div class="card flex-fill">
+                    <div class="card-header d-flex align-items-center justify-content-between">
+                    <a href="student-details.html" class="link-primary">AD9892432</a>
+                    <div class="d-flex align-items-center">
+                    <span class="badge badge-soft-success d-inline-flex align-items-center me-1"><i class="ti ti-circle-filled fs-5 me-1"></i>Active</span>
+                    <div class="dropdown">
+                    <a href="#" class="btn  btn-icon btn-sm d-flex align-items-center justify-content-center rounded-circle p-0" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa fa-ellipsis-v"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-right p-3">
+                    <li>
+                    <a class="dropdown-item rounded-1" href="student-details.html"><i class="ti ti-menu me-2"></i>View Student</a>
+                    </li>
+                    <li>
+                    <a class="dropdown-item rounded-1" href="edit-student.html"><i class="ti ti-edit-circle me-2"></i>Edit</a>
+                    </li>
+                    <li>
+                    <a class="dropdown-item rounded-1" href="student-promotion.html"><i class="ti ti-arrow-ramp-right-2 me-2"></i>Promote Student</a>
+                    </li>
+                    <li>
+                    <a class="dropdown-item rounded-1" href="#" data-bs-toggle="modal" data-bs-target="#delete-modal"><i class="ti ti-trash-x me-2"></i>Delete</a>
+                    </li>
+                    </ul>
+                    </div>
+                    </div>
+                    </div>
+                    <div class="card-body">
+                    <div class="bg-light-300 rounded-2 p-3 mb-3">
+                    <div class="d-flex align-items-center">
+                    <a href="student-details.html" class="avatar avatar-lg flex-shrink-0"><img src="assets/img/user-7.jpg" class="img-fluid rounded-circle" alt="img"></a>
+                    <div class="ms-2">
+                    <h6 class="mb-0"><a href="student-details.html">Kathleen Dison</a></h6>
+                    <p>III, A</p>
+                    </div>
+                    </div>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between gx-2">
+                    <div>
+                    <p class="mb-0">Status</p>
+                    <p class="text-dark">Paid</p>
+                    </div>
+                    <div>
+                    <p class="mb-0">Category</p>
+                    <p class="text-dark">Marketing</p>
+                    </div>
+                    <div>
+                    <p class="mb-0">Due date</p>
+                    <p class="text-dark">5 Dec 2017</p>
+                    </div>
+                    </div>
+                    </div>
+                    <div class="card-footer d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center">
+                    <a href="#" class="btn btn-outline-light bg-white btn-icon d-flex align-items-center justify-content-center rounded-circle  p-0 me-2"><i class="fa fa-comment"></i></a>
+                   
+                    <a href="#" class="btn btn-outline-light bg-white btn-icon d-flex align-items-center justify-content-center rounded-circle p-0 me-3"><i class="fa fa-envelope"></i></a>
+                    </div>
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#add_fees_collect" class="btn btn-light btn-sm fw-semibold">Add Fees</a>
+                    </div>
+                    </div>
+                    </div>
+                    
+                    
+                    <div class=" col-xxl-3 col-xl-4 col-md-6 d-flex">
+                    <div class="card flex-fill">
+                    <div class="card-header d-flex align-items-center justify-content-between">
+                    <a href="student-details.html" class="link-primary">AD9892431</a>
+                    <div class="d-flex align-items-center">
+                    <span class="badge badge-soft-danger d-inline-flex align-items-center me-1"><i class="ti ti-circle-filled fs-5 me-1"></i>Inactive</span>
+                    <div class="dropdown">
+                    <a href="#" class="btn  btn-icon btn-sm d-flex align-items-center justify-content-center rounded-circle p-0" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa fa-ellipsis-v"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-right p-3">
+                    <li>
+                    <a class="dropdown-item rounded-1" href="student-details.html"><i class="ti ti-menu me-2"></i>View Student</a>
+                    </li>
+                    <li>
+                    <a class="dropdown-item rounded-1" href="edit-student.html"><i class="ti ti-edit-circle me-2"></i>Edit</a>
+                    </li>
+                    <li>
+                    <a class="dropdown-item rounded-1" href="student-promotion.html"><i class="ti ti-arrow-ramp-right-2 me-2"></i>Promote Student</a>
+                    </li>
+                    <li>
+                    <a class="dropdown-item rounded-1" href="#" data-bs-toggle="modal" data-bs-target="#delete-modal"><i class="ti ti-trash-x me-2"></i>Delete</a>
+                    </li>
+                    </ul>
+                    </div>
+                    </div>
+                    </div>
+                    <div class="card-body">
+                    <div class="bg-light-300 rounded-2 p-3 mb-3">
+                    <div class="d-flex align-items-center">
+                    <a href="student-details.html" class="avatar avatar-lg flex-shrink-0"><img src="assets/img/user-5.jpg" class="img-fluid rounded-circle" alt="img"></a>
+                    <div class="ms-2">
+                    <h6 class="mb-0"><a href="student-details.html">Lisa Gourley </a></h6>
+                    <p>II, B</p>
+                    </div>
+                    </div>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between gx-2">
+                    <div>
+                    <p class="mb-0">Status</p>
+                    <p class="text-dark">Paid</p>
+                    </div>
+                    <div>
+                    <p class="mb-0">Category</p>
+                    <p class="text-dark">Marketing</p>
+                    </div>
+                    <div>
+                    <p class="mb-0">Due date</p>
+                    <p class="text-dark">13 May 2017</p>
+                    </div>
+                    </div>
+                    </div>
+                    <div class="card-footer d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center">
+                    <a href="#" class="btn btn-outline-light bg-white btn-icon d-flex align-items-center justify-content-center rounded-circle  p-0 me-2"><i class="fa fa-comment"></i></a>
+                   
+                    <a href="#" class="btn btn-outline-light bg-white btn-icon d-flex align-items-center justify-content-center rounded-circle p-0 me-3"><i class="fa fa-envelope"></i></a>
+                    </div>
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#add_fees_collect" class="btn btn-light btn-sm fw-semibold">Add Fees</a>
+                    </div>
+                    </div>
+                    </div>
+                    
+                    
+                    <div class="col-xxl-3 col-xl-4 col-md-6 d-flex">
+                    <div class="card flex-fill">
+                    <div class="card-header d-flex align-items-center justify-content-between">
+                    <a href="student-details.html" class="link-primary">AD9892430</a>
+                    <div class="d-flex align-items-center">
+                    <span class="badge badge-soft-success d-inline-flex align-items-center me-1"><i class="ti ti-circle-filled fs-5 me-1"></i>Active</span>
+                    <div class="dropdown">
+                    <a href="#" class="btn  btn-icon btn-sm d-flex align-items-center justify-content-center rounded-circle p-0" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa fa-ellipsis-v"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-right p-3">
+                    <li>
+                    <a class="dropdown-item rounded-1" href="student-details.html"><i class="ti ti-menu me-2"></i>View Student</a>
+                    </li>
+                    <li>
+                    <a class="dropdown-item rounded-1" href="edit-student.html"><i class="ti ti-edit-circle me-2"></i>Edit</a>
+                    </li>
+                    <li>
+                    <a class="dropdown-item rounded-1" href="student-promotion.html"><i class="ti ti-arrow-ramp-right-2 me-2"></i>Promote Student</a>
+                    </li>
+                    <li>
+                    <a class="dropdown-item rounded-1" href="#" data-bs-toggle="modal" data-bs-target="#delete-modal"><i class="ti ti-trash-x me-2"></i>Delete</a>
+                    </li>
+                    </ul>
+                    </div>
+                    </div>
+                    </div>
+                    <div class="card-body">
+                    <div class="bg-light-300 rounded-2 p-3 mb-3">
+                    <div class="d-flex align-items-center">
+                    <a href="student-details.html" class="avatar avatar-lg flex-shrink-0"><img src="assets/img/user-6.jpg" class="img-fluid rounded-circle" alt="img"></a>
+                    <div class="ms-2">
+                    <h6 class="mb-0"><a href="student-details.html">Ralph Claudia</a></h6>
+                    <p>II, B</p>
+                    </div>
+                    </div>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between gx-2">
+                    <div>
+                    <p class="mb-0">Status</p>
+                    <p class="text-dark">Overdue</p>
+                    </div>
+                    <div>
+                    <p class="mb-0">Category</p>
+                    <p class="text-dark">Food</p>
+                    </div>
+                    <div>
+                    <p class="mb-0">Due date</p>
+                    <p class="text-dark">20 Jun 20215</p>
+                    </div>
+                    </div>
+                    </div>
+                    <div class="card-footer d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center">
+                    <a href="#" class="btn btn-outline-light bg-white btn-icon d-flex align-items-center justify-content-center rounded-circle  p-0 me-2"><i class="fa fa-comment"></i></a>
+                   
+                    <a href="#" class="btn btn-outline-light bg-white btn-icon d-flex align-items-center justify-content-center rounded-circle p-0 me-3"><i class="fa fa-envelope"></i></a>
+                    </div>
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#add_fees_collect" class="btn btn-light btn-sm fw-semibold">Add Fees</a>
+                    </div>
+                    </div>
+                    </div>
+                    
+                    
+                    <div class="col-xxl-3 col-xl-4 col-md-6 d-flex">
+                    <div class="card flex-fill">
+                    <div class="card-header d-flex align-items-center justify-content-between">
+                    <a href="student-details.html" class="link-primary">AD9892429</a>
+                    <div class="d-flex align-items-center">
+                    <span class="badge badge-soft-success d-inline-flex align-items-center me-1"><i class="ti ti-circle-filled fs-5 me-1"></i>Active</span>
+                    <div class="dropdown">
+                    <a href="#" class="btn  btn-icon btn-sm d-flex align-items-center justify-content-center rounded-circle p-0" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa fa-ellipsis-v"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-right p-3">
+                    <li>
+                    <a class="dropdown-item rounded-1" href="student-details.html"><i class="ti ti-menu me-2"></i>View Student</a>
+                    </li>
+                    <li>
+                    <a class="dropdown-item rounded-1" href="edit-student.html"><i class="ti ti-edit-circle me-2"></i>Edit</a>
+                    </li>
+                    <li>
+                    <a class="dropdown-item rounded-1" href="student-promotion.html"><i class="ti ti-arrow-ramp-right-2 me-2"></i>Promote Student</a>
+                    </li>
+                    <li>
+                    <a class="dropdown-item rounded-1" href="#" data-bs-toggle="modal" data-bs-target="#delete-modal"><i class="ti ti-trash-x me-2"></i>Delete</a>
+                    </li>
+                    </ul>
+                    </div>
+                    </div>
+                    </div>
+                    <div class="card-body">
+                    <div class="bg-light-300 rounded-2 p-3 mb-3">
+                    <div class="d-flex align-items-center">
+                    <a href="student-details.html" class="avatar avatar-lg flex-shrink-0"><img src="assets/img/user-7.jpg" class="img-fluid rounded-circle" alt="img"></a>
+                    <div class="ms-2">
+                    <h6 class="mb-0"><a href="student-details.html">Ralph Claudia</a></h6>
+                    <p>II, B</p>
+                    </div>
+                    </div>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between gx-2">
+                    <div>
+                    <p class="mb-0">Status</p>
+                    <p class="text-dark">Paid</p>
+                    </div>
+                    <div>
+                    <p class="mb-0">Category</p>
+                    <p class="text-dark">Food</p>
+                    </div>
+                    <div>
+                    <p class="mb-0">Due date</p>
+                    <p class="text-dark">20 Jun 20215</p>
+                    </div>
+                    </div>
+                    </div>
+                    <div class="card-footer d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center">
+                    <a href="#" class="btn btn-outline-light bg-white btn-icon d-flex align-items-center justify-content-center rounded-circle  p-0 me-2"><i class="fa fa-comment"></i></a>
+                   
+                    <a href="#" class="btn btn-outline-light bg-white btn-icon d-flex align-items-center justify-content-center rounded-circle p-0 me-3"><i class="fa fa-envelope"></i></a>
+                    </div>
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#add_fees_collect" class="btn btn-light btn-sm fw-semibold">Add Fees</a>
+                    </div>
+                    </div>
+                    </div>
+                    
+                    
+                    <div class="col-xxl-3 col-xl-4 col-md-6 d-flex">
+                    <div class="card flex-fill">
+                    <div class="card-header d-flex align-items-center justify-content-between">
+                    <a href="student-details.html" class="link-primary">AD9892428</a>
+                    <div class="d-flex align-items-center">
+                    <span class="badge badge-soft-success d-inline-flex align-items-center me-1"><i class="ti ti-circle-filled fs-5 me-1"></i>Active</span>
+                    <div class="dropdown">
+                    <a href="#" class="btn  btn-icon btn-sm d-flex align-items-center justify-content-center rounded-circle p-0" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa fa-ellipsis-v"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-right p-3">
+                    <li>
+                    <a class="dropdown-item rounded-1" href="student-details.html"><i class="ti ti-menu me-2"></i>View Student</a>
+                    </li>
+                    <li>
+                    <a class="dropdown-item rounded-1" href="edit-student.html"><i class="ti ti-edit-circle me-2"></i>Edit</a>
+                    </li>
+                    <li>
+                    <a class="dropdown-item rounded-1" href="student-promotion.html"><i class="ti ti-arrow-ramp-right-2 me-2"></i>Promote Student</a>
+                    </li>
+                    <li>
+                    <a class="dropdown-item rounded-1" href="#" data-bs-toggle="modal" data-bs-target="#delete-modal"><i class="ti ti-trash-x me-2"></i>Delete</a>
+                    </li>
+                    </ul>
+                    </div>
+                    </div>
+                    </div>
+                    <div class="card-body">
+                    <div class="bg-light-300 rounded-2 p-3 mb-3">
+                    <div class="d-flex align-items-center">
+                    <a href="student-details.html" class="avatar avatar-lg flex-shrink-0"><img src="assets/img/user-5.jpg" class="img-fluid rounded-circle" alt="img"></a>
+                    <div class="ms-2">
+                    <h6 class="mb-0"><a href="student-details.html">Julie Scott</a></h6>
+                    <p>V, A</p>
+                    </div>
+                    </div>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between gx-2">
+                    <div>
+                    <p class="mb-0">Status</p>
+                    <p class="text-dark">Paid</p>
+                    </div>
+                    <div>
+                    <p class="mb-0">Category</p>
+                    <p class="text-dark">Marketing</p>
+                    </div>
+                    <div>
+                    <p class="mb-0">Due date</p>
+                    <p class="text-dark">18 Jan 2023</p>
+                    </div>
+                    </div>
+                    </div>
+                    <div class="card-footer d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center">
+                    <a href="#" class="btn btn-outline-light bg-white btn-icon d-flex align-items-center justify-content-center rounded-circle  p-0 me-2"><i class="fa fa-comment"></i></a>
+                   
+                    <a href="#" class="btn btn-outline-light bg-white btn-icon d-flex align-items-center justify-content-center rounded-circle p-0 me-3"><i class="fa fa-envelope"></i></a>
+                    </div>
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#add_fees_collect" class="btn btn-light btn-sm fw-semibold">Add Fees</a>
+                    </div>
+                    </div>
+                    </div>
+                    
+                    
+                    <div class="col-xxl-3 col-xl-4 col-md-6 d-flex">
+                    <div class="card flex-fill">
+                    <div class="card-header d-flex align-items-center justify-content-between">
+                    <a href="student-details.html" class="link-primary">AD9892427</a>
+                    <div class="d-flex align-items-center">
+                    <span class="badge badge-soft-success d-inline-flex align-items-center me-1"><i class="ti ti-circle-filled fs-5 me-1"></i>Active</span>
+                    <div class="dropdown">
+                    <a href="#" class="btn  btn-icon btn-sm d-flex align-items-center justify-content-center rounded-circle p-0" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa fa-ellipsis-v"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-right p-3">
+                    <li>
+                    <a class="dropdown-item rounded-1" href="student-details.html"><i class="ti ti-menu me-2"></i>View Student</a>
+                    </li>
+                    <li>
+                    <a class="dropdown-item rounded-1" href="edit-student.html"><i class="ti ti-edit-circle me-2"></i>Edit</a>
+                    </li>
+                    <li>
+                    <a class="dropdown-item rounded-1" href="student-promotion.html"><i class="ti ti-arrow-ramp-right-2 me-2"></i>Promote Student</a>
+                    </li>
+                    <li>
+                    <a class="dropdown-item rounded-1" href="#" data-bs-toggle="modal" data-bs-target="#delete-modal"><i class="ti ti-trash-x me-2"></i>Delete</a>
+                    </li>
+                    </ul>
+                    </div>
+                    </div>
+                    </div>
+                    <div class="card-body">
+                    <div class="bg-light-300 rounded-2 p-3 mb-3">
+                    <div class="d-flex align-items-center">
+                    <a href="student-details.html" class="avatar avatar-lg flex-shrink-0"><img src="assets/img/user-5.jpg" class="img-fluid rounded-circle" alt="img"></a>
+                    <div class="ms-2">
+                    <h6 class="mb-0"><a href="student-details.html">Susan Boswell</a></h6>
+                    <p>VIII, B</p>
+                    </div>
+                    </div>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between gx-2">
+                    <div>
+                    <p class="mb-0">Status</p>
+                    <p class="text-dark">Overdue</p>
+                    </div>
+                    <div>
+                    <p class="mb-0">Category</p>
+                    <p class="text-dark">Marketing</p>
+                    </div>
+                    <div>
+                    <p class="mb-0">Due date</p>
+                    <p class="text-dark">26 May 2020</p>
+                    </div>
+                    </div>
+                    </div>
+                    <div class="card-footer d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center">
+                    <a href="#" class="btn btn-outline-light bg-white btn-icon d-flex align-items-center justify-content-center rounded-circle  p-0 me-2"><i class="fa fa-comment"></i></a>
+                   
+                    <a href="#" class="btn btn-outline-light bg-white btn-icon d-flex align-items-center justify-content-center rounded-circle p-0 me-3"><i class="fa fa-envelope"></i></a>
+                    </div>
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#add_fees_collect" class="btn btn-light btn-sm fw-semibold">Add Fees</a>
+                    </div>
+                    </div>
+                    </div>
+                    
+                    
+                    <div class="col-xxl-3 col-xl-4 col-md-6 d-flex">
+                    <div class="card flex-fill">
+                    <div class="card-header d-flex align-items-center justify-content-between">
+                    <a href="student-details.html" class="link-primary">AD9892426</a>
+                    <div class="d-flex align-items-center">
+                    <span class="badge badge-soft-success d-inline-flex align-items-center me-1"><i class="ti ti-circle-filled fs-5 me-1"></i>Active</span>
+                    <div class="dropdown">
+                    <a href="#" class="btn  btn-icon btn-sm d-flex align-items-center justify-content-center rounded-circle p-0" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa fa-ellipsis-v"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-right p-3">
+                    <li>
+                    <a class="dropdown-item rounded-1" href="student-details.html"><i class="ti ti-menu me-2"></i>View Student</a>
+                    </li>
+                    <li>
+                    <a class="dropdown-item rounded-1" href="edit-student.html"><i class="ti ti-edit-circle me-2"></i>Edit</a>
+                    </li>
+                    <li>
+                    <a class="dropdown-item rounded-1" href="student-promotion.html"><i class="ti ti-arrow-ramp-right-2 me-2"></i>Promote Student</a>
+                    </li>
+                    <li>
+                    <a class="dropdown-item rounded-1" href="#" data-bs-toggle="modal" data-bs-target="#delete-modal"><i class="ti ti-trash-x me-2"></i>Delete</a>
+                    </li>
+                    </ul>
+                    </div>
+                    </div>
+                    </div>
+                    <div class="card-body">
+                    <div class="bg-light-300 rounded-2 p-3 mb-3">
+                    <div class="d-flex align-items-center">
+                    <a href="student-details.html" class="avatar avatar-lg flex-shrink-0"><img src="assets/img/user-5.jpg" class="img-fluid rounded-circle" alt="img"></a>
+                    <div class="ms-2">
+                    <h6 class="mb-0"><a href="student-details.html">Richard Mayes</a></h6>
+                    <p>V, A</p>
+                    </div>
+                    </div>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between gx-2">
+                    <div>
+                    <p class="mb-0">Status</p>
+                    <p class="text-dark">Paid</p>
+                    </div>
+                    <div>
+                    <p class="mb-0">Category</p>
+                    <p class="text-dark">Food</p>
+                    </div>
+                    <div>
+                    <p class="mb-0">Due date</p>
+                    <p class="text-dark">6 Oct 2022</p>
+                    </div>
+                    </div>
+                    </div>
+                    <div class="card-footer d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center">
+                    <a href="#" class="btn btn-outline-light bg-white btn-icon d-flex align-items-center justify-content-center rounded-circle  p-0 me-2"><i class="fa fa-comment"></i></a>
+                   
+                    <a href="#" class="btn btn-outline-light bg-white btn-icon d-flex align-items-center justify-content-center rounded-circle p-0 me-3"><i class="fa fa-envelope"></i></a>
+                    </div>
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#add_fees_collect" class="btn btn-light btn-sm fw-semibold">Add Fees</a>
+                    </div>
+                    </div>
+                    </div>
+                    
+                    
+                    <div class="col-xxl-3 col-xl-4 col-md-6 d-flex">
+                    <div class="card flex-fill">
+                    <div class="card-header d-flex align-items-center justify-content-between">
+                    <a href="student-details.html" class="link-primary">AD9892425</a>
+                    <div class="d-flex align-items-center">
+                    <span class="badge badge-soft-success d-inline-flex align-items-center me-1"><i class="ti ti-circle-filled fs-5 me-1"></i>Active</span>
+                    <div class="dropdown">
+                    <a href="#" class="btn  btn-icon btn-sm d-flex align-items-center justify-content-center rounded-circle p-0" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa fa-ellipsis-v"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-right p-3">
+                    <li>
+                    <a class="dropdown-item rounded-1" href="student-details.html"><i class="ti ti-menu me-2"></i>View Student</a>
+                    </li>
+                    <li>
+                    <a class="dropdown-item rounded-1" href="edit-student.html"><i class="ti ti-edit-circle me-2"></i>Edit</a>
+                    </li>
+                    <li>
+                    <a class="dropdown-item rounded-1" href="student-promotion.html"><i class="ti ti-arrow-ramp-right-2 me-2"></i>Promote Student</a>
+                    </li>
+                    <li>
+                    <a class="dropdown-item rounded-1" href="#" data-bs-toggle="modal" data-bs-target="#delete-modal"><i class="ti ti-trash-x me-2"></i>Delete</a>
+                    </li>
+                    </ul>
+                    </div>
+                    </div>
+                    </div>
+                    <div class="card-body">
+                    <div class="bg-light-300 rounded-2 p-3 mb-3">
+                    <div class="d-flex align-items-center">
+                    <a href="student-details.html" class="avatar avatar-lg flex-shrink-0"><img src="assets/img/user-5.jpg" class="img-fluid rounded-circle" alt="img"></a>
+                    <div class="ms-2">
+                    <h6 class="mb-0"><a href="student-details.html">Richard Mayes</a></h6>
+                    <p>VII, B</p>
+                    </div>
+                    </div>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between gx-2">
+                    <div>
+                    <p class="mb-0">Status</p>
+                    <p class="text-dark">Paid</p>
+                    </div>
+                    <div>
+                    <p class="mb-0">Category</p>
+                    <p class="text-dark">Food</p>
+                    </div>
+                    <div>
+                    <p class="mb-0">Due date</p>
+                    <p class="text-dark">6 Oct 2022</p>
+                    </div>
+                    </div>
+                    </div>
+                    <div class="card-footer d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center">
+                    <a href="#" class="btn btn-outline-light bg-white btn-icon d-flex align-items-center justify-content-center rounded-circle  p-0 me-2"><i class="fa fa-comment"></i></a>
+                   
+                    <a href="#" class="btn btn-outline-light bg-white btn-icon d-flex align-items-center justify-content-center rounded-circle p-0 me-3"><i class="fa fa-envelope"></i></a>
+                    </div>
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#add_fees_collect" class="btn btn-light btn-sm fw-semibold">Add Fees</a>
+                    </div>
+                    </div>
+                    </div>
+                    
+                    
+                    <div class="col-xxl-3 col-xl-4 col-md-6 d-flex">
+                    <div class="card flex-fill">
+                    <div class="card-header d-flex align-items-center justify-content-between">
+                    <a href="student-details.html" class="link-primary">AD9892424</a>
+                    <div class="d-flex align-items-center">
+                    <span class="badge badge-soft-success d-inline-flex align-items-center me-1"><i class="ti ti-circle-filled fs-5 me-1"></i>Active</span>
+                    <div class="dropdown">
+                    <a href="#" class="btn  btn-icon btn-sm d-flex align-items-center justify-content-center rounded-circle p-0" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa fa-ellipsis-v"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-right p-3">
+                    <li>
+                    <a class="dropdown-item rounded-1" href="student-details.html"><i class="ti ti-menu me-2"></i>View Student</a>
+                    </li>
+                    <li>
+                    <a class="dropdown-item rounded-1" href="edit-student.html"><i class="ti ti-edit-circle me-2"></i>Edit</a>
+                    </li>
+                    <li>
+                    <a class="dropdown-item rounded-1" href="student-promotion.html"><i class="ti ti-arrow-ramp-right-2 me-2"></i>Promote Student</a>
+                    </li>
+                    <li>
+                    <a class="dropdown-item rounded-1" href="#" data-bs-toggle="modal" data-bs-target="#delete-modal"><i class="ti ti-trash-x me-2"></i>Delete</a>
+                    </li>
+                    </ul>
+                    </div>
+                    </div>
+                    </div>
+                    <div class="card-body">
+                    <div class="bg-light-300 rounded-2 p-3 mb-3">
+                    <div class="d-flex align-items-center">
+                    <a href="student-details.html" class="avatar avatar-lg flex-shrink-0"><img src="assets/img/user-5.jpg" class="img-fluid rounded-circle" alt="img"></a>
+                    <div class="ms-2">
+                    <h6 class="mb-0"><a href="student-details.html">Veronica Randle</a></h6>
+                    <p>IX, A</p>
+                    </div>
+                    </div>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between gx-2">
+                    <div>
+                    <p class="mb-0">Status</p>
+                    <p class="text-dark">Overdue</p>
+                    </div>
+                    <div>
+                    <p class="mb-0">Category</p>
+                    <p class="text-dark">Marketing</p>
+                    </div>
+                    <div>
+                    <p class="mb-0">Due date</p>
+                    <p class="text-dark">27 Dec 2009</p>
+                    </div>
+                    </div>
+                    </div>
+                    <div class="card-footer d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center">
+                    <a href="#" class="btn btn-outline-light bg-white btn-icon d-flex align-items-center justify-content-center rounded-circle  p-0 me-2"><i class="fa fa-comment"></i></a>
+                   
+                    <a href="#" class="btn btn-outline-light bg-white btn-icon d-flex align-items-center justify-content-center rounded-circle p-0 me-3"><i class="fa fa-envelope"></i></a>
+                    </div>
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#add_fees_collect" class="btn btn-light btn-sm fw-semibold">Add Fees</a>
+                    </div>
+                    </div>
+                    </div>
+                    
+                    
+                    <div class="col-xxl-3 col-xl-4 col-md-6 d-flex">
+                    <div class="card flex-fill">
+                    <div class="card-header d-flex align-items-center justify-content-between">
+                    <a href="student-details.html" class="link-primary">AD9892423</a>
+                    <div class="d-flex align-items-center">
+                    <span class="badge badge-soft-success d-inline-flex align-items-center me-1"><i class="ti ti-circle-filled fs-5 me-1"></i>Active</span>
+                    <div class="dropdown">
+                    <a href="#" class="btn  btn-icon btn-sm d-flex align-items-center justify-content-center rounded-circle p-0" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa fa-ellipsis-v"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-right p-3">
+                    <li>
+                    <a class="dropdown-item rounded-1" href="student-details.html"><i class="ti ti-menu me-2"></i>View Student</a>
+                    </li>
+                    <li>
+                    <a class="dropdown-item rounded-1" href="edit-student.html"><i class="ti ti-edit-circle me-2"></i>Edit</a>
+                    </li>
+                    <li>
+                    <a class="dropdown-item rounded-1" href="student-promotion.html"><i class="ti ti-arrow-ramp-right-2 me-2"></i>Promote Student</a>
+                    </li>
+                    <li>
+                    <a class="dropdown-item rounded-1" href="#" data-bs-toggle="modal" data-bs-target="#delete-modal"><i class="ti ti-trash-x me-2"></i>Delete</a>
+                    </li>
+                    </ul>
+                    </div>
+                    </div>
+                    </div>
+                    <div class="card-body">
+                    <div class="bg-light-300 rounded-2 p-3 mb-3">
+                    <div class="d-flex align-items-center">
+                    <a href="student-details.html" class="avatar avatar-lg flex-shrink-0"><img src="assets/img/user-5.jpg" class="img-fluid rounded-circle" alt="img"></a>
+                    <div class="ms-2">
+                    <h6 class="mb-0"><a href="student-details.html">Thomas Hunt</a></h6>
+                    <p>X, A</p>
+                    </div>
+                    </div>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between gx-2">
+                    <div>
+                    <p class="mb-0">Status</p>
+                    <p class="text-dark">Paid</p>
+                    </div>
+                    <div>
+                    <p class="mb-0">Category</p>
+                    <p class="text-dark">Food</p>
+                    </div>
+                    <div>
+                    <p class="mb-0">Due date</p>
+                    <p class="text-dark">11 Aug 2008</p>
+                    </div>
+                    </div>
+                    </div>
+                    <div class="card-footer d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center">
+                    <a href="#" class="btn btn-outline-light bg-white btn-icon d-flex align-items-center justify-content-center rounded-circle  p-0 me-2"><i class="fa fa-comment"></i></a>
+                   
+                    <a href="#" class="btn btn-outline-light bg-white btn-icon d-flex align-items-center justify-content-center rounded-circle p-0 me-3"><i class="fa fa-envelope"></i></a>
+                    </div>
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#add_fees_collect" class="btn btn-light btn-sm fw-semibold">Add Fees</a>
+                    </div>
+                    </div>
+                    </div>
+                    
+              
+                    </div>
+        </div>
+    </div>
+</div>

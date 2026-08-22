@@ -1,0 +1,387 @@
+<app-breadcrumb></app-breadcrumb>
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <div
+          class="heading-new d-flex justify-content-between align-items-center"
+        >
+          <h5 class="mb-0">Supply Request</h5>
+        </div>
+
+        <div class="d-flex justify-content-end mb-2">
+          <div class="pay-box-plan me-2"></div>
+        </div>
+
+        <form [formGroup]="SupplyForm">
+          <div class="row">
+            <div class="col-md-6 mb-4">
+              <div class="form-group local-forms">
+                <label style="left: 10px !important"
+                  >Item Name<span class="login-danger">*</span></label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="itemName"
+                  name="itemName"
+                  placeholder="Enter Item"
+                />
+
+                <span
+                  *ngIf="itemName?.touched && itemName?.invalid"
+                  class="text-danger"
+                >
+                  <span *ngIf="itemName?.errors?.['required']"
+                    >This field is required.</span
+                  >
+                </span>
+              </div>
+
+              <div class="form-group local-forms mt-2">
+                <label style="left: 10px !important">Quantity</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  formControlName="quantity"
+                  name="quantity"
+                  placeholder="Enter Quantity"
+                   min="0"
+                  
+                />
+                <div
+                  *ngIf="SupplyForm.get('quantity')?.invalid"
+                  class="text-danger"
+                >
+                  <small *ngIf="SupplyForm.get('quantity')?.errors?.['min']"
+                    >Quantity cannot be negative</small
+                  >
+                </div>
+              </div>
+
+              <!-- <div class="form-group local-forms"style=" margin-top: 11px; ">
+                  <div class="row">
+                  <div class="col-md-5"> <div class="add-prouchased">
+                    <label ><i class="fa fa-paperclip"></i>Add Purchased Link</label>
+                 
+                  </div></div>
+                  <div class="col-md-7">          
+                         <div class="lablee">
+                    <label > Product Referral Link</label>
+                    <input class="form-control" formControlName="referralLink" name="quantity" ></div>
+                    <div class="add-more-link">
+                      <span class="icon"> <i class="fa fa-add"> </i></span>
+                    </div>
+                  
+                  </div>
+                  </div>
+                </div> -->
+
+              <!-- isha -->
+
+              <div class="form-group local-forms" style="margin-top: 11px">
+                <div class="row">
+                  <div class="col-md-5">
+                    <div class="add-prouchased">
+                      <label (click)="showReferralInput = true">
+                        <i class="fa fa-paperclip"></i> Add Purchased Link
+                      </label>
+                    </div>
+                  </div>
+
+                  <!-- <div class="col-md-7" *ngIf="showReferralInput">
+                      <div *ngFor="let link of referralLinks; let i = index" class="lablee mb-2">
+                        <label>Product Referral Link {{ i + 1 }}</label>
+                        <input
+                          class="form-control"
+                          formControlName="referralLink {{i}}"
+                          name="referralLink{{ i }}"
+                        />
+
+                          <div class="add-more-link" (click)="addReferralLink()">
+                        <span class="icon"><i class="fa fa-add"></i></span>
+                      </div>
+                      </div>
+                
+                    
+                    </div> -->
+
+                  <div class="col-md-7" *ngIf="showReferralInput">
+                    <div formArrayName="referralLinks">
+                      <div
+                        *ngFor="
+                          let linkCtrl of referralLinks?.controls;
+                          let i = index
+                        "
+                        class="lablee mb-2"
+                      >
+                        <label>Product Referral Link {{ i + 1 }}</label>
+                        <div class="d-flex align-items-center">
+                          <input
+                            class="form-control me-2"
+                            placeholder="Enter Link"
+                            [formControlName]="i"
+                            name="referralLink{{ i }}"
+                          />
+
+                          <!-- Remove button (except for the first input) -->
+                          <button
+                            *ngIf="referralLinks.length > 1"
+                            type="button"
+                            class="btn btn-danger btn-sm me-1"
+                            (click)="removeReferralLink(i)"
+                          >
+                            −
+                          </button>
+
+                          <!-- Add button only on the last input -->
+                          <button
+                            *ngIf="i === referralLinks.length - 1"
+                            type="button"
+                            class="btn btn-primary btn-sm"
+                            (click)="addReferralLink()"
+                          >
+                            +
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 mb-4">
+              <div class="form-group local-forms">
+                <label style="left: 10px !important"> Description</label>
+                <textarea
+                  class="form-control"
+                  formControlName="itemDescription"
+                  name="quantity"
+                  rows="5"
+                  placeholder="Enter Description"
+                  maxlength="500"
+                ></textarea>
+
+                   <small class="text-muted d-block text-end">
+                {{
+                  SupplyForm.get("itemDescription")?.value?.length || 0
+                }}/500 characters
+              </small>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12 mb-2">
+              <div class="student-submit text-end">
+                <button
+                  type="submit"
+                  class="btn btn-primary me-2"
+                  (click)="OnSubmitSupply()"
+                >
+                  {{ supplyID ? "Update" : "Submit" }}
+                </button>
+
+                <button
+                  type="reset"
+                  class="btn btn-secondary"
+                  (click)="cancel()"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="card-body" style="padding-top: 0px">
+        <div
+          class="heading-new d-flex justify-content-between align-items-center"
+        >
+          <h5 class="mb-0">Supply Request Records</h5>
+          <span class=" "> </span>
+        </div>
+        <div class="no-padding-mobile">
+          <div class="table-responsive">
+            <table class="table table-hover mb-0">
+              <thead class="student-thread">
+                <tr>
+                  <th>#</th>
+                  <th>Item Name</th>
+                  <th>Quantity</th>
+                  <th>Supply Description</th>
+                  <th>Referral Link</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+
+
+
+            
+                  @if (skeletonShow === 'Skelton') {
+                  <tbody>
+                    <tr>
+                      <td colspan="100%">
+                        <app-skeleton-loader skeletonShow="Skelton" viewType="table" [tableRows]="5" [tableCols]="5">
+                        </app-skeleton-loader>
+                      </td>
+                    </tr>
+                  </tbody>
+
+                  }
+                  @else if (SupplyList.length > 0) {
+              <tbody>v
+                <tr
+                  *ngFor="
+                    let supply of SupplyList
+                      | paginate
+                        : {
+                            itemsPerPage: Contentsize,
+                            currentPage: ContentP,
+                            id: 'Cmscontrol'
+                          };
+                    let i = index
+                  "
+                >
+                  <td>
+                    <span>{{ (ContentP - 1) * Contentsize + i + 1 }}</span>
+                  </td>
+
+                  <td>{{ supply.itemName }}</td>
+                  <td>{{ supply.itemQuantity }}</td>
+                  <!-- <td>{{ supply.itemDescription }}</td> -->
+
+                    <td
+              style="width: 300px; word-break: break-word; white-space: normal"
+            >
+              <div
+                class="deatil-subscription"
+                style="word-break: break-word; white-space: normal"
+              >
+                <p *ngIf="expandedDescriptionIndex !== i">
+                  {{
+                    supply.itemDescription.length > 50
+                      ? (supply.itemDescription | slice : 0 : 50) + "..."
+                      : supply.itemDescription
+                  }}
+                  <a
+                    *ngIf="supply.itemDescription.length > 50"
+                    href="javascript:void(0)"
+                    class="text-primary ms-1"
+                    (click)="expandedDescriptionIndex = i"
+                  >
+                    Read more
+                  </a>
+                </p>
+
+                <p *ngIf="expandedDescriptionIndex === i">
+                  {{ supply.itemDescription }}
+                  <a
+                    href="javascript:void(0)"
+                    class="text-primary ms-1"
+                    (click)="expandedDescriptionIndex = null"
+                  >
+                    Show less
+                  </a>
+                </p>
+              </div>
+            </td>
+
+
+                  <td *ngIf="supply.referralLink; else noLink">
+                    <ng-container
+                      *ngFor="let link of supply.referralLink.split(',')"
+                    >
+                      <a [href]="link.trim()" target="_blank" class="me-2">
+                        <i class="fa fa-paperclip"></i>
+                      </a>
+                    </ng-container>
+                  </td>
+
+                  <ng-template #noLink>
+                    <td>Link not Provided</td>
+                  </ng-template>
+
+                  <td>
+                    <span
+                      [ngClass]="{
+                        'badge-warning': supply.status === 'Pending',
+                        'badge-success': supply.status === 'Approved',
+                        'badge-danger':
+                          supply.status === 'Rejected' ||
+                          supply.status === 'Cancelled'
+                      }"
+                    >
+                      {{ supply.status }}
+                    </span>
+                  </td>
+                  <td class="action-cell">
+                    <i
+                      *ngIf="
+                        supply.status == 'Pending' && supply.isActive !== false
+                      "
+                      class="fa fa-pencil action-icon"
+                      (click)="OnEdit(supply.id)"
+                    ></i>
+                    <i
+                      *ngIf="
+                        supply.status == 'Pending' && supply.isActive !== false
+                      "
+                      class="fa fa-trash action-icon me-2"
+                      (click)="onDelete(supply.id)"
+                    ></i>
+                    <i
+                      *ngIf="supply.isActive == false"
+                      class="fa fa-eye"
+                      (click)="onView(supply.id)"
+                    ></i>
+                  </td>
+                </tr>
+              </tbody>
+                } @else {
+                  <tbody>
+
+                    <tr>
+                      <td colspan="100%">
+                        <app-skeleton-loader skeletonShow="NoRecord">
+                        </app-skeleton-loader>
+                      </td>
+
+                    </tr>
+                  </tbody>
+
+                  }
+
+              <!-- <ng-template #noRecord>  
+                           
+                <td colspan="9">
+                  <div class="no-data">
+                    <img src="assets/img/no-data-img.png" alt="No Record Found" />
+                    <span>No Record Found</span>
+                  </div>
+                </td>              
+            </ng-template> -->
+            </table>
+          </div>
+
+          <div
+            class="pagination-style mt-4 no-flex"
+            *ngIf="SupplyList.length > 0"
+          >
+            <pagination-controls
+              previousLabel="prev"
+              nextLabel="next"
+              [maxSize]="5"
+              class="datatable-pager-nav my-2 mb-sm-0"
+              id="Cmscontrol"
+              (pageChange)="onPageChange($event)"
+            >
+            </pagination-controls>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

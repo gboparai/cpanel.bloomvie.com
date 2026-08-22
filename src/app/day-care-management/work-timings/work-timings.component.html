@@ -1,0 +1,800 @@
+<app-breadcrumb></app-breadcrumb>
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="heading-new">
+          <h5 class="mb-0">Work calendar</h5>
+        </div>
+        <!-- <di v class="row">
+        <div class="col-md-6 mb-4">
+            <div class="form-group local-forms">
+            <label>Select Days<span class="login-danger">*</span></label>
+            <select class="form-select">
+                <option selected></option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+              </select> 
+            </div>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div class="form-group local-forms">
+            <label>Grace Time<span class="login-danger">*</span></label>
+           <input type="number" class="form-control">
+            </div>
+        </div>
+       </div> -->
+
+        <form [formGroup]="ClientWorkingDaysForm">
+          <div class="row cal-lord" style="padding: 0px 11px">
+            <!-- left duv -->
+            <div class="col-md-12 bdr-col" style="background: #eef4f6">
+              <div>
+                <h5
+                  class="mb-0"
+                  style="font-size: 15px; margin-bottom: 23px !important"
+                >
+                  Work Days/Timing
+                </h5>
+              </div>
+
+              @if (workTimeskeleton === 'workTimeskeleton') {
+              <app-skeleton-loader
+                workTimeskeleton="workTimeskeleton"
+                viewType="work-days-timing"
+                [workDays]="4"
+              ></app-skeleton-loader>
+              } @else {
+
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="row">
+                    <div class="col-xl-4">
+                      <span
+                        class="day-list form-group hvr-float-shadow mon"
+                        [ngClass]="{ uncheck: isMonday }"
+                        id="Monday"
+                        (change)="enableInputWithTime($event, 'mon')"
+                      >
+                        <input
+                          type="checkbox"
+                          name="mon"
+                          formControlName="mon"
+                          id="1"
+                          class="form-check-input cstm-toggle cstm-class"
+                          style="visibility: hidden; position: absolute"
+                        />
+                        <label for="1" class="w-100 mb-0">Monday</label>
+                      </span>
+                    </div>
+                    <div class="col-xl-4">
+                      <div class="input-area">
+                        <div class="form-group">
+                          <input
+                            type="time"
+                            name="monStartTime"
+                            formControlName="monStartTime"
+                            placeholder="Start Time"
+                            class="mon mondayStart form-control workingTime"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-xl-4">
+                      <div class="input-area">
+                        <div class="form-group">
+                          <input
+                            type="time"
+                            name="monEndTime"
+                            formControlName="monEndTime"
+                            placeholder="End Time"
+                            class="mon mondayEnd form-control workingTime"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="row">
+                    <div class="col-xl-4">
+                      <span
+                        class="day-list form-group hvr-float-shadow mon"
+                        id="Tuesday"
+                        [ngClass]="{ uncheck: isTuesday }"
+                        (change)="enableInputWithTime($event, 'tues')"
+                      >
+                        <input
+                          type="checkbox"
+                          name="tues"
+                          formControlName="tues"
+                          id="2"
+                          class="form-check-input cstm-toggle cstm-class"
+                          style="visibility: hidden; position: absolute"
+                        />
+                        <label for="2" class="w-100 mb-0">Tuesday</label>
+                      </span>
+                    </div>
+                    <div class="col-xl-4">
+                      <div class="input-area">
+                        <div class="form-group">
+                          <input
+                            type="time"
+                            name="tueStartTime"
+                            formControlName="tuesStartTime"
+                            placeholder="Start Time"
+                            class="mon mondayStart form-control workingTime"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-xl-4">
+                      <div class="input-area">
+                        <div class="form-group">
+                          <input
+                            type="time"
+                            name="tuesEndTime"
+                            formControlName="tuesEndTime"
+                            placeholder="End Time"
+                            class="mon mondayEnd form-control workingTime"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="row">
+                    <div class="col-xl-4">
+                      <span
+                        class="day-list form-group hvr-float-shadow mon"
+                        [ngClass]="{ uncheck: isWednesday }"
+                        id="Wednesday"
+                        (change)="enableInputWithTime($event, 'wed')"
+                      >
+                        <input
+                          type="checkbox"
+                          name="wed"
+                          formControlName="wed"
+                          id="3"
+                          class="form-check-input cstm-toggle cstm-class"
+                          style="visibility: hidden; position: absolute"
+                        />
+                        <label for="3" class="w-100 mb-0">Wednesday</label>
+                      </span>
+                    </div>
+                    <div class="col-xl-4">
+                      <div class="input-area">
+                        <div class="form-group">
+                          <input
+                            type="time"
+                            name="wedStartTime"
+                            formControlName="wedStartTime"
+                            placeholder="Start Time"
+                            class="mon mondayStart form-control workingTime"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-xl-4">
+                      <div class="input-area">
+                        <div class="form-group">
+                          <input
+                            type="time"
+                            name="wedEndTime"
+                            formControlName="wedEndTime"
+                            placeholder="End Time"
+                            class="mon mondayEnd form-control workingTime"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="row">
+                    <div class="col-xl-4">
+                      <span
+                        class="day-list form-group hvr-float-shadow mon"
+                        id="Thursday"
+                        [ngClass]="{ uncheck: isThursday }"
+                        (change)="enableInputWithTime($event, 'thu')"
+                      >
+                        <input
+                          type="checkbox"
+                          name="thu"
+                          formControlName="thu"
+                          id="4"
+                          class="form-check-input cstm-toggle cstm-class"
+                          style="visibility: hidden; position: absolute"
+                        />
+                        <label for="4" class="w-100 mb-0">Thursday</label>
+                      </span>
+                    </div>
+                    <div class="col-xl-4">
+                      <div class="input-area">
+                        <div class="form-group">
+                          <input
+                            type="time"
+                            name="thuStartTime"
+                            formControlName="thuStartTime"
+                            placeholder="Start Time"
+                            class="mon mondayStart form-control workingTime"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-xl-4">
+                      <div class="input-area">
+                        <div class="form-group">
+                          <input
+                            type="time"
+                            name="thuEndTime"
+                            formControlName="thuEndTime"
+                            placeholder="End Time"
+                            class="mon mondayEnd form-control workingTime"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="row">
+                    <div class="col-xl-4">
+                      <span
+                        class="day-list form-group hvr-float-shadow mon"
+                        [ngClass]="{ uncheck: isFriday }"
+                        id="Friday"
+                        (change)="enableInputWithTime($event, 'fri')"
+                      >
+                        <input
+                          type="checkbox"
+                          name="fri"
+                          formControlName="fri"
+                          id="5"
+                          class="form-check-input cstm-toggle cstm-class"
+                          style="visibility: hidden; position: absolute"
+                        />
+                        <label for="5" class="w-100 mb-0">Friday</label>
+                      </span>
+                    </div>
+                    <div class="col-xl-4">
+                      <div class="input-area">
+                        <div class="form-group">
+                          <input
+                            type="time"
+                            name="friStartTime"
+                            formControlName="friStartTime"
+                            placeholder="Start Time"
+                            class="mon mondayStart form-control workingTime"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-xl-4">
+                      <div class="input-area">
+                        <div class="form-group">
+                          <input
+                            type="time"
+                            name="friEndTime"
+                            formControlName="friEndTime"
+                            placeholder="End Time"
+                            class="mon mondayEnd form-control workingTime"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="row">
+                    <div class="col-xl-4">
+                      <span
+                        class="day-list form-group hvr-float-shadow mon"
+                        id="Saturday"
+                        [ngClass]="{ uncheck: isSaturday }"
+                        (change)="enableInputWithTime($event, 'sat')"
+                      >
+                        <input
+                          type="checkbox"
+                          name="sat"
+                          formControlName="sat"
+                          id="6"
+                          class="form-check-input cstm-toggle cstm-class"
+                          style="visibility: hidden; position: absolute"
+                        />
+                        <label for="6" class="w-100 mb-0">Saturday</label>
+                      </span>
+                    </div>
+                    <div class="col-xl-4">
+                      <div class="input-area">
+                        <div class="form-group">
+                          <input
+                            type="time"
+                            name="satStartTime"
+                            formControlName="satStartTime"
+                            placeholder="Start Time"
+                            class="mon mondayStart form-control workingTime"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-xl-4">
+                      <div class="input-area">
+                        <div class="form-group">
+                          <input
+                            type="time"
+                            name="satEndTime"
+                            formControlName="satEndTime"
+                            placeholder="End Time"
+                            class="mon mondayEnd form-control workingTime"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="row">
+                    <div class="col-xl-4">
+                      <span
+                        class="day-list form-group hvr-float-shadow mon"
+                        [ngClass]="{ uncheck: isSunday }"
+                        id="Sunday"
+                        (change)="enableInputWithTime($event, 'sun')"
+                      >
+                        <input
+                          type="checkbox"
+                          name="sun"
+                          formControlName="sun"
+                          id="7"
+                          class="form-check-input cstm-toggle cstm-class"
+                          style="visibility: hidden; position: absolute"
+                        />
+                        <label for="7" class="w-100 mb-0">Sunday</label>
+                      </span>
+                    </div>
+                    <div class="col-xl-4">
+                      <div class="input-area">
+                        <div class="form-group">
+                          <input
+                            type="time"
+                            name="sunStartTime"
+                            formControlName="sunStartTime"
+                            placeholder="Start Time"
+                            class="mon mondayStart form-control workingTime"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-xl-4">
+                      <div class="input-area">
+                        <div class="form-group">
+                          <input
+                            type="time"
+                            name="sunEndTime"
+                            formControlName="sunEndTime"
+                            placeholder="End Time"
+                            class="mon mondayEnd form-control workingTime"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              }
+            </div>
+
+            <!-- right duv -->
+            <div class="col-md-12 bdr-col" style="background: #8080800f">
+              <div class="lfter">
+                <div>
+                  <h5
+                    class="mb-0"
+                    style="font-size: 15px; margin-bottom: 23px !important"
+                  >
+                    Holidays List For {{ currentYear }}
+                  </h5>
+                </div>
+                <div class="row">
+                  @if (holidaySkeleton === 'holidays') {
+                  <app-skeleton-loader
+                    holidaySkeleton="holidays"
+                    viewType="month-checkbox-list"
+                  ></app-skeleton-loader>
+                  } @else if(holidays.length > 0) { @for(item of holidays;track
+                  item;let i=$index){
+                  <div class="col-md-4">
+                    <div class="holi">
+                      <div
+                        class="head-mo"
+                        [class]="{
+                          'head-m1': i < 3,
+                          'head-m2': i < 6 && i > 2,
+                          'head-m3': i < 9 && i > 5,
+                          'head-m4': i > 8
+                        }"
+                      >
+                        <h5>{{ item.month }}</h5>
+                      </div>
+                      <div class="radio">
+                        <ul>
+                          @for(event of item.holidays; track event){
+                          <li>
+                            <div
+                              class="d-flex align-items-center main-edit-holiday"
+                              style="gap: 4px"
+                            >
+                              <input
+                                [value]="event.id"
+                                [checked]="event.isActive"
+                                type="checkbox"
+                                name="holiday-check"
+                              />
+                              <span>{{ event.holidayInfo }}</span>
+                              @if(!event.isDefaultHoliday){
+                              <div class="edit-holiday actions">
+                                <a
+                                  (click)="editHoliday(i, event.id)"
+                                  class="action-btn bg-danger-light me-2"
+                                >
+                                  <i class="feather-edit"></i>
+                                </a>
+                                <a
+                                  (click)="deleteHoliday(event.id)"
+                                  class="action-btn bg-danger-light me-2"
+                                >
+                                  <i class="fa fa-trash"></i>
+                                </a>
+                              </div>
+                              }
+                            </div>
+                          </li>
+                          }
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  } }
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-12 text-end mt-4">
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                    data-bs-toggle="modal"
+                    data-bs-target="#exampleModal"
+                    [innerText]="holidays.length > 0 ? 'Add More Holidays' : 'Add Holidays'"
+                  ></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+
+        <form [formGroup]="seasonalBreakForm">
+          <div class="heading-new mt-4">
+            <h5 class="mb-0">Seasonal Break</h5>
+          </div>
+          <div class="row">
+            <div class="col-md-4 mb-4">
+              <div class="form-group local-forms">
+                <label>Seasonal Break Title
+                  <!-- <span class="login-danger">*</span> -->
+                </label>
+                <input
+                  formControlName="title"
+                  placeholder="Enter Title"
+                  type="text" 
+                  class="form-control"
+                />
+              </div>
+              @if(seasonalBreakFormControls.title.touched){
+              @if(seasonalBreakFormControls.title.errors?.required){
+              <span class="text-danger">This field is required.</span>
+              } }
+            </div>
+            <div class="col-md-4 mb-4">
+              <div class="form-group local-forms">
+                <label>Start Date
+                  <!-- <span class="login-danger">*</span> -->
+                </label>
+                <input
+                  formControlName="startDate"
+                  id="startDate"
+                  placeholder="Enter Date"
+                  name="startDate"
+                  type="text"
+                  class="form-control"
+                />
+              </div>
+              @if(seasonalBreakFormControls.startDate.touched){
+              @if(seasonalBreakFormControls.startDate.errors?.required){
+              <span class="text-danger">This field is required.</span>
+              } }
+            </div>
+            <div class="col-md-4 mb-4">
+              <div class="form-group local-forms">
+                <label>End Date
+                  <!-- <span class="login-danger">*</span> -->
+                </label>
+                <input
+                  id="endDate"
+                  formControlName="endDate"
+                  placeholder="Enter Date"
+                  name="endDate"
+                  type="text"
+                  class="form-control"
+                />
+                <!-- <input id="seasonal_enddate" [disabled]="true" formControlName="endDate" name="date-input" type="text" class="form-control"> -->
+              </div>
+              @if(seasonalBreakFormControls.endDate.touched){
+              @if(seasonalBreakFormControls.endDate.errors?.required){
+              <span class="text-danger">This field is required.</span>
+              } }
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12 mb-4">
+              <div class="student-submit text-end">
+                <button type="submit" class="btn btn-primary me-2" (click)="addSeasonalBreak()" [disabled]="isAllFieldsEmpty()">
+                  {{ onEditSeasonal == null ? "Add" : "Update" }}
+                </button>
+                <button  type="reset" class="btn btn-secondary" (click)="clearForm()">
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+
+        <!-- table for seasonal break  -->
+
+        <div class="row">
+          <div class="table-responsive">
+            <table class="table table-hover mb-0">
+              <thead class="student-thread">
+                <tr>
+                  <th>#</th>
+                  <th>Seasonal&nbsp;Break&nbsp;Title</th>
+                  <th>Start&nbsp;Date</th>
+                  <th>End&nbsp;Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                @if (skeletonShow === 'Skelton') {
+                <tr>
+                  <td colspan="100%">
+                    <app-skeleton-loader
+                      skeletonShow="Skelton"
+                      viewType="table"
+                      [tableRows]="5"
+                      [tableCols]="5"
+                    >
+                    </app-skeleton-loader>
+                  </td>
+                </tr>
+
+                } @else if (seasonalBreakList.length > 0) {
+                <tr *ngFor="let item of seasonalBreakList; let i = index">
+                  <td>{{ i + 1 }}</td>
+                  <td>{{ item.title }}</td>
+                  <td>{{ item.startDate | date : "MM/dd/yyyy" }}</td>
+                  <td>{{ item.endDate | date : "MM/dd/yyyy" }}</td>
+
+                  <td>
+                    <div class="actions">
+                      <a
+                        (click)="onEditSeasonalHoliday(i)" title="Edit Seasonal Holiday"
+                        class="action-btn bg-danger-light me-2"
+                      >
+                        <i class="feather-edit"></i>
+                      </a>
+                      <a
+                        *ngIf="item.id == 0"
+                        (click)="onDeleteSessionalHoliday(i)" title="Delete Seasonal Holiday"
+                        class="action-btn bg-danger-light me-2"
+                      >
+                        <i class="feather-trash"></i>
+                      </a>
+                      <label *ngIf="item.id > 0" class="switch mb-0">
+                        <input (change)="activeInactiveSeasonalHoliday(item.isActive,item.id)"
+                          id="class_check{{ item.id }}"
+                          [checked]="item.isActive"
+                          id="checkBoxAinA"
+                          value="isActive"
+                          name="isActive"
+                          type="checkbox"
+                          [disabled]="isExpiredHoliday(item.endDate)"
+                          title="Active/InActive Holiday"
+                        />
+                        <div class="slider">
+                          <span class="status-text"></span>
+                          <div class="circle">
+                            <svg
+                              class="cross"
+                              xml:space="preserve"
+                              style="enable-background: new 0 0 512 512"
+                              viewBox="0 0 365.696 365.696"
+                              y="0"
+                              x="0"
+                              height="6"
+                              width="6"
+                              xmlns:xlink="http://www.w3.org/1999/xlink"
+                              version="1.1"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <g>
+                                <path
+                                  data-original="#000000"
+                                  fill="currentColor"
+                                  d="M243.188 182.86 356.32 69.726c12.5-12.5 12.5-32.766 0-45.247L341.238 9.398c-12.504-12.503-32.77-12.503-45.25 0L182.86 122.528 69.727 9.374c-12.5-12.5-32.766-12.5-45.247 0L9.375 24.457c-12.5 12.504-12.5 32.77 0 45.25l113.152 113.152L9.398 295.99c-12.503 12.503-12.503 32.769 0 45.25L24.48 356.32c12.5 12.5 32.766 12.5 45.247 0l113.132-113.132L295.99 356.32c12.503 12.5 32.769 12.5 45.25 0l15.081-15.082c12.5-12.504 12.5-32.77 0-45.25zm0 0"
+                                ></path>
+                              </g>
+                            </svg>
+                            <svg
+                              class="checkmark"
+                              xml:space="preserve"
+                              style="enable-background: new 0 0 512 512"
+                              viewBox="0 0 24 24"
+                              y="0"
+                              x="0"
+                              height="10"
+                              width="10"
+                              xmlns:xlink="http://www.w3.org/1999/xlink"
+                              version="1.1"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <g>
+                                <path
+                                  class=""
+                                  data-original="#000000"
+                                  fill="currentColor"
+                                  d="M9.707 19.121a.997.997 0 0 1-1.414 0l-5.646-5.647a1.5 1.5 0 0 1 0-2.121l.707-.707a1.5 1.5 0 0 1 2.121 0L9 14.171l9.525-9.525a1.5 1.5 0 0 1 2.121 0l.707.707a1.5 1.5 0 0 1 0 2.121z"
+                                ></path>
+                              </g>
+                            </svg>
+                          </div>
+                        </div>
+                      </label>
+                    </div>
+                  </td>
+                </tr>
+                } @else {
+
+                <tr>
+                  <td colspan="100%">
+                    <app-skeleton-loader skeletonShow="NoRecord">
+                    </app-skeleton-loader>
+                  </td>
+                </tr>
+
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12 mt-4 mb-4">
+            <div class="student-submit text-end">
+              <button
+                *ngIf="onBoardingService.isOnboarding"
+                (click)="onBoardingService.onChangeTab('Tab-2')"
+                class="btn btn-secondary me-2"
+              >
+                Previous
+              </button>
+              <button
+                type="submit"
+                class="btn btn-primary"
+                (click)="onSubmit()"
+              >
+                Save & Proceed
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Button trigger modal -->
+
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="exampleModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+>
+  <div class="modal-dialog">
+    <form [formGroup]="holidayForm">
+      <div class="modal-content">
+        <div class="modal-header" style="border: none">
+          <h5 class="modal-title" id="exampleModalLabel">Add Holiday</h5>
+          <button
+            type="reset"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-12 mb-4">
+              <div class="form-group local-forms">
+                <label>Holiday Name<span class="login-danger">*</span></label>
+                <input
+                  formControlName="holidayName"
+                  type="text"
+                  placeholder="Enter Name"
+                  class="form-control"
+                />
+              </div>
+              @if(holidayFormControls.holidayName.touched){
+              @if(holidayFormControls.holidayName.errors?.required){
+              <span class="text-danger">This field is required.</span>
+              } }
+            </div>
+            <div class="col-md-12 mb-4">
+              <div class="form-group local-forms">
+                <label>Holiday Date<span class="login-danger">*</span></label>
+                <input
+                  name="date-input"
+                  formControlName="holidayDate"
+                  placeholder="Enter Date"
+                  type="text"
+                  class="form-control"
+                />
+              </div>
+              @if(holidayFormControls.holidayDate.touched){
+              @if(holidayFormControls.holidayDate.errors?.required){
+              <span class="text-danger">This field is required.</span>
+              } }
+            </div>
+          </div>
+          <div class="modal-footer" style="border: none">
+            <button
+              (click)="onSubmitHoliday()"
+              type="button"
+              class="btn btn-primary"
+            >
+              {{ isEdit == null ? "Add" : "Update" }}
+            </button>
+            <button
+              type="reset"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

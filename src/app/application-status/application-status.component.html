@@ -1,0 +1,1061 @@
+<app-breadcrumb></app-breadcrumb>
+<div class="row">
+  <!-- <button (click)="SendEmailAfterMeeting()">send email</button> -->
+
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="heading-new">
+          <h5 class="mb-0">Application Status</h5>
+        </div>
+
+        <ul class="nav nav-tabs" role="tablist">
+          <li class="nav-item" role="presentation">
+            <a
+              class="nav-link active"
+              href="#basictab2"
+              data-bs-toggle="tab"
+              aria-selected="false"
+              role="tab"
+              tabindex="-1"
+              (click)="getAllDayCareAppointments('Reschedule')"
+              >Past Due Appointment
+            </a>
+          </li>
+          <li class="nav-item" role="presentation">
+            <a
+              class="nav-link"
+              href="#basictab3"
+              data-bs-toggle="tab"
+              aria-selected="false"
+              role="tab"
+              tabindex="-1"
+              (click)="getAllDayCareAppointments('Completed')"
+              >Completed Appointment
+            </a>
+          </li>
+        </ul>
+        <div *ngIf="statusId == 7">
+          <div>
+            <div class="row mt-3">
+              <div class="col-md-12">
+                <div class="row mb-4">
+                  <div class="col-md-4">
+                    <div class="search">
+                      <input
+                        placeholder="Type here.."
+                        type="text"
+                        [(ngModel)]="rescheduleSearchItem"
+                        (ngModelChange)="getRescheduleSearchItem()"
+                      />
+                      <button type="submit">Search</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-12">
+                <div class="table-responsive">
+                  <table class="table table-hover mb-0">
+                    <thead class="student-thread">
+                      <tr>
+                        <th>#</th>
+                        <!-- <th>Name</th>
+                        <th>Email</th> -->
+                        <th>Daycare Name</th>
+                        <th>Address</th>
+                        <th>Users</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    @if (skeletonShow === 'Skelton') {
+                    <tbody>
+                      <tr>
+                        <td colspan="100%">
+                          <app-skeleton-loader
+                            skeletonShow="Skelton"
+                            viewType="table"
+                            [tableRows]="5"
+                            [tableCols]="7"
+                          >
+                          </app-skeleton-loader>
+                        </td>
+                      </tr>
+                    </tbody>
+
+                    } @else if (displayedMeetAttempList.length > 0) {
+                    <tbody
+                      *ngFor="
+                        let isMeetAttempt of displayedMeetAttempList
+                          | paginate
+                            : {
+                                itemsPerPage: ContentsizeAcceptedList,
+                                currentPage: ContentAcceptedList,
+                                id: 'dayCareAppointmentAcceptedList'
+                              };
+                        let i = index
+                      "
+                    >
+                      <tr class="ng-star-inserted">
+                        <td>
+                          {{
+                            i +
+                              1 +
+                              (ContentAcceptedList - 1) *
+                                ContentsizeAcceptedList
+                          }}
+                        </td>
+                        <!-- <td>{{ isMeetAttempt.name }}</td>
+                        <td>{{ isMeetAttempt.email }}</td> -->
+                        <!-- <td>{{ isMeetAttempt.centreName }}</td> -->
+
+
+                          <td>
+                          <!-- tooltip  added here  -->
+                          <div class="tooltip-wrapper" style="position: relative"
+                            (mouseenter)="hoveredRow = isMeetAttempt" (mouseleave)="hoveredRow = null">
+                            <span class="hover-anchor">{{ isMeetAttempt.centreName }}</span>
+                            <!-- call here   and remove below div if able to call -->
+                            <app-tooltip *ngIf="hoveredRow === isMeetAttempt" [employee]="{
+                              fullName: isMeetAttempt.name + '' + (isMeetAttempt.lastName ? ' ' + isMeetAttempt.lastName : ''),
+                              email: isMeetAttempt.email ,
+                              profile:''}">
+                            </app-tooltip>
+                          </div>
+                        </td>
+
+
+
+
+
+
+
+                        <td>
+                          {{ isMeetAttempt.city }}, {{ isMeetAttempt.country }}
+                        </td>
+                        <td>{{ isMeetAttempt.enrollmentCapacity }}</td>
+                        <td>
+                          {{ isMeetAttempt.slotDate | date : "MM-dd-yyyy" }}
+                        </td>
+                        <td>
+                          {{ isMeetAttempt.slotStartTime | TimeFormatAmPm }} -
+                          {{ isMeetAttempt.slotEndTime | TimeFormatAmPm }}
+                        </td>
+                        <td>
+                          <div class="actions inert-actions" id="inert-actions">
+                            <!-- <a class="action-btn bg-danger-light me-2" data-bs-toggle="modal" data-bs-target="#slot-info">
+                            <i class="feather-eye"></i>
+                          </a> -->
+                            <div
+                              class="d-inline-block"
+                              data-bs-toggle="tooltip"
+                              data-bs-placement="top"
+                              title="Appointment Details"
+                            >
+                              <a
+                                class="anchor btn btn-primary apoint-button"                            
+                                (click)="getByIDForView(isMeetAttempt.id)"
+                              >
+                              <!-- data-bs-toggle="modal"
+                                data-bs-target="#view-del" -->
+                                <i class="fa fa-eye" aria-hidden="true"></i
+                              ></a>
+                            </div>
+
+                            <!-- (click)="SendEmailAfterMeeting(dayCareAppointment.id)" -->
+                            <!-- <a class="anchor btn btn-primary apoint-button"
+                                data-bs-toggle="modal" data-bs-target="#view-del2" (click)="getPlan(dayCareAppointment.id)"> 
+                                <i class="fa fa-envelope" aria-hidden="true"></i></a> -->
+                            <!-- !viewAction && -->
+                            <button
+                              type="button"
+                              *ngIf="
+                                
+                                isMeetAttempt.counsellorID == UserID
+                              "
+                              class="btn btn-primary apoint-button"
+                              (click)="completeMeeting(isMeetAttempt.id)"
+                            >
+                              Meeting Wrapped
+                            </button>
+                              <!-- !viewAction && -->
+                            <button
+                              type="button"
+                              *ngIf="
+                              
+                                (isMeetAttempt.counsellorID == UserID ||
+                                  isMeetAttempt.counsellorID == null)
+                              "
+                              class="btn btn-primary apoint-button"
+                              data-bs-toggle="modal"
+                              (click)="getDayCareID(isMeetAttempt)"
+                              data-bs-target="#view-del3"
+                            >
+                              Reschedule
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                    } @else {
+                    <tbody>
+                      <tr>
+                        <td colspan="100%">
+                          <app-skeleton-loader skeletonShow="NoRecord">
+                          </app-skeleton-loader>
+                        </td>
+                      </tr>
+                    </tbody>
+
+                    }
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="col pagination-style mt-4 no-flex">
+              <div class="datatable-pager datatable-paging-loaded">
+                @if( displayedMeetAttempList.length > 0 ) {
+                <pagination-controls
+                  previousLabel="prev"
+                  nextLabel="next"
+                  [maxSize]="5"
+                  class="datatable-pager-nav my-2 mb-sm-0"
+                  id="dayCareAppointmentAcceptedList"
+                  (pageChange)="ContentAcceptedList = $event"
+                >
+                </pagination-controls>
+                }
+              </div>
+            </div>
+          </div>
+          <div></div>
+        </div>
+
+        <div *ngIf="statusId == 8">
+          <div>
+            <div class="row mt-3">
+              <div class="col-md-12">
+                <div class="row mb-4">
+                  <div class="col-md-4">
+                    <div class="search">
+                      <input
+                        placeholder="Type here.."
+                        type="text"
+                        [(ngModel)]="searchText"
+                        (ngModelChange)="applyFilter()"
+                      />
+                      <button type="submit">Search</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-12">
+                <div class="table-responsive">
+                  <table class="table table-hover mb-0">
+                    <thead class="student-thread">
+                      <tr>
+                        <th>#</th>
+                        <!-- <th>Name</th>
+                        <th>Email</th> -->
+                        <th>Daycare Name</th>
+                        <th>Address</th>
+                        <th>Users</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    @if (skeletonShow === 'Skelton') {
+                    <tbody>
+                      <tr>
+                        <td colspan="100%">
+                          <app-skeleton-loader
+                            skeletonShow="Skelton"
+                            viewType="table"
+                            [tableRows]="5"
+                            [tableCols]="6"
+                          >
+                          </app-skeleton-loader>
+                        </td>
+                      </tr>
+                    </tbody>
+
+                    } @else if (displayedcompleteList.length > 0) {
+                    <tbody
+                      *ngFor="
+                        let completedItem of displayedcompleteList
+                          | paginate
+                            : {
+                                itemsPerPage: ContentsizePendingList,
+                                currentPage: ContentPendingList,
+                                id: 'dayCareAppointmentPendingList'
+                              };
+                        let i = index
+                      "
+                    >
+                      <tr class="ng-star-inserted">
+                        <td>
+                          {{
+                            (ContentPendingList - 1) * ContentsizePendingList +
+                              i +
+                              1
+                          }}
+                        </td>
+                        <!-- <td>{{ completedItem.name }}</td>
+                        <td>{{ completedItem.email }}</td>
+                        <td>{{ completedItem.centreName }}</td> -->
+                           <td>
+                          <!-- tooltip  added here  -->
+                          <div class="tooltip-wrapper" style="position: relative"
+                            (mouseenter)="hoveredRow = completedItem" (mouseleave)="hoveredRow = null">
+                            <span class="hover-anchor">{{ completedItem.centreName }}</span>
+                            <!-- call here   and remove below div if able to call -->
+                            <app-tooltip *ngIf="hoveredRow === completedItem" [employee]="{
+                              fullName: completedItem.name + '' + (completedItem.lastName ? ' ' + completedItem.lastName : ''),
+                              email: completedItem.email ,
+                              profile:''}">
+                            </app-tooltip>
+                          </div>
+                        </td>
+
+
+
+
+
+
+                        <td>
+                          {{ completedItem.city }}, {{ completedItem.country }}
+                        </td>
+                        <td>{{ completedItem.enrollmentCapacity }}</td>
+                        <td>
+                          {{
+                            completedItem.slotDate != null
+                              ? (completedItem.slotDate | date : "MM-dd-yyyy")
+                              : (completedItem.dateAndTimeOfAppointment
+                                | date : "MM-dd-yyyy")
+                          }}
+                        </td>
+                        <td>
+                          {{
+                            completedItem.slotStartTime != null
+                              ? (completedItem.slotStartTime | TimeFormatAmPm)
+                              : (completedItem.dateAndTimeOfAppointment
+                                | date : "HH:mm")
+                          }}
+                          -
+                          {{
+                            completedItem.slotEndTime != null
+                              ? (completedItem.slotEndTime | TimeFormatAmPm)
+                              : (completedItem.endAppointmentTime
+                                | date : "HH:mm")
+                          }}
+                        </td>
+
+                        <td>
+                          <div class="actions">
+                            <!-- <a class="action-btn bg-danger-light me-2" data-bs-toggle="modal" data-bs-target="#slot-info">
+                            <i class="feather-eye"></i>
+                          </a>  -->
+                            <!-- <button
+                              *ngIf="!viewAction && (dayCareAppointment.status !== 'Accepted') && (dayCareAppointment.counsellorID != UserID)"
+                              type="button" class="btn btn-primary apoint-button"
+                              (click)="dayCareAppointment.status === 'Accepted' ? null : getByID(dayCareAppointment.id)">
+                              {{
+                              dayCareAppointment.counsellorID === UserID && dayCareAppointment.status === 'Accepted' ?
+                              'Accepted' : 'Accept' }}
+                            </button>  -->
+                            <div
+                              class="d-inline-block"
+                              data-bs-toggle="tooltip"
+                              data-bs-placement="top"
+                              title="Appointment Details"
+                            >
+                              <a
+                                class="anchor btn btn-primary apoint-button"
+                                (click)="getByIDForView(completedItem.id)"
+                              >
+                               <!-- data-bs-toggle="modal"
+                                data-bs-target="#view-del" -->
+                                <i class="fa fa-eye" aria-hidden="true"></i
+                              ></a>
+                            </div>
+
+                            <div
+                              class="d-inline-block"
+                              data-bs-toggle="tooltip"
+                              data-bs-placement="top"
+                              title="Send Plan"
+                            >
+                             <!-- !viewAction && -->
+                              <a
+                                class="anchor btn btn-primary apoint-button"
+                                *ngIf="
+                                 
+                                  completedItem.counsellorID == UserID &&
+                                  completedItem.isMailSend == false
+                                "
+                                data-bs-toggle="modal"
+                                data-bs-target="#select-option"
+                                (click)="getPlansForDaycare(completedItem)"
+                              >
+                                <i class="fa fa-envelope" aria-hidden="true"></i
+                              ></a>
+                            </div>
+                            <!-- <div class="d-inline-block">
+                              <a
+                                class="anchor btn btn-primary apoint-button"
+                                *ngIf="
+                                  !viewAction &&
+                                  completedItem.counsellorID == UserID &&
+                                  completedItem.isMailSend == false
+                                "
+                                data-bs-toggle="modal"
+                                data-bs-target="#view-del4"
+                                (click)="IntrestedDaycare(completedItem.id)"
+                                >Send Trial Period
+                              </a>
+                            </div> -->
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                    } @else {
+                    <tbody>
+                      <tr>
+                        <td colspan="100%">
+                          <app-skeleton-loader skeletonShow="NoRecord">
+                          </app-skeleton-loader>
+                        </td>
+                      </tr>
+                    </tbody>
+
+                    }
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="col pagination-style mt-4 no-flex">
+              <div class="datatable-pager datatable-paging-loaded">
+                @if( displayedcompleteList.length >0 ) {
+                <pagination-controls
+                  previousLabel="prev"
+                  nextLabel="next"
+                  [maxSize]="5"
+                  class="datatable-pager-nav my-2 mb-sm-0"
+                  id="dayCareAppointmentPendingList"
+                  (pageChange)="ContentPendingList = $event"
+                >
+                </pagination-controls>
+                }
+              </div>
+            </div>
+          </div>
+          <div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- The Modal -->
+<div class="modal" id="view-del">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h5 class="modal-title">Appointment Details</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        <div class="row" *ngIf="displayInterestedUser != null">
+          <div class="col-lg-6">
+            <div class="personal-activity">
+              <div class="personal-icons">
+                <i class="feather-user"></i>
+              </div>
+              <div class="views-personal">
+                <h4>Daycare Name</h4>
+                <h5>{{ displayInterestedUser.centreName }}</h5>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="personal-activity">
+              <div class="personal-icons">
+                <i _ngcontent-ng-c3403598508="" class="feather-mail"></i>
+              </div>
+              <div class="views-personal">
+                <h4>Email</h4>
+                <h5>{{ displayInterestedUser.email }}</h5>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="personal-activity">
+              <div class="personal-icons">
+                <i class="feather-user"></i>
+              </div>
+              <div class="views-personal">
+                <h4>Counsellor Name</h4>
+                <!-- <span *ngIf="displayInterestedUser.counsellorName == null ||  displayInterestedUser.status == 'Pending'"></span> -->
+                <h5>
+                  {{
+                    displayInterestedUser.status == "Pending" ||
+                    displayInterestedUser.counsellorName == null
+                      ? "------"
+                      : displayInterestedUser.counsellorName
+                  }}
+                </h5>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-6 mt-2">
+            <div class="personal-activity">
+              <div class="personal-icons">
+                <i _ngcontent-ng-c3403598508="" class="feather-calendar"></i>
+              </div>
+              <!-- <div class="views-personal">
+                <h4>Meeting Date & Time</h4>
+                <h5>{{displayInterestedUser.slotDate | date: 'MM-dd-yyyy'}} at {{displayInterestedUser.slotStartTime |
+                  timeFormat}} -
+                  {{displayInterestedUser.slotEndTime | timeFormat}}</h5>
+
+                 <h5>25/10/2024 at 10:00 AM</h5>
+              </div> -->
+
+              <div class="views-personal">
+                <h4>Meeting Date & Time</h4>
+                <h5>
+                  {{
+                    displayInterestedUser.slotDate != null
+                      ? (displayInterestedUser.slotDate | date : "MM-dd-yyyy")
+                      : (displayInterestedUser.dateAndTimeOfAppointment
+                        | date : "MM-dd-yyyy")
+                  }}
+                  at
+                  {{
+                    displayInterestedUser.slotStartTime != null
+                      ? (displayInterestedUser.slotStartTime | TimeFormatAmPm)
+                      : (displayInterestedUser.dateAndTimeOfAppointment
+                        | date : "HH:mm")
+                  }}
+                  -
+                  {{
+                    displayInterestedUser.slotEndTime != null
+                      ? (displayInterestedUser.slotEndTime | TimeFormatAmPm)
+                      : (displayInterestedUser.endTimeOfMeetUpAppointment
+                        | date : "HH:mm")
+                  }}
+                </h5>
+              </div>
+            </div>
+          </div>
+          <div
+            *ngIf="displayInterestedUser.dateAndTimeOfAppointment == null"
+            class="col-lg-12 mt-2"
+          >
+            <div class="personal-activity">
+              <div class="personal-icons">
+                <i _ngcontent-ng-c3403598508="" class="feather-link"></i>
+              </div>
+              <div class="views-personal">
+                <h4>Meeting Link</h4>
+                <span *ngIf="displayInterestedUser.link == null">------</span>
+                <h5 class="appoit-link">{{ displayInterestedUser.link }}</h5>
+
+                <!-- <h5>25/10/2024 at 10:00 AM</h5> -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <div class="student-submit">
+          <!-- <button  type="reset" class="btn btn-secondary"> Cancel </button> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal"
+  id="activate-plan"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h5 class="modal-title">Select Plan</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          (click)="resetData()"
+        ></button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group local-forms">
+              <label class="form-label"
+                >Select Plan<span class="login-danger">*</span></label
+              >
+              <ng-select
+                id="planSelect"
+                [items]="getPlansForDayCareList"
+                bindLabel="planName"
+                [(ngModel)]="planInformation"
+                bindValue="id"
+                (change)="getPlanId($event)"
+              ></ng-select>
+            </div>
+          </div>
+
+          <div class="row mt-3" *ngIf="planInformation">
+            <div class="col-6 fw-medium mb-3">Plan Name</div>
+            <div class="col-6 mb-3">
+              {{ planDescriptionDetails?.planName }}
+            </div>
+            <div class="col-6 fw-medium mb-3">Plan Price</div>
+            <!-- <div class="col-6 mb-3">${{ planDescriptionDetails?.price }}.00</div> -->
+            <div class="col-6 mb-3">
+              ${{ planDescriptionDetails?.price | number : "1.2-2" }}
+            </div>
+            <div class="col-6 fw-medium mb-3">Plan Duration</div>
+            <div class="col-6 mb-3">
+              {{
+                planDescriptionDetails?.daily == true
+                  ? "Daily"
+                  : planDescriptionDetails?.monthly == true
+                  ? "Montly"
+                  : planDescriptionDetails?.yearly == true
+                  ? "Yearly"
+                  : ""
+              }}
+            </div>
+            <div class="col-6 fw-medium mb-3">Allocated To</div>
+            <div class="col-6 mb-3 ">
+              {{ dayCareInformation?.name }} , <div class="non-transform">{{ dayCareInformation?.email }}</div>
+            </div>
+
+            <div
+              class="row mt-3 mb-3"
+              *ngIf="discountPercantageList.length > 0"
+            >
+              <div class="col-md-6 mb-3">
+                <ng-select
+                  id="planSelect" 
+                  [items]="discountPercantageList"
+                  bindLabel="label"
+                  [(ngModel)]="discountPercantage"
+                  bindValue="label"
+                  (change)="viewDiscountData()"
+                ></ng-select>
+              </div>
+              <div class="col-md-6 mb-3">
+                <button
+                  class="btn btn-primary apoint-button"
+                  type="button"
+                  (click)="getDiscountAmount()"
+                >
+                  Apply Discount
+                </button>
+              </div>
+            </div>
+
+            <div *ngIf="discountPercantage && viewDiscountSheet">
+              <div class="row">
+                <div class="col-6 fw-medium mb-3">Plan Amount</div>
+                <div class="col-md-6 mb-3">
+                  <!-- ${{ calculatedDisCountValue?.planAmount }}.00 -->
+                  ${{ calculatedDisCountValue?.planAmount | number : "1.2-2" }}
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-6 fw-medium mb-3">Discount Percent</div>
+                <div class="col-md-6 mb-3">
+                  {{ calculatedDisCountValue?.discountPercantage }}
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-6 fw-medium mb-3">Discount Amount</div>
+                <div class="col-md-6 mb-3">
+                  <!-- ${{ calculatedDisCountValue?.discountAmount }} -->
+                  ${{
+                    calculatedDisCountValue?.discountAmount | number : "1.2-2"
+                  }}
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-6 fw-medium mb-3">Final Amount</div>
+                <div class="col-md-6 mb-3">
+                  <!-- ${{ calculatedDisCountValue?.finalAmount }} -->
+                  ${{ calculatedDisCountValue?.finalAmount | number : "1.2-2" }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- <div class="modal-header">
+            <h5 class="modal-title">Free Trail</h5>
+          </div> -->
+
+          <!-- <div class="col-md-12">
+            <div class="form-group local-forms">
+              <label class="form-label">Enter Trial Days</label>
+              <input
+                type="text"
+                class="form-control"
+                id="trailDays"
+                (keyup)="updateMessage($event)"
+              />
+            </div>
+            <p *ngIf="messages">{{ messages }}</p>
+          </div> -->
+
+          <!-- <div class="row mt-5">
+            <div class="col-6 fw-medium mb-3">
+             Assigned To
+            </div>
+            <div class="col-6  mb-3">
+              {{dayCareInformation?.name}} , {{dayCareInformation?.email}}
+            </div>
+          </div> -->
+        </div>
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <div class="student-submit">
+          <button
+            type="button"
+            class="btn btn-primary apoint-button"
+            [disabled]="isButtonActive()"
+            (click)="SendEmailAfterMeeting()"
+          >
+            Send Plan Detail
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- trial pperiod -->
+
+<div
+  class="modal"
+  id="Free-trial"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h5 class="modal-title">Free Trial</h5>
+        <button
+          type="button"
+          data-bs-dismiss="modal"
+          class="btn-close"
+        ></button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="col-md-12 mb-3 form-group local-forms">
+              <label class="form-label"
+                >Enter Trial Days<span class="login-danger">*</span></label
+              >
+
+              <input
+                type="number"
+                class="form-control"
+                id="trailDays"
+                min="1"
+                max="15"
+                (keyup)="updateMessage($event)"
+                [(ngModel)]="trailDays"
+                (input)="validateTrailDays()"
+                oninput="this.value = Math.max(this.min, Math.min(this.value, this.max))"
+              />
+            </div>
+            <div class="col-md-12 mb-3 form-group local-forms">
+              <label class="form-label"
+                >Default Plan<span class="login-danger">*</span></label
+              >
+              <ng-select
+                id="planSelect"
+                [items]="defaultPlanList"
+                bindLabel="planName"
+                [(ngModel)]="selectedDefaultPlan"
+                bindValue="id"
+              ></ng-select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="modal-footer text-end"
+        style="border: none; padding-top: none"
+      >
+        <button
+          type="button"
+          class="btn btn-primary me-2"
+          (click)="TrialDuration()"
+          [disabled]="istrialSubmitButton()"
+        >
+          Submit
+        </button>
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="resetTrialForm()"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- select option for trial period or send plan -->
+<div
+  class="modal"
+  id="select-option"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h5 class="modal-title"></h5>
+        <button
+          type="button"
+          data-bs-dismiss="modal"
+          class="btn-close"
+        ></button>
+      </div>
+
+      <!-- Modal body -->
+      <div
+        class="modal-body"
+        style="
+          background: url('http://bloomvie.taskwrap.com/assets/img/page-header-bg-svg.png');
+        "
+      >
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card-grid">
+              <div
+                class="feature-card clickableDiv border border-light border-2 bg-white rounded-custom p-3"
+                (click)="selectFreeTrial()"
+              >
+                <div
+                  class="rounded mb-3 d-flex justify-content-center align-items-center"
+                >
+                  <div class="tec-img">
+                    <img
+                      src="https://i.postimg.cc/nVRPRs7v/frere.avif"
+                      alt="daycare_logo"
+                      width="100%"
+                      height="100%"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="feature-content ticker d-flex justify-content-center align-items-center flex-column"
+                >
+                  <h5 class="mb-3">Free</h5>
+                  <i class="fa-solid fa-circle-check icon"></i>
+                </div>
+              </div>
+              <div
+                class="feature-card clickableDiv border border-light border-2 bg-white rounded-custom p-3"
+                (click)="selectActivatePlan()"
+              >
+                <div
+                  class="rounded mb-3 d-flex justify-content-center align-items-center"
+                >
+                  <div class="tec-img">
+                    <img
+                      src="https://i.postimg.cc/DwTCM1CY/crowbw.webp"
+                      alt="daycare_logo"
+                      width="100%"
+                      height="100%"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="feature-content ticker d-flex justify-content-center align-items-center flex-column"
+                >
+                  <h5 class="mb-3">Pro</h5>
+                  <i class="fa-solid fa-circle-check icon"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div
+              class="modal-footer text-center"
+              style="border: none; padding-top: none"
+            >
+              <!-- <button
+                type="button"
+                class="btn btn-primary custom-btn me-2"
+                (click)="selectFreeTrial()"
+              >
+                Free Trial
+              </button>
+              <button
+                type="button"
+                class="btn btn-primary custom-btn"
+                (click)="selectActivatePlan()"
+              >
+                Activate Plan
+              </button> -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="modal-footer text-end"
+        style="border: none; padding-top: none"
+      >
+        <!-- <button
+          type="button"
+          class="btn btn-primary me-2"
+          (click)="TrialDuration()"
+        >
+          Submit
+        </button> -->
+        <!-- <button type="button" class="btn btn-secondary">Cancel</button> -->
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Reschedule -->
+
+<div
+  class="modal"
+  id="view-del3"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h5 class="modal-title">Reschedule Meeting</h5>
+        <button
+          type="button"
+          class="btn-close"
+          (click)="onClose()"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
+      <form
+        class="modal-body"
+        [formGroup]="rescheduleForm"
+        (ngSubmit)="onReschedule()"
+      >
+        <div class="row">
+          <div class="col-md-6 mb-4">
+            <div class="form-group local-forms">
+              <label>Date</label>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Select Date"
+                id="datePickerSelectDate"
+                (change)="date($event)"
+                formControlName="slotDate"
+              />
+              @if(rescheduleForm.controls['slotDate']?.invalid &&
+              rescheduleForm.controls['slotDate'].touched){
+              <span class="text-danger">This field is required</span>
+              }
+            </div>
+          </div>
+          <div class="col-md-6 mb-4">
+            <div class="form-group local-forms">
+              <label>Select Slot</label>
+              <ng-select formControlName="slotId" placeholder="Select Slot">
+                @for (slot of availableSlots; track slot.slotId) {
+                <ng-option [value]="slot.slotID"
+                  >{{ slot.slotStartTime | TimeFormatAmPm }} -
+                  {{ slot.slotEndTime | TimeFormatAmPm }}</ng-option
+                >
+                }
+              </ng-select>
+              @if(rescheduleForm.controls['slotId']?.invalid &&
+              rescheduleForm.controls['slotId'].touched){
+              <span class="text-danger">This field is required</span>
+              }
+            </div>
+          </div>
+          <!-- <div class="col-lg-12  mb-4">
+            <div class="form-group local-forms">
+              <label>Enter Meeting Link <span class="login-danger">*</span></label>
+
+              <input type="text" class="form-control" id="meetingLink" formControlName="link">
+              @if(rescheduleForm.controls['link']?.invalid && rescheduleForm.controls['link'].touched){
+              <span class="text-danger">This field is required</span>
+              }
+            </div>
+          </div> -->
+        </div>
+        <div class="row">
+          <div class="col-md-14 text-end">
+            <div class="student-submit text-end">
+              <button
+                id="submit-btn"
+                type="submit"
+                class="btn btn-primary me-2"
+              >
+                Submit</button
+              ><button
+                type="button"
+                class="btn btn-secondary"
+                (click)="onClose()"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Modal footer -->
+    <!-- <div class="modal-footer">
+        <div class="student-submit">
+
+           <button  type="reset" class="btn btn-secondary"> Cancel </button> 
+        </div>
+      </div> -->
+  </div>
+</div>

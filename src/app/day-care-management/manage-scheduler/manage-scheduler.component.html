@@ -1,0 +1,888 @@
+<app-breadcrumb></app-breadcrumb>
+
+<div class="row local-forms">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <div
+          id="pills-appointment"
+          role="tabpanel"
+          aria-labelledby="pills-appointment-tab"
+          tabindex="0"
+        >
+          <div class="heading-new">
+            <!-- <h5 class="mb-0">Staff Scheduler</h5> <a routerLink="/scheduler" class="Staff-back">Back to Scheduler</a> -->
+            <h5 class="mb-0">
+              {{ scheduleType == "student" ? "Student" : "Staff" }} Scheduler
+            </h5>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12">
+              <div>
+                <button
+                  *ngIf="!isOnboarding"
+                  class="Staff-back btn btn-primary mt-2"
+                  [disabled]="disableBackToScheduler"
+                  (click)="goToScheduler()"
+                >
+                  Back to Scheduler
+                </button>
+              </div>
+              <div class="">
+                <div class="mb-3">
+                      <div class="diver">
+                        <label class="form-label">DayCare Availability :</label><span class="text-muted">Please select the required days for
+                          filter classes</span>
+                      </div>
+
+                 <br />
+                  <div class="days--color">
+                    <div class="">
+                      <div class="mob-flex" id="daysList">
+                        @if (skeletonShow === 'Skelton') {
+
+                        <app-skeleton-loader
+                          skeletonShow="Skelton"
+                          viewType="day-toggle"
+                        >
+                        </app-skeleton-loader>
+
+                        } @else {
+                        <ng-container *ngFor="let day of filteredDaysWithIds">
+                          <input
+                            type="checkbox"
+                            class="btn-check"
+                            [id]="day.id"
+                            autocomplete="off"
+                            (change)="onDayToggle(day)"
+                            [checked]="day.isActive"
+                          />
+                          <label
+                            class="btn btn-outline-primary day-btn"
+                            [for]="day.id"
+                          >
+                            {{ day.day }}
+                          </label>
+                        </ng-container>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4">
+              <div class="" id="classList">
+                <label class="form-label">Classroom</label>
+                <ng-select
+                  [items]="filteredClassList"
+                  bindLabel="name"
+                  bindValue="id"
+                  [(ngModel)]="selectedClassIds"
+                  placeholder="Select Class"
+                  (change)="assignClass($event)"
+                >
+                </ng-select>
+              </div>
+            </div>
+
+            <div class="col-md-4" id="staffList">
+              <!-- Staff Dropdown -->
+              <div class="" *ngIf="scheduleType == 'staff' || type == 'staff'">
+                <label class="form-label">Staff</label><br />
+                <ng-select
+                  [items]="filteredStaffList"
+                  [(ngModel)]="selectedStaffIds"
+                  bindValue="id"
+                  [multiple]="true"
+                  placeholder="Select Staff"
+                  [closeOnSelect]="false"
+                  (change)="onStaffChange()"
+                >
+                  <ng-template ng-option-tmp let-item="item">
+                    <!-- {{ item.firstName }}{{ item.lastName ? ' ' + item.lastName : '' }} -->
+                    <div [ngClass]="{ highlight: isHighlighted(item.id) }">
+                      {{ item.firstName
+                      }}{{ item.lastName ? " " + item.lastName : "" }}
+                    </div>
+                  </ng-template>
+
+                  <ng-template
+                    ng-multi-label-tmp
+                    let-items="items"
+                    let-clear="clear"
+                  >
+                    <div class="ng-value" *ngFor="let itm of items">
+                      <span class="ng-value-label">
+                        {{ getNameById(itm.id) }}
+                      </span>
+                      <span
+                        class="ng-value-icon left"
+                        (click)="removeUserId(itm.id)"
+                        >×</span
+                      >
+                    </div>
+                  </ng-template>
+                </ng-select>
+              </div>
+
+              <!-- Student Dropdown -->
+              <div
+                class=""
+                *ngIf="scheduleType == 'student' || type == 'student'"
+              >
+                <label class="form-label">Student</label><br />
+                <ng-select
+                  [items]="studentList"
+                  [(ngModel)]="selectedStudentIds"
+                  bindValue="studentID"
+                  [multiple]="true"
+                  placeholder="Select Student"
+                  [closeOnSelect]="false"
+                  (change)="onStudentChange()"
+                >
+                  <ng-template ng-option-tmp let-item="item">
+                    <!-- {{ item.studentFirstName }} -->
+                    <div
+                      [ngClass]="{ highlight: isHighlighted(item.studentID) }"
+                    >
+                      {{ item.studentFirstName }}
+                    </div>
+                  </ng-template>
+
+                  <ng-template
+                    ng-multi-label-tmp
+                    let-items="items"
+                    let-clear="clear"
+                  >
+                    <div class="ng-value" *ngFor="let itm of items">
+                      <span class="ng-value-label">
+                        {{ getNameById(itm.studentID) }}
+                      </span>
+                      <span
+                        class="ng-value-icon left"
+                        (click)="removeUserId(itm.studentID)"
+                        >×</span
+                      >
+                    </div>
+                  </ng-template>
+                </ng-select>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-8">
+              <div class="inf" *ngIf="dayNameArray.length > 0">
+                <p class="assign-teacher">
+                  <span class="teacher-name">
+                    <b>Class Name:</b>{{ className }}
+                  </span>
+
+                  <span class="teacher-name" style="display: block">
+                    <b>Class Scheduled on: </b>
+                    <span *ngFor="let day of dayNameArray; let i = index">
+                      {{ day.dayName }}&nbsp;(&nbsp;{{
+                        day.startTime | TimeFormatAmPm
+                      }}
+                      - {{ day.endTime | TimeFormatAmPm }}&nbsp;)
+                      <span *ngIf="dayNameArray.length - 1 != i">,&nbsp;</span>
+                    </span>
+                  </span>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="scheduleType == 'staff'">
+            <div class="row" *ngIf="selectedStaffList?.length > 0">
+              <div class="mb-3 mt-3">
+                <label class="form-label">Assign Class To Staff</label><br />
+                <div class="days--color">
+                  <div class="">
+                    <div class="">
+                      <ng-container *ngFor="let staff of selectedStaffList">
+                        <input
+                          type="checkbox"
+                          class="btn-check"
+                          [id]="'staff-' + staff.id"
+                          autocomplete="off"
+                          (change)="onStaffToggle(staff)"
+                          [(ngModel)]="staff.isChecked"
+                        />
+                        <label
+                          class="btn btn-outline-primary day-btn me-2"
+                          [for]="'staff-' + staff.id"
+                        >
+                          {{ staff.firstName
+                          }}{{ staff.lastName ? " " + staff.lastName : "" }}
+                        </label>
+                        <i
+                          *ngIf="hasSlots(staff.id)"
+                          class="feather-clock me-2"
+                          title="View Your Schedule"
+                          (click)="viewUserSlots(staff)"
+                          style="cursor: pointer"
+                        ></i>
+                      </ng-container>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="scheduleType == 'student'">
+            <div class="row" *ngIf="selectedStudentList?.length > 0">
+              <div class="mb-3 mt-3">
+                <label class="form-label">Assign Class To Student</label><br />
+                <div class="days--color">
+                  <div class="">
+                    <div class="">
+                      <ng-container *ngFor="let student of selectedStudentList">
+                        <input
+                          type="checkbox"
+                          class="btn-check"
+                          [id]="'student-' + student.studentID"
+                          autocomplete="off"
+                          (change)="onStudentToggle(student)"
+                          [(ngModel)]="student.isChecked"
+                        />
+                        <label
+                          class="btn btn-outline-primary day-btn me-2"
+                          [for]="'student-' + student.studentID"
+                        >
+                          {{ student.studentFirstName
+                          }}{{
+                            student.studentLastName
+                              ? " " + student.studentLastName
+                              : ""
+                          }}
+                        </label>
+                        <i
+                          *ngIf="hasSlots(student.studentID)"
+                          class="feather-clock me-2"
+                          title="View Your Schedule"
+                          (click)="viewUserSlots(student)"
+                          style="cursor: pointer"
+                        ></i>
+                      </ng-container>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Description -->
+          <!-- Buttons -->
+          <div class="d-flex justify-content-end res-cs">
+            <button
+              class="btn btn-primary mr-2"
+              (click)="manageBulkAssignment()"
+              [disabled]="AssignmentBO.length === 0"
+            >
+              Submit
+            </button>
+            <button class="btn btn-secondary me-2" (click)="resetAllPage()">
+              Cancel
+            </button>
+          </div>
+        </div>
+
+        <!-- Assign Class Modal -->
+        <div
+          class="modal fade"
+          id="assignClassModal"
+          tabindex="-1"
+          aria-labelledby="assignClassModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header mb-0">
+                <h5 class="modal-title" id="assignClassModalLabel">
+                  Assign Class to
+                  {{ scheduleType == "student" ? "Student" : "Staff" }}
+                </h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                  (click)="closeModel()"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <div class="table-responsive" style="overflow-x: hidden">
+                  <form [formGroup]="assignClassForm">
+                    <div class="">
+                      <div class="row">
+                        <div *ngIf="scheduleType == 'staff'">
+                          <div class="mb-3 bdr-class">
+                            <label class="form-label"
+                              >Staff Availability Today</label
+                            ><br />
+                            <div
+                              *ngIf="filterTeacherDays?.length"
+                              class="repeat-div"
+                            >
+                              <div
+                                *ngFor="let day of filterTeacherDays"
+                                class="form-check mb-2"
+                              >
+                                <input
+                                  type="radio"
+                                  class="form-check-input"
+                                
+                                  [id]="'day-' + day.dayID"
+                                  [value]="day.dayID"
+                                  (change)="onDayRadioChange(day.dayID)"
+                                  name="dayID"
+                                  formControlName="dayID"
+                                />
+                                <label
+                                  class="form-check-label"
+                                  [for]="'day-' + day.dayID"
+                                >
+                                  {{ day.dayName }} ({{
+                                    day.startTime | TimeFormatAmPm
+                                  }}
+                                  - {{ day.endTime | TimeFormatAmPm }})
+                                </label>
+                              </div>
+                            </div>
+
+                            <div *ngIf="filterTeacherDays?.length === 0">
+                              <p>No available days found for this teacher.</p>
+                            </div>
+                          </div>
+
+                          <!-- Added on 17/07/25  -->
+                          <div
+                            class="col-md-8 inf"
+                            *ngIf="classTimingFilterbySelectedDay?.length > 0"
+                          >
+                            <p class="assign-teacher">
+                              <span class="teacher-name">
+                                <b>Class Name:</b>{{ className }}
+                              </span>
+
+                              <span class="teacher-name" style="display: block">
+                                <b>Class Scheduled on: </b>
+                                <span
+                                  *ngFor="
+                                    let day of classTimingFilterbySelectedDay;
+                                    let i = index
+                                  "
+                                >
+                                  {{ day.dayName }}&nbsp;(&nbsp;{{
+                                    day.startTime | TimeFormatAmPm
+                                  }}
+                                  - {{ day.endTime | TimeFormatAmPm }}&nbsp;)
+                                  <span
+                                    *ngIf="
+                                      classTimingFilterbySelectedDay?.length -
+                                        1 !=
+                                      i
+                                    "
+                                    >,&nbsp;</span
+                                  >
+                                </span>
+                              </span>
+                            </p>
+                          </div>
+                        </div>
+
+                        <!-- For Student -->
+                        <div *ngIf="scheduleType == 'student'">
+                          <div class="mb-3 bdr-class">
+                            <label class="form-label"
+                              >Student Availability Today</label
+                            ><br />
+                            <div
+                              *ngIf="filterStudentDays?.length"
+                              class="repeat-div"
+                            >
+                              <div
+                                *ngFor="let day of filterStudentDays"
+                                class="form-check mb-2"
+                              >
+                                <input
+                                  type="radio"
+                                  class="form-check-input"
+                                  name="dayRadio"
+                                  [id]="'day-' + day.dayID"
+                                  [value]="day.dayID"
+                                  (change)="onDayRadioChange(day.dayID)"
+                                  name="dayID"
+                                  formControlName="dayID"
+                                />
+                                <label
+                                  class="form-check-label"
+                                  [for]="'day-' + day.dayID"
+                                >
+                                  {{ day.dayName }}
+                                </label>
+                              </div>
+                            </div>
+
+                            <div *ngIf="filterStudentDays?.length === 0">
+                              <p>No available days found for this teacher.</p>
+                            </div>
+                          </div>
+
+                          <!-- Added on 17/07/25  -->
+                          <div
+                            class="col-md-8 inf"
+                            *ngIf="classTimingFilterbySelectedDay?.length > 0"
+                          >
+                            <p class="assign-teacher">
+                              <span class="teacher-name">
+                                <b>Class Name:</b>{{ className }}
+                              </span>
+
+                              <span class="teacher-name" style="display: block">
+                                <b>Class Scheduled on: </b>
+                                <span
+                                  *ngFor="
+                                    let day of classTimingFilterbySelectedDay;
+                                    let i = index
+                                  "
+                                >
+                                  {{ day.dayName }}&nbsp;(&nbsp;{{
+                                    day.startTime | TimeFormatAmPm
+                                  }}
+                                  - {{ day.endTime | TimeFormatAmPm }}&nbsp;)
+                                  <span
+                                    *ngIf="
+                                      classTimingFilterbySelectedDay?.length -
+                                        1 !=
+                                      i
+                                    "
+                                    >,&nbsp;</span
+                                  >
+                                </span>
+                              </span>
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- commented on 17/07/25 -->
+                      <!-- <div class="row">
+                        <div class="col-md-12 mb-2">
+                          <div class="form-check mt-2">
+                            <input type="checkbox" class="form-check-input" formControlName="isRepeating"
+                              (change)="onRepeatToggle($event)" />
+                            <label class="form-check-label">
+                              Repeats every week</label>
+                          </div>
+                        </div>
+                      </div> -->
+
+                      <!-- Added on 17/07/25 using radio -->
+                      <div class="row">
+                        <div class="col-md-12 mb-2">
+                          <label class="form-label">Repeats every week:</label>
+                          <div class="form-check form-check-inline">
+                            <input
+                              type="radio"
+                              class="mt-1 form-check-input"
+                              [value]="true"
+                              name="isRepeating"
+                              formControlName="isRepeating"
+                              (change)="onRepeatToggle($event)"
+                              id="repeatYes"
+                            />
+                            <label class="form-check-label" for="repeatYes"
+                              >Yes</label
+                            >
+                          </div>
+
+                          <div class="form-check form-check-inline">
+                            <input
+                              type="radio"
+                              class="mt-1 form-check-input"
+                              [value]="false"
+                              name="isRepeating"
+                              formControlName="isRepeating"
+                              (change)="onRepeatToggle($event)"
+                              id="repeatNo"
+                            />
+                            <label class="form-check-label" for="repeatNo"
+                              >No</label
+                            >
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row mb-2">
+                        <div class="col-md-6">
+                          <label class="form-label"
+                            >{{
+                              assignClassForm.get("isRepeating")?.value
+                                ? "Start date"
+                                : "Date"
+                            }}<span class="login-danger">*</span></label
+                          >
+                          <input
+                            type="date"
+                            class="form-control"
+                            id="startdatePicker"
+                            formControlName="startDate"
+                            placeholder="-Select-"
+                            (change)="
+                              scheduleType === 'staff'
+                                ? startDateChange($event)
+                                : null
+                            "
+                          />
+                          <div
+                            *ngIf="
+                              assignClassForm.get('startDate')?.touched &&
+                              assignClassForm.get('startDate')?.invalid
+                            "
+                          >
+                            <span
+                              *ngIf="assignClassForm.get('startDate')?.errors?.['required']"
+                              class="text-danger"
+                              style="display: block"
+                              >This field is required.</span
+                            >
+                          </div>
+                        </div>
+
+                        <div
+                          class="col-md-6"
+                          *ngIf="assignClassForm.get('isRepeating')?.value"
+                        >
+                          <label class="form-label"
+                            >End date<span class="login-danger">*</span></label
+                          >
+                          <input
+                            type="date"
+                            class="form-control"
+                            id="enddatePicker"
+                            formControlName="endDate"
+                            placeholder="-Select-"
+                            (change)="
+                              scheduleType === 'staff'
+                                ? endDateChange($event)
+                                : null
+                            "
+                          />
+                          <div
+                            *ngIf="
+                              assignClassForm.get('endDate')?.touched &&
+                              assignClassForm.get('endDate')?.invalid
+                            "
+                          >
+                            <span
+                              *ngIf="assignClassForm.get('endDate')?.errors?.['required']"
+                              class="text-danger"
+                              style="display: block"
+                              >This field is required.</span
+                            >
+                          </div>
+                        </div>
+
+                        <div class="col-md-6">
+                          <label class="form-label"
+                            >Start time<span class="login-danger"
+                              >*</span
+                            ></label
+                          >
+                          <input
+                            type="time"
+                            class="form-control"
+                            formControlName="startTime"
+                            (blur)="ApplyValidationForStartTime()"
+                            [readonly]="scheduleType === 'student'"
+                            [ngStyle]="
+                              scheduleType === 'student'
+                                ? {
+                                    'pointer-events': 'none',
+                                    'background-color': '#e9ecef'
+                                  }
+                                : {}
+                            "
+                          />
+                          <div
+                            *ngIf="
+                              assignClassForm.get('startTime')?.touched &&
+                              assignClassForm.get('startTime')?.invalid
+                            "
+                          >
+                            <span
+                              *ngIf="assignClassForm.get('startTime')?.errors?.['required']"
+                              class="text-danger"
+                              style="display: block"
+                              >This field is required.</span
+                            >
+                          </div>
+                          <span
+                            class="text-danger"
+                            style="display: block"
+                            *ngIf="greaterTimeValidationForStartTime"
+                          >
+                            End Time is greater than Start Time.</span
+                          >
+                          <span
+                            class="text-danger"
+                            style="display: block"
+                            *ngIf="timeMatchValidationForStartTime"
+                          >
+                            Timings Range does not matched.</span
+                          >
+                          <span
+                            class="text-danger"
+                            style="display: block"
+                            *ngIf="slotCreatedForSomeOtherClass"
+                          >
+                            Already Assigned to Someother Classes.</span
+                          >
+                        </div>
+
+                        <div class="col-md-6">
+                          <label class="form-label"
+                            >End time<span class="login-danger">*</span></label
+                          >
+                          <input
+                            type="time"
+                            class="form-control"
+                            formControlName="endTime"
+                            (blur)="ApplyValidationForEndTime()"
+                            [readonly]="scheduleType === 'student'"
+                            [ngStyle]="
+                              scheduleType === 'student'
+                                ? {
+                                    'pointer-events': 'none',
+                                    'background-color': '#e9ecef'
+                                  }
+                                : {}
+                            "
+                          />
+                          <div
+                            *ngIf="
+                              assignClassForm.get('endTime')?.touched &&
+                              assignClassForm.get('endTime')?.invalid
+                            "
+                          >
+                            <span
+                              *ngIf="assignClassForm.get('endTime')?.errors?.['required']"
+                              class="text-danger"
+                              style="display: block"
+                            >
+                              This field is required.</span
+                            >
+                          </div>
+                          <span
+                            class="text-danger"
+                            style="display: block"
+                            *ngIf="greaterTimeValidationForEndTime"
+                          >
+                            End Time is greater than Start Time.</span
+                          >
+                          <span
+                            class="text-danger"
+                            style="display: block"
+                            *ngIf="timeMatchValidationForEndTime"
+                          >
+                            Timings Range does not matched.</span
+                          >
+                          <span
+                            class="text-danger"
+                            style="display: block"
+                            *ngIf="slotCreatedForSomeOtherClassforEndTime"
+                          >
+                            Already Assigned to Someother Classes.</span
+                          >
+                        </div>
+                      </div>
+
+                      <div class="row mb-4">
+                        <div class="col-md-4"></div>
+                        <div class="col-md-4"></div>
+                        <div class="col-md-4 text-end">
+                          <div class="form-group local-forms">
+                            <button
+                              class="btn btn-primary"
+                              (click)="manageRecord()"
+                            >
+                              {{ isUpdate ? "Update" : "Add" }}
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- Description -->
+                      <!-- <div class="mb-3">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-control" formControlName="description" placeholder="Enter description"
+                      rows="4"></textarea>
+                  </div> -->
+                    </div>
+                  </form>
+                  <table class="table table-hover mb-0">
+                    <thead class="student-thread">
+                      <tr>
+                        <th>#</th>
+                        <th>Day Name</th>
+                        <th>Start&nbsp;Time</th>
+                        <th>End&nbsp;Time</th>
+                        <th>Repeat Every Week</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr
+                        *ngFor="
+                          let assignment of TempAssignmentList;
+                          let i = index
+                        "
+                      >
+                        <td>{{ i + 1 }}</td>
+                        <td>{{ assignment.dayName }}</td>
+                        <td>{{ assignment.startTime | TimeFormatAmPm }}</td>
+                        <td>{{ assignment.endTime | TimeFormatAmPm }}</td>
+                        <td>{{ assignment.isRepeating }}</td>
+                        <td class="wd-20">
+                          <div class="actions">
+                            <a
+                              class="action-btn bg-danger-light me-2"
+                              (click)="editSlot(i)"
+                            >
+                              <i class="feather-edit" title="Edit"></i>
+                            </a>
+                            <a
+                              class="action-btn bg-danger-light me-2"
+                              (click)="removeList(i)"
+                            >
+                              <i class="fa fa-trash" title="Delete"></i>
+                            </a>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr *ngIf="TempAssignmentList.length == 0">
+                        <td colspan="9" style="text-align: center">
+                          <div class="no-data">
+                            <img
+                              src="assets/img/no-data-img.png"
+                              alt="No Record Found"
+                            />
+                            <span>No Record Found</span>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div
+                  class="form-group local-forms"
+                  style="text-align: right; margin-top: 10px"
+                >
+                  <button
+                    class="btn btn-primary"
+                    (click)="finalSubmission()"
+                    [disabled]="TempAssignmentList.length === 0"
+                  >
+                    Submit
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal for Add Staff -->
+        <div
+          class="modal fade"
+          id="addStaffModal"
+          tabindex="-1"
+          aria-labelledby="addStaffModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Add staff to schedule</h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <div class="form-check mb-2">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="selectAll"
+                  />
+                  <label class="form-check-label" for="selectAll"
+                    >Select all</label
+                  >
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="staff1"
+                    checked
+                  />
+                  <label class="form-check-label" for="staff1"
+                    ><span class="teacher-mg">
+                      <img src="assets/img/user-7.jpg" /></span
+                    >Alana Fig</label
+                  >
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="staff2"
+                    checked
+                  />
+                  <label class="form-check-label" for="staff2"
+                    ><span class="teacher-mg">
+                      <img src="assets/img/user-7.jpg"
+                    /></span>
+                    Beth Jones</label
+                  >
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="staff3" />
+                  <label class="form-check-label" for="staff3"
+                    ><span class="teacher-mg">
+                      <img src="assets/img/user-7.jpg"
+                    /></span>
+                    Jessica Parker</label
+                  >
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="staff4" />
+                  <label class="form-check-label" for="staff4"
+                    ><span class="teacher-mg">
+                      <img src="assets/img/user-7.jpg"
+                    /></span>
+                    Kelly Smith</label
+                  >
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-primary">Add</button>
+                <button class="btn btn-secondary" data-bs-dismiss="modal">
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

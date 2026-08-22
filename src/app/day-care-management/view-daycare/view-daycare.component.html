@@ -1,0 +1,404 @@
+<app-breadcrumb></app-breadcrumb>
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="heading-new">
+          <h5 class="mb-0">View daycare</h5>
+        </div>
+
+        <div class="row mb-5">
+          <div class="col-md-4">
+            <div class="search">
+              <input
+                placeholder="Type here.."
+                type="text"
+                value=""
+                class=""
+                [(ngModel)]="searchText"
+                (change)="onSearchDaycare()"
+              />
+              <button type="submit">Search</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
+            <div class="table-responsive">
+              <table class="table table-hover mb-0">
+                <thead class="student-thread">
+                  <tr>
+                    <th>#</th>
+                    <th>Logo</th>
+                    <th>Centre&nbsp;Name</th>
+                    <!-- <th>Subscription&nbsp;Plan</th> -->
+                    <!-- <th>Email</th> -->
+                    <th>Phone</th>
+                    <th>On&nbsp;Boarding</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+
+                @if (skeletonShow === 'Skelton') {
+                <tbody>
+                  <tr>
+                    <td colspan="100%">
+                      <app-skeleton-loader
+                        skeletonShow="Skelton"
+                        viewType="table"
+                        [tableRows]="5"
+                        [tableCols]="5"
+                      >
+                      </app-skeleton-loader>
+                    </td>
+                  </tr>
+                </tbody>
+
+                } @else if (dayCareList.length > 0) {
+                <tbody>
+                  @for (item of dayCareList|paginate:paginationConfig; track
+                  item; let index = $index) {
+                  <tr>
+                    <td>
+                      {{
+                        paginationConfig.itemsPerPage *
+                          (paginationConfig.currentPage - 1) +
+                          index +
+                          1
+                      }}
+                    </td>
+                    <td>
+                      <div class="doc-img">
+                        <div
+                          class="doc-back-img"
+                          [style.background-image]="'url(' + item.s3Url + ')'"
+                        ></div>
+                      </div>
+                    </td>
+                    <td>
+                      <!-- tooltip  added here  -->
+                      <div
+                        class="tooltip-wrapper"
+                        style="position: relative"
+                        (mouseenter)="hoveredRow = item"
+                        (mouseleave)="hoveredRow = null"
+                      >
+                        <span class="hover-anchor">{{ item.centreName }}</span>
+                        <!-- call here   and remove below div if able to call -->
+                        <app-tooltip
+                          *ngIf="hoveredRow === item"
+                          [employee]="{
+                            fullName: item.adminInfo.adminName,
+                            email: item.adminInfo.adminEmail,
+                            profile: item.adminInfo.staffProfile
+                          }"
+                        ></app-tooltip>
+                      </div>
+                    </td>
+                    <!-- <td>{{ item.centreName }}</td> -->
+                    <!-- <td>Silver Plan</td> -->
+                    <!-- <td>{{ item.centreEmail }}</td> -->
+                    <td>
+                      {{
+                        "+1 " + item.adminInfo.adminMobile || item.centreMobile
+                      }}
+                    </td>
+                    <td>
+                      <div
+                        class="d-flex justify-content-start align-items-center"
+                      >
+                        <span
+                          [ngClass]="{
+                            'badge-success': item.onBoardingCompleted,
+                            'badge-warning': !item.onBoardingCompleted
+                          }"
+                          class="badge"
+                          >{{
+                            item.onBoardingCompleted ? "Completed" : "Pending"
+                          }}
+                        </span>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="actions">
+                        <a
+                          (click)="getDaycareDetail(item.id)"
+                          class="action-btn bg-danger-light me-2"
+                        >
+                          <i class="feather-eye"></i>
+                        </a>
+                        <a
+                          (click)="onEdit(item)"
+                          class="action-btn bg-danger-light me-2"
+                        >
+                          <i class="feather-edit"></i>
+                        </a>
+
+                        <a (click)="onSuspendPlan(item.id, item.latestPlan.isSuspend)" class="action-btn bg-danger-light me-2"
+                          title="Suspend Plan">
+                          <i class="fa-solid fa-ban" [ngClass]="{'text-danger': item.latestPlan.isSuspend}"></i>
+                        </a>
+                        <!-- <a (click)="onPlanPayment(item.adminInfo.id, item.latestPlan.subscriptionPlanID)"  class="action-btn bg-danger-light me-2" title="Plan Payment">
+                          <i class="fa-solid fa-dollar-sign"></i>
+                        </a> -->
+
+                        <!-- Commented on 05/08/25 -->
+                        <!-- <a
+                          (click)="handlePlanPayment(item)"
+                          class="action-btn bg-danger-light me-2"
+                          title="Plan Payment"
+                          [class.disabled]="
+                            shouldDisablePayment(
+                              item.latestPlan.dueDate,
+                              item.latestPlan.isSuspend
+                            )
+                          "
+                        >
+                          <i class="fa-solid fa-dollar-sign"></i>
+                        </a> -->
+
+                        <label class="switch mb-0">
+                          <input
+                            (change)="
+                              activeInactiveCentre(item.id, item.isActive)
+                            "
+                            id="check{{ item.id }}"
+                            [checked]="item.isActive"
+                            type="checkbox"
+                          />
+                          <div class="slider">
+                            <span class="status-text"></span>
+                            <div class="circle">
+                              <svg
+                                class="cross"
+                                xml:space="preserve"
+                                style="enable-background: new 0 0 512 512"
+                                viewBox="0 0 365.696 365.696"
+                                y="0"
+                                x="0"
+                                height="6"
+                                width="6"
+                                xmlns:xlink="http://www.w3.org/1999/xlink"
+                                version="1.1"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <g>
+                                  <path
+                                    data-original="#000000"
+                                    fill="currentColor"
+                                    d="M243.188 182.86 356.32 69.726c12.5-12.5 12.5-32.766 0-45.247L341.238 9.398c-12.504-12.503-32.77-12.503-45.25 0L182.86 122.528 69.727 9.374c-12.5-12.5-32.766-12.5-45.247 0L9.375 24.457c-12.5 12.504-12.5 32.77 0 45.25l113.152 113.152L9.398 295.99c-12.503 12.503-12.503 32.769 0 45.25L24.48 356.32c12.5 12.5 32.766 12.5 45.247 0l113.132-113.132L295.99 356.32c12.503 12.5 32.769 12.5 45.25 0l15.081-15.082c12.5-12.504 12.5-32.77 0-45.25zm0 0"
+                                  ></path>
+                                </g>
+                              </svg>
+                              <svg
+                                class="checkmark"
+                                xml:space="preserve"
+                                style="enable-background: new 0 0 512 512"
+                                viewBox="0 0 24 24"
+                                y="0"
+                                x="0"
+                                height="10"
+                                width="10"
+                                xmlns:xlink="http://www.w3.org/1999/xlink"
+                                version="1.1"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <g>
+                                  <path
+                                    class=""
+                                    data-original="#000000"
+                                    fill="currentColor"
+                                    d="M9.707 19.121a.997.997 0 0 1-1.414 0l-5.646-5.647a1.5 1.5 0 0 1 0-2.121l.707-.707a1.5 1.5 0 0 1 2.121 0L9 14.171l9.525-9.525a1.5 1.5 0 0 1 2.121 0l.707.707a1.5 1.5 0 0 1 0 2.121z"
+                                  ></path>
+                                </g>
+                              </svg>
+                            </div>
+                          </div>
+                        </label>
+                      </div>
+                    </td>
+                  </tr>
+                  }
+                </tbody>
+                } @else {
+                <tbody>
+                  <tr>
+                    <td colspan="100%">
+                      <app-skeleton-loader skeletonShow="NoRecord">
+                      </app-skeleton-loader>
+                    </td>
+                  </tr>
+                </tbody>
+
+                }
+              </table>
+              <div class="col pagination-style mt-4 no-flex">
+                <div class="datatable-pager datatable-paging-loaded">
+                  @if( dayCareList.length > 5 ) {
+                  <pagination-controls
+                    previousLabel="prev"
+                    nextLabel="next"
+                    [maxSize]="5"
+                    class="datatable-pager-nav my-2 mb-sm-0"
+                    id="view-Daycare"
+                    (pageChange)="paginationConfig.currentPage = $event"
+                  >
+                  </pagination-controls>
+                  }
+                </div>
+              </div>
+              <!-- <div *ngIf="dayCareList.length == 5">
+                <pagination-controls
+                  (pageChange)="filter('by-pagination', $event)"
+                  class="mt-4 no-flex"
+                  style="float: left; width: 100%"
+                ></pagination-controls>
+              </div> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- The Modal -->
+  <div class="modal" id="view-daycare-detail-popup">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h5 class="modal-title">Daycare&nbsp;Details</h5>
+          <button
+            type="button"
+            class="close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true" style="float: right">&times;</span>
+          </button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="personal-activity">
+                <div class="personal-icons">
+                  <i class="feather-user"></i>
+                </div>
+                <div class="views-personal">
+                  <h4>Center Name</h4>
+                  <h5>{{ daycareDetail?.centerName }}</h5>
+                  <span *ngIf="daycareDetail?.centerName == null"
+                    >--------</span
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="personal-activity">
+                <div class="personal-icons">
+                  <i _ngcontent-ng-c3403598508="" class="feather-mail"></i>
+                </div>
+                <div class="views-personal">
+                  <h4>Center Email</h4>
+                  <h5>{{ daycareDetail?.centerEmail }}</h5>
+                  <span *ngIf="daycareDetail?.adminName == null">--------</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="personal-activity">
+                <div class="personal-icons">
+                  <i class="feather-phone"></i>
+                </div>
+                <div class="views-personal">
+                  <h4>Center Mobile</h4>
+                  <span *ngIf="daycareDetail?.centerMobile === null"
+                    >--------</span
+                  >
+                  <h5>{{ daycareDetail?.centerMobile }}</h5>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="personal-activity">
+                <div class="personal-icons">
+                  <i class="feather-user"></i>
+                </div>
+
+                <div class="views-personal">
+                  <h4>Admin Name</h4>
+                  <span *ngIf="daycareDetail?.adminName == null">--------</span>
+                  <h5>{{ daycareDetail?.adminName }}</h5>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="personal-activity">
+                <div class="personal-icons">
+                  <i class="feather-mail"></i>
+                </div>
+                <div class="views-personal">
+                  <h4>Admin Email</h4>
+                  <span *ngIf="daycareDetail?.adminEmail == null"
+                    >--------</span
+                  >
+                  <h5>{{ daycareDetail?.adminEmail }}</h5>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="personal-activity">
+                <div class="personal-icons">
+                  <i class="feather-phone"></i>
+                </div>
+                <div class="views-personal">
+                  <h4>Admin Mobile</h4>
+                  <span *ngIf="daycareDetail?.adminMobile == null">--------</span>
+                  <!-- <h5>{{ daycareDetail?.adminMobile }}</h5> -->
+                  <h5>{{ "+1 " + daycareDetail?.adminMobile }}</h5>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="personal-activity">
+                <div class="personal-icons">
+                  <i class="feather-map-pin"></i>
+                </div>
+                <div class="views-personal">
+                  <h4>Admin Address</h4>
+                  <span *ngIf="daycareDetail?.adminAddress == null"
+                    >--------</span
+                  >
+                  <h5>{{ daycareDetail?.adminAddress }}</h5>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="personal-activity">
+                <div class="personal-icons">
+                  <i class="feather-map-pin"></i>
+                </div>
+                <div class="views-personal">
+                  <h4>Center Address</h4>
+                  <span *ngIf="daycareDetail?.centerAddress == null"
+                    >--------</span
+                  >
+                  <h5>{{ daycareDetail?.centerAddress }}</h5>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

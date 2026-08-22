@@ -1,0 +1,44 @@
+
+
+.settings-form .social-icon{
+    padding: 4px  !important
+}
+
+
+
+.settings-form .social-icon {
+    width: 43px !important;
+    height: 35px !important;
+  
+}
+
+.settings-form .trash {
+ 
+    height: 35px !important;
+    width: 43px !important;
+   
+}
+
+.row.shinzo {
+    margin-bottom: 2.25rem;
+}
+
+.social-icon{
+    width: 45px;
+    height: 35px;
+    margin-right: 6px;
+    color: #fff;
+    background: var(--main-color);
+    border: 1px solid var(--main-color);
+    border-radius: 5px;
+    font-size: 24px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    position: relative;
+    padding: 4px;
+}.settings-btns {
+    display: flex
+;
+    justify-content: end;
+}

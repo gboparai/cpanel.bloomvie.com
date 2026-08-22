@@ -1,0 +1,149 @@
+<app-breadcrumb></app-breadcrumb>
+<div class="row">
+  <div class="col-sm-12">
+    <div class="card">
+      <div class="card-body">
+        <div  class="heading-new">
+          <h5  class="mb-0">Add Event</h5>
+        </div>
+        <form [formGroup]="form" (ngSubmit)="manageMasterEvent()">
+          <div class="row">
+            <div class="col-12 col-md-4">
+              <div class="form-group local-forms">
+                <label for="role">Enter Event <span class="login-danger">*</span></label>
+                <input type="text" class="form-control" id="role" formControlName="name" name="name" />
+              
+                @if(input.name.touched){
+                  @if(input.name?.errors?.required){
+                      <span class="text-danger">This field is required.</span>
+                  }
+              }
+              </div>
+            </div>
+            <div class="col-12 col-md-4">
+              <div class="student-submit mt-4 ">
+                <!-- <button type="submit" class="btn btn-primary me-2">Submit</button> -->
+                <button type="submit" class="btn btn-primary me-2">
+                  {{ isEditMode ? 'Update' : 'Submit' }}
+                </button>
+                <button (click)="cancel()" type="reset" class="btn btn-secondary">Cancel</button>
+              </div>
+            </div>
+          </div>
+        </form>
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                  <div class="col-md-12">
+                    <div class="row mb-4">
+                      <div class="col-md-4">
+                        <div class="search" style="margin-bottom: 0px">
+                          <input 
+                            type="text"
+                            class="form-control"
+                            placeholder="Search Event"
+                            [(ngModel)]="searchText"
+                            (ngModelChange)="applyFilter()"
+                          />
+                          <button type="submit">Search</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                    <table class="table table-hover mb-0">
+                    <thead class="student-thread">
+                    <tr>
+                    <th>#</th>
+                    <th>Event</th>
+                    <th>Created By</th>
+                    <!-- <th>Bloomvie Owner</th>
+                    <th>Daycare Admin</th> -->
+                    <th>Action</th>
+                    </tr>
+                    </thead>
+                    @if(displayedEvent?.length > 0){
+                      <tbody>
+                        <tr *ngFor="let item of displayedEvent | paginate: { itemsPerPage: Contentsize, currentPage: ContentP, id: 'Agentcontrol' }; let i = index; ">
+                            <td>{{ (ContentP - 1) * Contentsize + i + 1 }}</td>
+                            <td>{{item.name}}</td>
+                            <td>{{item.userID == 1 ? 'Bloomvie Owner': 'Day Care Admin'}}</td>
+                            
+    
+                           @if(item.userID == userID){
+                            <td>
+                              <div class="actions">
+                                  <a  class="action-btn bg-danger-light me-2"(click)="onEdit(item)">
+                                  <i class="feather-edit"></i>
+                                  </a>
+                                  <label class="switch mb-0">
+                                      <input  id="checkBoxAinA{{item.id}}" value="isActive" name="isActive" [checked]="item.isActive" (change)="ActiveInactiveEvent(item.id,item.isActive)" type="checkbox">
+                                      <div class="slider">
+                                          <div class="circle">
+                                              <svg class="cross" xml:space="preserve" style="enable-background:new 0 0 512 512" viewBox="0 0 365.696 365.696" y="0" x="0" height="6" width="6" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                                                  <g>
+                                                      <path data-original="#000000" fill="currentColor" d="M243.188 182.86 356.32 69.726c12.5-12.5 12.5-32.766 0-45.247L341.238 9.398c-12.504-12.503-32.77-12.503-45.25 0L182.86 122.528 69.727 9.374c-12.5-12.5-32.766-12.5-45.247 0L9.375 24.457c-12.5 12.504-12.5 32.77 0 45.25l113.152 113.152L9.398 295.99c-12.503 12.503-12.503 32.769 0 45.25L24.48 356.32c12.5 12.5 32.766 12.5 45.247 0l113.132-113.132L295.99 356.32c12.503 12.5 32.769 12.5 45.25 0l15.081-15.082c12.5-12.504 12.5-32.77 0-45.25zm0 0"></path>
+                                                  </g>
+                                              </svg>
+                                              <svg class="checkmark" xml:space="preserve" style="enable-background:new 0 0 512 512" viewBox="0 0 24 24" y="0" x="0" height="10" width="10" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                                                  <g>
+                                                      <path class="" data-original="#000000" fill="currentColor" d="M9.707 19.121a.997.997 0 0 1-1.414 0l-5.646-5.647a1.5 1.5 0 0 1 0-2.121l.707-.707a1.5 1.5 0 0 1 2.121 0L9 14.171l9.525-9.525a1.5 1.5 0 0 1 2.121 0l.707.707a1.5 1.5 0 0 1 0 2.121z"></path>
+                                                  </g>
+                                              </svg>
+                                          </div>
+                                      </div>
+                                  </label>
+                                  </div>
+                          </td> 
+                        }@else {
+                        <td>
+                      </td>
+                        }
+                           
+                        </tr>
+                    
+                 </tbody>
+                    }@else {
+                      <tbody>
+                        <tr>
+                          <td colspan="8">
+                            <div class="no-data">
+                              <img src="assets/img/no-data-img.png" alt="No Record Found" />
+                              <span>No Record Found</span>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    }
+                 
+
+             
+                    </table>
+                    </div>
+            </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="col pagination-style">
+              <div class="datatable-pager datatable-paging-loaded">
+              @if((displayedEvent != null )&&( displayedEvent.length>5))
+              {
+               
+                <pagination-controls
+                previousLabel="prev"
+                nextLabel="next"
+                [maxSize]="5"
+                class="datatable-pager-nav my-2 mb-sm-0"
+                id="Agentcontrol"
+                (pageChange)="ContentP = $event"
+              >
+              </pagination-controls>
+            }
+              </div></div>
+          </div>
+        </div>
+      </div>
+     
+    
+    </div>
+  </div>
+</div>

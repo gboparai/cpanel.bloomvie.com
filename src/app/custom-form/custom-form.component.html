@@ -1,0 +1,153 @@
+<app-breadcrumb></app-breadcrumb>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <!--modal to submit the control-->
+
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Custom-form"> Add
+          Field</button>
+        <form [formGroup]="AddSectionForm" (ngSubmit)="onSubmitSectionForm()">
+          <!-- Modal -->
+          <div class="modal fade" id="addSectionModal" tabindex="-1" style="z-index: 9999;"
+            aria-labelledby="addSectionModalLabel" aria-hidden="true" #addSectionModal>
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                  <h5 class="modal-title" id="addSectionModalLabel">Add Section Title</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <!-- Modal Body -->
+                <div class="modal-body">
+
+                  <div class="form-group">
+                    <label for="field-title">Section Title</label>
+                    <input type="text" id="Section" formControlName="SectionTitle" placeholder="Enter Section Title"
+                      class="form-control">
+                    <div
+                      *ngIf="AddSectionForm.get('SectionTitle')?.invalid && (AddSectionForm.get('SectionTitle')?.touched || AddSectionForm.get('SectionTitle')?.dirty)">
+                      <div class="text-danger" *ngIf="AddSectionForm.get('SectionTitle')?.errors?.['required']">Field
+                        Section is required.</div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Modal Footer -->
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                  <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </form>
+
+
+
+        <div class="modal fade" id="Custom-form" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true"
+          #customFormModal>
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title" id="modalLabel">Create Your Own Form Fields</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form [formGroup]="LabelAndControlForm" (ngSubmit)="onLabelAndControlSubmit()">
+                  <div class="row">
+
+                    <!---->
+
+                    <div class="form-group">
+                      <label for="field-title">Sections</label>
+                      <select class="form-control" formControlName="SectionID">
+                        <option value="" disabled selected>Select Section</option>
+                        <option *ngFor="let section of SectionList" [value]="section.id">{{section.name}}</option>
+                      </select>
+                      <div
+                        *ngIf="LabelAndControlForm.get('SectionID')?.invalid && (LabelAndControlForm.get('SectionID')?.touched || LabelAndControlForm.get('SectionID')?.dirty)">
+                        <div class="text-danger" *ngIf="LabelAndControlForm.get('SectionID')?.errors?.['required']">
+                          Field Section is required.</div>
+                      </div>
+                      <button type="button" class="btn btn-primary me-2" (click)="OpenSectionModal()"> Add
+                        Field</button>
+
+                    </div>
+
+                    <div class="form-group">
+                      <label for="field-title">Field Title</label>
+                      <input type="text" id="labelName" formControlName="LabelName" placeholder="Enter field title"
+                        class="form-control">
+                      <div
+                        *ngIf="LabelAndControlForm.get('LabelName')?.invalid && (LabelAndControlForm.get('LabelName')?.touched || LabelAndControlForm.get('LabelName')?.dirty)">
+                        <div class="text-danger" *ngIf="LabelAndControlForm.get('LabelName')?.errors?.['required']">
+                          Field Title is required.</div>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label for="field-type">Field Type</label>
+                      <select id="field-type" class="form-control" formControlName="ControlType">
+                        <option value="" disabled selected>Please select</option>
+                        <option value="text">Text</option>
+                        <option value="number">Number</option>
+                        <option value="email">Email</option>
+                        <option value="date">Date</option>
+                        <option value="datetime">DateTime</option>
+                        <option value="select">Select</option>
+                        <option value="radio">Radio</option>
+                        <option value="checkbox">Checkbox</option>
+                      </select>
+                      <div
+                        *ngIf="LabelAndControlForm.get('ControlType')?.invalid && (LabelAndControlForm.get('ControlType')?.touched || LabelAndControlForm.get('ControlType')?.dirty)">
+                        <div class="text-danger" *ngIf="LabelAndControlForm.get('ControlType')?.errors?.['required']">
+                          Field Type is required.</div>
+                      </div>
+                    </div>
+
+
+
+                    <div class="form-group" id="options-input" style="display: none;">
+                      <label for="options">Options (Comma Separated)</label>
+                      <input type="text" id="options" formControlName="Values"
+                        placeholder="Option1, Option2, Option3, ..." class="form-control">
+                      <div
+                        *ngIf="LabelAndControlForm.get('Values')?.invalid && (LabelAndControlForm.get('Values')?.touched || LabelAndControlForm.get('Values')?.dirty)">
+                        <div class="text-danger" *ngIf="LabelAndControlForm.get('Values')?.errors?.['invalidFormat']">
+                          Invalid format. Use word1, word2, word3</div>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label for="field-title">Position</label>
+                      <input type="number" id="Position" formControlName="Position" placeholder="Enter Position Number"
+                        class="form-control">
+                      <div
+                        *ngIf="LabelAndControlForm.get('Position')?.invalid && (LabelAndControlForm.get('Position')?.touched || LabelAndControlForm.get('Position')?.dirty)">
+                        <div class="text-danger" *ngIf="LabelAndControlForm.get('Position')?.errors?.['required']">Field
+                          Position is required.</div>
+                      </div>
+                    </div>
+
+                    <div class="form-group" id="input-field-container">
+                    </div>
+                    <div class="right">
+                      <button type="submit" class="btn btn-primary btns" data-bs-dismiss="modal"
+                        [disabled]="!areFieldsFilled()" id="addFieldButton">Add Field</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+
+      </div>
+    </div>
+  </div>
+</div>

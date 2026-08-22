@@ -1,0 +1,444 @@
+<section class="upload">
+  <div class="card">
+    <div class="card-body">
+      <!-- Header Section -->
+      <div class="row mb-3 ">
+        <div class="col-12">
+          <div class="heading-new">
+            <h5 class="mb-0">Student Gallery Edit</h5> 
+          </div> 
+        </div>
+      </div>
+
+      <form [formGroup]="StudentGalleryForm">
+        <!-- Form Fields Section -->
+
+        <!-- Classroom Selection -->
+
+        <div class="row">
+
+          <div class="col-md-3">
+            <div class="form-group local-forms ">
+
+              <!-- Classroom Selection -->
+              <label for="classroomSelect" class="form-label">Select a classroom<span
+                  class="login-danger">*</span></label>
+                  
+              <ng-select  id="classroomSelect" formControlName="classroomID" (change)="onSelectClass($event)"
+                bindValue="classroomID" bindLabel="classroomName" [items]="classRoom">
+              </ng-select>
+
+              <span class="text-danger"
+                *ngIf="StudentGalleryForm.controls['classRoomID']?.invalid && StudentGalleryForm.controls['classRoomID']?.touched">
+                This field is required
+              </span>
+            </div>
+          </div>
+
+
+
+          <!-- Student List Selection -->
+
+          <div class="col-md-3">
+            <div class="form-group local-forms">
+              <label for="classroomSelect" class="form-label">
+                Select a Student <span class="login-danger">*</span>
+              </label>
+
+              <ng-select id="classroomSelect" formControlName="studentID" (change)="onSelectStudent($event)"
+                bindValue="id" bindLabel="firstName" [items]="StudentList">
+              </ng-select>
+
+              <span class="text-danger"
+                *ngIf="StudentGalleryForm.controls['studentID']?.invalid && StudentGalleryForm.controls['studentID']?.touched">
+                This field is required
+              </span>
+            </div>
+          </div>
+
+          <div class="col-md-3 fiv-days-button">
+
+            <div class="form-group local-forms">
+              <label for="classroomSelect" class="form-label">
+                Select To Date <span class="login-danger">*</span>
+              </label>
+            </div>
+            <div class="today-tomrrow">
+              <div class="activity-filter-box">
+                <div class="ng--parent">
+                  <!-- From Date -->
+                  <input type="text" id="selectToDate" class="form-control w-100" [(ngModel)]="selectedStartDate"
+                    (change)="onSelectStartDate($event)" />
+
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3 fiv-days-button">
+            <div class="form-group local-forms">
+              <label for="classroomSelect" class="form-label">
+                Select From Date<span class="login-danger">*</span>
+              </label>
+            </div>
+            <div class="today-tomrrow">
+              <div class="activity-filter-box">
+                <div class="ng--parent">
+
+                  <!-- To Date -->
+                  <input type="text" id="selectFromDate" class="form-control w-100" [(ngModel)]="selectedEndDate"
+                    (change)="onSelectEndDate($event)" />
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <!-- Form Fields Section -->
+          <div class="row ">
+
+
+
+
+
+
+
+            <!-- <div class="col-md-3  sub">
+                  <button type="submit" id="submit-btn" class="btn btn-primary me-2"
+                              (click)="onSubmit()">Search</button>
+              </div> -->
+          </div>
+
+
+
+          <!-- Date Selection -->
+          <!-- <div class="col-lg-3 col-md-4">
+          <div class="form-group local-forms">
+            <label for="datePickerSelectDate" class="form-label">
+              Select Date <span class="login-danger">*</span>
+            </label>
+            <input type="text" id="datePickerSelectDate" #datePickerSelectDate class="form-control"
+              formControlName="activityDate" (change)="onChangeDate($event)">
+
+            <span class="text-danger"
+              *ngIf="StudentGalleryForm.controls['activityDate']?.invalid && StudentGalleryForm.controls['activityDate']?.touched">
+              This field is required.
+            </span>
+          </div>
+        </div> -->
+
+          <!-- <div class="row ">
+
+          <div class="col-md-5 fiv-days-button">
+              <div class="today-tomrrow">
+                  <div class="activity-filter-box">
+                      <div class="ng--parent">
+                          <input type="text" id="firstToDate" placeholder="Select To Date"
+                              class="form-control w-100" [(ngModel)]="selectedFirstStartDate" />
+
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+
+          <div class="col-md-5 fiv-days-button">
+              <div class="today-tomrrow">
+                  <div class="activity-filter-box">
+                      <div class="ng--parent">
+
+                          <input type="text" id="firstFromDate" placeholder="Select From Date"
+                              class="form-control w-100" [(ngModel)]="selectedFirstEndDate" />
+
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div> -->
+
+        </div>
+      </form>
+      <!-- Buttons Section -->
+      <!-- <div class="row mt-4">
+        <div class="col-12 text-end">
+          <button type="submit" id="submit-btn" class="btn btn-primary me-2" (click)="onSubmit()">Search</button>
+          <button type="reset" class="btn btn-secondary" (click)="ResetForm()">Cancel</button>
+        </div>
+      </div> -->
+    </div>
+  </div>
+</section>
+
+
+
+
+<section class="upload">
+  <div class="card">
+    <div class="card-body">
+      <!-- Header Section -->
+      <div class="row mb-3 ">
+        <div class="col-12">
+          <div class="heading-new">
+            <h5 class="mb-0">Student Gallery View</h5>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="!gallery || gallery.length === 0" class="no-data-container"
+        style="display: flex; justify-content: center; align-items: center; height: 100%;">
+        <div class="no-data" style="text-align: center;">
+          <img src="assets/img/no-data-img.png" alt="No Record Found" style="margin-bottom: 10px;" />
+          <span>No Record Found</span>
+        </div>
+      </div>
+      <div class="row ">
+        <div class="col-12">
+          <div class=" timeline">
+
+
+            @for(student of gallery;track student){
+            @for(day of student.days;track day){
+            <span class="timeline-month me-2">
+              {{ day.date | date: "dd,MMMM, yy" }}
+            </span>
+
+
+            @for(item of day.studentGalleryData;track item){
+
+           
+            <div class="row timeline-section">
+              <div class="inner-pad p-3 mx-3">
+                <div class="font-medium stater">
+                  <h5 class="activity-name">{{item.activityName ? item.activityName : 'test'}} </h5>
+                </div>
+                <div *ngFor="let image of (item.filePath.includes(',') ? item.filePath.split(',') : [item.filePath])"
+                  class="cell-width" >
+                  <!-- Video Section -->
+                  <ng-container *ngIf="isVideo(image); else imageTemplate">
+                    <div class="cell-height">
+                      <div class="item bulk-img">
+                        <a [href]="rootUrl + 'Content/Image/BulkUpload/' + image" data-fancybox="gallery2"
+                          class="fancybox">
+                          <img alt="Video">
+
+                          <!-- [src]="videoThumbnailUrl(image)" -->
+                        </a>
+                      </div>
+                    </div>
+                  </ng-container>
+
+                  <ng-template #imageTemplate>
+                    <div class="cell-height">
+                      <div class="item bulk-img">
+                        <a [href]="rootUrl + 'Content/Image/BulkUpload/' + image" data-fancybox="gallery2"
+                          class="fancybox">
+                          <img [src]="rootUrl + 'Content/Image/BulkUpload/' + image" alt="Image"
+                            style="width: 100%; height: auto;" />
+                        </a>
+                      </div>
+                    </div>
+                  </ng-template>
+
+                  <!-- image Details and Delete Button -->
+                  <div class="del-btn">
+                    <button class="btn btn-danger btn-sm" (click)="deleteFile(item.id, image)"
+                      style="    padding: 2px 7px !important;">
+                      <i class="fa fa-trash " style="font-size: 12px;"></i><span></span>
+                    </button>
+                  </div>
+
+
+
+                </div>
+            
+              <div class="row justify-content-center mt-4 add-comments">
+                <div class="col-md-12">
+                  <div class="card ">
+                    <div class="card-header heading-new bg-primary text-white">
+                      <h5 class="mb-0"> Comment Section</h5>
+                    </div>
+  
+                    <!-- parent comment  -->
+                    @if(item.parentComment){
+  
+                    <div class="card-body ">
+                      <div class="comment  p-3 mb-3 rounded">
+                        <div class="align-items-center">
+                          <div class="comment-details ml-3 flex-grow-1">
+                            <div class="Parent">
+                              <span>P</span>
+                            </div>
+                            <h6 class="font-weight-bold mb-0 text-primary">{{parent?.firstName}} {{parent?.lastName}}</h6>
+                            <!-- <p>{{sdf}}</p> -->
+  
+                          </div>
+                          <div class="content-del">
+                            <div>
+                              <p class="text-muted date small mb-1">
+                               <b> Commented On:</b> {{ (item?.parentModifiedDate ||
+                                item.parentCreatedDate) | date: 'dd/MM/yyyy HH:mm:ss' }}
+                              </p>
+                              <p class="comment-text mb-0 text-dark">{{ item?.parentComment }}</p>
+  
+                            </div>
+                          </div>
+  
+                        </div>
+  
+  
+                      </div>
+                    </div>
+  
+                  }
+  
+  
+                    <!-- teacher comment  -->
+                    @if(item?.teacherComment){
+  
+                    <div class="card-body">
+                      <div class="comment  p-3 mb-3 rounded">
+                        <div class="align-items-center">
+                          <div class="comment-details ml-3 flex-grow-1">
+                            <div class="Parent">
+                              <span>T</span>
+                            </div>
+                            <h6 class="font-weight-bold mb-0 text-primary">{{teacherName}}</h6>
+  
+  
+                          </div>
+                          <div class="content-del">
+                            <div *ngIf="!item.isEditing; else editTemplate">
+                              <p class="text-muted date small mb-1">
+                               <b>Commented On: </b> 
+                               
+                               
+                               {{ ( item?.teacherModifiedDate ? item?.teacherModifiedDate : item?.teacherCreatedDate) | date: 'dd/MM/yyyy HH:mm:ss' }}
+                               
+                            
+                              </p>
+                              <p class="comment-text mb-0 text-dark">{{ item?.teacherComment }}</p>
+                            </div>
+                          </div>
+  
+                          <!-- Edit Button -->
+                          <div>
+                            <button class="edit-hover" (click)="enableEditComment(item)">
+                              <i class="fa fa-edit"></i>
+                            </button>
+                          </div>
+  
+                          <!-- Unique Edit Template -->
+                          <ng-template #editTemplate>
+                            <div class="mt-2">
+                              <textarea [(ngModel)]="item.editText" class="form-control mb-2 shadow-sm"
+                                placeholder="Edit your comment..."></textarea>
+                              <div class="text-right">
+                                <button class="btn btn-sm btn-success shadow-none"
+                                  (click)="commentAdd(item.editText, 'update', item.activityDate)">
+                                  Save
+                                </button>
+                                <button class="btn btn-sm btn-outline-secondary shadow-none ml-1"
+                                  (click)="cancelEditComment(item)">
+                                  Cancel
+                                </button>
+                              </div>
+                            </div>
+                          </ng-template>
+  
+                          <div>
+                            <button class="edit-hover" (click)="enableEditComment(item)">
+                              <i class="fa fa-edit"></i>
+                            </button>
+  
+                          </div>
+                        </div>
+  
+  
+  
+                        <ng-template #editTemplate>
+                          <div class="mt-2">
+                            <textarea [(ngModel)]="newCommentText" class="form-control mb-2 shadow-sm"
+                              placeholder="Edit your comment..."></textarea>
+                            <div class="text-right">
+                              <button class="btn btn-sm btn-success shadow-none"
+                                (click)="commentAdd(newCommentText, 'update', item.activityDate)">
+                                Save
+                              </button>
+                              <button class="btn btn-sm btn-outline-secondary shadow-none ml-1"
+                                (click)="cancelEditComment(item)">
+                                Cancel
+                              </button>
+                            </div>
+                          </div>
+                        </ng-template>
+                      </div>
+  
+                    </div>
+  
+                  }
+  
+  
+  
+  
+                    <!-- @if(gallery.teacherComment){ -->
+                    <!-- <div class="card-footer">
+                      @if(!item.teacherComment){
+                      <textarea class="form-control shadow-none mb-2" rows="3" [(ngModel)]="newCommentText"
+                        placeholder="Write a comment..."></textarea>
+                      <div class="text-right">
+                        <button class="btn btn-primary btn-sm shadow-none px-4" (click)="commentAdd(item, 'add' , item.activityDate)"
+                          [disabled]="!newCommentText">
+                          Post Comment
+                        </button>
+                        <button class="btn btn-outline-secondary btn-sm shadow-none ml-2 px-4" (click)="cancelComment()">
+                          Cancel
+                        </button>
+                      </div>
+                      }
+  
+                    </div> -->
+  
+                    <div class="card-footer">
+                      @if(!item.teacherComment){
+                      <textarea class="form-control shadow-none mb-2" rows="3" [(ngModel)]="newCommentText"
+                        placeholder="Write a comment..."></textarea>
+                      <div class="text-right">
+                        <button class="btn btn-primary btn-sm shadow-none px-4"
+                          (click)="commentAdd(newCommentText, 'add', item.activityDate)" [disabled]="!newCommentText">
+                          Post Comment
+                        </button>
+                        <button class="btn btn-outline-secondary btn-sm shadow-none ml-2 px-4" (click)="cancelComment()">
+                          Cancel
+                        </button>
+                      </div>
+                      }
+  
+                    </div>
+  
+  
+                    <!-- } -->
+  
+  
+  
+  
+  
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+            }
+            }
+            }
+
+
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</section>

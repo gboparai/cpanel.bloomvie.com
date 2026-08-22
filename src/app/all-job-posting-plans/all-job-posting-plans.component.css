@@ -1,0 +1,22 @@
+.card-header {
+    font-weight: bold;
+}
+.card {
+    position: relative;
+}.job-buttons {
+    position: absolute;
+    right: 20px;
+    top: 17px;
+    background: #5c709d !important;
+    border: none;
+}
+.all-job-card
+{
+    border: 1px solid #e2e5e6 !important;
+    position: relative;
+    padding: 11px;
+    border-radius: 4px;
+}
+.all-job-card .card-body {
+    padding-bottom: 0px;
+}

@@ -1,0 +1,24 @@
+form.row.g-3 {
+    margin: 0px 0px 37px 0px;
+}.col-2.mt-4.mr-top {
+    margin-top: 3% !important;
+}.heading-new h5 {
+   
+    margin-bottom: 0px;
+}::ng-deep .ng-select.days-selector {
+    min-height: 38px;
+    font-size: 14px;
+  }
+  
+  ::ng-deep .ng-select.days-selector .ng-placeholder {
+    color: #6c757d;
+  }
+  .my-roster input[type="text"] {
+    border: none !important;
+}
+
+
+::ng-deep ng-select.ng-select-focused .ng-select-container {
+  border: none !important;
+  box-shadow: none !important;
+}

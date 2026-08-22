@@ -1,0 +1,284 @@
+/*-----------shail css social links-------------*/
+
+
+.settings-form .social-icon{
+    padding: 4px  !important
+}
+
+
+
+.settings-form .social-icon {
+    width: 43px !important;
+    height: 35px !important;
+  
+}
+
+.settings-form .trash {
+ 
+    height: 35px !important;
+    width: 43px !important;
+   
+}
+
+.row.shinzo {
+    margin-bottom: 2.25rem;
+}
+
+ .social-icon {
+    width: 50px;
+    height: 40px;
+    margin-right: 6px;
+    color: #fff;
+    background: var(--main-color);
+    border: 1px solid var(--main-color);
+    border-radius: 5px;
+    font-size: 24px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    position: relative;
+    padding: 4px;
+}
+/*---------------------------------*/
+
+main {
+    /* padding-right: 230px; */
+    /* padding-left: 31px; */
+    padding-top: 84px;
+    padding-bottom: 20px;
+    overflow: auto;
+    position: relative;
+    overflow: hidden;
+}
+
+.bd-card {
+    width: 100%;
+    border-radius: 23px;
+    box-shadow: 0 2px 4px 0 rgba(208, 208, 208, 0.5);
+    background-color: #ffffff;
+    min-height: 825px;
+    margin-top: auto;
+    margin-bottom: auto;
+    position: relative;
+}
+main:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    /* left: 76%; */
+    left: 0;
+    right: 0;
+    /* background: var(--main-color); */
+    background: #adbeff;
+}
+ul#pills-tab { 
+    /* justify-content: end; */
+    position: relative;
+}
+ul#pills-tab li a {
+    position: absolute;
+    width: 233px;
+    display: flex;
+    align-items: center;
+    justify-content: normal;
+    text-align: start;
+    gap: 10px;
+    right: -244px;
+
+}
+.btn2 {
+    top: 82px;
+}
+.btn3 {
+    top: 165px;
+}
+.nav-pills .nav-link.active {
+    background: #ce4a4a00;
+    border: none;
+}
+.nav-pills .nav-link.active i {
+    background: var(--main-color);
+    color: #fff;
+}
+
+.nav-pills .nav-link{
+    background: #ff000000;
+    border: none;
+    color:#fff;
+}
+.nav-pills i {
+    /* padding: 10px; */
+    /* background: white;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px double;
+    color: var(--main-color);
+    font-size: 17px; */
+
+   
+        background: white ;
+        border-radius: 50%  !important ;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 3px double;
+        color: var(--main-color);
+        font-size: 17px;
+    
+
+
+
+}
+.bd-card .card-body {
+    /* padding: 41px; */
+    padding: 41px;
+
+}
+/*-----------------------------New Design Style parent Onboarding-----------------------------------*/
+.bd-card{
+    width: 1400px;
+    margin: 0 auto;
+
+}
+
+/* ul#pills-tab {
+  
+    position: relative;
+    top: 0;
+    bottom: 0;
+    width: 23%;
+    display: flex;
+    flex-direction: column;
+    top: 0;
+   
+    right: 0;
+    left: 0;
+    background-size: cover !important;
+    padding: 23px 16px 12px 16px;
+   
+    border-radius: 17px 0px 0px 17px;
+} */
+ 
+.my-tab-body {
+    /* display: flex; */
+    /* align-items: center; */
+    /* justify-content: space-between; */
+    /* position: relative;
+    min-height: 825px; */
+}
+ 
+.tab-content {
+    /* width: 77%;
+    padding: 17px 23px 18px 29px !important;
+    border: 3px double #100999;
+    border-left: none;
+    border-radius: 0px 17px 17px 0px; */
+}
+ul#pills-tab   li   a {
+    /* position: unset !important; */
+    /* width: 233px; */
+    /* display: flex;
+    align-items: center;
+    justify-content: normal;
+    text-align: start;
+    gap: 10px;
+    right: -244px; */
+}
+.nav-pills   .nav-link.active   i {
+    /* background: #bfe2fd !important;
+    color: #545454 !important;  */
+
+    background: var(--main-color) !important;
+    color: #fff  !important;
+
+}
+.nav-pills   i {
+    /* background: #ffffff00 !important;
+    color: #ffffff !important; */
+
+}
+/*-----------------------------ENd New Design Style parent Onboarding-----------------------------------*/
+
+
+@media screen and (max-width:1450px) {
+    .bd-card {
+        width: 90%;
+    }
+}
+@media screen and (max-width:1200px) {
+    .my-tab-body {
+        /* display: block !important; */
+    }
+    ul#pills-tab {
+        width: 100% !important;
+        flex-direction: row !important;
+        border-radius: 17px 17px 0px 0px !important;
+    }
+    .tab-content {
+        width: 100% !important;
+        /* border-left: 3px double #100999!important; */
+        border-radius: 0px 0px 17px 17px !important;
+    }
+}
+
+/* new scss */
+
+.bd-card {
+    width: 100%;
+    border-radius: 23px;
+    box-shadow: 0 2px 4px 0 rgba(208, 208, 208, 0.5);
+    background-color: #ffffff;
+    min-height: 825px;
+    margin-top: auto;
+    margin-bottom: auto;
+    position: relative;
+}
+
+
+ul#pills-tab  li  a {
+    position: absolute;
+    width: 233px;
+    display: flex;
+    align-items: center;
+    justify-content: normal;
+    text-align: start;
+    gap: 10px;
+    right: -244px;
+}
+
+.nav-pills  .nav-link.active  i {
+    background: var(--main-color);
+    color: #fff;
+}
+
+main:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 76%;
+    right: 0;
+    background: var(--main-color);
+}
+
+main {
+    padding-right: 230px;
+    padding-left: 31px;
+    padding-top: 84px;
+    padding-bottom: 20px;
+    overflow: auto;
+    position: relative;
+    overflow: hidden;
+}
+
+ul#pills-tab {
+    justify-content: end;
+    position: relative;
+}

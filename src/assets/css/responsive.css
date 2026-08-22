@@ -1,0 +1,179 @@
+@media (max-width: 768px) {
+
+
+html.menu-opened body {
+    overflow: visible;
+}
+.award-boxs {
+ float: left; 
+}
+.activity-groups.daycare-holiday {
+    width: 100% !important;
+}
+.select-act-are {
+  
+    flex-wrap: wrap;
+}.nav.flex-column.nav-pills.nav-pills-tab   a   span {
+
+         font-size: 14px!important;
+  
+}
+.nav.flex-column.nav-pills.nav-pills-tab a {
+    margin: 25px 6px !important;
+        height: 70px!important;
+    width: 70px!important;
+}.svg-module-svgWrapper img {
+    width: 100%!important;
+
+}
+.student-banner .d-flex.align-items-center {
+    display: block !important;
+   
+}.student-banner  .icon {
+    margin-bottom: 16px;
+        text-align: center;
+}
+.no-flex {
+    display: block !important;
+}
+.left-button {
+    text-align: left !important;
+    /* width: 100%; */
+}.hover-box{
+ 
+   
+    flex-direction: row!important;
+    justify-content: space-around!important;
+    padding: 10px;
+}.no-padding-mobile
+{
+    padding: 0px !important;
+}.activity-filter-box input {
+    margin-bottom: 12px;
+}
+.item.bulk-img   a   img {
+ 
+    padding: 0px!important;
+    
+}
+.ngx-pagination .pagination-next a:after, .ngx-pagination .pagination-next.disabled:after {
+    display: none!important;
+    /* margin-left: -2.5rem; */
+}.ngx-pagination .pagination-previous a:before, .ngx-pagination .pagination-previous.disabled:before {
+      display: none!important;
+}
+ .content-del .date {
+    padding-left: 0px!important;
+        margin-top: 13px!important;
+}p.comment-text.mb-0.text-dark{
+    padding-left: 0px!important;
+    
+}ul.d-flex.justify-content-start.align-items-center.gp-12 {
+    flex-wrap: wrap!important;
+      margin-bottom: 10px!important;
+}
+.activity-filter-box1 label {
+    margin-top: 10px!important;
+    
+}ul.d-flex.justify-content-start.align-items-center.gp-26 div {
+    margin-bottom: 10px;
+            width: 100%;
+}
+.timeline-section {
+    padding-left: 20px!important;
+}.dive.d-flex.flex-column {
+    position: relative;
+}.logo-img.responsive-logo-new img {
+    display: block !important;
+    width: 53%;
+    margin: 0 auto;
+}.card-body.daycare-body a {
+    margin-bottom: 20px!important;
+} ul.nav.nav-tabs  li {
+    border: 1px solid #bb9bb8;
+           border-radius: 7px;
+        margin-bottom: 10px;
+}.mobile_btn i.fas.fa-bars {
+    color: #a2729e;
+}  .fc .fc-daygrid-event {
+    font-size: 10px;
+    padding: 1px 2px;
+  }
+
+ a.fc-event.fc-event-start.fc-event-end.fc-event-past.fc-daygrid-event.fc-daygrid-dot-event div {
+    width: 100%;
+}
+  full-calendar.fc.fc-media-screen.fc-direction-ltr.fc-theme-standard {
+    height: 542px;
+}
+.expense-type {
+    text-align: left !important;
+}
+.days-box.days-box.d-flex.justify-content-between.align-items-center {
+    flex-wrap: wrap;
+}.teacher2 {
+    margin-bottom: 0px!important;
+    padding-bottom: 10px!important;
+}.form-group-job {
+  
+    width: 100%!important;
+    margin-bottom: 10px!important;
+}
+.col-md-8.float-end.add-item-button button {
+    margin-top: 14px;
+}.col-md-2.cancel-btn {
+
+    justify-content: end!important;
+  
+}.search button[type=submit] {
+        padding: 7px 11px !important;
+        top: 1px !important;
+    }
+    ul.new-slots li{
+  
+    width: 100%!important;
+    margin-right: 0px;
+    position: relative;
+    margin-bottom: 12px!important;
+}.card-body.activites-class {
+    height: auto !important;
+}.tab-content {
+    padding-right: 0px!important;
+}
+.my-tab-body ul li {
+    width: 50%;
+    margin-bottom: 11px;
+}.lfter .radio ul li {
+    width: 100% !important;
+}ng-select {
+    
+    min-height: max-content !important;
+}
+img.img-fluid.preloader-icon2 {
+   
+    width: 20% !important;
+} .login-left {
+    display: none !important;
+}
+.login-wrapper .loginbox .login-right {
+  
+    width: 100%!important;
+}
+.level-1 {
+    width: 100%!important;
+  
+}
+ul.nav.nav-tabs li {
+    margin-right: 10px!important;
+}
+.select-act-are {
+
+    justify-content: flex-start !important;
+}
+.student-submit.text-end button {
+    font-size: 13px;
+    padding: 2px 5px !important;
+}.student-submit.text-end {
+    text-align: left !important;
+}
+} 

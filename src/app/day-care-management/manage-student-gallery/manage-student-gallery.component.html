@@ -1,0 +1,154 @@
+<app-breadcrumb></app-breadcrumb>
+<section class="upload">
+  <div class="card">
+    <div class="card-body">
+      <!-- Header Section -->
+      <div class="row mb-3">
+        <div class="col-12">
+          <div class="heading-new">
+            <h5 class="mb-0">Manage Student Gallery</h5>
+          </div>
+        </div>
+      </div>
+
+      <form [formGroup]="StudentGalleryForm">
+        <!-- Form Fields Section -->
+        <div class="row">
+
+          
+
+
+          <!-- Classroom Selection -->
+          <div class="col-lg-4 col-md-6">
+            <div class="form-group local-forms">
+              <label for="classroomSelect" class="form-label">
+                Select a classroom<span class="login-danger">*</span>
+              </label>
+
+              <ng-select id="planSelect" [items]="class" bindLabel="classroomName" formControlName="classRoomID"
+                bindValue="classroomID" (change)="onSelectClass($event)"></ng-select>
+
+              <span class="text-danger" *ngIf="
+                  StudentGalleryForm.controls['classRoomID']?.invalid &&
+                  StudentGalleryForm.controls['classRoomID']?.touched
+                ">
+                This field is required
+              </span>
+            </div>
+          </div>
+
+          <!-- Student List Selection -->
+          <div class="col-lg-4 col-md-6">
+            <div class="form-group local-forms">
+              <label for="sectionSelect" class="form-label">Select a Student<span class="login-danger">*</span></label>
+
+              <ng-select [items]="student" bindLabel="firstName" bindValue="id" formControlName="studentID"
+                [multiple]="true" (change)="onSelectStudent($event)">
+                <ng-template ng-option-tmp let-item="item">
+                  {{ item.firstName }} {{ item.lastName }}
+                </ng-template>
+              </ng-select>
+
+
+
+              <span class="text-danger" *ngIf="
+                  StudentGalleryForm.controls['studentID']?.invalid &&
+                  StudentGalleryForm.controls['studentID']?.touched
+                ">
+                This field is required
+              </span>
+            </div>
+          </div>
+
+          <!-- Date Selection -->
+          <div class="col-lg-4 col-md-6">
+            <div class="form-group local-forms">
+              <label for="datePickerSelectDate" class="form-label">
+                Select Date <span class="login-danger">*</span>
+              </label>
+              <input type="text" id="datePickerSelectDate" #datePickerSelectDate class="form-control"
+                formControlName="activityDate" (change)="onChangeDate($event)" />
+
+              <span class="text-danger" *ngIf="
+                  StudentGalleryForm.controls['activityDate']?.invalid &&
+                  StudentGalleryForm.controls['activityDate']?.touched
+                ">
+                This field is required.
+              </span>
+            </div>
+          </div>
+
+          <!-- Activity Name Input -->
+          <div class="col-lg-4 col-md-6  mt-4">
+            <div class="form-group local-forms">
+              <label for="activityName" class="form-label">
+                Activity Name <span class="login-danger">*</span>
+              </label>
+              <input type="text" id="activityName" class="form-control" formControlName="activityName"
+                />
+
+              <span class="text-danger" *ngIf="
+        StudentGalleryForm.controls['activityName']?.invalid &&
+        StudentGalleryForm.controls['activityName']?.touched
+      ">
+                This field is required.
+              </span>
+            </div>
+          </div>
+
+          <div class="col-xl-4 col-lg-6  mt-4">
+            <div class="form-group local-forms" style="position: relative">
+              <label>Image & Video</label>
+              <input #addFileOrVideo type="file" class="form-control" accept="image/png, image/jpeg, image/jpg, image/webp, image/gif, video/mp4, video/mov, video/webm, video/avi" />
+
+              <div class="file-label">
+                {{ fileCount || "Choose Files" }}
+              </div>
+              <input accept="image/png, image/jpeg, image/jpg, image/webp, image/gif, video/mp4, video/mov, video/webm, video/avi" type="file" class="form-control updated" formControlName="bulkFile"
+                [accept]="fileAcceptType" [(ngModel)]="fileInput" id="file-upload" #FileInput
+                (change)="FileChange($event, 'bulkUpload')" multiple />
+            </div>
+          </div>
+
+
+        </div>
+        <!-- File Upload Section -->
+        <div class="row mt-3">
+     
+        </div>
+        <div class="row mt-3">
+          <div class="col-md-12">
+            <div class="grid">
+              <div style="width: 10%; height: auto" class="cell-width" *ngFor="let imageUrl of Urls; let i = index">
+                <div class="cell-height">
+                  <div class="item">
+                    <i (click)="DeleteFile(i)" class="fa fa-xmark delete-icon" aria-hidden="true">
+                    </i>
+                    <img [src]="imageUrl" alt="Uploaded Image" style="width: 100%; height: auto" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+
+
+      <div class="stroage-limit">
+        <span> <i class="fa fa-info"></i> You can upload up to 10 images per activity. Supported formats include JPG, PNG, and JPEG.</span>
+      </div>
+
+      <!-- Buttons Section -->
+      <div class="row mt-4">
+        <div class="col-12 text-end">
+          <button type="submit" id="submit-btn" class="btn btn-primary me-2" (click)="onSubmit()">
+            Submit
+          </button>
+          <button type="reset" class="btn btn-secondary" (click)="ResetForm()">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

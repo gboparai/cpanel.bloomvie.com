@@ -1,0 +1,5 @@
+.disabled {
+    pointer-events: none;  /* Prevents clicks */
+    opacity: 0.5;          /* Fades the element */
+    cursor: not-allowed;   /* Shows disabled cursor */
+}

@@ -1,0 +1,14 @@
+.searcher {
+    display: flex;
+    width: 100%;
+    gap: 40px;
+}
+
+.mb-0 a{
+    color:#000  !important
+}
+
+.p-25{
+    padding: 25px;
+}
+

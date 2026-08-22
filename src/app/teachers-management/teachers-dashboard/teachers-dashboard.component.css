@@ -1,0 +1,234 @@
+
+.photos-grid-container {
+    height: 100%;
+    display: grid;
+    grid-template-columns:  1fr; 
+    grid-template-rows: 1fr;
+    grid-gap: 0;
+    align-items: start;
+  }
+  @media (max-width: 580px) {
+    .photos-grid-container {
+      grid-template-columns: 1fr;
+    }
+  }
+  .photos-grid-container .img-box {
+    border: 1px solid #ffffff;
+    position: relative;
+  }
+  .photos-grid-container .img-box:hover .transparent-box {
+    background-color: rgba(0, 0, 0, 0.6);
+  }
+  .photos-grid-container .img-box:hover .caption {
+    transform: translateY(-5px);
+  }
+  .photos-grid-container img {
+    max-width: 100%;
+    display: block;
+    height: 100%;
+  }
+  .photos-grid-container .caption {
+    color: white;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    font-size: 1.5rem;
+  }
+  .photos-grid-container .transparent-box {
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: background-color 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .photos-grid-container .main-photo {
+    grid-row: 1;
+    grid-column: 1;
+  }
+  .photos-grid-container .sub {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    grid-gap: 0em;
+    height: 323px;
+  }
+  .photos-grid-container .sub:nth-child(0) {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .photos-grid-container .sub:nth-child(1) {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .photos-grid-container .sub:nth-child(2) {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .photos-grid-container .sub:nth-child(3) {
+    grid-column: 2;
+    grid-row: 2;
+  }
+  
+  .hide-element {
+    border: 0;
+    clip: rect(1px 1px 1px 1px);
+    /* IE6, IE7 */
+    clip: rect(1px, 1px, 1px, 1px);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+  }
+  /*------------------------*/
+.db-icon img{
+  width:40px;
+  height:40px;
+}
+
+#calendar {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 0 10px;
+  }
+
+  
+
+  .pdf-container {
+    margin: 20px;
+    padding: 10px;
+  }
+  
+  h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+
+  .calendar-wrapper {
+    max-width: 500px;
+    min-width: 200px;
+    border: 1px solid #d3d3d3; /* Example color for gray variant 300 */
+    border-radius: 6px;
+    margin: 8px;
+}
+
+.igx-calendar {
+    --ig-size: 2;
+    border-radius: 4px;
+}
+
+
+.fixer{
+    height: 293px;
+}
+.calca{
+  background: #fff;
+  border-radius: 16px;
+  padding: 25px;
+  height: 571px;
+  margin-bottom: 1.875rem;
+}
+
+.actions .approve-rec:hover {
+  background-color: #ffffff00  !important;
+}
+.bg-card {
+  background: var(--main-color);
+}
+.overlay-img .shape-01 {
+  position: absolute;
+  left: 40%;
+}.overlay-img .shape-02 {
+  position: absolute;
+  left: 60%;
+  bottom: 0;
+}.overlay-img .shape-03 {
+  position: absolute;
+  left: 80%;
+}.overlay-img .shape-04 {
+  position: absolute;
+  right: 15%;
+  bottom: 0;
+}.card-body.activites-class {
+ max-height: 650px;
+    height: 280px;
+    overflow: auto;
+    min-height: 200px;
+}
+
+
+.eye-box{
+  position: absolute;
+  padding: 7px 5px;
+  background-color: #cdcdcdad;
+  right: 0px;
+  top: 21px;
+  border-radius: 0px 5px 5px 0px;
+
+}
+.eye-box .fa .fa-eye{
+  font-size: 12px !important;
+}
+.rounded-custom{
+  border-radius: 13px !important;
+}
+
+.AddslotButton{
+  margin-left: 390px;
+  margin-top: 4px;
+}
+
+.eye-box .fa-eye{
+
+  font-size: 12px; color: var(--main-color);
+}
+
+ /* .dasboard-header {
+  background: #94c9c7 !important;
+}
+.dasboard-main-color {
+    background: #c9e3e2 !important;
+}
+.dasboard-header-two {
+  background: #c8d26e !important ;
+}
+.dasboard-main-color-two  {
+    background: #eff2dc !important;
+} */.card-body.teacher-card-body .card-body {
+  height: 110px;
+}
+
+
+
+.skeleton-line.user-info-card {
+  height: 24px;
+  border-radius: 4px;
+  background-color: #e0e0e0;
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton-line.user-info-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -150px;
+  height: 100%;
+  width: 150px;
+  background: linear-gradient(to right, transparent 0%, #f5f5f5 50%, transparent 100%);
+  animation: shimmer 1.2s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    left: -150px;
+  }
+  100% {
+    left: 100%;
+  }
+}

@@ -1,0 +1,141 @@
+<app-breadcrumb></app-breadcrumb>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="heading-new">
+                    <h5 class="mb-0">View Expense</h5>
+                </div>
+                <form>
+                    <div class="row">
+                        <div class="col-md-12 text-end">
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                data-bs-target="#exampleModal">
+                                <i class="fa fa-plus"></i>
+                                Add Expense
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="row mt-3">
+                    <div class="col-md-12">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="student-thread">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Expense&nbsp;Type</th>
+                                        <th>Amount</th>
+                                        <th>Date&nbsp;of&nbsp;Expense</th>
+                                        <th>Payment&nbsp;Status</th>
+                                        <th>Notes/Description</th>
+                                        <th class="text-center">Attachment</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>Office Supplies</td>
+                                        <td>$100</td>
+                                        <td>10-09-2024</td>
+                                        <td><span class="badge rounded-pill bg-success">Paid</span></td>
+                                        <td>Any additional details or notes about the expense</td>
+                                        <td>
+                                            <div  class="actions"><a
+                                                     title="Download Resume"
+                                                    class="action-btn bg-danger-light me-2"><i
+                                                         class="feather-download"></i></a>
+                                             </div>
+                                        </td>
+                                        <td>
+                                            <div class="actions">
+                                                <a class="action-btn bg-danger-light me-2" data-bs-toggle="modal"
+                                                    data-bs-target="#exampleModal">
+                                                    <i class="feather-edit"></i>
+                                                </a>
+                                            
+                                            </div>
+                                        </td>
+                                    </tr>
+
+
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="border:none;">
+                <h5 class="modal-title" id="exampleModalLabel">
+                    Add Expense
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row ">
+                    <div class="col-12 col-md-12 mb-4">
+                        <div class="form-group local-forms">
+                            <label for="role">Expense Type<span class="login-danger">*</span></label>
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-12 mb-4">
+                        <div class="form-group local-forms">
+                            <label for="role">Amount<span class="login-danger">*</span></label>
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-12 mb-4">
+                        <div class="form-group local-forms">
+                            <label for="role">Date of Expense<span class="login-danger">*</span></label>
+                            <input type="date" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-12 mb-4">
+                        <div class="form-group local-forms">
+                            <label for="role">Payment Status<span class="login-danger">*</span></label>
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-12 mb-4">
+                        <div class="form-group local-forms">
+                            <label for="role"> Attachment</label>
+                            <input type="file" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-12">
+                        <div class="form-group local-forms">
+                            <label for="role">Notes/Description<span class="login-danger">*</span></label>
+                            <textarea class="form-control"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer" style="border:none;">
+                <button type="button" class="btn btn-primary">Submit</button>
+                <button type="button" class="btn btn-secondary" >Cancel</button>
+
+            </div>
+        </div>
+    </div>
+</div>

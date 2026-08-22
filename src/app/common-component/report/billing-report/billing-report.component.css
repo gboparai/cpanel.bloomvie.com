@@ -1,0 +1,23 @@
+.badge {
+    padding: .25rem .45rem;
+    text-transform: capitalize;
+    font-weight: 600;
+    letter-spacing: .5px;
+    border-radius: 4px;
+}
+.fs-5 {
+    font-size: .3125rem!important;
+}
+
+.badge-soft-pending {
+    background: #e6f9ff;
+    color: #05c3fb;
+}
+.p-25{
+    padding: 25px;
+}
+.searcher {
+    display: flex;
+    width: 100%;
+    gap: 40px;
+}

@@ -1,0 +1,13 @@
+<div class="employee-tooltip">
+  <div class="tooltip-content">
+    <img [src]="employee.profile?employee.profile:'assets/img/dummy-avatar.jpg'"/>
+  
+    <div class="tooltip-info">
+      <div class="emp-name non-transform d-flex justify-content-start align-items-center gp-5"><i class="fas fa-user"></i><span> {{employee.fullName}}</span></div>
+      <div class="emp-id non-transform d-flex justify-content-start align-items-center gp-5" ><i class="fas fa-envelope"></i> <span>{{employee.email}}</span></div>
+      <!-- <div class="emp-email">rohit.verma&#64;company.in</div>
+      <div class="emp-phone">9786543215</div> -->
+    </div>
+  </div>
+  <div class="tooltip-arrow"></div>
+</div>

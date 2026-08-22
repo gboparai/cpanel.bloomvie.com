@@ -1,0 +1,191 @@
+<app-breadcrumb></app-breadcrumb>
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="heading-new">
+          <h5 class="mb-0"> View Class Teacher</h5>
+        </div>
+
+        <div class="col-md-12" *ngIf="showBanner">
+          <div class="student-banner">
+            <div class="d-flex align-items-center">
+              <div class="icon">
+                <img class="listing" src="assets/img/grouping.png" />
+              </div>
+              <div>
+                <h5 class="mb-1 fw-semibold">Welcome to your Staff- Class
+                  List!</h5>
+                <p class="mb-0 text-muted">
+                  View a comprehensive list of all staff and students in your
+                  school. Use the demo entries to explore
+                  how Bloomvie displays and organizes your data.
+                </p>
+              </div>
+            </div>
+            <div class="close-btn" (click)="closeBanner()">&times;</div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="search">
+            <input placeholder="Type here.." type="text"
+              [(ngModel)]="searchText" (input)="onSearchInput()" />
+            <button type="submit">Search</button>
+          </div>
+        </div>
+
+        <div class="accordion" id="accordionExample">
+          <table class="table table-hover mb-0">
+            <thead class="student-thread">
+              <tr>
+                <th>Class Name</th>
+                <th>Age Group</th>
+                <th>Student Ratio</th>
+                <th>Staff Ratio</th>
+                <th>Overall Ratio</th>
+              </tr>
+            </thead>
+
+            @if (skeletonShow === 'Skelton') {
+            <tbody>
+              <tr>
+                <td colspan="100%">
+                  <app-skeleton-loader skeletonShow="Skelton" viewType="table"
+                    [tableRows]="5" [tableCols]="5">
+                  </app-skeleton-loader>
+                </td>
+              </tr>
+            </tbody>
+            }
+            @else if (classList.length > 0) {
+            <tbody
+              *ngFor="let item of classList  | paginate: { itemsPerPage: Contentsize, currentPage: ContentP, id: 'Agentcontrol' } ;let i= index">
+              <tr>
+                <td>
+                  <div class="toogle-classroom">
+                    <button class="btn-toggle" data-bs-toggle="collapse"
+                      [attr.data-bs-target]="'#collapseClass' + i"
+                      aria-expanded="false"
+                      [attr.aria-controls]="'collapseClass' + i"
+                      (click)="onClassNameClick(item.id)">
+                      <i class="fa"></i>
+                    </button>
+                    <span>{{ item.className }}</span>
+                  </div>
+                </td>
+                <td>{{ item.ageGroup }}</td>
+                <td><span class="rounded-pill badge bg-dany"><b>{{
+                      item.studentRatio }}</b> Student In</span></td>
+                <td><span class="rounded-pill badge bg-dany"><b>{{ item.staff
+                      }}</b> Staff In</span></td>
+                <td><b>{{ item.staff }} : {{ item.studentRatio }}</b></td>
+              </tr>
+
+              <!-- Collapsible Teacher Details -->
+              <tr>
+                <td class="p-0" colspan="8">
+                  <div class="collapse collapse-table"
+                    [attr.id]="'collapseClass' + i"
+                    data-bs-parent="#accordionExample">
+                    <table class="table sub-table mb-0">
+                      <thead class="table-light">
+                        <tr>
+                          <th class="wd-20">Teacher Name</th>
+                          <!-- <th class="text-start wd-20">Email</th> -->
+                          <th>Class Date</th>
+                          <th>Class Day</th>
+                        </tr>
+                      </thead>
+
+                      @if (skeletonShow2 === 'Skelton2') {
+                      <tbody>
+                        <tr>
+                          <td colspan="100%">
+                            <app-skeleton-loader skeletonShow2="Skelton2"
+                              viewType="table" [tableRows]="5"
+                              [tableCols]="4">
+                            </app-skeleton-loader>
+                          </td>
+                        </tr>
+                      </tbody>
+                      }
+                      @else if (teacherlist.length > 0) {
+                      <tbody *ngFor="let teacher of teacherlist">
+                        <tr>
+                          <!-- <td class="wd-20">{{ teacher.name }}</td> -->
+                          <!-- <td class="wd-20">{{ teacher.email }}</td> -->
+                          <td>
+                            <!-- tooltip  added here  -->
+                            <div class="tooltip-wrapper"
+                              style="position: relative"
+                              (mouseenter)="hoveredRow = teacher"
+                              (mouseleave)="hoveredRow = null">
+                              <span class="hover-anchor">{{
+                                teacher.name}}</span>
+                              <!-- call here   and remove below div if able to call -->
+                              <app-tooltip *ngIf="hoveredRow === teacher"
+                                [employee]="{
+                      fullName: teacher.name + '' + (teacher.lastName ? ' ' + teacher.lastName : ''),
+                      email: teacher.email,
+                      profile:''
+                    }"></app-tooltip>
+                            </div>
+                          </td>
+
+                          <td>{{ teacher.classDate | date: 'MM/dd/yyyy' }}</td>
+                          <td>{{ teacher.classDay }}</td>
+                        </tr>
+                      </tbody>
+                      }
+                      @else {
+                      <tbody>
+                        <tr>
+                          <td colspan="8">
+                            <div class="no-data">
+                              <img src="assets/img/no-data-img.png"
+                                alt="No Record Found" />
+                              <span>No Record Found</span>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                      }
+                    </table>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+            }
+            @else {
+            <tbody>
+              <tr>
+                <td colspan="8">
+                  <div class="no-data">
+                    <img src="assets/img/no-data-img.png"
+                      alt="No Record Found" />
+                    <span>No Record Found</span>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+            }
+          </table>
+        </div>
+
+        <div class="col pagination-style mt-4 no-flex">
+          <div class="datatable-pager datatable-paging-loaded">
+            @if((classList != null )&&( classList.length>10))
+            {
+            <pagination-controls previousLabel="prev" nextLabel="next"
+              [maxSize]="10"
+              class="datatable-pager-nav my-2 mb-sm-0" id="Agentcontrol"
+              (pageChange)="ContentP = $event">
+            </pagination-controls>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

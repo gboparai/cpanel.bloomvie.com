@@ -1,0 +1,57 @@
+  .icon-box {
+      text-align: center;
+      padding: 10px;
+      border-radius: 10px;
+      background-color: #f5e6f4;
+    }
+
+
+    .student-table th, .student-table td {
+      vertical-align: middle;
+    }
+
+    .form-note {
+      font-size: 0.875rem;
+      color: #6c757d;
+    }
+
+    .eye-btn {
+      background: none;
+      border: none;
+      font-size: 18px;
+    }.activity-icons {
+  background-color: #f3e5f5; /* light purple */
+  padding: 17px 30px 32px 30px;
+  border-radius: 10px;
+}
+
+.icon-box {
+  width: 90px;
+  height: 90px;
+  text-align: center;
+  padding: 8px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.icon-box img {
+  width: 70px;
+  height: 70px;
+  background-color: #fff;
+  border-radius: 50%;
+  padding: 10px;
+  box-shadow: 0 0 0 2px #ccc;
+}
+
+.icon-box .small {
+  font-size: 14px;
+      font-weight: bold;
+  margin-top: 5px;
+}
+
+
+.icon-box.active img {
+  background-color: #c27cd7; /* darker purple for active */
+  box-shadow: 0 0 0 2px #c27cd7;
+  
+}

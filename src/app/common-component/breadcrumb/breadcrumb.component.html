@@ -1,0 +1,25 @@
+<div class="page-header">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="page-sub-header">
+        <ul class="breadcrumb">
+          <li>
+            <a [ngClass]="{ active: !ChildComponent }">
+              {{ Component }}
+            </a>
+          </li>
+          <li *ngIf="ChildComponent">
+            <a class="active">
+              {{ ChildComponent }}
+            </a>
+          </li>
+          <li *ngIf="nestedChild">
+            <a class="active">
+              {{ nestedChild }}
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,271 @@
+.img-thumbnail {
+    border: 1px solid #ddd;
+    padding: 5px;
+    border-radius: 5px;
+  }
+  
+  .me-2 {
+    margin-right: 10px;
+  }
+  
+
+  .gallery-grid .gallery-item {
+    margin-bottom: 15px;
+}
+
+.image-thumbnail img, .video-thumbnail img {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.comment-section .comment {
+    border-radius: 8px;
+}
+
+.comment-section .comment .comment-text {
+    font-size: 0.9rem;
+}
+
+.comment-section .comment .user-avatar img {
+    border: 2px solid #ddd;
+}
+
+.add-comments .col-md-12 {
+  margin-top: 38px;
+}
+.add-comments {
+
+  margin-top: 10px !important;
+  float: left;
+  width: 100%;
+}.card-header.bg-primary.text-white {
+  background: #d6e9f0 !important;
+  margin-bottom: 0px;
+  padding: 10px;
+}.card-header.bg-primary.text-white  h5.mb-0 {
+  font-size: 17px;
+}.add-comments .card-body {
+
+  padding: 10px;
+}
+.card-footer {
+  border: 0px;
+}
+
+.comment-details.ml-3.flex-grow-1 {
+  display: flex;
+  margin-left: 0px ! IMPORTANT;
+  justify-content: flex-start;
+  width: 100%;
+  vertical-align: middle;
+  align-items: center;
+;
+}.content-del {
+  float: left;
+  width: 100%;
+  display: block;
+}.Parent span {
+  height: 27px;
+  width: 27px;
+  display: block;
+  background: #f5cccc;
+  text-align: center !important;
+  border-radius: 50%;
+  text-align: center;
+  align-items: center;
+  position: relative;
+  margin-right: 11px;
+  display: flex;
+  text-align: center;
+  justify-content: center;
+}.comment.p-3 {
+  padding: 7px 16px !important;
+  border-bottom: 1px dashed #e3e2e2;
+  border-radius: 0px !important;
+  float: left;
+  position: relative;
+  width: 100%;
+  margin-bottom: 0px !important;
+
+}.comment.p-3.mb-3.rounded.shadow-sm.ng-star-inserted {
+  padding: 16px 20px !important;
+  float: left;
+  width: 100%;
+}p.comment-text.mb-0.text-dark {
+  padding-left: 40px;
+  margin-top: 3px ! IMPORTANT;
+  padding-bottom: 6px;
+}button.edit-hover {
+  border: none;
+  
+  background: transparent;
+  color: gray;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}.comment.p-3.mb-3.rounded:hover {
+  background: #ebeaeaa3;
+}button.btn.btn-sm.btn-success.shadow-none {
+  background: #95a2bf;
+  border-color: #95a2bf;
+}.add-comments .card {
+  
+ 
+  box-shadow: 1px 6px 8px -3px rgb(44 50 63 / 29%) !important;
+ 
+}.date {
+  padding-left: 40px;
+}
+
+.timeline-month {
+  /* font-size: 20px; */
+  font-weight: 500;
+  margin-right: 8px;
+}
+
+.grid{
+  align-items: start;
+}
+.gp-10{
+  gap: 20px;
+}
+
+.cell-width{
+  position: relative;
+}
+.del-btn{
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  display: flex
+  ;
+}
+.cell-width {
+  object-fit: cover;
+    height: 170px;
+    width: 22%;
+    line-height: 170px;
+    background: #cce2ed;
+    display: block;
+    text-align: center;
+    position: relative;
+
+    align-items: center;
+    margin: 13px;
+    float: left;
+}.item.bulk-img {
+  height: 170px;
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  overflow: hidden;
+  object-fit: cover;
+}.item.bulk-img a img {
+  height: 100% !important;
+  padding: 15px;
+  width: 100% !important;
+}
+
+.timeline {
+  margin-top: 20px;
+  position: relative;
+  max-width: 100%;
+}
+
+.timeline:before {
+  position: absolute;
+  content: "";
+  width: 4px;
+  height: calc(100% + 0px);
+  background: rgb(138, 145, 150);
+  background: -moz-linear-gradient(left, rgba(138, 145, 150, 1) 0%, rgba(122, 130, 136, 1) 60%, rgba(98, 105, 109, 1) 100%);
+  background: -webkit-linear-gradient(left, rgba(138, 145, 150, 1) 0%, rgba(122, 130, 136, 1) 60%, rgba(98, 105, 109, 1) 100%);
+  background: linear-gradient(
+    to right,
+    rgba(138, 145, 150, 1) 0%,
+    rgba(122, 130, 136, 1) 60%,
+    rgba(98, 105, 109, 1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#8a9196", endColorstr="#62696d", GradientType=1);
+  left: 14px;
+  top: 5px;
+  border-radius: 4px;
+}
+
+.timeline-month{
+  position: relative;
+  padding: 4px 15px 4px 35px;
+  background-color: #ffffff;
+  display: inline-block;
+  width: auto;
+  border-radius: 40px;
+  border: 1px solid #242424;
+  border-right-color: #2c2b2b;
+  margin-bottom: 30px;
+}
+.timeline-month:before {
+  position: absolute;
+  content: "";
+  width: 20px;
+  height: 20px;
+  background: rgb(138, 145, 150);
+  background: -moz-linear-gradient(top, rgba(138, 145, 150, 1) 0%, rgba(122, 130, 136, 1) 60%, rgba(112, 120, 125, 1) 100%);
+  background: -webkit-linear-gradient(top, rgba(138, 145, 150, 1) 0%, rgba(122, 130, 136, 1) 60%, rgba(112, 120, 125, 1) 100%);
+  background: linear-gradient(
+    to bottom,
+    rgba(138, 145, 150, 1) 0%,
+    rgba(122, 130, 136, 1) 60%,
+    rgba(112, 120, 125, 1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#8a9196", endColorstr="#70787d", GradientType=0);
+  border-radius: 100%;
+  border: 1px solid #17191B;
+  left: 5px;
+}
+.inner-pad {
+  border: 1px dotted black;
+  border-radius: .375rem;
+  display: inline-block;
+}
+.timeline:before {
+  position: absolute;
+  content: "";
+  width: 4px;
+  height: calc(100% + 0px);
+  background: rgb(138, 145, 150);
+  background: -moz-linear-gradient(left, rgba(138, 145, 150, 1) 0%, rgba(122, 130, 136, 1) 60%, rgba(98, 105, 109, 1) 100%);
+  background: -webkit-linear-gradient(left, rgba(138, 145, 150, 1) 0%, rgba(122, 130, 136, 1) 60%, rgba(98, 105, 109, 1) 100%);
+  background: linear-gradient(
+    to right,
+    rgba(138, 145, 150, 1) 0%,
+    rgba(122, 130, 136, 1) 60%,
+    rgba(98, 105, 109, 1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#8a9196", endColorstr="#62696d", GradientType=1);
+  left: 14px;
+  top: 5px;
+  border-radius: 4px;
+}
+.timeline-section {
+  padding-left: 35px;
+  display: block;
+  position: relative;
+  margin-bottom: 30px;
+}
+
+.timeline-section:before {
+  content: "";
+  position: absolute;
+  width: 26px;
+  height: 1px;
+  background-color: #444950;
+  top: 12px;
+  left: 26px;
+}.stater {
+  background: #eff4f8;
+  padding: 8px 19px;
+  margin-bottom: 15px;
+}h5.activity-name {
+  color: var(--main-color);
+  text-transform: capitalize;
+ 
+}

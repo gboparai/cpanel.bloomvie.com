@@ -1,0 +1,92 @@
+span.day-list.uncheck {
+    background: transparent;
+    color: #000;
+    border: 3px double var(--main-color);
+}
+.day-list {
+    background: var(--main-color);
+    padding: 3px 11px;
+    color: #fff;
+    border-radius: 8px;
+    width: 100%;
+    display: inline-block;
+    font-size: 15px;
+    border: 4px double #fff;
+}
+
+.pb-20{
+    padding-bottom: 20px;
+}
+div#pills-work .card-body {
+    padding: 0px !important;
+}
+
+.bdr-col{
+
+    /* border: 1px dashed #ddd; */
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+}
+
+/* .holi{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 50px;
+} */
+
+
+
+.head-mo h5 {
+    padding: 3px 8px;
+}
+.head-mo {
+    border-radius: 5px;
+}
+.head-mo {
+    
+    margin-bottom: 12px;
+}
+.head-mo  h5{
+font-size: 15px !important;
+    padding: 7px 20px;
+}
+
+.head-m1{
+
+background: #f8e9e9;
+}
+.head-m2{
+
+   background: #e7f0e7;
+}
+
+.head-m3{
+
+  background: #e7e7f9;
+ 
+}
+
+.head-m4{
+
+   background: #ffff001a;
+}
+
+@media(max-width:1500px){
+
+
+    .radio ul li  label span {
+        font-size:13px !important;
+    }
+}
+.edit-holiday {
+    position: absolute;
+    right: 0px;
+    display: none;
+}
+.main-edit-holiday {
+    position: relative;
+    cursor: pointer;
+}
+.main-edit-holiday:hover .edit-holiday {
+    display: flex;
+  }

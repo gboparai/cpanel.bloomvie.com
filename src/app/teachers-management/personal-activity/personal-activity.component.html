@@ -1,0 +1,137 @@
+
+<app-breadcrumb></app-breadcrumb>
+<div class="row">
+  <div class="col-md-12">
+    <div class="card bg-card">
+        <div  class="card-body">
+        <div class="heading-new"><h5 class="mb-0">Add Activity</h5></div>
+        <div class="teacher-child-personal-act">
+            <div class=" my-4">
+    <!-- Icons -->
+ <div class="d-flex flex-wrap gap-2 justify-content-between mb-4 activity-icons">
+  <div class="icon-box active">
+    <img src="assets/img/nap-icon.png" alt="Nap">
+    <div class="small">Nap</div>
+  </div>
+  <div class="icon-box">
+    <img src="assets/img/food-icon.png" alt="Food">
+    <div class="small">Food</div>
+  </div>
+  <div class="icon-box">
+    <img src="assets/img/health-icon.png" alt="Health">
+    <div class="small">Health</div>
+  </div>
+  <div class="icon-box">
+    <img src="assets/img/med-icon.png" alt="Medicines">
+    <div class="small">Medicines</div>
+  </div>
+  <div class="icon-box">
+    <img src="assets/img/incident-icon.png" alt="Incident">
+    <div class="small">Incident</div>
+  </div>
+  <div class="icon-box">
+    <img src="assets/img/note-icon.png" alt="Note">
+    <div class="small">Note</div>
+  </div>
+  <div class="icon-box">
+    <img src="assets/img/reminder-icon.png" alt="Reminders">
+    <div class="small">Reminders</div>
+  </div>
+</div>
+
+    <!-- Form -->
+    <form>
+      <div class="row mb-3">
+        <div class="col-md-6 mb-3">
+                    <div class="col-md-6 mb-3"></div>
+            <div class="form-group">
+          <label class="form-label">Nap Start Time</label>
+          <input type="time" class="form-control" /></div>
+            <div class="form-group">     <label class="form-label">Nap End Time</label>
+          <input type="time" class="form-control" /></div>
+        </div>
+        <div class="col-md-6 mb-3">
+     <label class="form-label">Note</label>
+          <textarea class="form-control" placeholder="Enter here..." rows="2"></textarea>
+        </div>
+       
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Date</label>
+          <input type="date" class="form-control" />
+        </div>
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Images & Video</label>
+          <input type="file" class="form-control" multiple />
+          <div class="form-note mt-1">You can upload up to 10 images per activity. Supported formats: JPG, PNG, JPEG.</div>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Select Classroom</label>
+        <select class="form-select">
+          <option selected>Select Classroom</option>
+        </select>
+      </div>
+
+      <div class="table-responsive mb-4">
+        <table class="table table-bordered student-table">
+          <thead class="table-light">
+            <tr>
+              <th>Select Child</th>
+              <th>Student Name</th>
+              <th>Age Group</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><input type="checkbox" class="form-check-input" /></td>
+              <td>Manveet</td>
+              <td>24 - 26</td>
+              <td><button type="button" class="eye-btn">👁️</button></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" class="form-check-input" /></td>
+              <td>Neha</td>
+              <td>10 - 12</td>
+              <td><button type="button" class="eye-btn">👁️</button></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" class="form-check-input" /></td>
+              <td>Sharma Ji</td>
+              <td>10 - 12</td>
+              <td><button type="button" class="eye-btn">👁️</button></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" class="form-check-input" /></td>
+              <td>Himesh</td>
+              <td>10 - 12</td>
+              <td><button type="button" class="eye-btn">👁️</button></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" class="form-check-input" /></td>
+              <td>Mukta</td>
+              <td>12 - 36</td>
+              <td><button type="button" class="eye-btn">👁️</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="d-flex justify-content-end gap-2">
+        <button type="submit" class="btn btn-primary">Add</button>
+        <button type="button" class="btn btn-secondary">Cancel</button>
+      </div>
+    </form>
+  </div>
+
+        </div>
+
+        </div>
+        </div>
+        </div>
+       
+        </div>

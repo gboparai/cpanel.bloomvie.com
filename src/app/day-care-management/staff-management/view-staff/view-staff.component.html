@@ -1,0 +1,938 @@
+<app-breadcrumb></app-breadcrumb>
+<div class="card">
+  <div class="card-body">
+    <div class="heading-new">
+      <div class="inactive-heading-box">
+        <h5 class="mb-0">View Staff</h5>
+      </div>
+    </div>
+
+    <div class="col-md-12" *ngIf="showBanner">
+      <div class="student-banner">
+        <div class="d-flex align-items-center">
+          <div class="icon">
+            <img class="listing" src="assets/img/grouping.png" />
+          </div>
+          <div>
+            <h5 class="mb-1 fw-semibold">Welcome to your Staff List!</h5>
+            <p class="mb-0 text-muted">
+              This is where you can manage all staff in your school. Explore
+              Bloomvie's functionality with the demo staff members.
+            </p>
+          </div>
+        </div>
+        <div class="close-btn" (click)="closeBanner()">&times;</div>
+      </div>
+    </div>
+
+    <ul class="nav nav-tabs" role="tablist">
+      <li class="nav-item" role="presentation">
+        <a class="nav-link active" data-bs-toggle="tab" aria-selected="false" role="tab" tabindex="-1"
+          (click)="filterActiveDeactive('active')">Active</a>
+      </li>
+      <li class="nav-item" role="presentation">
+        <a class="nav-link" data-bs-toggle="tab" aria-selected="false" role="tab" tabindex="-1"
+          (click)="filterActiveDeactive('deactivate')">Deactivate</a>
+      </li>
+    </ul>
+
+    <div class="row">
+      <div class="col-md-6">
+        <div class="row">
+          <div class="col-md-8 mb-3">
+            <div class="search">
+              <input placeholder="Type here.." type="text" [formControl]="searchTerm" />
+              <button type="submit">Search</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12" *ngIf="userRoleID == 3">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead class="student-thread">
+              <tr>
+                <th></th>
+                <th>#</th>
+                <th>First Name</th>
+                <!-- <th>Last Name</th> -->
+                <!-- <th>Email</th> -->
+                <th>Role</th>
+                <th>Role Specialization</th>
+                <th>Availability</th>
+                <!-- <th>Class Assign</th> -->
+                <th>Action</th>
+              </tr>
+            </thead>
+            @if (skeletonShow === 'Skelton') {
+            <tbody>
+              <tr>
+                <td colspan="100%">
+                  <app-skeleton-loader skeletonShow="Skelton" viewType="table" [tableRows]="5" [tableCols]="6">
+                  </app-skeleton-loader>
+                </td>
+              </tr>
+            </tbody>
+
+            } @else if (staffList.length > 0) {
+
+
+            <tbody *ngFor="
+                let item of staffList
+                  | paginate
+                    : {
+                        itemsPerPage: ContentsizePendingList,
+                        currentPage: ContentPendingList,
+                        id: 'dayCareAppointmentPendingList'
+                      };
+                let i = index
+              ">
+              <tr>
+                <td>
+                  @if(item.assignmentList[0]){
+                  <div class="accordion-header toggle-classroom" [id]="'heading' + item.id">
+                    <button class="btn-toggle" type="button" data-bs-toggle="collapse"
+                      [attr.data-bs-target]="'#collapse' + item.id" aria-expanded="false"
+                      [attr.aria-controls]="'collapse' + item.id" (click)="getClassListByTeacherID(item.id)">
+                      <i class="fa-solid fa-plus"></i>
+                    </button>
+                  </div>
+                  }
+                </td>
+                <td>
+                  {{
+                  (ContentPendingList - 1) * ContentsizePendingList + i + 1
+                  }}
+                </td>
+
+                <!-- <td>
+                  <span class="table-img-div"
+                    ><img
+                      [src]="
+                        item.staffProfile
+                          ? item.staffProfile
+                          : 'assets/img/dummy-avatar.jpg'
+                      "
+                      class="rounded-circle table-image0new"
+                      style="object-fit: cover" /></span
+                  >{{ item.firstName }}
+                </td> -->
+
+
+                <td>
+                  <!-- tooltip  added here  -->
+                  <div class="tooltip-wrapper" style="position: relative" (mouseenter)="hoveredRow = item"
+                    (mouseleave)="hoveredRow = null">
+                    <span class="hover-anchor">{{ item.firstName }}</span>
+                    <!-- call here   and remove below div if able to call -->
+                    <app-tooltip *ngIf="hoveredRow === item" [employee]="{
+                      fullName: item.firstName + '' + (item.lastName ? ' ' + item.lastName : ''),
+                      email: item.email,
+                      profile:item.staffProfile
+                    }"></app-tooltip>
+                  </div>
+                </td>
+
+
+
+
+
+                <!-- <td>{{ item.lastName == null ? "--" : item.lastName }}</td> -->
+                <!-- <td>{{ item.email }}</td> -->
+                <td>{{ item.userRole }}</td>
+                <td>{{ item.roleSpecialization || '---'}}</td>
+
+                <td class="tooltip-wrapper">
+                  <div class="day-block" *ngFor="let availability of item.teacherAvailability">
+                    <!-- aDD TIME HOVER -->
+                    <span class="hover-anchor">
+                      {{availability.dayName || '---'}}
+                    </span>
+
+                    <div *ngIf="item.dayName" class="employee-tooltip">
+                      <div class="tooltip-content">
+
+                        <div class="tooltip-info">
+                          <div class="emp-name">
+                            <span class="me-2"><b>Your Availability</b></span>
+                          </div>
+                          <div class="emp-name"><i class="fa-solid fa-clock me-1"></i>
+                            <span class="me-2"><b>Start Time</b></span><span>{{availability.startTime |
+                              TimeFormatAmPm}}</span>
+                          </div>
+                          <div class="emp-id"><i class="fa-solid fa-clock me-1"></i>
+                            <span class="me-2"><b>End Time</b></span><span>{{availability.endTime |
+                              TimeFormatAmPm}}</span>
+                          </div>
+
+                        </div>
+                      </div>
+                      <div class="tooltip-arrow"></div>
+                    </div>
+                  </div>
+                </td>
+
+                <!-- <td>{{item.assignmentList[0]?.className}}</td> -->
+                <td>
+                  <div class="actions">
+                    <a data-bs-toggle="modal" class="action-btn bg-danger-light me-2"
+                      (click)="viewTeacherDetail(item.id)"><i class="fa fa-eye "></i></a>
+
+                    <!-- <a *ngIf="item.assignmentList?.length == 0" (click)="selectItem(item)"
+                      class="action-btn bg-danger-light me-2">
+                      <i class="feather-edit"></i>
+                    </a> -->
+
+                      <a  (click)="selectItem(item)"
+                      class="action-btn bg-danger-light me-2">
+                      <i class="feather-edit"></i>
+                    </a>
+                    <!--  [attr.data-bs-target]="
+                        item.isActive ? '#exampleModal' : '#exampleModal1'
+                         data-bs-toggle="modal"
+                      " -->
+
+                    <a *ngIf="!onBoardingService.isOnboarding" class="action-btn bg-danger-light me-2"
+                      (click)="employeeJourneyDetails(item.id)">
+                      <i class="fa-solid fa-sitemap"></i>
+                    </a>
+                    <label class="switch mb-0 me-2" *ngIf="item.id > 0">
+                      <input id="check{{ item.id }}" [checked]="item.isActive"
+                        (change)="activeInactive(item.id, item.isActive)" type="checkbox" />
+
+                      <div class="slider">
+                        <span class="status-text"></span>
+                        <div class="circle">
+                          <!-- Cross Icon -->
+                          <svg class="cross" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 365.696 365.696" height="6"
+                            width="6">
+                            <g>
+                              <path fill="currentColor"
+                                d="M243.188 182.86L356.32 69.726c12.5-12.5 12.5-32.766 0-45.247L341.238 9.398c-12.504-12.503-32.77-12.503-45.25 0L182.86 122.528 69.727 9.374c-12.5-12.5-32.766-12.5-45.247 0L9.375 24.457c-12.5 12.504-12.5 32.77 0 45.25l113.152 113.152L9.398 295.99c-12.503 12.503-12.503 32.769 0 45.25L24.48 356.32c12.5 12.5 32.766 12.5 45.247 0l113.132-113.132L295.99 356.32c12.503 12.5 32.769 12.5 45.25 0l15.081-15.082c12.5-12.504 12.5-32.77 0-45.25z">
+                              </path>
+                            </g>
+                          </svg>
+                          <!-- Checkmark Icon -->
+                          <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="10"
+                            width="10">
+                            <g>
+                              <path fill="currentColor"
+                                d="M9.707 19.121a.997.997 0 0 1-1.414 0l-5.646-5.647a1.5 1.5 0 0 1 0-2.121l.707-.707a1.5 1.5 0 0 1 2.121 0L9 14.171l9.525-9.525a1.5 1.5 0 0 1 2.121 0l.707.707a1.5 1.5 0 0 1 0 2.121z">
+                              </path>
+                            </g>
+                          </svg>
+                        </div>
+                      </div>
+                    </label>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="9" class="p-0">
+                  <div [id]="'collapse' + item.id" class="accordion-collapse collapse collapse-table"
+                    [attr.aria-labelledby]="'heading' + item.id" data-bs-parent="#accordionExample">
+                    <table class="table sub-table mb-0">
+                      <thead class="table-light">
+                        <tr>
+                          <!-- <th style="width: 12%"></th> -->
+                          <th style="width: 10%">#</th>
+                          <th style="width: 30%">Class Name</th>
+                          <th style="width: 25%">Age Group</th>
+                          <th>Class Date</th>
+                          <th>Class Timing</th>
+                          <th>Teacher Timing</th>
+                        </tr>
+                      </thead>
+                      @if (skeletonShow2 === 'Skelton2') {
+                      <tbody>
+                        <tr>
+                          <td colspan="100%">
+                            <app-skeleton-loader skeletonShow2="Skelton2" viewType="table" [tableRows]="5"
+                              [tableCols]="6">
+                            </app-skeleton-loader>
+                          </td>
+                        </tr>
+                      </tbody>
+
+                      } @else if (AllClassList.length > 0) {
+
+                      <tbody *ngFor="let class of AllClassList; let i = index">
+                        <tr>
+                          <!-- <td> -->
+                          <!-- <div class="accordion-header toogle-classroom" id="headingTwo">
+                              <button class="btn-toggle" type="button" data-bs-toggle="collapse"
+                                [attr.data-bs-target]="'#heading-' + i" aria-expanded="false"
+                                [attr.aria-controls]="'heading-' + i" (click)="onClassNameClick(class.classID)">
+                                <i class="fa-solid fa-plus"></i>
+                              </button>
+                            </div> -->
+                          <!-- </td> -->
+                          <td>{{ i + 1 }}</td>
+                          <td>{{ class?.className }}</td>
+                          <td>{{ class?.ageGroup }}</td>
+                          <td>{{ class?.classDate | date : "MM/dd/yyyy" }}</td>
+                          <td>{{class?.classTimingDays?.startTime | TimeFormatAmPm }} -
+                            {{class?.classTimingDays?.endTime | TimeFormatAmPm }}</td>
+                          <td>{{class?.teacherStartTime | TimeFormatAmPm}} - {{class?.teacherEndTime | TimeFormatAmPm}}
+                          </td>
+                        </tr>
+
+                        <tr>
+                          <td colspan="9" class="p-0">
+                            <div [attr.id]="'heading-' + i" class="accordion-collapse collapse collapse-table collapse"
+                              [attr.aria-labelledby]="'heading-' + i" data-bs-parent="#accordionExample">
+                              <table class="table sub-table mb-0">
+                                <thead class="table-light">
+                                  <tr>
+                                    <th class="text-start" style="width: 10%">
+                                      #
+                                    </th>
+
+                                    <th class="text-start" style="width: 25%">
+                                      Start Time
+                                    </th>
+                                    <th class="text-start" style="width: 25%">
+                                      End Time
+                                    </th>
+
+                                    <th class="text-start" style="width: 23%">
+                                      Days
+                                    </th>
+                                  </tr>
+                                </thead>
+
+                                @if (skeletonShow3 === 'Skelton3') {
+                                <tbody>
+                                  <tr>
+                                    <td colspan="100%">
+                                      <app-skeleton-loader skeletonShow3="Skelton3" viewType="table" [tableRows]="5"
+                                        [tableCols]="6">
+                                      </app-skeleton-loader>
+                                    </td>
+                                  </tr>
+                                </tbody>
+
+                                } @else if (classTiming.length > 0) {
+
+                                <tbody *ngFor="let sec of classTiming; let i = index">
+                                  <tr>
+                                    <td class="text-start">{{ i + 1 }}</td>
+
+                                    <td class="text-start">
+                                      {{ sec.startTime | TimeFormatAmPm }}
+                                    </td>
+                                    <td class="text-start">
+                                      {{ sec.endTime | TimeFormatAmPm }}
+                                    </td>
+
+                                    <td class="text-start" style="width: 10%">
+                                      <span *ngFor="let day of sec.days">{{ day.dayName }} &nbsp;
+                                      </span>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                                } @else {
+                                <tbody>
+
+                                  <tr>
+                                    <td colspan="100%">
+                                      <app-skeleton-loader skeletonShow="NoRecord">
+                                      </app-skeleton-loader>
+                                    </td>
+
+                                  </tr>
+                                </tbody>
+
+
+                                }
+                              </table>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+
+
+                      } @else {
+                      <tbody>
+
+                        <tr>
+                          <td colspan="100%">
+                            <app-skeleton-loader skeletonShow="NoRecord">
+                            </app-skeleton-loader>
+                          </td>
+
+                        </tr>
+                      </tbody>
+
+
+                      }
+                    </table>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+
+            } @else {
+            <tbody>
+
+              <tr>
+                <td colspan="100%">
+                  <app-skeleton-loader skeletonShow="NoRecord">
+                  </app-skeleton-loader>
+                </td>
+
+              </tr>
+            </tbody>
+
+
+            }
+          </table>
+        </div>
+      </div>
+
+      <div class="col pagination-style mt-4 no-flex" *ngIf="userRoleID == 3">
+        <div class="datatable-pager datatable-paging-loaded">
+          @if(( staffList.length >5 )) {
+          <pagination-controls previousLabel="prev" nextLabel="next" [maxSize]="5"
+            class="datatable-pager-nav my-2 mb-sm-0" id="dayCareAppointmentPendingList"
+            (pageChange)="ContentPendingList = $event">
+          </pagination-controls>
+          }
+        </div>
+      </div>
+
+      <!-- Bloomvie-staff -->
+      <div class="col-md-12" *ngIf="userRoleID == 1">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead class="student-thread">
+              <tr>
+                <th>#</th>
+                <th>First Name</th>
+                <!-- <th>Last Name</th> -->
+                <!-- <th>Email</th> -->
+                <th>Role</th>
+                <!-- <th>Class Assign</th> -->
+
+                <th>Action</th>
+              </tr>
+            </thead>
+            @if(bloomvieStaff.length>0) {
+
+            <tbody>
+              <tr *ngFor="
+                  let item of bloomvieStaff
+                    | paginate
+                      : {
+                          itemsPerPage: BContentsizePendingList,
+                          currentPage: BContentPendingList,
+                          id: 'BdayCareAppointmentPendingList'
+                        };
+                  let i = index
+                ">
+                <td>
+                  {{
+                  (ContentPendingList - 1) * ContentsizePendingList + i + 1
+                  }}
+                </td>
+                <!-- <td>{{ item.firstName }}</td> -->
+                <!-- <td>
+                  <span class="table-img-div"><img [src]="
+                        item.staffProfile
+                          ? item.staffProfile
+                          : 'assets/img/dummy-avatar.jpg'
+                      " class="rounded-circle table-image0new" style="object-fit: cover" /></span>{{ item.firstName }}
+                </td> -->
+                <!-- <td>{{ item.lastName == null ? "--" : item.lastName }}</td> -->
+                <!-- <td>{{ item.email }}</td> -->
+                <td>
+                  <!-- tooltip  added here  -->
+                  <div class="tooltip-wrapper" style="position: relative" (mouseenter)="hoveredRow = item"
+                    (mouseleave)="hoveredRow = null">
+                    <span class="hover-anchor">{{ item.firstName }}</span>
+                    <!-- call here   and remove below div if able to call -->
+                    <app-tooltip *ngIf="hoveredRow === item" [employee]="{
+                      fullName: item.firstName + '' + (item.lastName ? ' ' + item.lastName : ''),
+                      email: item.email,
+                      profile:item.staffProfile
+                    }"></app-tooltip>
+                  </div>
+                </td>
+
+                <td>{{ item.userRole }}</td>
+
+                <!-- <td>{{item.assignmentList[0]?.className}}</td> -->
+                <td>
+                  <div class="actions">
+                    <!-- <a data-bs-toggle="modal" (click)="viewTeacherDetail(item.id)" class="action-btn bg-danger-light me-2"><i class="fa fa-eye"></i></a> -->
+
+                    <a (click)="selectItem(item)" class="action-btn bg-danger-light me-2">
+                      <i class="feather-edit"></i>
+                    </a>
+                    <!--  [attr.data-bs-target]="
+                        item.isActive ? '#exampleModal' : '#exampleModal1'
+                         data-bs-toggle="modal"
+                      " -->
+                    <label class="switch mb-0 me-2" *ngIf="item.id > 0">
+                      <input id="check{{ item.id }}" [checked]="item.isActive"
+                        (change)="activeInactiveBloomvieStaff(item)" type="checkbox" />
+
+                      <div class="slider">
+                        <span class="status-text"></span>
+                        <div class="circle">
+                          <!-- Cross Icon -->
+                          <svg class="cross" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 365.696 365.696" height="6"
+                            width="6">
+                            <g>
+                              <path fill="currentColor"
+                                d="M243.188 182.86L356.32 69.726c12.5-12.5 12.5-32.766 0-45.247L341.238 9.398c-12.504-12.503-32.77-12.503-45.25 0L182.86 122.528 69.727 9.374c-12.5-12.5-32.766-12.5-45.247 0L9.375 24.457c-12.5 12.504-12.5 32.77 0 45.25l113.152 113.152L9.398 295.99c-12.503 12.503-12.503 32.769 0 45.25L24.48 356.32c12.5 12.5 32.766 12.5 45.247 0l113.132-113.132L295.99 356.32c12.503 12.5 32.769 12.5 45.25 0l15.081-15.082c12.5-12.504 12.5-32.77 0-45.25z">
+                              </path>
+                            </g>
+                          </svg>
+                          <!-- Checkmark Icon -->
+                          <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="10"
+                            width="10">
+                            <g>
+                              <path fill="currentColor"
+                                d="M9.707 19.121a.997.997 0 0 1-1.414 0l-5.646-5.647a1.5 1.5 0 0 1 0-2.121l.707-.707a1.5 1.5 0 0 1 2.121 0L9 14.171l9.525-9.525a1.5 1.5 0 0 1 2.121 0l.707.707a1.5 1.5 0 0 1 0 2.121z">
+                              </path>
+                            </g>
+                          </svg>
+                        </div>
+                      </div>
+                    </label>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+            } @else {
+            <tbody>
+              <tr>
+                <td colspan="9">
+                  <div class="no-data">
+                    <img src="assets/img/no-data-img.png" alt="No Record Found" />
+                    <span>No Record Found</span>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+            }
+          </table>
+          <div class="col pagination-style mt-4 no-flex" *ngIf="userRoleID == 1">
+            <div class="datatable-pager datatable-paging-loaded">
+              @if(( bloomvieStaff.length >5 )) {
+              <pagination-controls previousLabel="prev" nextLabel="next" [maxSize]="5"
+                class="datatable-pager-nav my-2 mb-sm-0" id="BdayCareAppointmentPendingList"
+                (pageChange)="BContentPendingList = $event">
+              </pagination-controls>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- // mohit -->
+
+<div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel1" aria-hidden="true"
+  data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header" style="border: none">
+        <h5 class="modal-title" id="exampleModalLabel">Assign Class</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="onClose1()"></button>
+      </div>
+      <div class="col-md-12 pt-2">
+        <form [formGroup]="assignmentForm" (ngSubmit)="ClassSectionAssignment()">
+          <div class="row">
+            <div class="col-md-12 mb-4">
+              <div class="form-group local-forms">
+                <label>Select Class<span class="login-danger">*</span></label>
+                <ng-select formControlName="classID" (change)="onChangeClass($event.id)" [items]="classList"
+                  bindLabel="name" bindValue="id"></ng-select>
+              </div>
+            </div>
+            <!-- <div class="col-md-4 mb-4">
+              <div class="form-group local-forms">
+                <label>Select Section<span class="login-danger">*</span></label>
+                <ng-select
+                  formControlName="sectionID"
+                  (change)="onChangeSection($event.id)"
+                  [items]="sectionList"
+                  bindLabel="name"
+                  bindValue="id"
+                ></ng-select>
+              </div>
+            </div> -->
+            <div class="modal-footer" style="border: none">
+              <div class="student-submit">
+                <!-- Use submit for form submission -->
+                <button type="submit" class="btn btn-primary me-2">
+                  Assign Class
+                </button>
+                <button type="reset" class="btn btn-secondary" (click)="onClose1()">
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+  data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header" style="border: none">
+        <h5 class="modal-title" id="exampleModalLabel">
+          <div class="mod-head">Instructions</div>
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="onClose()"></button>
+      </div>
+      <div class="modal-body">
+        <div class="instr-div p-3">
+          <div class="in-head mb-3">
+            <h5>Please Read The Following Instructions Carefully</h5>
+          </div>
+          <ul class="list-styled">
+            <li>
+              Before Deactivating the account you should first assign the class
+              to other Teacher .
+            </li>
+            <li>
+              To do this select the Teacher that You Should want to assigned all
+              the classes.
+            </li>
+            <li>
+              After Press Submitt button all the classes has been transferred to
+              other Teacher and the Teacher account is deactivated.
+            </li>
+          </ul>
+        </div>
+
+        <div class="teach-sel">
+          <div class="row mb-5">
+            <div class="col-md-6">
+              <div class="form-group local-forms">
+                <label for="classroomSelect" class="form-label">
+                  Select Teacher<span class="login-danger">*</span>
+                </label>
+
+                <ng-select [items]="teacherResult" bindLabel="teacherName" bindValue="teacherID"
+                  (change)="checkClassAssignment()" [(ngModel)]="newTeacherID">
+                </ng-select>
+                <div>
+                  @if(alreadyAssignedList.length > 0 ) {
+                  <div class="class-assi mt-3 mb-3 pb-3">
+                    <p class="fnt">
+                      Below classes is already assigned to this teacher
+                    </p>
+                    <span class="out-span" *ngFor="let classes of alreadyAssignedList">
+                      <span class="in-span">{{ classes.className }}</span>
+                    </span>
+                  </div>
+                  }
+                  <!-- <ul >
+                  <li>Main class</li>  
+                <ul>
+                </div> -->
+
+                  <!-- <span class="text-danger"
+                       >
+                        This field is required
+                    </span> -->
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="head-down mt-3 mb-3">
+                  <h6>The List of classes</h6>
+                </div>
+                <div>
+                  <ul class="tree" *ngFor="let class of classList">
+                    <li>
+                      {{ class.className }}
+                      <!-- <ul *ngFor="let section of class.sectionList">
+                      <li>{{ section.sectionName }}</li>
+                    </ul> -->
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer" style="border: none">
+          <div class="student-submit">
+            <button type="submit" class="btn btn-primary me-2" (click)="assignedClass()">
+              Submit
+            </button>
+            <button type="reset" class="btn btn-secondary" data-bs-dismiss="modal" (click)="onClose()">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="exampleModal5" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+  data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header" style="border: none">
+        <h5 class="modal-title" id="exampleModalLabel">
+          <div class="mod-head">Instructions</div>
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="onCloseModal()"></button>
+      </div>
+      <div class="modal-body">
+        <div class="instr-div p-3">
+          <div class="in-head mb-3">
+            <h5>Please Read The Following Instructions Carefully</h5>
+          </div>
+          <ul class="list-styled">
+            <li>
+              Before Deactivating the account you should first assign All the
+              Daycare to another Counsellor .
+            </li>
+            <li>
+              To do this select the Counsellor that You Should want to assigned
+              all the daycares.
+            </li>
+            <li>
+              After Press Submit button all the daycares has been transferred to
+              other Counsellor and the Counsellor account is deactivated.
+            </li>
+          </ul>
+        </div>
+
+        <div class="teach-sel">
+          <div class="row mb-5">
+            <div class="col-md-6">
+              <div class="form-group local-forms">
+                <label for="classroomSelect" class="form-label">
+                  Select Counsellor<span class="login-danger">*</span>
+                </label>
+                <ng-select [items]="counsellorList" bindLabel="counsellorName" bindValue="id"
+                  [(ngModel)]="selectedCounsellor">
+                </ng-select>
+
+                <div>
+                  <!-- <ul >
+                  <li>Main class</li>  
+                <ul>
+                </div> -->
+
+                  <!-- <span class="text-danger"
+                       >
+                        This field is required
+                    </span> -->
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="head-down mt-3 mb-3">
+                  <h6>Assigned Daycare to this Counsellor</h6>
+                </div>
+                <div *ngFor="let daycare of daycareList; let i = index">
+                  <span class="out-span">
+                    <span class="in-span">{{ daycare.centreName }}</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer" style="border: none">
+          <div class="student-submit">
+            <button type="submit" class="btn btn-primary me-2" (click)="deactivatingAccount()">
+              Submit
+            </button>
+            <button type="reset" class="btn btn-secondary" data-bs-dismiss="modal" (click)="onCloseModal()">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="exampleModal6" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+  data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header" style="border: none">
+        <h5 class="modal-title" id="exampleModalLabel">
+          <div class="mod-head">Daycare Assignment</div>
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="onCloseDaycareAssignmentModal()"></button>
+      </div>
+      <div class="modal-body">
+        <div class="col-md-6">
+          <div class="form-group local-forms">
+            <label for="classroomSelect" class="form-label">
+              select Daycare<span class="login-danger">*</span>
+            </label>
+            <ng-select [items]="dayCareCentreList" bindLabel="centreName" bindValue="id" [multiple]="true"
+              [(ngModel)]="selectedAssignDaycare"></ng-select>
+          </div>
+        </div>
+
+        <div class="modal-footer" style="border: none">
+          <div class="student-submit">
+            <button type="submit" class="btn btn-primary me-2" (click)="daycareAssignment()">
+              Submit
+            </button>
+            <button type="reset" class="btn btn-secondary" data-bs-dismiss="modal"
+              (click)="onCloseDaycareAssignmentModal()">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Button trigger modal -->
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop65" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header" style="border: none;">
+        <h5 class="modal-title">View Staff </h5>
+        <button type="button" data-bs-dismiss="modal" aria-label="Close" class="btn-close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-body">
+          <div class="row" *ngIf="teacherViewDetail != null">
+            <div class="col-lg-6">
+              <div class="personal-activity">
+                <div class="personal-icons">
+                  <i class="fa-solid fa-user"></i>
+                </div>
+                <div class="views-personal">
+                  <h4>Teacher Name</h4>
+                  <h5>{{ teacherViewDetail.firstName }}{{ teacherViewDetail.lastName ? ' ' + teacherViewDetail.lastName
+                    : '' }}</h5>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="personal-activity">
+                <div class="personal-icons">
+                  <i class="fa-solid fa-envelope"></i>
+                </div>
+                <div class="views-personal">
+                  <h4>Email</h4>
+                  <h5 class="non-transform">{{ teacherViewDetail.email != null ? teacherViewDetail.email : '--' }}</h5>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-6">
+              <div class="personal-activity">
+                <div class="personal-icons">
+                  <i class="fa-solid fa-phone"></i>
+                </div>
+                <div class="views-personal">
+                  <h4>Mobile</h4>
+                  <h5>{{ teacherViewDetail.mobile != null ? '+1' + teacherViewDetail.mobile : '--' }}</h5>
+
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-6">
+              <div class="personal-activity">
+                <div class="personal-icons">
+                  <i class="fa-solid fa-clock"></i>
+                </div>
+                <div class="views-personal">
+                  <h4>Working Hours</h4>
+                  <h5>{{teacherViewDetail.workingHours != null ? teacherViewDetail.workingHours : '--'}}</h5>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-6">
+              <div class="personal-activity">
+                <div class="personal-icons">
+                  <i class="fa-solid fa-money-bill-wave"></i>
+                </div>
+                <div class="views-personal">
+                  <h4>Wages</h4>
+                  <h5>{{ teacherViewDetail.wages != null ? (teacherViewDetail.wages | number:'1.2-2') : '--' }}</h5>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-6">
+              <div class="personal-activity">
+                <div class="personal-icons">
+                  <i class="fa-solid fa-sack-dollar"></i>
+                </div>
+                <div class="views-personal">
+                  <h4>Salary</h4>
+                  <h5>{{ teacherViewDetail.salary !== null && teacherViewDetail.salary !== undefined ?
+                    (teacherViewDetail.salary | number:'1.2-2') : '--' }}</h5>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-6">
+              <div class="personal-activity">
+                <div class="personal-icons">
+                  <i class="fa-solid fa-calendar-days"></i>
+                </div>
+                <div class="views-personal">
+                  <h4>Salary Unit</h4>
+                  <h5>{{teacherViewDetail.salaryUnit != null ? teacherViewDetail.salaryUnit : '--'}}</h5>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-6">
+              <div class="personal-activity">
+                <div class="personal-icons">
+                  <i class="fa-solid fa-calendar-days"></i>
+                </div>
+                <div class="views-personal">
+                  <h4>Joining Date</h4>
+                  <h5>{{ teacherViewDetail.joiningDate != null ? (teacherViewDetail.joiningDate | date:'MM-dd-yyyy') :
+                    '--' }}</h5>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+        <!-- <button type="button" class="btn btn-primary">Submit</button> -->
+      </div>
+    </div>
+  </div>
+</div>

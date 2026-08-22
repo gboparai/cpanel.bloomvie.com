@@ -1,0 +1,4201 @@
+<app-breadcrumb></app-breadcrumb>
+
+<!-- Cropper Pop up -->
+<div
+  class="modal fade"
+  id="cropperModal"
+  tabindex="-1"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  aria-labelledby="cropperModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="cropperModalLabel">Crop Image</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <image-cropper
+          [imageChangedEvent]="imageChangedEvent"
+          [maintainAspectRatio]="false"
+          [aspectRatio]="4 / 3"
+          [format]="croppedImageType"
+          (imageCropped)="storeTempCrop($event)"
+        ></image-cropper>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cancel
+        </button>
+
+        <button
+          *ngIf="!showUploadBtnToUploadCroppedImages"
+          type="button"
+          class="btn btn-primary"
+          (click)="processCroppedImage()"
+        >
+          Next
+        </button>
+        <button
+          *ngIf="showUploadBtnToUploadCroppedImages"
+          type="button"
+          class="btn btn-primary"
+          (click)="fileChangeHandler()"
+        >
+          Upload
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap Modal -->
+<div
+  class="modal fade"
+  id="cropperModalForSingleImage"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="cropperModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="cropperModalLabel">Crop Image</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <image-cropper
+          [imageChangedEvent]="imageChangedEvent"
+          [maintainAspectRatio]="false"
+          [aspectRatio]="4 / 3"
+          [format]="croppedImageType"
+          (imageCropped)="storeTempCrop($event)"
+        ></image-cropper>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cancel
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="processCroppedImageForSingle()"
+        >
+          Upload
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+@if(activityID == null){
+<div class="row">
+  <div class="col-12 col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-xxl-12 col-lg-12">
+            <div class="heading-new">
+              <h5 class="mb-0">Select Activity</h5>
+            </div>
+            <div
+              class="nav flex-column nav-pills nav-pills-tab"
+              id="v-pills-tab2"
+              role="tablist"
+              aria-orientation="vertical"
+            >
+              <div class="select-act-are">
+                <!-- 1 -->
+                <a
+                  (click)="onClickToAddMasterActivityID(1, 'Nap')"
+                  class="nav-link mb-1 show active disable hvr-grow"
+                  id="v-pills-home-tab2"
+                  data-bs-toggle="pill"
+                  href="#v-pills-home2"
+                  role="tab"
+                  aria-controls="v-pills-home2"
+                  aria-selected="false"
+                  tabindex="-1"
+                >
+                  <div class="svg-module-svgWrapper" aria-hidden="true">
+                    <div>
+                      <img src="assets/img/nap-icon.png" alt="Nap" />
+                    </div>
+                  </div>
+                  <span>Nap Time</span>
+                </a>
+
+                <!-- 2 -->
+                <a
+                  (click)="onClickToAddMasterActivityID(2, 'Food')"
+                  class="nav-link mb-1 hvr-grow"
+                  id="v-pills-profile-tab2"
+                  data-bs-toggle="pill"
+                  href="#v-pills-profile2"
+                  role="tab"
+                  aria-controls="v-pills-profile2"
+                  aria-selected="false"
+                  tabindex="-1"
+                >
+                  <div class="svg-module-svgWrapper" aria-hidden="true">
+                    <div>
+                      <img src="assets/img/food-icon.png" alt="Food" />
+                    </div>
+                  </div>
+                  <span>Food</span>
+                </a>
+
+                <!-- 3 -->
+                <a
+                  (click)="onClickToAddMasterActivityID(3, 'Note')"
+                  class="nav-link mb-1 hvr-grow"
+                  id="v-pills-messages-tab2"
+                  data-bs-toggle="pill"
+                  href="#v-pills-messages2"
+                  role="tab"
+                  aria-controls="v-pills-messages2"
+                  aria-selected="true"
+                >
+                  <div class="svg-module-svgWrapper" aria-hidden="true">
+                    <div>
+                      <img src="assets/img/note-icon.png" alt="Note" />
+                    </div>
+                  </div>
+                  <span>Note</span>
+                </a>
+
+                <!-- 4 -->
+                <a
+                  (click)="onClickToAddMasterActivityID(4, 'Health')"
+                  class="nav-link mb-1 hvr-grow"
+                  id="v-pills-settings-tab2"
+                  data-bs-toggle="pill"
+                  href="#v-pills-settings2"
+                  role="tab"
+                  aria-controls="v-pills-settings2"
+                  aria-selected="false"
+                  tabindex="-1"
+                >
+                  <div class="svg-module-svgWrapper" aria-hidden="true">
+                    <div>
+                      <img src="assets/img/health-icon.png" alt="Health" />
+                    </div>
+                  </div>
+                  <span> Health </span>
+                </a>
+
+                <!-- 5 -->
+                <a
+                  (click)="onClickToAddMasterActivityID(5, 'Incident')"
+                  class="nav-link mb-1 hvr-grow"
+                  id="v-pills-incident-tab2"
+                  data-bs-toggle="pill"
+                  href="#v-pills-incident"
+                  role="tab"
+                  aria-controls="v-pills-incident"
+                  aria-selected="false"
+                  tabindex="-1"
+                >
+                  <div class="svg-module-svgWrapper" aria-hidden="true">
+                    <div>
+                      <img src="assets/img/incident-icon.png" alt="Incident" />
+                    </div>
+                  </div>
+                  <span> Incident </span>
+                </a>
+
+                <!-- 6 -->
+                <a
+                  (click)="onClickToAddMasterActivityID(6, 'Meds')"
+                  class="nav-link mb-1 hvr-grow"
+                  id="v-pills-med-tab2"
+                  data-bs-toggle="pill"
+                  href="#v-pills-med"
+                  role="tab"
+                  aria-controls="v-pills-med"
+                  aria-selected="false"
+                  tabindex="-1"
+                >
+                  <div class="svg-module-svgWrapper" aria-hidden="true">
+                    <div>
+                      <img src="assets/img/med-icon.png" alt="Medicines" />
+                    </div>
+                  </div>
+                  <span> Meds </span>
+                </a>
+
+                <!-- 7 -->
+                <a
+                  (click)="onClickToAddMasterActivityID(7, 'Reminder')"
+                  class="nav-link mb-1 hvr-grow"
+                  id="v-pills-reminder-tab"
+                  data-bs-toggle="pill"
+                  href="#v-pills-reminder"
+                  role="tab"
+                  aria-controls="v-pills-reminder"
+                  aria-selected="false"
+                  tabindex="-1"
+                >
+                  <!-- Custom Color Applied -->
+                  <div class="svg-module-svgWrapper" aria-hidden="true">
+                    <div>
+                      <img src="assets/img/reminder-icon.png" alt="Reminders" />
+                    </div>
+                  </div>
+                  <span>Reminder</span>
+                </a>
+
+                <a
+                  (click)="onClickToAddMasterActivityID(8, 'uploadMedia')"
+                  class="nav-link mb-1 hvr-grow"
+                  id="v-pills-home"
+                  data-bs-toggle="pill"
+                  href="#v-pills-upload-media"
+                  role="tab"
+                  aria-controls="v-pills-upload-media"
+                  aria-selected="false"
+                  tabindex="-1"
+                >
+                  <div class="svg-module-svgWrapper" aria-hidden="true">
+                    <div>
+                      <img src="assets/img/upload-media.png" alt="Nap" />
+                    </div>
+                  </div>
+                  <span>Upload/Media</span>
+                </a>
+              </div>
+            </div>
+
+            <div class="tab-content pt-0" id="v-pills-tabContent">
+              <!-- Nap Time -->
+              <div
+                class="tab-pane fade active show"
+                id="v-pills-home2"
+                role="tabpanel"
+                aria-labelledby="v-pills-home-tab2"
+              >
+                <div class="row" [formGroup]="NapTimeForm">
+                  <!-- 
+                  <div class="col-md-12">
+                    <h5 class="modal-title" id="exampleModalLabel">Add Nap</h5>
+                  </div> -->
+
+                  <!-- <div class="col-md-12">
+                    <div class="heading-new22 text-left">
+                      <h5 class="mb-0">Nap</h5>
+                    </div>
+                  </div> -->
+
+                  <div class="col-md-7">
+                    <div class="row">
+                      <div class="col-md-6 mb-4">
+                        <div class="form-group local-forms">
+                          <label>
+                            Date <span class="login-danger">*</span></label
+                          >
+                          <input
+                            type="text"
+                            #dateRangePicker
+                            id="dateRangePicker"
+                            class="form-control dateRangePickerClass"
+                            formControlName="napDate"
+                            (change)="getActivityDate($event)"
+                            placeholder="-Select -"
+                          />
+                          @if(NapTimeForm.controls['napDate']?.invalid &&
+                          NapTimeForm.controls['napDate'].touched){
+                          <span class="text-danger"
+                            >This field is required</span
+                          >
+                          }
+                        </div>
+                      </div>
+
+                      <!--LATEST CODE DESIGN-->
+
+                      <div _ngcontent-ng-c1084851556="" class="col-md-6">
+                        <div
+                          class="form-group local-forms"
+                          style="position: relative"
+                        >
+                          <label>Image & Video</label>
+                          <input
+                            type="file"
+                            class="form-control"
+                            accept="image/png, image/jpeg, image/jpg, image/webp, image/gif, video/mp4, video/mov, video/webm, video/avi"
+                          />
+
+                          <ng-container
+                            *ngTemplateOutlet="
+                              fileLabelTemplate;
+                              context: {
+                                fileCount: activityMediaStats['Nap'].imageCount,
+                                videoCount:
+                                  activityMediaStats['Nap'].videoCount,
+                                videoMB: activityMediaStats['Nap'].videoSizeMB
+                              }
+                            "
+                          >
+                          </ng-container>
+
+                          <input
+                            accept="image/png, image/jpeg, image/jpg, image/webp, image/gif, video/mp4, video/mov, video/webm, video/avi"
+                            type="file"
+                            #napfileInput
+                            class="form-control updated"
+                            (change)="onFileSelection($event, 'Nap')"
+                            multiple
+                            id="NapFileElement"
+                          />
+                        </div>
+                      </div>
+
+                      <div class="col-md-6 mb-4">
+                        <div class="form-group local-forms">
+                          <label
+                            >Nap Start Time<span class="login-danger"
+                              >*</span
+                            ></label
+                          >
+                          <input
+                            type="time"
+                            class="form-control"
+                            formControlName="napStartTime"
+                            (change)="changeTime($event, 'StartTime')"
+                          />
+                          @if(NapTimeForm.controls['napStartTime']?.invalid &&
+                          NapTimeForm.controls['napStartTime'].touched){
+                          <span class="text-danger"
+                            >This field is required</span
+                          >
+                          }
+                        </div>
+                      </div>
+                      <div class="col-md-6 mb-4">
+                        <div class="form-group local-forms">
+                          <label
+                            >Nap End Time<span class="login-danger"
+                              >*</span
+                            ></label
+                          >
+                          <input
+                            type="time"
+                            class="form-control"
+                            formControlName="napEndTime"
+                            (change)="changeTime($event, 'EndTime')"
+                          />
+                          @if(NapTimeForm.controls['napEndTime']?.invalid &&
+                          NapTimeForm.controls['napEndTime'].touched){
+                          <span class="text-danger"
+                            >This field is required</span
+                          >
+                          }
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-5">
+                    <div class="row">
+                      <div class="col-md-12 mb-4">
+                        <div class="form-group local-forms">
+                          <label>Note</label>
+                          <textarea
+                            class="form-control"
+                            formControlName="note"
+                            rows="5"
+                            cols="50"
+                            placeholder="Enter Note"
+                          ></textarea>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="bottom-gallery">
+                      <div class="">
+                        <div class="img-inner">
+                          <div
+                            class="cell-height"
+                            *ngFor="
+                              let imageUrl of urlMap['Nap'];
+                              let i = index
+                            "
+                          >
+                            <!-- FOR IMAGE -->
+                            <div
+                              class="item"
+                              *ngIf="imageUrl.startsWith('data:image')"
+                            >
+                              <i
+                                (click)="deleteImage('Nap', i, imageUrl)"
+                                class="fa fa-xmark delete-icon"
+                                aria-hidden="true"
+                              ></i>
+                              <img [src]="imageUrl" />
+                            </div>
+
+                            <!-- FOR VIDEO -->
+                            <div
+                              class="item"
+                              *ngIf="imageUrl.startsWith('data:video')"
+                            >
+                              <i
+                                (click)="deleteImage('Nap', i, imageUrl)"
+                                class="fa fa-xmark delete-icon"
+                                style="z-index: 2"
+                                aria-hidden="true"
+                              ></i>
+                              <video
+                                width="100%"
+                                height="100%"
+                                controls="controls"
+                                preload="metadata"
+                              >
+                                <source
+                                  [src]="imageUrl"
+                                  [type]="imageUrl.split(':')[1].split(';')[0]"
+                                />
+                              </video>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Food -->
+              <div
+                class="tab-pane fade"
+                id="v-pills-profile2"
+                role="tabpanel"
+                aria-labelledby="v-pills-profile-tab2"
+              >
+                <!--  -->
+                <div class="row" [formGroup]="FoodForm">
+                  <!-- <div class="col-md-12">
+                    <h5 class="modal-title" id="exampleModalLabel">Add Food</h5>
+                  </div> -->
+                  <!-- <div class="col-md-12">
+                    <div class="heading-new78 text-left">
+                      <h5 class="mb-0">Food</h5>
+                    </div>
+                  </div> -->
+
+                  <div class="col-md-12">
+                    <div class="row">
+                      <div class="col-md-4 mb-4">
+                        <div class="form-group local-forms">
+                          <label>
+                            Date <span class="login-danger">*</span></label
+                          >
+                          <input
+                            type="text"
+                            #dateRangePicker
+                            id="dateRangePicker"
+                            class="form-control dateRangePickerClass"
+                            formControlName="foodServingDate"
+                            (change)="getActivityDate($event)"
+                            placeholder="-Select -"
+                          />
+                          @if(FoodForm.controls['foodServingDate']?.invalid &&
+                          FoodForm.controls['foodServingDate'].touched){
+                          <span class="text-danger"
+                            >This field is required</span
+                          >
+
+                          }
+                        </div>
+                      </div>
+                      <div class="col-md-4 mb-4">
+                        <div class="form-group local-forms">
+                          <label>
+                            Time<span class="login-danger">*</span></label
+                          >
+                          <input
+                            type="time"
+                            class="form-control"
+                            formControlName="foodServingTime"
+                            (change)="changeTime($event, 'FoodTime')"
+                          />
+                          @if(FoodForm.controls['foodServingTime']?.invalid &&
+                          FoodForm.controls['foodServingTime'].touched){
+                          <span class="text-danger"
+                            >This field is required</span
+                          >
+
+                          }
+                        </div>
+                      </div>
+                      <!-- <div class="col-md-4 mb-4">
+                        <div class="form-group local-forms">
+                          <label>Food Type<span class="login-danger">*</span></label>
+                          <select class="form-select" formControlName="foodTypeID">
+                            <option *ngFor="let item of food; let i = index" [value]="item.id">
+                              {{ item.foodType }}
+                            </option>
+                          </select>
+                          @if(FoodForm.controls['foodTypeID']?.invalid &&
+                          FoodForm.controls['foodTypeID'].touched){
+                          <span class="text-danger">This field is required</span>
+
+                          }
+                        </div>
+                      </div> -->
+                      <div class="col-md-4 mb-4">
+                        <div class="form-group local-forms">
+                          <label>Meal Type</label>
+                          <select
+                            class="form-select"
+                            formControlName="mealTypeID"
+                          >
+                            <option value=""></option>
+                            <option value="1">Breakfast</option>
+                            <option value="2">Lunch</option>
+                            <option value="3">Dinner</option>
+                          </select>
+                          <!-- 
+                          @if(FoodForm.controls['mealTypeID']?.invalid &&
+                          FoodForm.controls['mealTypeID'].touched){
+                          <span class="text-danger">This field is required</span>
+
+                          } -->
+                        </div>
+                      </div>
+                      <div class="col-md-4 mb-4">
+                        <div class="form-group local-forms">
+                          <label>Meal Item</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            formControlName="mealItem"
+                          />
+
+                          <!-- @if(FoodForm.controls['mealItem']?.invalid &&
+                          FoodForm.controls['mealItem'].touched){
+                          <span class="text-danger">This field is required</span>
+                          } -->
+                        </div>
+                      </div>
+
+                      <div class="col-md-4 mb-4">
+                        <div class="form-group local-forms">
+                          <label>Meal Completion</label>
+                          <ng-select
+                            [items]="MealCompletion"
+                            bindLabel="label"
+                            bindValue="value"
+                            formControlName="mealCompletion"
+                          >
+                          </ng-select>
+
+                          <!-- @if(FoodForm.controls['mealItem']?.invalid &&
+                          FoodForm.controls['mealItem'].touched){
+                          <span class="text-danger">This field is required</span>
+                          } -->
+                        </div>
+                      </div>
+
+                      <!-- <div class="col-md-4">
+                        <div class="row">
+                          <div class="col-md-12 mb-4">
+                            <div class="form-group local-forms">
+                              <label>Images & Video</label>
+                              <input type="file"
+                                accept="image/png, image/jpeg, image/jpg, image/webp, image/gif, video/mp4, video/mov, video/webm, video/avi"
+                                class="form-control" #foodFileInput (change)="onFileSelection($event, 'Food')"
+                                multiple />
+                            </div>
+                          </div>
+                        </div>
+                      </div> -->
+
+                      <!--LATEST CODE-->
+
+                      <div _ngcontent-ng-c1084851556="" class="col-md-4">
+                        <div
+                          class="form-group local-forms"
+                          style="position: relative"
+                        >
+                          <label>Image & Video</label>
+                          <input
+                            type="file"
+                            class="form-control"
+                            accept="image/png, image/jpeg, image/jpg, image/webp, image/gif, video/mp4, video/mov, video/webm, video/avi"
+                          />
+
+                          <ng-container
+                            *ngTemplateOutlet="
+                              fileLabelTemplate;
+                              context: {
+                                fileCount:
+                                  activityMediaStats['Food'].imageCount,
+                                videoCount:
+                                  activityMediaStats['Food'].videoCount,
+                                videoMB: activityMediaStats['Food'].videoSizeMB
+                              }
+                            "
+                          >
+                          </ng-container>
+                          <input
+                            accept="image/png, image/jpeg, image/jpg, image/webp, image/gif, video/mp4, video/mov, video/webm, video/avi"
+                            type="file"
+                            class="form-control updated"
+                            (change)="onFileSelection($event, 'Food')"
+                            multiple
+                            id="FoodFileElement"
+                            #foodFileInput
+                          />
+                        </div>
+                      </div>
+
+                      <div class="col-md-6 mb-4">
+                        <div class="form-group local-forms">
+                          <label>Note</label>
+                          <textarea
+                            class="form-control"
+                            placeholder="Enter Note"
+                            formControlName="note"
+                          ></textarea>
+                        </div>
+                      </div>
+                      <div class="col-md-12">
+                        <div class="bottom-gallery">
+                          <div class="">
+                            <div class="img-inner">
+                              <div
+                                class="cell-height"
+                                *ngFor="
+                                  let foods of urlMap['Food'];
+                                  let i = index
+                                "
+                              >
+                                <!-- <div class="item">
+                                  <i (click)="deleteImage('Food', i)" class="fa fa-xmark delete-icon"
+                                    aria-hidden="true"></i>
+                                  <img [src]="foods" />
+                                </div> -->
+
+                                <!-- FOR IMAGE -->
+                                <div
+                                  class="item"
+                                  *ngIf="foods.startsWith('data:image')"
+                                >
+                                  <i
+                                    (click)="deleteImage('Food', i, foods)"
+                                    class="fa fa-xmark delete-icon"
+                                    aria-hidden="true"
+                                  ></i>
+                                  <img [src]="foods" />
+                                </div>
+
+                                <!-- FOR VIDEO -->
+                                <div
+                                  class="item"
+                                  *ngIf="foods.startsWith('data:video')"
+                                >
+                                  <i
+                                    (click)="deleteImage('Food', i, foods)"
+                                    class="fa fa-xmark delete-icon"
+                                    style="z-index: 2"
+                                    aria-hidden="true"
+                                  ></i>
+                                  <video
+                                    width="100%"
+                                    height="100%"
+                                    controls="controls"
+                                    preload="metadata"
+                                  >
+                                    <source
+                                      [src]="foods"
+                                      [type]="foods.split(':')[1].split(';')[0]"
+                                    />
+                                  </video>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Note -->
+              <div
+                class="tab-pane fade"
+                id="v-pills-messages2"
+                role="tabpanel"
+                aria-labelledby="v-pills-messages-tab2"
+              >
+                <div class="row" [formGroup]="NoteForm">
+                  <!-- <div class="col-md-12">
+                    <h5 class="modal-title" id="exampleModalLabel">Add Note</h5>
+                  </div> -->
+
+                  <div class="col-md-7">
+                    <div class="row">
+                      <div class="col-md-6 mb-4">
+                        <div class="form-group local-forms">
+                          <label>
+                            Date <span class="login-danger">*</span></label
+                          >
+                          <input
+                            type="text"
+                            #dateRangePicker
+                            id="dateRangePicker"
+                            class="form-control dateRangePickerClass"
+                            formControlName="noteDate"
+                            (change)="getActivityDate($event)"
+                            placeholder="-Select -"
+                          />
+                          @if(NoteForm.controls['noteDate']?.invalid &&
+                          NoteForm.controls['noteDate'].touched){
+                          <span class="text-danger"
+                            >This field is required</span
+                          >
+
+                          }
+                        </div>
+                      </div>
+                      <div class="col-md-6 mb-4">
+                        <div class="form-group local-forms">
+                          <label>
+                            Time<span class="login-danger">*</span></label
+                          >
+                          <input
+                            type="time"
+                            class="form-control"
+                            formControlName="noteTime"
+                            (change)="changeTime($event, 'NoteTime')"
+                          />
+                          @if(NoteForm.controls['noteTime']?.invalid &&
+                          NoteForm.controls['noteTime'].touched){
+                          <span class="text-danger"
+                            >This field is required</span
+                          >
+
+                          }
+                        </div>
+                      </div>
+
+                      <div class="col-md-12 mb-4">
+                        <div class="form-group local-forms">
+                          <label>Note</label>
+                          <textarea
+                            formControlName="note"
+                            placeholder="Enter Note"
+                            class="form-control"
+                          ></textarea>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- <div class="col-md-5">
+                    <div class="row">
+                      <div class="col-md-12 mb-4">
+                        <div class="form-group local-forms">
+                          <label>Images & Video</label>
+                          <input type="file"
+                            accept="image/png, image/jpeg, image/jpg, image/webp, image/gif, video/mp4, video/mov, video/webm, video/avi"
+                            class="form-control" #noteFileInput (change)="onFileSelection($event, 'Note')" multiple />
+                        </div>
+                      </div>
+                    </div>
+                  </div> -->
+
+                  <!--LATEST CODE-->
+
+                  <div _ngcontent-ng-c1084851556="" class="col-md-4">
+                    <div
+                      class="form-group local-forms"
+                      style="position: relative"
+                    >
+                      <label>Image & Video</label>
+                      <input
+                        type="file"
+                        class="form-control"
+                        accept="image/png, image/jpeg, image/jpg, image/webp, image/gif, video/mp4, video/mov, video/webm, video/avi"
+                      />
+
+                      <ng-container
+                        *ngTemplateOutlet="
+                          fileLabelTemplate;
+                          context: {
+                            fileCount: activityMediaStats['Note'].imageCount,
+                            videoCount: activityMediaStats['Note'].videoCount,
+                            videoMB: activityMediaStats['Note'].videoSizeMB
+                          }
+                        "
+                      >
+                      </ng-container>
+                      <input
+                        accept="image/png, image/jpeg, image/jpg, image/webp, image/gif, video/mp4, video/mov, video/webm, video/avi"
+                        type="file"
+                        #noteFileInput
+                        class="form-control updated"
+                        (change)="onFileSelection($event, 'Note')"
+                        multiple
+                        id="NoteFileElement"
+                      />
+                    </div>
+                  </div>
+
+                  <div class="col-md-12">
+                    <div class="bottom-gallery">
+                      <div class="">
+                        <div class="img-inner">
+                          <div
+                            class="cell-height"
+                            *ngFor="let note of urlMap['Note']; let i = index"
+                          >
+                            <!-- FOR IMAGE -->
+                            <div
+                              class="item"
+                              *ngIf="note.startsWith('data:image')"
+                            >
+                              <i
+                                (click)="deleteImage('Note', i, note)"
+                                class="fa fa-xmark delete-icon"
+                                aria-hidden="true"
+                              ></i>
+                              <img [src]="note" />
+                            </div>
+
+                            <!-- FOR VIDEO -->
+                            <div
+                              class="item"
+                              *ngIf="note.startsWith('data:video')"
+                            >
+                              <i
+                                (click)="deleteImage('Note', i, note)"
+                                class="fa fa-xmark delete-icon"
+                                style="z-index: 2"
+                                aria-hidden="true"
+                              ></i>
+                              <video
+                                width="100%"
+                                height="100%"
+                                controls="controls"
+                                preload="metadata"
+                              >
+                                <source
+                                  [src]="note"
+                                  [type]="note.split(':')[1].split(';')[0]"
+                                />
+                              </video>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Health -->
+              <div
+                class="tab-pane fade"
+                id="v-pills-settings2"
+                role="tabpanel"
+                aria-labelledby="v-pills-settings-tab2"
+              >
+                <div class="row" [formGroup]="HealthForm">
+                  <!-- <div class="col-md-12">
+                    <h5 class="modal-title" id="exampleModalLabel">Add Health</h5>
+                  </div> -->
+
+                  <div class="col-md-6">
+                    <div class="row">
+                      <div class="col-md-6 mb-4">
+                        <div class="form-group local-forms">
+                          <label>
+                            Date <span class="login-danger">*</span></label
+                          >
+                          <input
+                            type="text"
+                            #dateRangePicker
+                            id="dateRangePicker"
+                            class="form-control dateRangePickerClass"
+                            formControlName="healthDate"
+                            (change)="getActivityDate($event)"
+                            placeholder="-Select -"
+                          />
+                          @if(HealthForm.controls['healthDate']?.invalid &&
+                          HealthForm.controls['healthDate'].touched){
+                          <span class="text-danger"
+                            >This field is required</span
+                          >
+
+                          }
+                        </div>
+                      </div>
+                      <div class="col-md-6 mb-4">
+                        <div class="form-group local-forms">
+                          <label>
+                            Time<span class="login-danger">*</span></label
+                          >
+                          <input
+                            type="time"
+                            class="form-control"
+                            formControlName="healthTime"
+                            (change)="changeTime($event, 'HealthTime')"
+                          />
+                          @if(HealthForm.controls['healthTime']?.invalid &&
+                          HealthForm.controls['healthTime'].touched){
+                          <span class="text-danger"
+                            >This field is required</span
+                          >
+
+                          }
+                        </div>
+                      </div>
+                      <div class="col-md-6 mb-4">
+                        <div class="form-group local-forms">
+                          <label
+                            >Body Temperature<span class="login-danger"
+                              >*</span
+                            ></label
+                          >
+
+                          <div class="input-group">
+                            <input
+                              type="number"
+                              class="form-control"
+                              formControlName="bodyTemperature"
+                              (change)="validatingBodyTemperature($event)"
+                            />
+                            <span class="input-group-text">℉</span>
+                          </div>
+                          @if(HealthForm.controls['bodyTemperature']?.invalid &&
+                          HealthForm.controls['bodyTemperature'].touched){
+                          <span class="text-danger"
+                            >This field is required</span
+                          >
+
+                          }
+                          <div>
+                            <span
+                              class="text-danger"
+                              *ngIf="isTemperatureInvalid"
+                              >Range of body temperature is not valid .</span
+                            >
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- <div class="col-md-6">
+                        <div class="form-group local-forms">
+                          <label>Images & Video</label>
+                          <input type="file"
+                            accept="image/png, image/jpeg, image/jpg, image/webp, image/gif, video/mp4, video/mov, video/webm, video/avi"
+                            class="form-control" #healthFileInput (change)="onFileSelection($event, 'Health')"
+                            multiple />
+                        </div>
+                      </div> -->
+
+                      <!--LATEST CODE-->
+
+                      <div _ngcontent-ng-c1084851556="" class="col-md-6">
+                        <div
+                          class="form-group local-forms"
+                          style="position: relative"
+                        >
+                          <label>Image & Video</label>
+                          <input
+                            type="file"
+                            class="form-control"
+                            accept="image/png, image/jpeg, image/jpg, image/webp, image/gif, video/mp4, video/mov, video/webm, video/avi"
+                          />
+
+                          <ng-container
+                            *ngTemplateOutlet="
+                              fileLabelTemplate;
+                              context: {
+                                fileCount:
+                                  activityMediaStats['Health'].imageCount,
+                                videoCount:
+                                  activityMediaStats['Health'].videoCount,
+                                videoMB:
+                                  activityMediaStats['Health'].videoSizeMB
+                              }
+                            "
+                          >
+                          </ng-container>
+                          <input
+                            accept="image/png, image/jpeg, image/jpg, image/webp, image/gif, video/mp4, video/mov, video/webm, video/avi"
+                            type="file"
+                            #healthFileInput
+                            class="form-control updated"
+                            (change)="onFileSelection($event, 'Health')"
+                            multiple
+                            id="HealthFileElement"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="col-md-12 mb-4">
+                      <div class="form-group local-forms">
+                        <label>Note</label>
+                        <textarea
+                          class="form-control"
+                          formControlName="note"
+                          rows="5"
+                          cols="50"
+                          placeholder="Enter Note"
+                        ></textarea>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="bottom-gallery">
+                      <div class="">
+                        <div class="img-inner">
+                          <div
+                            class="cell-height"
+                            *ngFor="
+                              let health of urlMap['Health'];
+                              let i = index
+                            "
+                          >
+                            <!-- <div *ngIf="health" class="item">
+                              <i (click)="deleteImage('Health', i)" class="fa fa-xmark delete-icon"
+                                aria-hidden="true"></i>
+                              <img [src]="health" />
+                            </div> -->
+
+                            <!-- FOR IMAGE -->
+                            <div
+                              class="item"
+                              *ngIf="health.startsWith('data:image')"
+                            >
+                              <i
+                                (click)="deleteImage('Health', i, health)"
+                                class="fa fa-xmark delete-icon"
+                                aria-hidden="true"
+                              ></i>
+                              <img [src]="health" />
+                            </div>
+
+                            <!-- FOR VIDEO -->
+                            <div
+                              class="item"
+                              *ngIf="health.startsWith('data:video')"
+                            >
+                              <i
+                                (click)="deleteImage('Health', i, health)"
+                                class="fa fa-xmark delete-icon"
+                                style="z-index: 2"
+                                aria-hidden="true"
+                              ></i>
+                              <video
+                                width="100%"
+                                height="100%"
+                                controls="controls"
+                                preload="metadata"
+                              >
+                                <source
+                                  [src]="health"
+                                  [type]="health.split(':')[1].split(';')[0]"
+                                />
+                              </video>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Incident -->
+              <div
+                class="tab-pane fade"
+                id="v-pills-incident"
+                role="tabpanel"
+                aria-labelledby="v-pills-incident-tab2"
+              >
+                <div class="row" [formGroup]="IncidentForm">
+                  <!-- <div class="col-md-12">
+                    <h5 class="modal-title" id="exampleModalLabel">Add Incident</h5>
+                  </div> -->
+
+                  <div class="col-md-7">
+                    <div class="row">
+                      <div class="col-md-6 mb-4">
+                        <div class="form-group local-forms">
+                          <label>
+                            Date <span class="login-danger">*</span></label
+                          >
+                          <input
+                            type="text"
+                            #dateRangePicker
+                            id="dateRangePicker"
+                            class="form-control dateRangePickerClass"
+                            formControlName="incidentDate"
+                            (change)="getActivityDate($event)"
+                            placeholder="-Select -"
+                          />
+                          @if(IncidentForm.controls['incidentDate']?.invalid &&
+                          IncidentForm.controls['incidentDate'].touched){
+                          <span class="text-danger"
+                            >This field is required</span
+                          >
+
+                          }
+                        </div>
+                      </div>
+                      <div class="col-md-6 mb-4">
+                        <div class="form-group local-forms">
+                          <label>
+                            Time<span class="login-danger">*</span></label
+                          >
+                          <input
+                            type="time"
+                            class="form-control"
+                            formControlName="incidentTime"
+                            (change)="changeTime($event, 'IncidentTime')"
+                          />
+                          @if(IncidentForm.controls['incidentTime']?.invalid &&
+                          IncidentForm.controls['incidentTime'].touched){
+                          <span class="text-danger"
+                            >This field is required</span
+                          >
+
+                          }
+                        </div>
+                      </div>
+
+                      <div class="col-md-12 mb-4">
+                        <div class="form-group local-forms">
+                          <label>Note</label>
+                          <textarea
+                            class="form-control"
+                            formControlName="note"
+                            placeholder="Enter Note"
+                          ></textarea>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-5">
+                    <div class="row">
+                      <!--LATEST CODE-->
+
+                      <div _ngcontent-ng-c1084851556="" class="col-md-12">
+                        <div
+                          class="form-group local-forms"
+                          style="position: relative"
+                        >
+                          <label>Image & Video</label>
+                          <input
+                            type="file"
+                            class="form-control"
+                            accept="image/png, image/jpeg, image/jpg, image/webp, image/gif, video/mp4, video/mov, video/webm, video/avi"
+                          />
+
+                          <ng-container
+                            *ngTemplateOutlet="
+                              fileLabelTemplate;
+                              context: {
+                                fileCount:
+                                  activityMediaStats['Incident'].imageCount,
+                                videoCount:
+                                  activityMediaStats['Incident'].videoCount,
+                                videoMB:
+                                  activityMediaStats['Incident'].videoSizeMB
+                              }
+                            "
+                          >
+                          </ng-container>
+                          <input
+                            accept="image/png, image/jpeg, image/jpg, image/webp, image/gif, video/mp4, video/mov, video/webm, video/avi"
+                            type="file"
+                            #incidentFileInput
+                            class="form-control updated"
+                            (change)="onFileSelection($event, 'Incident')"
+                            multiple
+                            id="IncidentFileElement"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="bottom-gallery">
+                      <div class="">
+                        <div class="img-inner">
+                          <div
+                            class="cell-height"
+                            *ngFor="
+                              let incident of urlMap['Incident'];
+                              let i = index
+                            "
+                          >
+                            <!-- <div class="item">
+                              <i (click)="deleteImage('Incident', i)" class="fa fa-xmark delete-icon"
+                                aria-hidden="true"></i>
+                              <img [src]="incident" />
+                            </div> -->
+
+                            <!-- FOR IMAGE -->
+                            <div
+                              class="item"
+                              *ngIf="incident.startsWith('data:image')"
+                            >
+                              <i
+                                (click)="deleteImage('Incident', i, incident)"
+                                class="fa fa-xmark delete-icon"
+                                aria-hidden="true"
+                              ></i>
+                              <img [src]="incident" />
+                            </div>
+
+                            <!-- FOR VIDEO -->
+                            <div
+                              class="item"
+                              *ngIf="incident.startsWith('data:video')"
+                            >
+                              <i
+                                (click)="deleteImage('Incident', i, incident)"
+                                class="fa fa-xmark delete-icon"
+                                style="z-index: 2"
+                                aria-hidden="true"
+                              ></i>
+                              <video
+                                width="100%"
+                                height="100%"
+                                controls="controls"
+                                preload="metadata"
+                              >
+                                <source
+                                  [src]="incident"
+                                  [type]="incident.split(':')[1].split(';')[0]"
+                                />
+                              </video>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Medicine -->
+              <div
+                class="tab-pane fade"
+                id="v-pills-med"
+                role="tabpanel"
+                aria-labelledby="v-pills-med-tab2"
+              >
+                <div class="row" [formGroup]="MedicineForm">
+                  <!-- <div class="col-md-12">
+                    <h5 class="modal-title" id="exampleModalLabel">Add Medicine</h5>
+                  </div> -->
+
+                  <div class="col-md-7">
+                    <div class="row">
+                      <div class="col-md-6 mb-4">
+                        <div class="form-group local-forms">
+                          <label>
+                            Date <span class="login-danger">*</span></label
+                          >
+                          <input
+                            type="text"
+                            #dateRangePicker
+                            id="dateRangePicker"
+                            class="form-control dateRangePickerClass"
+                            formControlName="medsDate"
+                            (change)="getActivityDate($event)"
+                            placeholder="-Select -"
+                          />
+
+                          @if(MedicineForm.controls['medsDate']?.invalid &&
+                          MedicineForm.controls['medsDate'].touched){
+                          <span class="text-danger"
+                            >This field is required</span
+                          >
+
+                          }
+                        </div>
+                      </div>
+                      <div class="col-md-6 mb-4">
+                        <div class="form-group local-forms">
+                          <label>
+                            Time<span class="login-danger">*</span></label
+                          >
+                          <input
+                            type="time"
+                            class="form-control"
+                            formControlName="medsTime"
+                            (change)="changeTime($event, 'MedsTime')"
+                          />
+                          @if(MedicineForm.controls['medsTime']?.invalid &&
+                          MedicineForm.controls['medsTime'].touched){
+                          <span class="text-danger"
+                            >This field is required</span
+                          >
+
+                          }
+                        </div>
+                      </div>
+
+                      <div class="col-md-12 mb-4">
+                        <div class="form-group local-forms">
+                          <label>Note</label>
+                          <textarea
+                            class="form-control"
+                            formControlName="note"
+                            placeholder="Enter Note"
+                          ></textarea>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-5">
+                    <div class="row">
+                      <!-- <div class="col-md-12">
+                        <div class="form-group local-forms">
+                          <label>Images & Video</label>
+                          <input type="file"
+                            accept="image/png, image/jpeg, image/jpg, image/webp, image/gif, video/mp4, video/mov, video/webm, video/avi"
+                            class="form-control" #medsFileInput (change)="onFileSelection($event, 'Meds')" multiple />
+                        </div>
+                      </div> -->
+
+                      <!--LATEST CODE-->
+
+                      <div _ngcontent-ng-c1084851556="" class="col-md-12">
+                        <div
+                          class="form-group local-forms"
+                          style="position: relative"
+                        >
+                          <label>Image & Video</label>
+                          <input
+                            type="file"
+                            class="form-control"
+                            accept="image/png, image/jpeg, image/jpg, image/webp, image/gif, video/mp4, video/mov, video/webm, video/avi"
+                          />
+
+                          <ng-container
+                            *ngTemplateOutlet="
+                              fileLabelTemplate;
+                              context: {
+                                fileCount:
+                                  activityMediaStats['Meds'].imageCount,
+                                videoCount:
+                                  activityMediaStats['Meds'].videoCount,
+                                videoMB: activityMediaStats['Meds'].videoSizeMB
+                              }
+                            "
+                          >
+                          </ng-container>
+                          <input
+                            accept="image/png, image/jpeg, image/jpg, image/webp, image/gif, video/mp4, video/mov, video/webm, video/avi"
+                            type="file"
+                            #medsFileInput
+                            class="form-control updated"
+                            (change)="onFileSelection($event, 'Meds')"
+                            multiple
+                            id="MedsFileElement"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="bottom-gallery">
+                      <div class="">
+                        <div class="img-inner">
+                          <div
+                            class="cell-height"
+                            *ngFor="let meds of urlMap['Meds']; let i = index"
+                          >
+                            <!-- <div class="item">
+                              <i (click)="deleteImage('Meds', i)" class="fa fa-xmark delete-icon"
+                                aria-hidden="true"></i>
+                              <img [src]="meds" />
+                            </div> -->
+
+                            <!-- FOR IMAGE -->
+                            <div
+                              class="item"
+                              *ngIf="meds.startsWith('data:image')"
+                            >
+                              <i
+                                (click)="deleteImage('Meds', i, meds)"
+                                class="fa fa-xmark delete-icon"
+                                aria-hidden="true"
+                              ></i>
+                              <img [src]="meds" />
+                            </div>
+
+                            <!-- FOR VIDEO -->
+                            <div
+                              class="item"
+                              *ngIf="meds.startsWith('data:video')"
+                            >
+                              <i
+                                (click)="deleteImage('Meds', i, meds)"
+                                class="fa fa-xmark delete-icon"
+                                style="z-index: 2"
+                                aria-hidden="true"
+                              ></i>
+                              <video
+                                width="100%"
+                                height="100%"
+                                controls="controls"
+                                preload="metadata"
+                              >
+                                <source
+                                  [src]="meds"
+                                  [type]="meds.split(':')[1].split(';')[0]"
+                                />
+                              </video>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Reminder -->
+              <div
+                class="tab-pane fade"
+                id="v-pills-reminder"
+                role="tabpanel"
+                aria-labelledby="v-pills-reminder-tab2"
+              >
+                <div class="row" [formGroup]="ReminderForm">
+                  <!-- <div class="col-md-12">
+                    <h5 class="modal-title" id="exampleModalLabel">Add Reminder</h5>
+                  </div> -->
+
+                  <div class="col-md-7">
+                    <div class="row">
+                      <div class="col-md-6 mb-4">
+                        <div class="form-group local-forms">
+                          <label>
+                            Date <span class="login-danger">*</span></label
+                          >
+                          <input
+                            type="text"
+                            #reminderdateRangePicker
+                            id="reminderdateRangePicker"
+                            class="form-control dateRangePickerClass"
+                            (change)="getActivityDate($event)"
+                            formControlName="reminderDate"
+                            placeholder="-Select -"
+                          />
+
+                          @if(ReminderForm.controls['reminderDate']?.invalid &&
+                          ReminderForm.controls['reminderDate'].touched){
+                          <span class="text-danger"
+                            >This field is required</span
+                          >
+                          }
+                        </div>
+                      </div>
+                      <div class="col-md-6 mb-4">
+                        <div class="form-group local-forms">
+                          <label>
+                            Time<span class="login-danger">*</span></label
+                          >
+                          <input
+                            type="time"
+                            class="form-control"
+                            formControlName="reminderTime"
+                            (change)="changeTime($event, 'ReminderTime')"
+                          />
+                          @if(ReminderForm.controls['reminderTime']?.invalid &&
+                          ReminderForm.controls['reminderTime'].touched){
+                          <span class="text-danger"
+                            >This field is required</span
+                          >
+                          }
+                        </div>
+                      </div>
+
+                      <div class="col-md-12 mb-4">
+                        <div class="form-group local-forms">
+                          <label
+                            >Reminder<span class="login-danger">*</span></label
+                          >
+                          <textarea
+                            class="form-control"
+                            formControlName="note"
+                            placeholder="Enter Note"
+                          ></textarea>
+                          @if(ReminderForm.controls['note']?.invalid &&
+                          ReminderForm.controls['note'].touched){
+                          <span class="text-danger"
+                            >This field is required</span
+                          >
+                          }
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-5">
+                    <div class="row">
+                      <!--LATEST CODE-->
+
+                      <div _ngcontent-ng-c1084851556="" class="col-md-12">
+                        <div
+                          class="form-group local-forms"
+                          style="position: relative"
+                        >
+                          <label>Image & Video</label>
+                          <input
+                            type="file"
+                            class="form-control"
+                            accept="image/png, image/jpeg, image/jpg, image/webp, image/gif, video/mp4, video/mov, video/webm, video/avi"
+                          />
+
+                          <ng-container
+                            *ngTemplateOutlet="
+                              fileLabelTemplate;
+                              context: {
+                                fileCount:
+                                  activityMediaStats['Reminder'].imageCount,
+                                videoCount:
+                                  activityMediaStats['Reminder'].videoCount,
+                                videoMB:
+                                  activityMediaStats['Reminder'].videoSizeMB
+                              }
+                            "
+                          >
+                          </ng-container>
+                          <input
+                            accept="image/png, image/jpeg, image/jpg, image/webp, image/gif, video/mp4, video/mov, video/webm, video/avi"
+                            type="file"
+                            #reminderFileInput
+                            class="form-control updated"
+                            (change)="onFileSelection($event, 'Reminder')"
+                            multiple
+                            id="ReminderFileElement"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="bottom-gallery">
+                      <div class="">
+                        <div class="img-inner">
+                          <div
+                            class="cell-height"
+                            *ngFor="
+                              let reminder of urlMap['Reminder'];
+                              let i = index
+                            "
+                          >
+                            <!-- <div class="item">
+                              <i (click)="deleteImage('Reminder', i)" class="fa fa-xmark delete-icon"
+                                aria-hidden="true"></i>
+                              <img [src]="reminder" />
+                            </div> -->
+
+                            <!-- FOR IMAGE -->
+                            <div
+                              class="item"
+                              *ngIf="reminder.startsWith('data:image')"
+                            >
+                              <i
+                                (click)="deleteImage('Reminder', i, reminder)"
+                                class="fa fa-xmark delete-icon"
+                                aria-hidden="true"
+                              ></i>
+                              <img [src]="reminder" />
+                            </div>
+
+                            <!-- FOR VIDEO -->
+                            <div
+                              class="item"
+                              *ngIf="reminder.startsWith('data:video')"
+                            >
+                              <i
+                                (click)="deleteImage('Reminder', i, reminder)"
+                                class="fa fa-xmark delete-icon"
+                                style="z-index: 2"
+                                aria-hidden="true"
+                              ></i>
+                              <video
+                                width="100%"
+                                height="100%"
+                                controls="controls"
+                                preload="metadata"
+                              >
+                                <source
+                                  [src]="reminder"
+                                  [type]="reminder.split(':')[1].split(';')[0]"
+                                />
+                              </video>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- upload/media activity -->
+
+              <div
+                class="tab-pane fade"
+                id="v-pills-upload-media"
+                role="tabpanel"
+                aria-labelledby="v-pills-reminder-tab2"
+              >
+                <div class="row" [formGroup]="uploadMediaForm">
+                  <!-- <div class="col-md-12">
+                    <h5 class="modal-title" id="exampleModalLabel">Add Reminder</h5>
+                  </div> -->
+
+                  <div class="col-md-6">
+                    <div class="row">
+                      <div class="col-md-12 mb-4">
+                        <div class="form-group local-forms">
+                          <label>
+                            Date <span class="login-danger">*</span></label
+                          >
+                          <input
+                            type="text"
+                            #dateRangePicker
+                            id="dateRangePicker"
+                            class="form-control dateRangePickerClass"
+                            (change)="getActivityDate($event)"
+                            formControlName="uploadMediaDate"
+                            placeholder="-Select -"
+                          />
+
+                          @if(uploadMediaForm.controls['uploadMediaDate']?.invalid
+                          &&
+                          uploadMediaForm.controls['uploadMediaDate'].touched){
+                          <span class="text-danger"
+                            >This field is required</span
+                          >
+                          }
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <!--LATEST CODE-->
+
+                        <div _ngcontent-ng-c1084851556="" class="col-md-12">
+                          <div
+                            class="form-group local-forms"
+                            style="position: relative"
+                          >
+                            <label>Image & Video</label>
+                            <input
+                              type="file"
+                              class="form-control"
+                              accept="image/png, image/jpeg, image/jpg, image/webp, image/gif, video/mp4, video/mov, video/webm, video/avi"
+                            />
+
+                            <ng-container
+                              *ngTemplateOutlet="
+                                fileLabelTemplate;
+                                context: {
+                                  fileCount:
+                                    activityMediaStats['uploadMedia']
+                                      .imageCount,
+                                  videoCount:
+                                    activityMediaStats['uploadMedia']
+                                      .videoCount,
+                                  videoMB:
+                                    activityMediaStats['uploadMedia']
+                                      .videoSizeMB
+                                }
+                              "
+                            >
+                            </ng-container>
+                            <input
+                              accept="image/png, image/jpeg, image/jpg, image/webp, image/gif, video/mp4, video/mov, video/webm, video/avi"
+                              type="file"
+                              #upladMediaFileInput
+                              class="form-control updated"
+                              (change)="onFileSelection($event, 'uploadMedia')"
+                              multiple
+                              id="uploadMediaFileElement"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <div class="col-md-12 mb-4">
+                      <div class="form-group local-forms">
+                        <label>Note</label>
+                        <textarea
+                          class="form-control"
+                          formControlName="note"
+                          rows="5"
+                          cols="50"
+                          placeholder="Enter Note"
+                        ></textarea>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="bottom-gallery">
+                      <div class="">
+                        <div class="img-inner">
+                          <div
+                            class="cell-height"
+                            *ngFor="
+                              let uploadMedia of urlMap['uploadMedia'];
+                              let i = index
+                            "
+                          >
+                            <!-- <div class="item">
+                              <i (click)="deleteImage('uploadMedia', i)" class="fa fa-xmark delete-icon"
+                                aria-hidden="true"></i>
+                              <img [src]="uploadMedia" />
+                            </div> -->
+
+                            <!-- FOR IMAGE -->
+                            <div
+                              class="item"
+                              *ngIf="uploadMedia.startsWith('data:image')"
+                            >
+                              <i
+                                (click)="
+                                  deleteImage('uploadMedia', i, uploadMedia)
+                                "
+                                class="fa fa-xmark delete-icon"
+                                aria-hidden="true"
+                              ></i>
+                              <img [src]="uploadMedia" />
+                            </div>
+
+                            <!-- FOR VIDEO -->
+                            <div
+                              class="item"
+                              *ngIf="uploadMedia.startsWith('data:video')"
+                            >
+                              <i
+                                (click)="
+                                  deleteImage('uploadMedia', i, uploadMedia)
+                                "
+                                class="fa fa-xmark delete-icon"
+                                style="z-index: 2"
+                                aria-hidden="true"
+                              ></i>
+                              <video
+                                width="100%"
+                                height="100%"
+                                controls="controls"
+                                preload="metadata"
+                              >
+                                <source
+                                  [src]="uploadMedia"
+                                  [type]="
+                                    uploadMedia.split(':')[1].split(';')[0]
+                                  "
+                                />
+                              </video>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="stroage-limit">
+                <span>
+                  <i class="fa fa-info"></i> You can upload up to 10 images
+                  (JPG, PNG, JPEG) and videos totaling up to 45 MB per activity.
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row justify-content-end classroom-select">
+        <div class="container">
+          <div class="col-md-12">
+            <div class="heading-new">
+              <h5 class="mb-0">Select Student</h5>
+            </div>
+          </div>
+          <div
+            class="d-flex flex-wrap align-items-center justify-content-between"
+          >
+            <!-- Class and Section Form -->
+            <div [formGroup]="ClassAndSectionForm" class="col-md-4">
+              <!--updated section and classes dropdown with ng-select-->
+
+              <div class="form-group local-forms select-class-room">
+                <!-- Classroom Selection -->
+                <label for="classroomSelect" class="form-label"
+                  >Classroom<span class="login-danger">*</span></label
+                >
+                <ng-select
+                  id="classroomSelect"
+                  formControlName="classroomID"
+                  (change)="onSelectClass($event)"
+                  placeholder="-Select-"
+                  bindValue="classroomID"
+                  bindLabel="classroomName"
+                  [items]="classRoom"
+                >
+                </ng-select>
+              </div>
+            </div>
+            <div class="col-md-4 mt-5">
+              <div class="search">
+                <input
+                  type="text"
+                  class=""
+                  placeholder="Type here.."
+                  (input)="onSearchName($event)"
+                />
+                <button type="submit" class="">Search</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
+            <div class="">
+              <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                  <thead class="student-thread">
+                    <tr>
+                      <th
+                        style="width: 10%"
+                        *ngIf="
+                          UserRoleId != 3 &&
+                          ClassAndSectionForm.value.classroomID != '' &&
+                          ClassAndSectionForm.value.classroomID != null
+                        "
+                      >
+                        <div
+                          class="checkBox d-flex justify-content-start align-items-center"
+                          *ngIf="
+                            UserRoleId != 3 &&
+                            ClassAndSectionForm.value.classroomID != '' &&
+                            ClassAndSectionForm.value.classroomID != null
+                          "
+                        >
+                          <input
+                            type="checkbox"
+                            [(ngModel)]="selectAll"
+                            (ngModelChange)="onSelectAllChange()"
+                          />
+                          <label for="" class="me-2"> </label>
+                          <span>Select All</span>
+                        </div>
+                      </th>
+                      <th>#</th>
+                      <th>Student&nbsp;Name</th>
+                      <!-- <th>Parent&nbsp;Email</th> -->
+                      <th>Age&nbsp;Group</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+
+                  @if (skeletonShow === 'Skelton') {
+                  <tbody>
+                    <tr>
+                      <td colspan="100%">
+                        <app-skeleton-loader
+                          skeletonShow="Skelton"
+                          viewType="table"
+                          [tableRows]="5"
+                          [tableCols]="5"
+                        >
+                        </app-skeleton-loader>
+                      </td>
+                    </tr>
+                  </tbody>
+
+                  } @else if (StudentList.length > 0) {
+
+                  <tbody>
+                    <tr
+                      *ngFor="
+                        let student of StudentList
+                          | paginate
+                            : {
+                                itemsPerPage: ContentSize,
+                                currentPage: ContentP,
+                                id: 'Agentcontrol'
+                              };
+                        let i = index
+                      "
+                    >
+                      <td style="width: 10%" *ngIf="UserRoleId != 3">
+                        <div
+                          *ngIf="UserRoleId != 3"
+                          class="checkBox d-flex justify-content-start align-items-center"
+                        >
+                          <input
+                            type="checkbox"
+                            [(ngModel)]="student.selected"
+                            (ngModelChange)="
+                              onSelectInput(student.id, student.selected)
+                            "
+                          />
+
+                          <label for=""> </label>
+                        </div>
+                      </td>
+                      <td>
+                        {{ i + 1 + (ContentP - 1) * ContentSize }}
+                      </td>
+
+                      <td>
+                        <div
+                          class="tooltip-wrapper d-flex align-items-center"
+                          style="position: relative"
+                          (mouseenter)="hoveredRow = item"
+                          (mouseleave)="hoveredRow = null"
+                        >
+                          <span class="table-img-div me-2">
+                            <img
+                              [src]="
+                                student.imageUrl
+                                  ? student.imageUrl
+                                  : 'assets/img/dummy-avatar.jpg'
+                              "
+                              class="rounded-circle table-image0new"
+                              style="object-fit: cover"
+                            />
+                          </span>
+
+                          <span
+                            class="hover-anchor"
+                            (mouseenter)="hoveredRow = student"
+                            (mouseleave)="hoveredRow = null"
+                            style="position: relative"
+                          >
+                            {{ student.firstName || "--" }}
+                            {{ student.lastName || "" }}
+
+                            <!-- Tooltip on Hover -->
+                            <app-tooltip
+                              *ngIf="hoveredRow === student"
+                              [employee]="{
+                                fullName:
+                                  student.parentFirstName +
+                                  (student.parentLastName
+                                    ? ' ' + student.parentLastName
+                                    : ''),
+                                email: student.parentEmail,
+                                profile: student.staffProfile
+                              }"
+                            ></app-tooltip>
+                          </span>
+                        </div>
+                      </td>
+
+                      <td>{{ student.label || "--" }}</td>
+
+                      <td>
+                        <div class="actions">
+                          <a
+                            class="action-btn bg-danger-light me-2"
+                            (click)="selectClassRoom(student.id)"
+                          >
+                            <i class="fa-solid fa-eye"></i>
+                          </a>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                  } @else {
+                  <tbody>
+                    <tr>
+                      <td colspan="100%">
+                        <app-skeleton-loader skeletonShow="NoRecord">
+                        </app-skeleton-loader>
+                      </td>
+                    </tr>
+                  </tbody>
+
+                  }
+                </table>
+              </div>
+              <!-- <div *ngIf="UserRoleId != 3 && StudentList.length > 0" class="row">
+                <div class="col-md-12 mt-3 text-end">
+                  <div class="acti-btn text-end">
+                    <button type="button" class="btn btn-primary" (click)="modalOpen(true)"
+                      [disabled]="isDisable()">
+                      <i class="fa fa-plus me-1"></i>
+                      Add Activity
+                    </button>
+                  </div>
+                </div>
+              </div> -->
+
+              <div class="col pagination-style">
+                <div class="datatable-pager datatable-paging-loaded">
+                  <pagination-controls
+                    previousLabel="prev"
+                    nextLabel="next"
+                    [maxSize]="5"
+                    class="datatable-pager-nav my-2 mb-sm-0"
+                    id="Agentcontrol"
+                    (pageChange)="ContentP = $event"
+                  >
+                  </pagination-controls>
+                </div>
+              </div>
+
+              @if(this.SelectedStudentId.length != 0){
+
+              <!-- Nap Time Submit -->
+              <div
+                class="col-md-12 mt-3"
+                *ngIf="AcceptedMasterActivityID === 1"
+              >
+                <div class="student-submit text-end">
+                  <button
+                    type="submit"
+                    class="btn btn-primary me-2"
+                    (click)="NapTimeSubmit()"
+                  >
+                    Add Activity
+                  </button>
+                  <button
+                    type="reset"
+                    class="btn btn-secondary"
+                    (click)="resetAllActivityForms()"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+
+              <!-- Food Submit -->
+              <div
+                class="col-md-12 mt-3"
+                *ngIf="AcceptedMasterActivityID === 2"
+              >
+                <div class="student-submit text-end">
+                  <button
+                    type="submit"
+                    class="btn btn-primary me-2"
+                    (click)="foodSubmit()"
+                  >
+                    Add Activity
+                  </button>
+                  <button
+                    type="reset"
+                    class="btn btn-secondary"
+                    (click)="resetAllActivityForms()"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+
+              <!-- Note Submit -->
+              <div
+                class="col-md-12 mt-3"
+                *ngIf="AcceptedMasterActivityID === 3"
+              >
+                <div class="student-submit text-end">
+                  <button
+                    type="submit"
+                    class="btn btn-primary me-2"
+                    (click)="noteSubmit()"
+                  >
+                    Add Activity
+                  </button>
+                  <button
+                    type="reset"
+                    class="btn btn-secondary"
+                    (click)="resetAllActivityForms()"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+
+              <!-- Health Submit -->
+              <div
+                class="col-md-12 mt-3"
+                *ngIf="AcceptedMasterActivityID === 4"
+              >
+                <div class="student-submit text-end">
+                  <button
+                    type="submit"
+                    class="btn btn-primary me-2"
+                    (click)="healthSubmit()"
+                  >
+                    Add Activity
+                  </button>
+                  <button
+                    type="reset"
+                    class="btn btn-secondary"
+                    (click)="resetAllActivityForms()"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+
+              <!-- Incident Submit -->
+              <div
+                class="col-md-12 mt-3"
+                *ngIf="AcceptedMasterActivityID === 5"
+              >
+                <div class="student-submit text-end">
+                  <button
+                    type="submit"
+                    class="btn btn-primary me-2"
+                    (click)="IncidentSubmit()"
+                  >
+                    Add Activity
+                  </button>
+                  <button
+                    type="reset"
+                    class="btn btn-secondary"
+                    (click)="resetAllActivityForms()"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+
+              <!-- Medicine Submit -->
+              <div
+                class="col-md-12 mt-3"
+                *ngIf="AcceptedMasterActivityID === 6"
+              >
+                <div class="student-submit text-end">
+                  <button
+                    type="submit"
+                    class="btn btn-primary me-2"
+                    (click)="MedicineSubmit()"
+                  >
+                    Add Activity
+                  </button>
+                  <button
+                    type="reset"
+                    class="btn btn-secondary"
+                    (click)="resetAllActivityForms()"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+
+              <!-- Reminder Submit -->
+              <div
+                class="col-md-12 mt-3"
+                *ngIf="AcceptedMasterActivityID === 7"
+              >
+                <div class="student-submit text-end">
+                  <button
+                    type="submit"
+                    class="btn btn-primary me-2"
+                    (click)="ReminderSubmit()"
+                  >
+                    Add Activity
+                  </button>
+                  <button
+                    type="reset"
+                    class="btn btn-secondary"
+                    (click)="resetAllActivityForms()"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+
+              <!-- upload media Submit -->
+              <div
+                class="col-md-12 mt-3"
+                *ngIf="AcceptedMasterActivityID === 8"
+              >
+                <div class="student-submit text-end">
+                  <button
+                    type="submit"
+                    class="btn btn-primary me-2"
+                    (click)="uploadMediaSubmit()"
+                  >
+                    Add Activity
+                  </button>
+                  <button
+                    type="reset"
+                    class="btn btn-secondary"
+                    (click)="resetAllActivityForms()"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+}@else{
+
+<!-- edit case -->
+
+@if (skeletonShow === 'Skelton') {
+
+<app-skeleton-loader skeletonShow="Skelton" viewType="studentActivityEdit">
+</app-skeleton-loader>
+
+} @else{
+
+<div class="row">
+  <div class="col-12 col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="row">
+          <div class="tab-content pt-0" id="v-pills-tabContent">
+            <!-- Nap Time -->
+
+            <div
+              *ngIf="activityTypeID == 1"
+              class="tab-pane fade active show"
+              id="v-pills-home2"
+              role="tabpanel"
+              aria-labelledby="v-pills-home-tab2"
+            >
+              <div class="card-header heading-new">
+                <h5>Nap Time</h5>
+              </div>
+              <div class="row" [formGroup]="NapTimeForm">
+                <!-- <div class="col-md-12 text-left">
+                <h5 class="modal-title" id="exampleModalLabel">Add Nap</h5>
+              </div>
+   -->
+
+                <!-- <div class="col-md-12">
+                  <div class="heading-new22 text-left">
+                    <h5 class="mb-0">Nap</h5>
+                  </div>
+                </div> -->
+
+                <div class="col-md-7">
+                  <div class="row">
+                    <div class="col-md-6 mb-4">
+                      <div class="form-group local-forms">
+                        <label
+                          >Select Date
+                          <span class="login-danger">*</span></label
+                        >
+                        <input
+                          readonly
+                          type="text"
+                          #dateRangePicker
+                          id="dateRangePicker"
+                          class="form-control dateRangePickerClass"
+                          formControlName="napDate"
+                          (change)="getActivityDate($event)"
+                          placeholder="-Select -"
+                        />
+                        @if(NapTimeForm.controls['napDate']?.invalid &&
+                        NapTimeForm.controls['napDate'].touched){
+                        <span class="text-danger">This field is required</span>
+                        }
+                      </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                      <div class="form-group local-forms">
+                        <label
+                          >Nap Start Time<span class="login-danger"
+                            >*</span
+                          ></label
+                        >
+                        <input
+                          type="time"
+                          class="form-control"
+                          formControlName="napStartTime"
+                          (change)="changeTime($event, 'StartTime')"
+                        />
+                        @if(NapTimeForm.controls['napStartTime']?.invalid &&
+                        NapTimeForm.controls['napStartTime'].touched){
+                        <span class="text-danger">This field is required</span>
+                        }
+                      </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                      <div class="form-group local-forms">
+                        <label
+                          >Nap End Time<span class="login-danger"
+                            >*</span
+                          ></label
+                        >
+                        <input
+                          type="time"
+                          class="form-control"
+                          formControlName="napEndTime"
+                          (change)="changeTime($event, 'EndTime')"
+                        />
+                        @if(NapTimeForm.controls['napEndTime']?.invalid &&
+                        NapTimeForm.controls['napEndTime'].touched){
+                        <span class="text-danger">This field is required</span>
+                        }
+                      </div>
+                    </div>
+                    <div class="col-md-12 mb-4">
+                      <div class="form-group local-forms">
+                        <label>Note</label>
+                        <textarea
+                          class="form-control"
+                          formControlName="note"
+                        ></textarea>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-5">
+                  <div class="row">
+                    <div class="col-md-12 mb-4">
+                      <!--LATEST CODE DESIGN-->
+
+                      <div _ngcontent-ng-c1084851556="">
+                        <div
+                          class="form-group local-forms"
+                          style="position: relative"
+                        >
+                          <label>Image & Video</label>
+                          <input
+                            type="file"
+                            class="form-control"
+                            accept="image/png, image/jpeg, image/jpg, image/webp, image/gif, video/mp4, video/mov, video/webm, video/avi"
+                          />
+                          <ng-container
+                            *ngTemplateOutlet="
+                              fileLabelTemplate;
+                              context: {
+                                fileCount: activityMediaStats['Nap'].imageCount,
+                                videoCount:
+                                  activityMediaStats['Nap'].videoCount,
+                                videoMB: activityMediaStats['Nap'].videoSizeMB
+                              }
+                            "
+                          ></ng-container>
+                          <input
+                            accept="image/png, image/jpeg, image/jpg, image/webp, image/gif, video/mp4, video/mov, video/webm, video/avi"
+                            type="file"
+                            #napfileInput
+                            class="form-control updated"
+                            (change)="onFileSelection($event, 'Nap')"
+                            multiple
+                            id="NapFileElement"
+                          />
+                        </div>
+                      </div>
+
+                      <!-- <div class="form-group local-forms">
+                        <label>Images & Video</label>
+                        <input type="file" class="form-control" id="napTimeImage" #napfileInput
+                          accept="image/png, image/jpeg, image/jpg, image/webp, image/gif, video/mp4, video/mov, video/webm, video/avi"
+                          (change)="onFileSelection($event, 'Nap')" multiple />
+                      </div>  -->
+                    </div>
+                    <div class="col-md-12">
+                      <div class="">
+                        <div class="cell-width">
+                          <div class="img-inner">
+                            <!-- ========== EXISTING FILES (from API) ========== -->
+                            <ng-container
+                              *ngIf="
+                                activity?.imageUrl &&
+                                activity?.imageUrl.length > 0
+                              "
+                            >
+                              <div
+                                class="cell-height"
+                                *ngFor="
+                                  let image of activity.imageUrl;
+                                  let i = index
+                                "
+                              >
+                                <div class="item">
+                                  <i
+                                    (click)="
+                                      deleteFile(
+                                        activity,
+                                        activity.imageEdit[i]
+                                      )
+                                    "
+                                    class="fa fa-xmark delete-icon"
+                                    aria-hidden="true"
+                                  ></i>
+
+                                  <!-- IMAGE -->
+                                  <img
+                                    *ngIf="image.startsWith('data:image')"
+                                    [src]="image"
+                                    style="width: 100%; height: auto"
+                                  />
+
+                                  <!-- VIDEO -->
+                                  <video
+                                    *ngIf="image.startsWith('data:video')"
+                                    width="100%"
+                                    height="auto"
+                                    controls
+                                    preload="metadata"
+                                  >
+                                    <source
+                                      [src]="image"
+                                      [type]="image.split(':')[1].split(';')[0]"
+                                    />
+                                  </video>
+                                </div>
+                              </div>
+                            </ng-container>
+
+                            <!-- ========== NEWLY ADDED FILES (from user input) ========== -->
+                            <ng-container
+                              *ngFor="
+                                let imageUrl of urlMap['Nap'];
+                                let i = index
+                              "
+                            >
+                              <div class="item cell-height">
+                                <i
+                                  (click)="deleteImage('Nap', i, imageUrl)"
+                                  class="fa fa-xmark delete-icon"
+                                  aria-hidden="true"
+                                ></i>
+
+                                <!-- IMAGE -->
+                                <img
+                                  *ngIf="imageUrl.startsWith('data:image')"
+                                  [src]="imageUrl"
+                                  style="width: 100%; height: auto"
+                                />
+
+                                <!-- VIDEO -->
+                                <video
+                                  *ngIf="imageUrl.startsWith('data:video')"
+                                  width="100%"
+                                  height="auto"
+                                  controls
+                                  preload="metadata"
+                                >
+                                  <source
+                                    [src]="imageUrl"
+                                    [type]="
+                                      imageUrl.split(':')[1].split(';')[0]
+                                    "
+                                  />
+                                </video>
+                              </div>
+                            </ng-container>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-12 mt-3">
+                  <div class="student-submit text-end">
+                    <button
+                      type="submit"
+                      class="btn btn-primary me-2"
+                      (click)="NapTimeSubmit()"
+                    >
+                      {{ this.activity?.id ? "Update" : "Add" }}
+                    </button>
+                    <button
+                      type="reset"
+                      class="btn btn-secondary"
+                      (click)="resetAllActivityForms()"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- food      -->
+            <div
+              *ngIf="activityTypeID == 2"
+              class="tab-pane fade active show"
+              id="v-pills-profile2"
+              role="tabpanel"
+              aria-labelledby="v-pills-profile-tab2"
+            >
+              <div class="row" [formGroup]="FoodForm">
+                <div class="col-md-7">
+                  <div class="row">
+                    <!-- Date -->
+                    <div class="col-md-6 mb-4">
+                      <div class="form-group local-forms">
+                        <label
+                          >Select Date
+                          <span class="login-danger">*</span></label
+                        >
+                        <input
+                          type="text"
+                          class="form-control dateRangePickerClass"
+                          #dateRangePicker
+                          formControlName="foodServingDate"
+                          (change)="getActivityDate($event)"
+                          placeholder="-Select -"
+                        />
+                        @if(FoodForm.controls['foodServingDate']?.invalid &&
+                        FoodForm.controls['foodServingDate'].touched){
+                        <span class="text-danger">This field is required</span>
+                        }
+                      </div>
+                    </div>
+
+                    <!-- Time -->
+                    <div class="col-md-6 mb-4">
+                      <div class="form-group local-forms">
+                        <label>Time <span class="login-danger">*</span></label>
+                        <input
+                          type="time"
+                          class="form-control"
+                          formControlName="foodServingTime"
+                          (change)="changeTime($event, 'FoodTime')"
+                        />
+                        @if(FoodForm.controls['foodServingTime']?.invalid &&
+                        FoodForm.controls['foodServingTime'].touched){
+                        <span class="text-danger">This field is required</span>
+                        }
+                      </div>
+                    </div>
+
+                    <!-- <div class="col-md-6 mb-4">
+                      <div class="form-group local-forms">
+                        <label>Food Type <span class="login-danger">*</span></label>
+                        <select class="form-select" formControlName="foodTypeID">
+                          <option value="" disabled>Select food type</option>
+                          <option *ngFor="let item of food" [value]="item.id">
+                            {{ item.foodType }}
+                          </option>
+                        </select>
+                        @if(FoodForm.controls['foodTypeID']?.invalid &&
+                        FoodForm.controls['foodTypeID'].touched){
+                        <span class="text-danger">This field is required</span>
+                        }
+                      </div>
+                    </div> -->
+
+                    <div class="col-md-6 mb-4">
+                      <div class="form-group local-forms">
+                        <label>Meal Type </label>
+                        <select
+                          class="form-select"
+                          formControlName="mealTypeID"
+                        >
+                          <option value="">Select meal type</option>
+                          <option value="1">Breakfast</option>
+                          <option value="2">Lunch</option>
+                          <option value="3">Dinner</option>
+                        </select>
+                        <!-- @if(FoodForm.controls['mealTypeID']?.invalid &&
+                        FoodForm.controls['mealTypeID'].touched){
+                        <span class="text-danger">This field is required</span>
+                        } -->
+                      </div>
+                    </div>
+
+                    <div class="col-md-6 mb-4">
+                      <div class="form-group local-forms">
+                        <label>Meal Item </label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          formControlName="mealItem"
+                        />
+                        <!-- @if(FoodForm.controls['mealItem']?.invalid &&
+                        FoodForm.controls['mealItem'].touched){
+                        <span class="text-danger">This field is required</span>
+                        } -->
+                      </div>
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+                      <div class="form-group local-forms">
+                        <label>Meal Completion</label>
+                        <ng-select
+                          [items]="MealCompletion"
+                          bindLabel="label"
+                          bindValue="value"
+                          formControlName="mealCompletion"
+                        >
+                        </ng-select>
+
+                        <!-- @if(FoodForm.controls['mealItem']?.invalid &&
+                          FoodForm.controls['mealItem'].touched){
+                          <span class="text-danger">This field is required</span>
+                          } -->
+                      </div>
+                    </div>
+
+                    <div class="col-md-12 mb-4">
+                      <div class="form-group local-forms">
+                        <label>Note</label>
+                        <textarea
+                          class="form-control"
+                          formControlName="note"
+                        ></textarea>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-5">
+                  <div class="row">
+                    <div class="col-md-12 mb-4">
+                      <div _ngcontent-ng-c1084851556="">
+                        <div
+                          class="form-group local-forms"
+                          style="position: relative"
+                        >
+                          <label>Image & Video</label>
+                          <input
+                            type="file"
+                            class="form-control"
+                            accept="image/png, image/jpeg, image/jpg, image/webp, image/gif, video/mp4, video/mov, video/webm, video/avi"
+                          />
+                          <ng-container
+                            *ngTemplateOutlet="
+                              fileLabelTemplate;
+                              context: {
+                                fileCount:
+                                  activityMediaStats['Food'].imageCount,
+                                videoCount:
+                                  activityMediaStats['Food'].videoCount,
+                                videoMB: activityMediaStats['Food'].videoSizeMB
+                              }
+                            "
+                          ></ng-container>
+                          <input
+                            accept="image/png, image/jpeg, image/jpg, image/webp, image/gif, video/mp4, video/mov, video/webm, video/avi"
+                            type="file"
+                            #foodFileInput
+                            class="form-control updated"
+                            (change)="onFileSelection($event, 'Food')"
+                            multiple
+                            id="FoodFileElement"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-12">
+                      <div class="cell-width">
+                        <div class="img-inner">
+                          <!-- ========== EXISTING FILES (from API) ========== -->
+                          <ng-container
+                            *ngIf="
+                              activity?.imageUrl &&
+                              activity?.imageUrl.length > 0
+                            "
+                          >
+                            <div
+                              class="cell-height"
+                              *ngFor="
+                                let image of activity.imageUrl;
+                                let i = index
+                              "
+                            >
+                              <div class="item">
+                                <i
+                                  (click)="
+                                    deleteFile(activity, activity.imageEdit[i])
+                                  "
+                                  class="fa fa-xmark delete-icon"
+                                  aria-hidden="true"
+                                ></i>
+
+                                <!-- IMAGE -->
+                                <img
+                                  *ngIf="image.startsWith('data:image')"
+                                  [src]="image"
+                                  style="width: 100%; height: auto"
+                                />
+
+                                <!-- VIDEO -->
+                                <video
+                                  *ngIf="image.startsWith('data:video')"
+                                  width="100%"
+                                  height="auto"
+                                  controls
+                                  preload="metadata"
+                                >
+                                  <source
+                                    [src]="image"
+                                    [type]="image.split(':')[1].split(';')[0]"
+                                  />
+                                </video>
+                              </div>
+                            </div>
+                          </ng-container>
+
+                          <!-- ========== NEWLY ADDED FILES (from user input) ========== -->
+                          <ng-container
+                            *ngFor="
+                              let imageUrl of urlMap['Food'];
+                              let i = index
+                            "
+                          >
+                            <div class="item cell-height">
+                              <i
+                                (click)="deleteImage('Food', i, imageUrl)"
+                                class="fa fa-xmark delete-icon"
+                                aria-hidden="true"
+                              ></i>
+
+                              <!-- IMAGE -->
+                              <img
+                                *ngIf="imageUrl.startsWith('data:image')"
+                                [src]="imageUrl"
+                                style="width: 100%; height: auto"
+                              />
+
+                              <!-- VIDEO -->
+                              <video
+                                *ngIf="imageUrl.startsWith('data:video')"
+                                width="100%"
+                                height="auto"
+                                controls
+                                preload="metadata"
+                              >
+                                <source
+                                  [src]="imageUrl"
+                                  [type]="imageUrl.split(':')[1].split(';')[0]"
+                                />
+                              </video>
+                            </div>
+                          </ng-container>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-12 mt-3">
+                  <div class="student-submit text-end">
+                    <button
+                      type="submit"
+                      class="btn btn-primary me-2"
+                      (click)="foodSubmit()"
+                    >
+                      {{ this.activity?.id ? "Update" : "Add" }}
+                    </button>
+                    <button
+                      type="reset"
+                      class="btn btn-secondary"
+                      (click)="resetAllActivityForms()"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Note -->
+
+            <div
+              *ngIf="activityTypeID == 3"
+              class="tab-pane fade active show"
+              id="v-pills-messages2"
+              role="tabpanel"
+              aria-labelledby="v-pills-messages-tab2"
+            >
+              <div class="card-header heading-new">
+                <h5>Note</h5>
+              </div>
+              <div class="row" [formGroup]="NoteForm">
+                <div class="col-md-7">
+                  <div class="row">
+                    <div class="col-md-6 mb-4">
+                      <div class="form-group local-forms">
+                        <label
+                          >Select Date
+                          <span class="login-danger">*</span></label
+                        >
+                        <input
+                          readonly
+                          type="text"
+                          #dateRangePicker
+                          id="dateRangePicker"
+                          class="form-control dateRangePickerClass"
+                          formControlName="noteDate"
+                          (change)="getActivityDate($event)"
+                          placeholder="-Select -"
+                        />
+                        @if(NoteForm.controls['noteDate']?.invalid &&
+                        NoteForm.controls['noteDate'].touched){
+                        <span class="text-danger">This field is required</span>
+                        }
+                      </div>
+                    </div>
+
+                    <div class="col-md-6 mb-4">
+                      <div class="form-group local-forms">
+                        <label>Time <span class="login-danger">*</span></label>
+                        <input
+                          type="time"
+                          class="form-control"
+                          formControlName="noteTime"
+                          (change)="changeTime($event, 'NoteTime')"
+                        />
+                        @if(NoteForm.controls['noteTime']?.invalid &&
+                        NoteForm.controls['noteTime'].touched){
+                        <span class="text-danger">This field is required</span>
+                        }
+                      </div>
+                    </div>
+
+                    <div class="col-md-12 mb-4">
+                      <div class="form-group local-forms">
+                        <label>Note</label>
+                        <textarea
+                          formControlName="note"
+                          class="form-control"
+                        ></textarea>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-5">
+                  <div class="row">
+                    <div class="col-md-12 mb-4">
+                      <div _ngcontent-ng-c1084851556="">
+                        <div
+                          class="form-group local-forms"
+                          style="position: relative"
+                        >
+                          <label>Image & Video</label>
+                          <input
+                            type="file"
+                            class="form-control"
+                            accept="image/png, image/jpeg, image/jpg, image/webp, image/gif, video/mp4, video/mov, video/webm, video/avi"
+                          />
+                          <ng-container
+                            *ngTemplateOutlet="
+                              fileLabelTemplate;
+                              context: {
+                                fileCount:
+                                  activityMediaStats['Note'].imageCount,
+                                videoCount:
+                                  activityMediaStats['Note'].videoCount,
+                                videoMB: activityMediaStats['Note'].videoSizeMB
+                              }
+                            "
+                          ></ng-container>
+                          <input
+                            accept="image/png, image/jpeg, image/jpg, image/webp, image/gif, video/mp4, video/mov, video/webm, video/avi"
+                            type="file"
+                            #noteFileInput
+                            class="form-control updated"
+                            (change)="onFileSelection($event, 'Note')"
+                            multiple
+                            id="NoteFileElement"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-12">
+                      <div class="cell-width">
+                        <div class="img-inner">
+                          <!-- ========== EXISTING FILES (from API) ========== -->
+                          <ng-container
+                            *ngIf="
+                              activity?.imageUrl &&
+                              activity?.imageUrl.length > 0
+                            "
+                          >
+                            <div
+                              class="cell-height"
+                              *ngFor="
+                                let image of activity.imageUrl;
+                                let i = index
+                              "
+                            >
+                              <div class="item">
+                                <i
+                                  (click)="
+                                    deleteFile(activity, activity.imageEdit[i])
+                                  "
+                                  class="fa fa-xmark delete-icon"
+                                  aria-hidden="true"
+                                ></i>
+
+                                <!-- IMAGE -->
+                                <img
+                                  *ngIf="image.startsWith('data:image')"
+                                  [src]="image"
+                                  style="width: 100%; height: auto"
+                                />
+
+                                <!-- VIDEO -->
+                                <video
+                                  *ngIf="image.startsWith('data:video')"
+                                  width="100%"
+                                  height="auto"
+                                  controls
+                                  preload="metadata"
+                                >
+                                  <source
+                                    [src]="image"
+                                    [type]="image.split(':')[1].split(';')[0]"
+                                  />
+                                </video>
+                              </div>
+                            </div>
+                          </ng-container>
+
+                          <!-- ========== NEWLY ADDED FILES (from user input) ========== -->
+                          <ng-container
+                            *ngFor="
+                              let imageUrl of urlMap['Note'];
+                              let i = index
+                            "
+                          >
+                            <div class="item cell-height">
+                              <i
+                                (click)="deleteImage('Note', i, imageUrl)"
+                                class="fa fa-xmark delete-icon"
+                                aria-hidden="true"
+                              ></i>
+
+                              <!-- IMAGE -->
+                              <img
+                                *ngIf="imageUrl.startsWith('data:image')"
+                                [src]="imageUrl"
+                                style="width: 100%; height: auto"
+                              />
+
+                              <!-- VIDEO -->
+                              <video
+                                *ngIf="imageUrl.startsWith('data:video')"
+                                width="100%"
+                                height="auto"
+                                controls
+                                preload="metadata"
+                              >
+                                <source
+                                  [src]="imageUrl"
+                                  [type]="imageUrl.split(':')[1].split(';')[0]"
+                                />
+                              </video>
+                            </div>
+                          </ng-container>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-12 mt-3">
+                  <div class="student-submit text-end">
+                    <button
+                      type="submit"
+                      class="btn btn-primary me-2"
+                      (click)="noteSubmit()"
+                    >
+                      {{ this.activity?.id ? "Update" : "Add" }}
+                    </button>
+                    <button
+                      type="reset"
+                      class="btn btn-secondary"
+                      (click)="resetAllActivityForms()"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Health -->
+
+            <div
+              *ngIf="activityTypeID == 4"
+              class="tab-pane fade active show"
+              id="v-pills-settings2"
+              role="tabpanel"
+              aria-labelledby="v-pills-settings-tab2"
+            >
+              <div class="card-header heading-new">
+                <h5>Health</h5>
+              </div>
+              <div class="row" [formGroup]="HealthForm">
+                <div class="col-md-7">
+                  <div class="row">
+                    <div class="col-md-6 mb-4">
+                      <div class="form-group local-forms">
+                        <label
+                          >Select Date
+                          <span class="login-danger">*</span></label
+                        >
+                        <inputreadonly
+                          type="text"
+                          #dateRangePicker
+                          id="dateRangePicker"
+                          class="form-control dateRangePickerClass"
+                          formControlName="healthDate"
+                          (change)="getActivityDate($event)"
+                          placeholder="-Select -"
+                        />
+                        @if(HealthForm.controls['healthDate']?.invalid &&
+                        HealthForm.controls['healthDate'].touched){
+                        <span class="text-danger">This field is required</span>
+                        }
+                      </div>
+                    </div>
+
+                    <div class="col-md-6 mb-4">
+                      <div class="form-group local-forms">
+                        <label>Time <span class="login-danger">*</span></label>
+                        <input
+                          type="time"
+                          class="form-control"
+                          formControlName="healthTime"
+                          (change)="changeTime($event, 'HealthTime')"
+                        />
+                        @if(HealthForm.controls['healthTime']?.invalid &&
+                        HealthForm.controls['healthTime'].touched){
+                        <span class="text-danger">This field is required</span>
+                        }
+                      </div>
+                    </div>
+
+                    <div class="col-md-12 mb-4">
+                      <div class="form-group local-forms">
+                        <label
+                          >Body Temperature
+                          <span class="login-danger">*</span></label
+                        >
+                        <input
+                          type="text"
+                          class="form-control"
+                          formControlName="bodyTemperature"
+                        />
+                        @if(HealthForm.controls['bodyTemperature']?.invalid &&
+                        HealthForm.controls['bodyTemperature'].touched){
+                        <span class="text-danger">This field is required</span>
+                        }
+                      </div>
+                    </div>
+
+                    <div class="col-md-12 mb-4">
+                      <div class="form-group local-forms">
+                        <label>Note</label>
+                        <textarea
+                          class="form-control"
+                          formControlName="note"
+                        ></textarea>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-5">
+                  <div class="row">
+                    <div class="col-md-12 mb-4">
+                      <div _ngcontent-ng-c1084851556="">
+                        <div
+                          class="form-group local-forms"
+                          style="position: relative"
+                        >
+                          <label>Image & Video</label>
+                          <input
+                            type="file"
+                            class="form-control"
+                            accept="image/png, image/jpeg, image/jpg, image/webp, image/gif, video/mp4, video/mov, video/webm, video/avi"
+                          />
+                          <ng-container
+                            *ngTemplateOutlet="
+                              fileLabelTemplate;
+                              context: {
+                                fileCount:
+                                  activityMediaStats['Health'].imageCount,
+                                videoCount:
+                                  activityMediaStats['Health'].videoCount,
+                                videoMB:
+                                  activityMediaStats['Health'].videoSizeMB
+                              }
+                            "
+                          ></ng-container>
+                          <input
+                            accept="image/png, image/jpeg, image/jpg, image/webp, image/gif, video/mp4, video/mov, video/webm, video/avi"
+                            type="file"
+                            #healthFileInput
+                            class="form-control updated"
+                            (change)="onFileSelection($event, 'Health')"
+                            multiple
+                            id="HealthFileElement"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-12">
+                      <div class="cell-width">
+                        <div class="img-inner">
+                          <!-- ========== EXISTING FILES (from API) ========== -->
+                          <ng-container
+                            *ngIf="
+                              activity?.imageUrl &&
+                              activity?.imageUrl.length > 0
+                            "
+                          >
+                            <div
+                              class="cell-height"
+                              *ngFor="
+                                let image of activity.imageUrl;
+                                let i = index
+                              "
+                            >
+                              <div class="item">
+                                <i
+                                  (click)="
+                                    deleteFile(activity, activity.imageEdit[i])
+                                  "
+                                  class="fa fa-xmark delete-icon"
+                                  aria-hidden="true"
+                                ></i>
+
+                                <!-- IMAGE -->
+                                <img
+                                  *ngIf="image.startsWith('data:image')"
+                                  [src]="image"
+                                  style="width: 100%; height: auto"
+                                />
+
+                                <!-- VIDEO -->
+                                <video
+                                  *ngIf="image.startsWith('data:video')"
+                                  width="100%"
+                                  height="auto"
+                                  controls
+                                  preload="metadata"
+                                >
+                                  <source
+                                    [src]="image"
+                                    [type]="image.split(':')[1].split(';')[0]"
+                                  />
+                                </video>
+                              </div>
+                            </div>
+                          </ng-container>
+
+                          <!-- ========== NEWLY ADDED FILES (from user input) ========== -->
+                          <ng-container
+                            *ngFor="
+                              let imageUrl of urlMap['Health'];
+                              let i = index
+                            "
+                          >
+                            <div class="item cell-height">
+                              <i
+                                (click)="deleteImage('Health', i, imageUrl)"
+                                class="fa fa-xmark delete-icon"
+                                aria-hidden="true"
+                              ></i>
+
+                              <!-- IMAGE -->
+                              <img
+                                *ngIf="imageUrl.startsWith('data:image')"
+                                [src]="imageUrl"
+                                style="width: 100%; height: auto"
+                              />
+
+                              <!-- VIDEO -->
+                              <video
+                                *ngIf="imageUrl.startsWith('data:video')"
+                                width="100%"
+                                height="auto"
+                                controls
+                                preload="metadata"
+                              >
+                                <source
+                                  [src]="imageUrl"
+                                  [type]="imageUrl.split(':')[1].split(';')[0]"
+                                />
+                              </video>
+                            </div>
+                          </ng-container>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-12 mt-3">
+                  <div class="student-submit text-end">
+                    <button
+                      type="submit"
+                      class="btn btn-primary me-2"
+                      (click)="healthSubmit()"
+                    >
+                      {{ this.activity?.id ? "Update" : "Add" }}
+                    </button>
+                    <button
+                      type="reset"
+                      class="btn btn-secondary"
+                      (click)="resetAllActivityForms()"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Incident -->
+
+            <div
+              *ngIf="activityTypeID == 5"
+              class="tab-pane fade active show"
+              id="v-pills-incident"
+              role="tabpanel"
+              aria-labelledby="v-pills-incident-tab2"
+            >
+              <div class="card-header heading-new">
+                <h5>Incident</h5>
+              </div>
+              <div class="row" [formGroup]="IncidentForm">
+                <div class="col-md-7">
+                  <div class="row">
+                    <div class="col-md-6 mb-4">
+                      <div class="form-group local-forms">
+                        <label
+                          >Select Date
+                          <span class="login-danger">*</span></label
+                        >
+                        <input
+                          readonly
+                          type="text"
+                          #dateRangePicker
+                          id="dateRangePicker"
+                          class="form-control dateRangePickerClass"
+                          formControlName="incidentDate"
+                          (change)="getActivityDate($event)"
+                          placeholder="-Select -"
+                        />
+                        @if(IncidentForm.controls['incidentDate']?.invalid &&
+                        IncidentForm.controls['incidentDate'].touched){
+                        <span class="text-danger">This field is required</span>
+                        }
+                      </div>
+                    </div>
+
+                    <div class="col-md-6 mb-4">
+                      <div class="form-group local-forms">
+                        <label>Time <span class="login-danger">*</span></label>
+                        <input
+                          type="time"
+                          class="form-control"
+                          formControlName="incidentTime"
+                          (change)="changeTime($event, 'IncidentTime')"
+                        />
+                        @if(IncidentForm.controls['incidentTime']?.invalid &&
+                        IncidentForm.controls['incidentTime'].touched){
+                        <span class="text-danger">This field is required</span>
+                        }
+                      </div>
+                    </div>
+
+                    <div class="col-md-12 mb-4">
+                      <div class="form-group local-forms">
+                        <label>Note</label>
+                        <textarea
+                          class="form-control"
+                          formControlName="note"
+                        ></textarea>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-5">
+                  <div class="row">
+                    <div class="col-md-12 mb-4">
+                      <div _ngcontent-ng-c1084851556="">
+                        <div
+                          class="form-group local-forms"
+                          style="position: relative"
+                        >
+                          <label>Image & Video</label>
+                          <input
+                            type="file"
+                            class="form-control"
+                            accept="image/png, image/jpeg, image/jpg, image/webp, image/gif, video/mp4, video/mov, video/webm, video/avi"
+                          />
+
+                          <ng-container
+                            *ngTemplateOutlet="
+                              fileLabelTemplate;
+                              context: {
+                                fileCount:
+                                  activityMediaStats['Incident'].imageCount,
+                                videoCount:
+                                  activityMediaStats['Incident'].videoCount,
+                                videoMB:
+                                  activityMediaStats['Incident'].videoSizeMB
+                              }
+                            "
+                          ></ng-container>
+                          <input
+                            accept="image/png, image/jpeg, image/jpg, image/webp, image/gif, video/mp4, video/mov, video/webm, video/avi"
+                            type="file"
+                            #incidentFileInput
+                            class="form-control updated"
+                            (change)="onFileSelection($event, 'Incident')"
+                            multiple
+                            id="IncidentFileElement"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-12">
+                      <div class="cell-width">
+                        <div class="img-inner">
+                          <!-- ========== EXISTING FILES (from API) ========== -->
+                          <ng-container
+                            *ngIf="
+                              activity?.imageUrl &&
+                              activity?.imageUrl.length > 0
+                            "
+                          >
+                            <div
+                              class="cell-height"
+                              *ngFor="
+                                let image of activity.imageUrl;
+                                let i = index
+                              "
+                            >
+                              <div class="item">
+                                <i
+                                  (click)="
+                                    deleteFile(activity, activity.imageEdit[i])
+                                  "
+                                  class="fa fa-xmark delete-icon"
+                                  aria-hidden="true"
+                                ></i>
+
+                                <!-- IMAGE -->
+                                <img
+                                  *ngIf="image.startsWith('data:image')"
+                                  [src]="image"
+                                  style="width: 100%; height: auto"
+                                />
+
+                                <!-- VIDEO -->
+                                <video
+                                  *ngIf="image.startsWith('data:video')"
+                                  width="100%"
+                                  height="auto"
+                                  controls
+                                  preload="metadata"
+                                >
+                                  <source
+                                    [src]="image"
+                                    [type]="image.split(':')[1].split(';')[0]"
+                                  />
+                                </video>
+                              </div>
+                            </div>
+                          </ng-container>
+
+                          <!-- ========== NEWLY ADDED FILES (from user input) ========== -->
+                          <ng-container
+                            *ngFor="
+                              let imageUrl of urlMap['Incident'];
+                              let i = index
+                            "
+                          >
+                            <div class="item cell-height">
+                              <i
+                                (click)="deleteImage('Incident', i, imageUrl)"
+                                class="fa fa-xmark delete-icon"
+                                aria-hidden="true"
+                              ></i>
+
+                              <!-- IMAGE -->
+                              <img
+                                *ngIf="imageUrl.startsWith('data:image')"
+                                [src]="imageUrl"
+                                style="width: 100%; height: auto"
+                              />
+
+                              <!-- VIDEO -->
+                              <video
+                                *ngIf="imageUrl.startsWith('data:video')"
+                                width="100%"
+                                height="auto"
+                                controls
+                                preload="metadata"
+                              >
+                                <source
+                                  [src]="imageUrl"
+                                  [type]="imageUrl.split(':')[1].split(';')[0]"
+                                />
+                              </video>
+                            </div>
+                          </ng-container>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-12 mt-3">
+                  <div class="student-submit text-end">
+                    <button
+                      type="submit"
+                      class="btn btn-primary me-2"
+                      (click)="IncidentSubmit()"
+                    >
+                      {{ activity?.id ? "Update" : "Add" }}
+                    </button>
+                    <button
+                      type="reset"
+                      class="btn btn-secondary"
+                      (click)="resetAllActivityForms()"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Mz0cine -->
+
+            <div
+              *ngIf="activityTypeID == 6"
+              class="tab-pane fade active show"
+              id="v-pills-med"
+              role="tabpanel"
+              aria-labelledby="v-pills-med-tab2"
+            >
+              <div class="card-header heading-new">
+                <h5>Medicine</h5>
+              </div>
+              <div class="row" [formGroup]="MedicineForm">
+                <div class="col-md-7">
+                  <div class="row">
+                    <div class="col-md-6 mb-4">
+                      <div class="form-group local-forms">
+                        <label
+                          >Select Date
+                          <span class="login-danger">*</span></label
+                        >
+                        <input
+                          readonly
+                          type="text"
+                          #dateRangePicker
+                          id="dateRangePicker"
+                          class="form-control dateRangePickerClass"
+                          formControlName="medsDate"
+                          (change)="getActivityDate($event)"
+                          placeholder="-Select -"
+                        />
+                        @if(MedicineForm.controls['medsDate']?.invalid &&
+                        MedicineForm.controls['medsDate'].touched){
+                        <span class="text-danger">This field is required</span>
+                        }
+                      </div>
+                    </div>
+
+                    <div class="col-md-6 mb-4">
+                      <div class="form-group local-forms">
+                        <label>Time <span class="login-danger">*</span></label>
+                        <input
+                          type="time"
+                          class="form-control"
+                          formControlName="medsTime"
+                          (change)="changeTime($event, 'MedsTime')"
+                        />
+                        @if(MedicineForm.controls['medsTime']?.invalid &&
+                        MedicineForm.controls['medsTime'].touched){
+                        <span class="text-danger">This field is required</span>
+                        }
+                      </div>
+                    </div>
+
+                    <div class="col-md-12 mb-4">
+                      <div class="form-group local-forms">
+                        <label>Note</label>
+                        <textarea
+                          class="form-control"
+                          formControlName="note"
+                        ></textarea>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-5">
+                  <div class="row">
+                    <div class="col-md-12 mb-4">
+                      <div _ngcontent-ng-c1084851556="">
+                        <div
+                          class="form-group local-forms"
+                          style="position: relative"
+                        >
+                          <label>Image & Video</label>
+                          <input
+                            type="file"
+                            class="form-control"
+                            accept="image/png, image/jpeg, image/jpg, image/webp, image/gif, video/mp4, video/mov, video/webm, video/avi"
+                          />
+                          <ng-container
+                            *ngTemplateOutlet="
+                              fileLabelTemplate;
+                              context: {
+                                fileCount:
+                                  activityMediaStats['Meds'].imageCount,
+                                videoCount:
+                                  activityMediaStats['Meds'].videoCount,
+                                videoMB: activityMediaStats['Meds'].videoSizeMB
+                              }
+                            "
+                          ></ng-container>
+                          <input
+                            accept="image/png, image/jpeg, image/jpg, image/webp, image/gif, video/mp4, video/mov, video/webm, video/avi"
+                            type="file"
+                            #medsFileInput
+                            class="form-control updated"
+                            (change)="onFileSelection($event, 'Meds')"
+                            multiple
+                            id="MedsFileElement"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-12">
+                      <div class="cell-width">
+                        <div class="img-inner">
+                          <!-- ========== EXISTING FILES (from API) ========== -->
+                          <ng-container
+                            *ngIf="
+                              activity?.imageUrl &&
+                              activity?.imageUrl.length > 0
+                            "
+                          >
+                            <div
+                              class="cell-height"
+                              *ngFor="
+                                let image of activity.imageUrl;
+                                let i = index
+                              "
+                            >
+                              <div class="item">
+                                <i
+                                  (click)="
+                                    deleteFile(activity, activity.imageEdit[i])
+                                  "
+                                  class="fa fa-xmark delete-icon"
+                                  aria-hidden="true"
+                                ></i>
+
+                                <!-- IMAGE -->
+                                <img
+                                  *ngIf="image.startsWith('data:image')"
+                                  [src]="image"
+                                  style="width: 100%; height: auto"
+                                />
+
+                                <!-- VIDEO -->
+                                <video
+                                  *ngIf="image.startsWith('data:video')"
+                                  width="100%"
+                                  height="auto"
+                                  controls
+                                  preload="metadata"
+                                >
+                                  <source
+                                    [src]="image"
+                                    [type]="image.split(':')[1].split(';')[0]"
+                                  />
+                                </video>
+                              </div>
+                            </div>
+                          </ng-container>
+
+                          <!-- ========== NEWLY ADDED FILES (from user input) ========== -->
+                          <ng-container
+                            *ngFor="
+                              let imageUrl of urlMap['Meds'];
+                              let i = index
+                            "
+                          >
+                            <div class="item cell-height">
+                              <i
+                                (click)="deleteImage('Meds', i, imageUrl)"
+                                class="fa fa-xmark delete-icon"
+                                aria-hidden="true"
+                              ></i>
+
+                              <!-- IMAGE -->
+                              <img
+                                *ngIf="imageUrl.startsWith('data:image')"
+                                [src]="imageUrl"
+                                style="width: 100%; height: auto"
+                              />
+
+                              <!-- VIDEO -->
+                              <video
+                                *ngIf="imageUrl.startsWith('data:video')"
+                                width="100%"
+                                height="auto"
+                                controls
+                                preload="metadata"
+                              >
+                                <source
+                                  [src]="imageUrl"
+                                  [type]="imageUrl.split(':')[1].split(';')[0]"
+                                />
+                              </video>
+                            </div>
+                          </ng-container>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-12 mt-3">
+                  <div class="student-submit text-end">
+                    <button
+                      type="submit"
+                      class="btn btn-primary me-2"
+                      (click)="MedicineSubmit()"
+                    >
+                      {{ activity?.id ? "Update" : "Add" }}
+                    </button>
+                    <button
+                      type="reset"
+                      class="btn btn-secondary"
+                      (click)="resetAllActivityForms()"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Reminder -->
+
+            <div
+              *ngIf="activityTypeID == 7"
+              class="tab-pane fade active show"
+              id="v-pills-reminder"
+              role="tabpanel"
+              aria-labelledby="v-pills-reminder-tab2"
+            >
+              <div class="card-header heading-new">
+                <h5>Reminder</h5>
+              </div>
+              <div class="row" [formGroup]="ReminderForm">
+                <!-- <div class="col-md-12">
+                <h5 class="modal-title" id="exampleModalLabel">Add Reminder</h5>
+              </div> -->
+
+                <!-- <div class="col-md-12">
+                  <div class="heading-new78 text-left">
+                    <h5 class="mb-0">Reminder</h5>
+                  </div>
+                </div> -->
+
+                <div class="col-md-7">
+                  <div class="row">
+                    <div class="col-md-6 mb-4">
+                      <div class="form-group local-forms">
+                        <label
+                          >Select Date
+                          <span class="login-danger">*</span></label
+                        >
+                        <input
+                          readonly
+                          type="text"
+                          #reminderdateRangePicker
+                          id="reminderdateRangePicker"
+                          class="form-control dateRangePickerClass"
+                          (change)="getActivityDate($event)"
+                          formControlName="reminderDate"
+                          placeholder="-Select -"
+                        />
+                        @if(ReminderForm.controls['reminderDate']?.invalid &&
+                        ReminderForm.controls['reminderDate'].touched){
+                        <span class="text-danger">This field is required</span>
+                        }
+                      </div>
+                    </div>
+
+                    <div class="col-md-6 mb-4">
+                      <div class="form-group local-forms">
+                        <label>Time <span class="login-danger">*</span></label>
+                        <input
+                          type="time"
+                          class="form-control"
+                          formControlName="reminderTime"
+                          (change)="changeTime($event, 'ReminderTime')"
+                        />
+                        @if(ReminderForm.controls['reminderTime']?.invalid &&
+                        ReminderForm.controls['reminderTime'].touched){
+                        <span class="text-danger">This field is required</span>
+                        }
+                      </div>
+                    </div>
+
+                    <div class="col-md-12 mb-4">
+                      <div class="form-group local-forms">
+                        <label
+                          >Reminder <span class="login-danger">*</span></label
+                        >
+                        <textarea
+                          class="form-control"
+                          formControlName="note"
+                        ></textarea>
+                        @if(ReminderForm.controls['note']?.invalid &&
+                        ReminderForm.controls['note'].touched){
+                        <span class="text-danger">This field is required</span>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-5">
+                  <div class="row">
+                    <div class="col-md-12 mb-4">
+                      <div _ngcontent-ng-c1084851556="">
+                        <div
+                          class="form-group local-forms"
+                          style="position: relative"
+                        >
+                          <label>Image & Video</label>
+                          <input
+                            type="file"
+                            class="form-control"
+                            accept="image/png, image/jpeg, image/jpg, image/webp, image/gif, video/mp4, video/mov, video/webm, video/avi"
+                          />
+                          <ng-container
+                            *ngTemplateOutlet="
+                              fileLabelTemplate;
+                              context: {
+                                fileCount:
+                                  activityMediaStats['Reminder'].imageCount,
+                                videoCount:
+                                  activityMediaStats['Reminder'].videoCount,
+                                videoMB:
+                                  activityMediaStats['Reminder'].videoSizeMB
+                              }
+                            "
+                          ></ng-container>
+                          <input
+                            accept="image/png, image/jpeg, image/jpg, image/webp, image/gif, video/mp4, video/mov, video/webm, video/avi"
+                            type="file"
+                            #reminderFileInput
+                            class="form-control updated"
+                            (change)="onFileSelection($event, 'Reminder')"
+                            multiple
+                            id="ReminderFileElement"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-12">
+                      <div class="cell-width">
+                        <div class="img-inner">
+                          <!-- ========== EXISTING FILES (from API) ========== -->
+                          <ng-container
+                            *ngIf="
+                              activity?.imageUrl &&
+                              activity?.imageUrl.length > 0
+                            "
+                          >
+                            <div
+                              class="cell-height"
+                              *ngFor="
+                                let image of activity.imageUrl;
+                                let i = index
+                              "
+                            >
+                              <div class="item">
+                                <i
+                                  (click)="
+                                    deleteFile(activity, activity.imageEdit[i])
+                                  "
+                                  class="fa fa-xmark delete-icon"
+                                  aria-hidden="true"
+                                ></i>
+
+                                <!-- IMAGE -->
+                                <img
+                                  *ngIf="image.startsWith('data:image')"
+                                  [src]="image"
+                                  style="width: 100%; height: auto"
+                                />
+
+                                <!-- VIDEO -->
+                                <video
+                                  *ngIf="image.startsWith('data:video')"
+                                  width="100%"
+                                  height="auto"
+                                  controls
+                                  preload="metadata"
+                                >
+                                  <source
+                                    [src]="image"
+                                    [type]="image.split(':')[1].split(';')[0]"
+                                  />
+                                </video>
+                              </div>
+                            </div>
+                          </ng-container>
+
+                          <!-- ========== NEWLY ADDED FILES (from user input) ========== -->
+                          <ng-container
+                            *ngFor="
+                              let imageUrl of urlMap['Reminder'];
+                              let i = index
+                            "
+                          >
+                            <div class="item cell-height">
+                              <i
+                                (click)="deleteImage('Reminder', i, imageUrl)"
+                                class="fa fa-xmark delete-icon"
+                                aria-hidden="true"
+                              ></i>
+
+                              <!-- IMAGE -->
+                              <img
+                                *ngIf="imageUrl.startsWith('data:image')"
+                                [src]="imageUrl"
+                                style="width: 100%; height: auto"
+                              />
+
+                              <!-- VIDEO -->
+                              <video
+                                *ngIf="imageUrl.startsWith('data:video')"
+                                width="100%"
+                                height="auto"
+                                controls
+                                preload="metadata"
+                              >
+                                <source
+                                  [src]="imageUrl"
+                                  [type]="imageUrl.split(':')[1].split(';')[0]"
+                                />
+                              </video>
+                            </div>
+                          </ng-container>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-12 mt-3">
+                  <div class="student-submit text-end">
+                    <button
+                      type="submit"
+                      class="btn btn-primary me-2"
+                      (click)="ReminderSubmit()"
+                    >
+                      {{ activity?.id ? "Update" : "Add" }}
+                    </button>
+                    <button
+                      type="reset"
+                      class="btn btn-secondary"
+                      (click)="resetAllActivityForms()"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- upload media -->
+
+            <div
+              *ngIf="activityTypeID == 8"
+              class="tab-pane fade active show"
+              id="v-pills-reminder"
+              role="tabpanel"
+              aria-labelledby="v-pills-reminder-tab2"
+            >
+              <div class="card-header heading-new">
+                <h5>Upload Media</h5>
+              </div>
+              <div class="row" [formGroup]="uploadMediaForm">
+                <!-- <div class="col-md-12">
+                <h5 class="modal-title" id="exampleModalLabel">Add Reminder</h5>
+              </div> -->
+
+                <!-- <div class="col-md-12">
+                  <div class="heading-new78 text-left">
+                    <h5 class="mb-0">Upload/Media</h5>
+                  </div>
+                </div> -->
+
+                <div class="col-md-7">
+                  <div class="row">
+                    <div class="col-md-6 mb-4">
+                      <div class="form-group local-forms">
+                        <label
+                          >Select Date
+                          <span class="login-danger">*</span></label
+                        >
+                        <input
+                          readonly
+                          type="text"
+                          #dateRangePicker
+                          id="dateRangePicker"
+                          class="form-control dateRangePickerClass"
+                          (change)="getActivityDate($event)"
+                          formControlName="uploadMediaDate"
+                          placeholder="-Select -"
+                        />
+                        @if(uploadMediaForm.controls['uploadMediaDate']?.invalid
+                        && uploadMediaForm.controls['uploadMediaDate'].touched){
+                        <span class="text-danger">This field is required</span>
+                        }
+                      </div>
+                    </div>
+
+                    <div class="col-md-12 mb-4">
+                      <div class="form-group local-forms">
+                        <label>Note <span class="login-danger">*</span></label>
+                        <textarea
+                          class="form-control"
+                          formControlName="note"
+                        ></textarea>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-5">
+                  <div class="row">
+                    <div class="col-md-12 mb-4">
+                      <div _ngcontent-ng-c1084851556="">
+                        <div
+                          class="form-group local-forms"
+                          style="position: relative"
+                        >
+                          <label>Image & Video</label>
+                          <input
+                            type="file"
+                            class="form-control"
+                            accept="image/png, image/jpeg, image/jpg, image/webp, image/gif, video/mp4, video/mov, video/webm, video/avi"
+                          />
+                          <ng-container
+                            *ngTemplateOutlet="
+                              fileLabelTemplate;
+                              context: {
+                                fileCount:
+                                  activityMediaStats['uploadmedia'].imageCount,
+                                videoCount:
+                                  activityMediaStats['uploadmedia'].videoCount,
+                                videoMB:
+                                  activityMediaStats['uploadmedia'].videoSizeMB
+                              }
+                            "
+                          ></ng-container>
+                          <input
+                            accept="image/png, image/jpeg, image/jpg, image/webp, image/gif, video/mp4, video/mov, video/webm, video/avi"
+                            type="file"
+                            #upladMediaFileInput
+                            class="form-control updated"
+                            (change)="onFileSelection($event, 'uploadmedia')"
+                            multiple
+                            id="uploadMediaFileElement"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-12">
+                      <div class="cell-width">
+                        <div class="img-inner">
+                          <!-- ========== EXISTING FILES (from API) ========== -->
+                          <ng-container
+                            *ngIf="
+                              activity?.imageUrl &&
+                              activity?.imageUrl.length > 0
+                            "
+                          >
+                            <div
+                              class="cell-height"
+                              *ngFor="
+                                let image of activity.imageUrl;
+                                let i = index
+                              "
+                            >
+                              <div class="item">
+                                <i
+                                  (click)="
+                                    deleteFile(activity, activity.imageEdit[i])
+                                  "
+                                  class="fa fa-xmark delete-icon"
+                                  aria-hidden="true"
+                                ></i>
+
+                                <!-- IMAGE -->
+                                <img
+                                  *ngIf="image.startsWith('data:image')"
+                                  [src]="image"
+                                  style="width: 100%; height: auto"
+                                />
+
+                                <!-- VIDEO -->
+                                <video
+                                  *ngIf="image.startsWith('data:video')"
+                                  width="100%"
+                                  height="auto"
+                                  controls
+                                  preload="metadata"
+                                >
+                                  <source
+                                    [src]="image"
+                                    [type]="image.split(':')[1].split(';')[0]"
+                                  />
+                                </video>
+                              </div>
+                            </div>
+                          </ng-container>
+
+                          <!-- ========== NEWLY ADDED FILES (from user input) ========== -->
+                          <ng-container
+                            *ngFor="
+                              let imageUrl of urlMap['Reminder'];
+                              let i = index
+                            "
+                          >
+                            <div class="item cell-height">
+                              <i
+                                (click)="deleteImage('Reminder', i, imageUrl)"
+                                class="fa fa-xmark delete-icon"
+                                aria-hidden="true"
+                              ></i>
+
+                              <!-- IMAGE -->
+                              <img
+                                *ngIf="imageUrl.startsWith('data:image')"
+                                [src]="imageUrl"
+                                style="width: 100%; height: auto"
+                              />
+
+                              <!-- VIDEO -->
+                              <video
+                                *ngIf="imageUrl.startsWith('data:video')"
+                                width="100%"
+                                height="auto"
+                                controls
+                                preload="metadata"
+                              >
+                                <source
+                                  [src]="imageUrl"
+                                  [type]="imageUrl.split(':')[1].split(';')[0]"
+                                />
+                              </video>
+                            </div>
+                          </ng-container>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-12 mt-3">
+                  <div class="student-submit text-end">
+                    <button
+                      type="submit"
+                      class="btn btn-primary me-2"
+                      (click)="uploadMediaSubmit()"
+                    >
+                      {{ activity?.id ? "Update" : "Add" }}
+                    </button>
+                    <button
+                      type="reset"
+                      class="btn btn-secondary"
+                      (click)="resetAllActivityForms()"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+} }
+
+<ng-template
+  #fileLabelTemplate
+  let-fileCount="fileCount"
+  let-videoCount="videoCount"
+  let-videoMB="videoMB"
+>
+  <div class="file-label" style="top: 26px !important; line-height: 42px">
+    <ng-container *ngIf="fileCount === 0 && videoCount === 0">
+      Select File
+    </ng-container>
+
+    <ng-container *ngIf="fileCount > 0">
+      {{ fileCount }} {{ fileCount === 1 ? "Image" : "Images" }} {{(fileCount > 0 && videoCount > 0) ? '|':'' }}
+    </ng-container>
+
+    <ng-container *ngIf="videoCount > 0">
+      {{ videoCount }} {{ videoCount === 1 ? "Video" : "Videos" }}
+      {{ videoMB }} MB
+    </ng-container>
+  </div>
+</ng-template>

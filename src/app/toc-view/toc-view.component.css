@@ -1,0 +1,193 @@
+.action-buttons a {
+    text-decoration: none; /* Remove underline from links */
+    color: #007bff; /* Make the links blue */
+    display: flex;
+    align-items: center; /* Align icon and text vertically */
+    gap: 5px; /* Add space between icon and text */
+}
+
+.action-buttons a:hover {
+    text-decoration: underline; /* Add underline on hover */
+    color: #0056b3; /* Darker blue on hover */
+}
+.action-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+
+/* Arsh */
+
+.table {
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  
+  .table th, .table td {
+    vertical-align: middle;
+   
+  }
+  
+  /* Collapsible Table Section */
+  .collapse-table {
+    background-color: #f9f9f9;
+  }
+  
+  /* Button Styling */
+  .btn-toggle {
+    background-color:#1f3fbc;
+    color: white;
+    border: none;
+    padding: 0px 8px;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: background-color 0.3s;
+    cursor: pointer;
+  }
+  
+  .btn-toggle:hover {
+    background-color:rgb(24, 174, 250) !important;
+  }
+  
+  /* Custom Collapse Row Styling */
+  .collapse {
+    padding: 17px 79px;
+  }
+  
+  /* Subtable Styling */
+  .sub-table {
+    background-color: #e3e3e3;
+    border: 4px solid #444444;
+    border-radius: 5px;
+  }
+  
+  .sub-table th, .sub-table td {
+    padding: 8px;
+  }
+  
+  .toogle-classroom {
+      display: flex;
+      gap: 7px;
+      align-items: center;
+  }
+   .btn-toggle i{
+    font-size: 12px;
+}
+
+/*--------plus minus icon change on toggle----------*/
+.btn-toggle i:before {
+    content: "\f0d7"; /* mdi-plus */
+  }
+  
+  .btn-toggle[aria-expanded="true"] i:before {
+    content: "\f0d8";  /* mdi-minus */ 
+  
+   
+  }
+  
+  .btn-toggle[aria-expanded="false"] i:before {
+    content:"\f0d7";  /* mdi-plus */
+   
+  }
+    ul.avail.d-grid {
+      grid-template-column: auto, repeat(1fr, 1);
+      /* grid-template-columns: auto 1fr; */
+      grid-template-columns: repeat(4, 1fr);
+  }
+  
+  .avail-parent{ background: #cdcdcd9e;
+      padding: 15px;
+  }
+  
+  .saver-class{
+    max-width: fit-content;
+    text-wrap: inherit;
+    white-space: nowrap;
+  
+  }
+  .mrg-lft{
+    margin-left: 70%;
+  }
+  
+  @media (max-width:1400px) {
+    .mrg-lft{
+      margin-left: 64%;
+    }
+  }
+  
+  .grid-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* Creates 3 equal columns */
+   
+     /* Optional: Adds padding to the grid container */
+  }
+  
+  .days-style{
+    white-space: nowrap;
+  }
+  
+  
+  
+  .today-tomrrow {
+    display: flex;
+    justify-content:space-evenly;
+    margin-top: 20px;
+   
+  }.today-tomrrow h6 {
+     color:#a2719e;
+   
+  }
+  .arrow.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+  
+  .today-tomorrow {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin: 20px 0px;
+  }
+   .today-tomorrow .left-arrow .arrow, .today-tomorrow .right-arrow .arrow{
+    cursor: pointer !important;
+  }
+  
+  i.fa.fa-angle-left {
+    cursor: pointer;
+  }
+  
+  i.fa.fa-angle-right {
+    cursor: pointer;
+  }
+  
+  span.final-date {
+    color: #a2719e;
+    font-size: 17px;
+    text-transform: capitalize;
+  }.span-area {
+    
+    color: #686262;
+  
+    font-size: 12px;
+    font-style: italic;
+  }
+.preview-image {
+  max-width: 100%;
+  max-height: 80vh; /* prevents image from overflowing vertically */
+  width: auto;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  border-radius: 8px;
+  object-fit: contain; /* ensures image scales nicely without cropping */
+}
+
+.preview-pdf {
+  width: 100%;
+  height: 80vh;
+  border: none;
+}
+
+  

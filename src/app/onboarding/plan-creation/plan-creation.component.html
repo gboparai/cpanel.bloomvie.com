@@ -1,0 +1,12 @@
+<div>
+    <app-subscription-features (detectChanges)="detectChanges($event)"></app-subscription-features>
+</div>
+<div>
+    <app-subscription-plans ></app-subscription-plans>
+</div>
+
+<div class="d-flex justify-content-end" >
+    <!-- {{trackValue()}} -->
+    <button id="next-btn" class="btn btn-secondary me-2" (click)="service.onChangeTab('Tab-3')">Previous</button>
+<button id="next-btn" class="btn btn-primary " [disabled]="disabledFeature" (click)="proceedOnboarding()">Save & Proceed</button>
+</div>

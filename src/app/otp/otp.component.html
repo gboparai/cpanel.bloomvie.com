@@ -1,0 +1,71 @@
+<div class="main-wrapper login-body">
+    <div class="login-wrapper">
+        <div class="container">
+            <div class="loginbox">
+                <div class="login-left">
+                    <img class="img-fluid" src="assets/img/login.png" alt="Logo">
+                </div>
+                <div class="login-right">
+
+                    <div class="login-right-wrap loginComponent" [class.hidden]="showPasswordChange">
+
+                        <form [formGroup]="otpForm" class="d-flex flex-column align-items-center"
+                            (ngSubmit)="verifyOTP()">
+                            <h3 class="text-dark fw-bolder fs-4 mb-2">Two Step Verification</h3>
+
+                            <div class="fw-normal text-muted mb-4">
+                                Enter the verification code we sent to
+                            </div>
+
+                            <div class="d-flex align-items-center justify-content-center fw-bold mb-4">
+                                <span class="non-transform">{{ email }}</span>
+                            </div>
+
+                            <div class="otp_input text-start mb-2 d-flex flex-column align-items-center">
+                                <label for="digit">Type your 6 digit security code</label>
+
+                                <ng-otp-input [formCtrl]="otpForm.get('otp')" #otpinput
+                                    [config]="{ length: 6, isPasswordInput: false, allowNumbersOnly: true }" [ngClass]="{
+                                  'is-invalid': otpForm.get('otp')?.invalid && otpForm.get('otp')?.touched
+                                }"></ng-otp-input>
+
+                                <div *ngIf="otpForm.get('otp')?.invalid && otpForm.get('otp')?.touched"
+                                    class="text-danger mt-1">
+                                    Please enter a valid 6-digit code.
+                                </div>
+                            </div>
+
+                            <div class="form-group pt-3">
+                                <button class="btn btn-primary btn-block padder" type="submit"
+                                    [disabled]="otpForm.invalid">
+                                    Verify OTP
+                                </button>
+                            </div>
+
+                            <div class="fw-normal text-muted mb-2">
+                                Didn’t get the code?
+                                <a href="javascript:;" class="text-primary fw-bold text-decoration-none"
+                                    [class.disabled]="!IsAbleToShowButton" (click)="resendOtp()">
+                                    Resend
+                                </a>
+                                <span *ngIf="!IsAbleToShowButton" class="text-muted ms-2">
+                                    ({{ resendTimer }}s)
+                                </span>
+                            </div>
+
+                        </form>
+
+
+
+
+                    </div>
+
+                    <div [class.hidden]="!showPasswordChange">
+                        <app-password-change></app-password-change>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

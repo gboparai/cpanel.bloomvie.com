@@ -1,0 +1,501 @@
+<app-breadcrumb></app-breadcrumb>
+
+<div class="content">
+
+  <div class="attendance-types page-header justify-content-end">
+    <ul class="attendance-type-list">
+      <li>
+        <span class="attendance-icon bg-success"><i class="fa-solid fa-check"></i></span>
+        Present
+      </li>
+      <li>
+        <span class="attendance-icon bg-danger"><i class="fas fa-times"></i></span>
+        Absent
+      </li>
+      <li>
+        <span class="attendance-icon bg-pending"><i class="fa-solid fa-clock"></i></span>
+        Late
+      </li>
+      <li>
+        <span class="attendance-icon bg-dark"><i class="fa-solid fa-calendar-days"></i></span>
+        Halfday
+      </li>
+      <li>
+        <span class="attendance-icon bg-info"><i class="fa-solid fa-umbrella-beach" style="font-size: 13px"></i></span>
+        Holiday
+      </li>
+    </ul>
+  </div>
+
+  <div class="card" style="border: none">
+    <div class="">
+      <div class="col-md-12">
+        <div class="d-flex align-items-center justify-content-between flex-wrap row p-25">
+          <div class="col-md-8">
+            <div class="searcher">
+              <div class="">
+                <input type="text" class="form-control" placeholder="Search by ID ..." />
+              </div>
+              <div class="search-student-btn">
+                <button type="btn" class="btn btn-primary">Search</button>
+              </div>
+            </div>
+          </div>
+
+      
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body p-25">
+      <div class="custom-datatable-filter">
+        <div >
+          <div class="row dt-row">
+            <div class="col-sm-12 table-responsive">
+              <table class="table no-footer table-hover">
+                <thead class="thead-light">
+                  <tr>
+                    <th class="sorting sorting_asc" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1"
+                      colspan="1" aria-sort="ascending" aria-label="Student / Date: activate to sort column descending"
+                      style="width: 94.6875px">
+                      Student / Date
+                    </th>
+                    <th class="sorting" tabindex="0" 
+                      aria-label="%: activate to sort column ascending" style="width: 33.9531px">
+                      %
+                    </th>
+                    <th class="no-sort sorting" tabindex="0" 
+                      aria-label="P: activate to sort column ascending" style="width: 15.7344px">
+                      P
+                    </th>
+                    <th class="no-sort sorting" tabindex="0" 
+                      aria-label="L: activate to sort column ascending" style="width: 7.875px">
+                      L
+                    </th>
+                    <th class="no-sort sorting" tabindex="0" 
+                      aria-label="A: activate to sort column ascending" style="width: 9.32812px">
+                      A
+                    </th>
+                    <th class="no-sort sorting" tabindex="0" 
+                      aria-label="H: activate to sort column ascending" style="width: 9.95312px">
+                      H
+                    </th>
+                    <th class="no-sort sorting" tabindex="0" 
+                      aria-label="F: activate to sort column ascending" style="width: 7.875px">
+                      F
+                    </th>
+                    <th class="no-sort sorting" tabindex="0" 
+                      aria-label="
+    01M
+    : activate to sort column ascending" style="width: 15.9219px">
+                      <div class="text-center">
+                        <span class="day-num d-block">01</span><span>M</span>
+                      </div>
+                    </th>
+                    <th class="no-sort sorting" tabindex="0" 
+                      aria-label="
+    02T
+    : activate to sort column ascending" style="width: 15.9219px">
+                      <div class="text-center">
+                        <span class="day-num d-block">02</span><span>T</span>
+                      </div>
+                    </th>
+                    <th class="no-sort sorting" tabindex="0" 
+                      aria-label="
+    03W
+    : activate to sort column ascending" style="width: 15.9219px">
+                      <div class="text-center">
+                        <span class="day-num d-block">03</span><span>W</span>
+                      </div>
+                    </th>
+                    <th class="no-sort sorting" tabindex="0" 
+                      aria-label="
+    04T
+    : activate to sort column ascending" style="width: 15.9219px">
+                      <div class="text-center">
+                        <span class="day-num d-block">04</span><span>T</span>
+                      </div>
+                    </th>
+                    <th class="no-sort sorting" tabindex="0" 
+                      aria-label="
+    05F
+    : activate to sort column ascending" style="width: 15.9219px">
+                      <div class="text-center">
+                        <span class="day-num d-block">05</span><span>F</span>
+                      </div>
+                    </th>
+                    <th class="no-sort sorting" tabindex="0" 
+                      aria-label="
+    06S
+    : activate to sort column ascending" style="width: 15.9219px">
+                      <div class="text-center">
+                        <span class="day-num d-block">06</span><span>S</span>
+                      </div>
+                    </th>
+                    <th class="no-sort sorting" tabindex="0" 
+                      aria-label="
+    07S
+    : activate to sort column ascending" style="width: 15.9219px">
+                      <div class="text-center">
+                        <span class="day-num d-block">07</span><span>S</span>
+                      </div>
+                    </th>
+                    <th class="no-sort sorting" tabindex="0" 
+                      aria-label="
+    08M
+    : activate to sort column ascending" style="width: 15.9219px">
+                      <div class="text-center">
+                        <span class="day-num d-block">08</span><span>M</span>
+                      </div>
+                    </th>
+                    <th class="no-sort sorting" tabindex="0" 
+                      aria-label="
+    09T
+    : activate to sort column ascending" style="width: 15.9219px">
+                      <div class="text-center">
+                        <span class="day-num d-block">09</span><span>T</span>
+                      </div>
+                    </th>
+                    <th class="no-sort sorting" tabindex="0" 
+                      aria-label="
+    10W
+    : activate to sort column ascending" style="width: 15.9219px">
+                      <div class="text-center">
+                        <span class="day-num d-block">10</span><span>W</span>
+                      </div>
+                    </th>
+                    <th class="no-sort sorting" tabindex="0" 
+                      aria-label="
+    11T
+    : activate to sort column ascending" style="width: 15.9219px">
+                      <div class="text-center">
+                        <span class="day-num d-block">11</span><span>T</span>
+                      </div>
+                    </th>
+                    <th class="no-sort sorting" tabindex="0" 
+                      aria-label="
+    12F
+    : activate to sort column ascending" style="width: 15.9219px">
+                      <div class="text-center">
+                        <span class="day-num d-block">12</span><span>F</span>
+                      </div>
+                    </th>
+                    <th class="no-sort sorting" tabindex="0" 
+                      aria-label="
+    13S
+    : activate to sort column ascending" style="width: 15.9219px">
+                      <div class="text-center">
+                        <span class="day-num d-block">13</span><span>S</span>
+                      </div>
+                    </th>
+                    <th class="no-sort sorting" tabindex="0" 
+                      aria-label="
+    14S
+    : activate to sort column ascending" style="width: 15.9219px">
+                      <div class="text-center">
+                        <span class="day-num d-block">14</span><span>S</span>
+                      </div>
+                    </th>
+                    <th class="no-sort sorting" tabindex="0" 
+                      aria-label="
+    15M
+    : activate to sort column ascending" style="width: 15.9219px">
+                      <div class="text-center">
+                        <span class="day-num d-block">15</span><span>M</span>
+                      </div>
+                    </th>
+                    <th class="no-sort sorting" tabindex="0" 
+                      aria-label="
+    16T
+    : activate to sort column ascending" style="width: 15.9219px">
+                      <div class="text-center">
+                        <span class="day-num d-block">16</span><span>T</span>
+                      </div>
+                    </th>
+                    <th class="no-sort sorting" tabindex="0" 
+                      aria-label="
+    17W
+    : activate to sort column ascending" style="width: 15.9219px">
+                      <div class="text-center">
+                        <span class="day-num d-block">17</span><span>W</span>
+                      </div>
+                    </th>
+                    <th class="no-sort sorting" tabindex="0" 
+                      aria-label="
+    18T
+    : activate to sort column ascending" style="width: 15.9219px">
+                      <div class="text-center">
+                        <span class="day-num d-block">18</span><span>T</span>
+                      </div>
+                    </th>
+                    <th class="no-sort sorting" tabindex="0" 
+                      aria-label="
+    19F
+    : activate to sort column ascending" style="width: 15.9219px">
+                      <div class="text-center">
+                        <span class="day-num d-block">19</span><span>F</span>
+                      </div>
+                    </th>
+                    <th class="no-sort sorting" tabindex="0" 
+                      aria-label="
+    20S
+    : activate to sort column ascending" style="width: 15.9219px">
+                      <div class="text-center">
+                        <span class="day-num d-block">20</span><span>S</span>
+                      </div>
+                    </th>
+                    <th class="no-sort sorting" tabindex="0" 
+                      aria-label="
+    21S
+    : activate to sort column ascending" style="width: 15.9219px">
+                      <div class="text-center">
+                        <span class="day-num d-block">21</span><span>S</span>
+                      </div>
+                    </th>
+                    <th class="no-sort sorting" tabindex="0" 
+                      aria-label="
+    22M
+    : activate to sort column ascending" style="width: 15.9219px">
+                      <div class="text-center">
+                        <span class="day-num d-block">22</span><span>M</span>
+                      </div>
+                    </th>
+                    <th class="no-sort sorting" tabindex="0" 
+                      aria-label="
+    23T
+    : activate to sort column ascending" style="width: 15.9219px">
+                      <div class="text-center">
+                        <span class="day-num d-block">23</span><span>T</span>
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="even">
+                    <td class="sorting_1">
+                      <div class="d-flex align-items-center">
+                        <a href="javascript:;" class="avatar avatar-md"><img src="assets/img/user-6.jpg"
+                            class="img-fluid rounded-circle" alt="img" /></a>
+                        <div class="ms-2">
+                          <p class="text-dark mb-0">
+                            <a href="javascript:;">Lisa</a>
+                          </p>
+                        </div>
+                      </div>
+                    </td>
+                    <td><span class="badge badge-soft-success">100</span></td>
+                    <td>24</td>
+                    <td>2</td>
+                    <td>1</td>
+                    <td>6</td>
+                    <td>1</td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-dark"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-danger"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-info"></span></td>
+                    <td><span class="attendance-range bg-info"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-pending"></span></td>
+                    <td><span class="attendance-range bg-info"></span></td>
+                    <td><span class="attendance-range bg-info"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-info"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-info"></span></td>
+                    <td><span class="attendance-range bg-info"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                  </tr>
+                  <tr class="odd">
+                    <td class="sorting_1">
+                      <div class="d-flex align-items-center">
+                        <a href="javascript:;" class="avatar avatar-md"><img src="assets/img/user-5.jpg"
+                            class="img-fluid rounded-circle" alt="img" /></a>
+                        <div class="ms-2">
+                          <p class="text-dark mb-0">
+                            <a href="javascript:;">Ralph</a>
+                          </p>
+                        </div>
+                      </div>
+                    </td>
+                    <td><span class="badge badge-soft-info">95</span></td>
+                    <td>21</td>
+                    <td>2</td>
+                    <td>1</td>
+                    <td>6</td>
+                    <td>2</td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-dark"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-danger"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-info"></span></td>
+                    <td><span class="attendance-range bg-info"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-pending"></span></td>
+                    <td><span class="attendance-range bg-info"></span></td>
+                    <td><span class="attendance-range bg-info"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-info"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-info"></span></td>
+                    <td><span class="attendance-range bg-info"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                  </tr>
+                  <tr class="even">
+                    <td class="sorting_1">
+                      <div class="d-flex align-items-center">
+                        <a href="javascript:;" class="avatar avatar-md"><img src="assets/img/user-5.jpg"
+                            class="img-fluid rounded-circle" alt="img" /></a>
+                        <div class="ms-2">
+                          <p class="text-dark mb-0">
+                            <a href="javascript:;">Richard</a>
+                          </p>
+                        </div>
+                      </div>
+                    </td>
+                    <td><span class="badge badge-soft-info">97</span></td>
+                    <td>15</td>
+                    <td>1</td>
+                    <td>1</td>
+                    <td>6</td>
+                    <td>1</td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-dark"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-danger"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-info"></span></td>
+                    <td><span class="attendance-range bg-info"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-pending"></span></td>
+                    <td><span class="attendance-range bg-info"></span></td>
+                    <td><span class="attendance-range bg-info"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-info"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-info"></span></td>
+                    <td><span class="attendance-range bg-info"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                  </tr>
+                  <tr class="odd">
+                    <td class="sorting_1">
+                      <div class="d-flex align-items-center">
+                        <a href="javascript:;" class="avatar avatar-md"><img src="assets/img/user-6.jpg"
+                            class="img-fluid rounded-circle" alt="img" /></a>
+                        <div class="ms-2">
+                          <p class="text-dark mb-0">
+                            <a href="javascript:;">Ryan</a>
+                          </p>
+                        </div>
+                      </div>
+                    </td>
+                    <td><span class="badge badge-soft-info">98</span></td>
+                    <td>23</td>
+                    <td>0</td>
+                    <td>2</td>
+                    <td>6</td>
+                    <td>1</td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-dark"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-danger"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-info"></span></td>
+                    <td><span class="attendance-range bg-info"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-pending"></span></td>
+                    <td><span class="attendance-range bg-info"></span></td>
+                    <td><span class="attendance-range bg-info"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-info"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-info"></span></td>
+                    <td><span class="attendance-range bg-info"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                  </tr>
+                  <tr class="even">
+                    <td class="sorting_1">
+                      <div class="d-flex align-items-center">
+                        <a href="javascript:;" class="avatar avatar-md"><img src="assets/img/user-7.jpg"
+                            class="img-fluid rounded-circle" alt="img" /></a>
+                        <div class="ms-2">
+                          <p class="text-dark mb-0">
+                            <a href="javascript:;">Susan</a>
+                          </p>
+                        </div>
+                      </div>
+                    </td>
+                    <td><span class="badge badge-soft-danger">32</span></td>
+                    <td>20</td>
+                    <td>3</td>
+                    <td>1</td>
+                    <td>6</td>
+                    <td>4</td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-dark"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-danger"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-info"></span></td>
+                    <td><span class="attendance-range bg-info"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-pending"></span></td>
+                    <td><span class="attendance-range bg-info"></span></td>
+                    <td><span class="attendance-range bg-info"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-info"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                    <td><span class="attendance-range bg-info"></span></td>
+                    <td><span class="attendance-range bg-info"></span></td>
+                    <td><span class="attendance-range bg-success"></span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12 col-md-5"></div>
+
+            <div class="col-sm-12 col-md-7">
+              <div class="dataTables_paginate paging_simple_numbers" id="DataTables_Table_0_paginate"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

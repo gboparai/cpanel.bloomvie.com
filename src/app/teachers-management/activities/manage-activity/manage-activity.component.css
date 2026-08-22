@@ -1,0 +1,96 @@
+
+
+
+.local-forms label {
+   
+    left: 21px !important;
+  
+}
+
+.settings-btn{
+    position: relative;
+    height: 130px !important;
+   
+}
+.settings-label{
+   
+}
+.upload-images1{
+    position: absolute;
+    left: 24%;
+    top: 0px;
+}
+.upload-images2{
+    position: absolute;
+    left: 24%;
+
+    top: 0px;
+}
+
+.upload-images3{
+    position: absolute;
+    left: 24%;
+    top: 0px;
+}
+.upload-images{
+    border:none !important;
+   
+}
+
+.editer i.far.fa-edit {
+
+
+    position: absolute;
+    top: 6px;
+    right: 20px;
+    color: #ababab; 
+}
+
+.nav-tabs.menu-tabs .nav-item.active .nav-link {
+    color: #3d5ee1 !important;
+    background: #3d5ee1
+}
+
+.nav-link{
+     border: 1px solid  #3d5ee1;
+     
+}
+
+.nav-item{
+    margin-right: 5px;
+}
+
+@media(max-width:768px){
+
+    .nav-item{
+        margin-bottom: 10px;
+    }
+}
+
+.settings-btn .hide-input {
+    position: absolute;
+    z-index: 3;
+    cursor: pointer;
+    min-height: auto;
+    /* padding-left: 4px; */
+    padding-top: 0;
+    line-height: 10px;
+    width: 100%;
+    opacity: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.divw{
+    height: 100%;
+    width: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.divw img {
+    height: 100%;
+    width: auto;
+}

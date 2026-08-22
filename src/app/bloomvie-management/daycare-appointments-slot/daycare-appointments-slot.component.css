@@ -1,0 +1,59 @@
+.time-slots {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;margin-top: 20px;
+    
+    
+  }
+  .time-slot {
+    border: 1px solid #5c709d;
+    border-radius: 8px;
+    padding: 5px 10px;
+    color: #5c709d;
+    font-weight: 400;
+    cursor: pointer;
+    transition: 0.3s;
+
+  }
+  .time-slot.selected {
+    background-color: #5c709d;
+    color: white;
+  }
+  .time-slot:hover {
+    background-color:#5c709d;
+    color: #fff;
+  }ul.new-slots li {
+    display: inline-block;
+    width: 16%;
+    margin-right: 31px;
+    position: relative;
+}.add-newslot{
+    margin: 15px 0px 0px 0px;
+}.slot {
+    display: block;
+    width: 100%;
+}.booked .time-slot {
+  text-decoration: line-through;
+}.time-slots.margin-top-none {
+  margin-top: 0px;
+}.heading-new {
+  margin-bottom: 0px;
+}
+.line-through-new  {
+  text-decoration: line-through;
+  opacity: 0.7;
+}span.text-danger.ng-star-inserted {
+  position: absolute;
+}
+.close-date{
+  position: absolute;
+  right: 12px;
+  top: 11px;
+}
+
+
+.sub {
+  display: flex;
+  align-items: center;
+  margin-top: 47px;
+}

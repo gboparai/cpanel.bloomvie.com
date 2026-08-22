@@ -1,0 +1,210 @@
+<app-breadcrumb></app-breadcrumb>
+<form
+  [formGroup]="studentRegistrationForm"
+  (ngSubmit)="manageStudentRegistration()"
+>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="heading-new">
+            <h5 class="mb-0">Student Enrollment</h5>
+          </div>
+          <div class="row">
+            <div class="col-md-4 mb-4">
+              <div class="form-group local-forms">
+                <label
+                  >Student First Name<span class="login-danger">*</span></label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="firstName"
+                />
+                <span
+                  class="text-danger"
+                  *ngIf="
+                    studentRegistrationForm.get('firstName').errors?.required &&
+                    studentRegistrationForm.get('firstName').touched
+                  "
+                  >This field is required.</span
+                >
+              </div>
+            </div>
+
+            <div class="col-md-4 mb-4">
+              <div class="form-group local-forms">
+                <label>Student Last Name </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="lastName"
+                />
+              </div>
+            </div>
+
+            <!-- <div class="col-md-4 mb-4">
+              <div class="form-group local-forms">
+                <label>DOB</label>
+                <input
+                  class="form-control"
+                  type="text"
+                  id="DateofBirth"
+                  (change)="getDateOfBirth($event)"
+                />
+              </div>
+            </div> -->
+
+            <div class="col-md-4 mb-4" *ngIf="planInfo == null">
+              <div class="form-group local-forms">
+                <label
+                  >Select Age Group<span class="login-danger">*</span></label
+                >
+                <ng-select
+                  formControlName="ageGroup"
+                  [items]="filteredageGroupList"
+                  bindLabel="name"
+                  bindValue="id"
+                  [(ngModel)]="selectedAge"
+                  (change)="getPlanListByAge($event.id)"
+                  placeholder="Select Age"
+                ></ng-select>
+                <span
+                  class="text-danger"
+                  *ngIf="
+                    studentRegistrationForm.get('ageGroup').errors?.required &&
+                    studentRegistrationForm.get('ageGroup').touched
+                  "
+                  >This field is required.</span
+                >
+              </div>
+            </div>
+
+            <div class="col-md-4 mb-4" *ngIf="planInfo == null">
+              <div class="form-group local-forms">
+                <label>Select Plan<span class="login-danger">*</span></label>
+                <ng-select
+                  (change)="getSelectedPlan($event)"
+                  [items]="planList"
+                  bindLabel="planName"
+                  bindValue="id"
+                  placeholder="Select Plan"
+                ></ng-select>
+                <!-- <span class="text-danger" *ngIf="
+                    studentRegistrationForm.get('ageGroup').errors?.required &&
+                    studentRegistrationForm.get('ageGroup').touched
+                  ">This field is required.</span> -->
+              </div>
+            </div>
+
+            <div class="col-md-4 mb-4" *ngIf="planInfo != null">
+              <div class="form-group local-forms">
+                <label>Plan Assigned<span class="login-danger"></span></label>
+                <input
+                  readonly
+                  type="text"
+                  class="form-control"
+                  id="planName"
+                  [value]="
+                    planInfo
+                      ? planInfo.planName +
+                        ' - ' +
+                        planInfo.discountValue +
+                        '% OFF'
+                      : ''
+                  "
+                />
+              </div>
+            </div>
+
+            <div class="col-md-4 mb-4">
+              <div class="form-group local-forms">
+                <label>Billing Date<span class="login-danger">*</span></label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="billingDate"
+                  formControlName="billingDate"
+                />
+                <span
+                  class="text-danger"
+                  *ngIf="
+                    studentRegistrationForm.get('billingDate').errors
+                      ?.required &&
+                    studentRegistrationForm.get('billingDate').touched
+                  "
+                  >This field is required.</span
+                >
+              </div>
+            </div>
+
+            <div class="col-md-4 mb-4">
+              <div class="gender-section">
+                <label for="gender" class="gender-label"
+                  >Gender <span class="login-danger">*</span></label
+                >
+                <div class="gender-options">
+                  <label class="gender-option">
+                    <input
+                      value="Male"
+                      type="radio"
+                      name="gender"
+                      formControlName="gender"
+                    />
+                    Male</label
+                  >
+                  <label class="gender-option">
+                    <input
+                      value="Female"
+                      type="radio"
+                      name="gender"
+                      formControlName="gender"
+                    />Female</label
+                  >
+                  <label class="gender-option">
+                    <input
+                      value="Other"
+                      type="radio"
+                      name="gender"
+                      formControlName="gender"
+                    />
+                    Other</label
+                  >
+                </div>
+                <span
+                  class="text-danger"
+                  *ngIf="
+                    studentRegistrationForm.get('gender').errors?.required &&
+                    studentRegistrationForm.get('gender').touched
+                  "
+                  >This field is required.</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="row mt-3">
+            <div class="col-md-12 text-end">
+              <div class="student-submit text-end">
+                <button
+                  type="submit"
+                  class="btn btn-primary me-2"
+                  id="submit-btn"
+                >
+                  Save
+                </button>
+                <button
+                  type="button"
+                  (click)="resetForm()"
+                  class="btn btn-secondary"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

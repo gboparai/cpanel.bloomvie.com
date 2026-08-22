@@ -1,0 +1,314 @@
+
+<app-breadcrumb></app-breadcrumb>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <div
+          id="pills-appointment"
+          role="tabpanel"
+          aria-labelledby="pills-appointment-tab"
+          tabindex="0"
+        >
+          <div class="heading-new">
+            <h5 class="mb-0">Add New DayCare</h5>
+          </div>
+          <form class="row" [formGroup]="addAppointmentForm">
+            <div class="col-md-6 mb-4">
+              <div class="local-forms form-group">
+                <label>Name <span class="text-danger">*</span></label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="name"
+                />
+                @if(addAppointmentForm.controls['name']?.invalid &&
+                addAppointmentForm.controls['name'].touched){
+                <span class="text-danger">This field is required</span>
+                }
+              </div>
+            </div>
+
+            <div class="col-md-6 mb-4">
+              <div class="form-group local-forms">
+                <label>Email <span class="text-danger">*</span></label>
+                <input
+                  type="email"
+                  class="form-control"
+                  formControlName="centreEmail"
+                  (change)="CheckInterestedEmailExist()"
+                />
+              </div>
+
+              @if(addAppointmentForm.controls['centreEmail']?.invalid &&
+              addAppointmentForm.controls['centreEmail'].touched){
+              <span class="text-danger">This field is required</span>
+              }
+            </div>
+            <div class="col-md-6 mb-4">
+              <div class="form-group local-forms">
+                <label>Mobile Number <span class="text-danger">*</span></label>
+                <input
+                  type="text"
+                  class="form-control"
+                  maxlength="12"
+                  formControlName="centreMobile"
+                  (input)="formatPhoneNumber($event)"
+                />
+              </div>
+
+              @if(addAppointmentForm.controls['centreMobile']?.invalid &&
+              addAppointmentForm.controls['centreMobile'].touched){
+              <span class="text-danger">This field is required</span>
+              }
+            </div>
+            <div class="col-md-6 mb-4">
+              <div class="form-group local-forms">
+                <label>Centre Name <span class="text-danger">*</span></label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="centreName"
+                />
+              </div>
+              @if(addAppointmentForm.controls['centreName']?.invalid &&
+              addAppointmentForm.controls['centreName'].touched){
+              <span class="text-danger">This field is required</span>
+              }
+            </div>
+            <div class="col-md-6 mb-4">
+              <div class="form-group local-forms">
+                <label>Centre Type <span class="text-danger">*</span></label>
+                <ng-select
+                  [items]="AllCenterTypes"
+                  bindLabel="centerType"
+                  bindValue="id"
+                  formControlName="DaycareTypeID"
+                  class="w-100"
+                ></ng-select>
+              </div>
+              @if(addAppointmentForm.controls['DaycareTypeID']?.invalid &&
+              addAppointmentForm.controls['DaycareTypeID'].touched){
+              <span class="text-danger">This field is required</span>
+              }
+            </div>
+            <div class="col-md-6 mb-4">
+              <div class="form-group local-forms">
+                <label
+                  >Enrollment Capacity <span class="text-danger">*</span></label
+                >
+                <ng-select
+                  [items]="enrollmentCapacity"
+                  bindLabel="name"
+                  bindValue="name"
+                  formControlName="enrollmentCapacity"
+                ></ng-select>
+              </div>
+              @if(addAppointmentForm.controls['enrollmentCapacity']?.invalid &&
+              addAppointmentForm.controls['enrollmentCapacity'].touched){
+              <span class="text-danger">This field is required</span>
+              }
+            </div>
+            <div class="col-md-6 mb-4">
+              <div class="form-group local-forms">
+                <label>Zip Code / Postal Code
+ <span class="text-danger">*</span></label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="pinCode"
+                  (blur)="
+                    fetchLocationData(addAppointmentForm.get('pinCode')?.value)
+                  "
+                  (input)="formatPostalCode($event)"
+                  placeholder="A1A A1A / 56786"
+                />
+              </div>
+              @if(addAppointmentForm.controls['pinCode']?.invalid &&
+              addAppointmentForm.controls['pinCode'].touched){
+              <span class="text-danger">This field is required</span>
+              }
+            </div>
+            <div class="col-md-6 mb-4">
+              <div class="form-group local-forms">
+                <label>Country</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="country"
+                />
+              </div>
+              @if(addAppointmentForm.controls['country']?.invalid &&
+              addAppointmentForm.controls['country'].touched){
+              <span class="text-danger">This field is required</span>
+              }
+            </div>
+            <div class="col-md-6 mb-4">
+              <div class="form-group local-forms">
+                <label>State</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="state"
+                />
+              </div>
+            </div>
+            <div class="col-md-6 mb-4">
+              <div class="form-group local-forms">
+                <label>City</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="city"
+                />
+              </div>
+            </div>
+
+            <div class="col-md-6 mb-4">
+              <div class="form-group local-forms">
+                <label class="form-label"
+                  >Select Plan<span class="login-danger">*</span></label
+                >
+                <ng-select
+                  id="planSelect"
+                  [items]="getPlansForDayCareList"
+                  bindLabel="planName"
+                  bindValue="id"
+                  formControlName="plan"
+                  (change)="getPlanId($event)"
+                ></ng-select>
+              </div>
+            </div>
+          </form>
+          <div class="row mt-4">
+            <div class="col-md-12 text-end">
+              <button (click)="onSubmit()" class="btn btn-primary me-2">
+                Submit
+              </button>
+              <button (click)="ResetForm()" class="btn btn-secondary">
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <!-- Add New DayCare Section -->
+        <div
+          id="pills-appointment"
+          role="tabpanel"
+          aria-labelledby="pills-appointment-tab"
+          tabindex="0"
+        >
+          <div class="heading-new">
+            <h5 class="mb-0">Secondary DayCare</h5>
+          </div>
+        </div>
+
+        <!-- Search and Table Section -->
+        <div>
+          <div>
+            <div class="row mt-3">
+              <div class="col-md-12">
+                <!-- <div class="row mb-4">
+                    <div class="col-md-4">
+                      <div class="search">
+                        <button type="submit">Search</button>
+                      </div>
+                    </div>
+                  </div> -->
+              </div>
+              <div class="col-md-12">
+                <div class="table-responsive">
+                  <table class="table table-hover mb-0">
+                    <thead class="student-thread">
+                      <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Daycare Name</th>
+                        <th>Mobile Number</th>
+                        <th>Address</th>
+                      </tr>
+                    </thead>
+
+                    @if(primaryDayCarelist.length > 0;){
+                    <tbody>
+                      <tr
+                        *ngFor="
+                          let daycareList of primaryDayCarelist
+                            | paginate
+                              : {
+                                  itemsPerPage: ContentsizePendingList,
+                                  currentPage: ContentPendingList,
+                                  id: 'dayCareAppointmentPendingList'
+                                };
+                          let i = index
+                        "
+                      >
+                        <td>
+                          {{
+                            (ContentPendingList - 1) * ContentsizePendingList +
+                              i +
+                              1
+                          }}
+                        </td>
+                        <td>{{ daycareList.name }}</td>
+                        <td>{{ daycareList.centreEmail }}</td>
+                        <td>{{ daycareList.centreName }}</td>
+                        <td>{{ daycareList.centreMobile }}</td>
+                        <td>{{ daycareList.city }}</td>
+                        <!-- <td>{{ daycareList.city }}, {{daycareList.state}}, {{daycareList.country}}</td> -->
+                      </tr>
+                    </tbody>
+
+                    } @else{
+                    <tbody>
+                      <tr>
+                        <td colspan="7">
+                          <div class="no-data">
+                            <img
+                              src="assets/img/no-data-img.png"
+                              alt="No Record Found"
+                            />
+                            <span>No Record Found</span>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                    }
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="col pagination-style">
+              <div class="datatable-pager datatable-paging-loaded">
+                <ng-container
+                  *ngIf="primaryDayCarelist.length > ContentsizePendingList"
+                >
+                  <pagination-controls
+                    previousLabel="prev"
+                    nextLabel="next"
+                    [maxSize]="5"
+                    class="datatable-pager-nav my-2 mb-sm-0"
+                    id="dayCareAppointmentPendingList"
+                    (pageChange)="ContentPendingList = $event"
+                  >
+                  </pagination-controls>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

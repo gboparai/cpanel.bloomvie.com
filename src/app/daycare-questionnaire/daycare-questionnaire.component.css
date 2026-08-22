@@ -1,0 +1,88 @@
+.btns {
+    float: right;
+    width: 92px;
+    text-align: right;
+}
+/* button.btn.btn-primary {
+    margin-top: 10px !important;
+} */
+.checkbox-container, .radio-container {
+    display: flex;
+    flex-direction: row; /* Align items in a row */
+    align-items: center; /* Center vertically */
+  }
+  
+  .checkbox-label, .radio-label {
+    display: flex;
+    align-items: center; /* Center label with input */
+    margin-right: 10px; /* Space between checkboxes/radios */
+  }
+
+
+  .form-group.local-forms.custom-1.custom-form-new {
+    margin-bottom: 20px;
+}/* Default styling for all labels */
+.custom-form-new label {
+    position: relative; /* Keeps default positioning */
+  }
+  
+  /* Absolute positioning for specific fields */
+  .custom-form-new .absolute-label {
+    /* position: absolute; */
+    top: -10px; /* Adjust as needed */
+    
+    /* Additional styling for the absolute position, if desired */
+  }
+  /* .custom-form-new  .ng-star-inserted {
+    display: inline;
+    margin-left: 10px;
+} */
+
+.editSectionButton{
+  position: absolute;
+  right: 17px;
+  top: 11px;
+  color: var(--main-color);
+  z-index: 10;
+}
+.inactive-heading-box{
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+
+.heading-new {
+  display: flex;
+  padding-left: 7px;
+}.heading-new h5.mb-0 {
+  margin-left: 12px;
+}.heading-new  input {
+  left: 3px;
+  position: relative;
+  top: -1px;
+}
+.inactive-fieldsbox{
+  position: relative;
+  z-index: 10;
+}
+
+.my-eye{
+  position: relative;
+  z-index: 11; 
+  cursor: pointer;
+  color: var(--main-color);
+}
+.color-green-to-fields{
+  color: rgb(54, 117, 54) !important;
+}
+.color-green-to-fields::before {
+
+  background-color:green !important;
+
+}
+@media(max-width:576px){
+  .gp-5{
+    gap: 10px;
+  }
+}

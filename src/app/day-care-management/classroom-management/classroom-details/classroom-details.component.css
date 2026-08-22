@@ -1,0 +1,335 @@
+
+  
+
+.students-follows h4 {
+    color: #000;
+    font-size: 17px !important;
+    font-weight: 500 !important;
+    margin-bottom: 0;
+}
+.follow-btn-group {
+    justify-content: end;
+}
+
+.accordion-button:not(.collapsed)::after {
+    content: "";
+    font-family: "font awesome 5 free";
+    font-weight: 900;
+    text-rendering: auto;
+    line-height: 40px;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+}
+.accordion-button::after {
+    content: "";
+    font-family: "font awesome 5 free";
+    font-weight: 900;
+    text-rendering: auto;
+    line-height: 40px;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+}
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+    color: #fff;
+    background-color: #5c92aa00;
+}
+a#v-pills-home-tab2 {
+    background: #5463d6;
+    border: #5463d6 !important;
+    color: #fff;
+}
+a#v-pills-profile-tab2 {
+    background: #e14c91;
+    border: #e14c91 !important;
+    color: #fff;
+}
+a#v-pills-messages-tab2 {
+    background: #70b78a;
+    border: #70b78a !important;
+    color: #fff;
+}
+a#v-pills-settings-tab2 {
+    background: #49a8f3;
+    border: #49a8f3 !important;
+    color: #fff;
+}
+a#v-pills-incident-tab2 {
+    background: #ec6449;
+    border: #ec6449 !important;
+    color: #fff;
+}
+a#v-pills-med-tab2 {
+    background: #48c1bf;
+    border: #48c1bf !important;
+    color: #fff;
+}
+.heading-new22 {
+    margin-bottom: 31px;
+    padding: 6px 10px;
+    position: relative;
+    border-radius: 6px;
+    background-color: #5463d626;
+}
+.heading-new22 h5 {
+    color: #5463d6;
+    font-size: 15px;
+}
+.heading-new33 {
+    margin-bottom: 31px;
+    padding: 6px 10px;
+    position: relative;
+    border-radius: 6px;
+    background-color: #e14c9126;
+}
+.heading-new33 h5 {
+    color: #e14c91;
+    font-size: 15px;
+}
+.heading-new44 {
+    margin-bottom: 31px;
+    padding: 6px 10px;
+    position: relative;
+    border-radius: 6px;
+    background-color: #70b78a30;
+}
+.heading-new44 h5 {
+    color: #70b78a;
+    font-size: 15px;
+}
+.heading-new55 {
+    margin-bottom: 31px;
+    padding: 6px 10px;
+    position: relative;
+    border-radius: 6px;
+    background-color: #49a8f333;
+}
+.heading-new55 h5 {
+    color: #49a8f3;
+    font-size: 15px;
+}
+.heading-new66 {
+    margin-bottom: 31px;
+    padding: 6px 10px;
+    position: relative;
+    border-radius: 6px;
+    background-color: #ec64493a;
+}
+.heading-new66 h5 {
+    color: #ec6449;
+    font-size: 15px;
+}
+.heading-new77 {
+    margin-bottom: 31px;
+    padding: 6px 10px;
+    position: relative;
+    border-radius: 6px;
+    background-color: #48c1bf33;
+}
+.heading-new77 h5 {
+    color: #48c1bf;
+    font-size: 15px;
+}
+div#v-pills-home2 {
+    padding: 16px 16px;
+    border: 2px solid #5463d6;
+}
+div#v-pills-profile2 {
+    padding: 16px 16px;
+    border: 2px solid #e14c91;
+}
+div#v-pills-messages2 {
+    padding: 16px 16px;
+    border: 2px solid #70b78a;
+}
+div#v-pills-settings2 {
+    padding: 16px 16px;
+    border: 2px solid #49a8f3;
+}
+div#v-pills-incident {
+    padding: 16px 16px;
+    border: 2px solid #ec6449;
+}
+div#v-pills-med {
+    padding: 16px 16px;
+    border: 2px solid #48c1bf;
+}
+.svg-module-svgWrapper {
+    display: inline-block;
+    margin-right: 9px;
+}
+.nav-pills .nav-link{
+    margin-right: 0px;
+}
+.dropdown-item.active, .dropdown-item:active {
+    background-color: #ffffff;
+}
+.dropdown-menu {
+    font-size: 14px;
+    min-width: 16rem;
+}
+@media screen and (max-width:1399px) {
+    .follow-btn-group{
+        margin-top: 15px;
+    }
+}
+
+
+
+
+
+
+.grid {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .grid .cell-width {
+    width: 33.3333333333%;
+  }
+  .grid .cell-height {
+    position: relative;
+    padding-top: 100%;
+  }
+  .grid .item {
+    display: flex;
+    position: absolute;
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.15);
+    padding: 5% 5%;
+    top: 4%;
+    bottom: 4%;
+    left: 4%;
+    right: 4%;
+  }
+  .grid .item:hover, .grid .item:focus {
+    transition: transform 175ms;
+    transform: scale(1.075);
+  }
+  .grid .item img {
+    margin: auto;
+    max-width: 100%;
+    max-height: 100%;
+    -o-object-fit: scale-down;
+       object-fit: scale-down;
+  }
+
+
+  /*------------style for view activity----------------*/
+  .class1{
+    color: #5e6cd8;
+}
+.accordion .card-header{
+    padding: 8px 20px;
+    border-radius: 0px;
+}
+div#headingNine {
+    background: #5463d626;
+
+}
+div#headingNine h5{
+   color: #5463d6;
+}
+div#headingFive {
+    background: #e14c9126;
+
+}
+div#headingFive h5{
+   color: #e14c91;
+}
+div#headingSix {
+    background: #70b78a30;
+
+}
+div#headingSix h5{
+   color: #70b78a;
+}
+div#headingSeven {
+    background: #49a8f333;
+
+}
+div#headingSeven h5{
+   color: #49a8f3;
+}
+div#collapseNine .card-body {
+    border: 2px solid #dbddf5;
+}
+.carousel-inner {
+    height: 299px;
+}
+p.updated {
+    font-style: italic;
+    margin-bottom: 7px;
+}
+span.accordian-span1 {
+    font-weight: 600;
+}
+span.note-span {
+    color: #5e6cd8;
+}
+ul.activity-listes li {
+    margin-bottom: 10px;
+    border-bottom: 1px dotted #bfb2b2;
+    padding-bottom: 9px;
+}
+ul.activity-listes li i {
+    margin-right: 5px;
+    color: #7e7d7d;
+}
+span.accordian-span3 {
+    font-weight: 600;
+    margin-right: 9px;
+}
+span.accordian-span5 {
+    font-weight: 600;
+    margin-right: 9px;
+}
+span.accordian-span7 {
+    font-weight: 600;
+    margin-right: 9px;
+}
+div#collapseFive .card-body {
+    border: 2px solid #fbe4ef;
+}
+div#headingeigth {
+    background: #ec64493a;
+}
+div#headingeigth h5 {
+    color: #ec6449;
+}
+div#headingeleven {
+    background: #48c1bf33;
+}
+div#headingeleven h5 {
+    color: #48c1bf;
+}
+div#collapseSix .card-body {
+    border: 2px solid #e4f1e9;
+}
+div#collapseSeven .card-body {
+    border: 2px solid #dbeefd;
+}
+div#collapseeigth .card-body {
+    border: 2px solid #fbdcd6;
+}
+div#collapseeleven .card-body {
+    border: 2px solid #daf3f2;
+}
+.accordion .card .card-body{
+    margin-bottom: 10px;
+}
+
+.checkBox input:checked + label:before {
+    background: var(--main-color);
+    box-shadow: 0 0 0 1px var(--main-color);
+}
+
+body {
+    --table-width: 100%; /* Or any value, this will change dinamically */
+  }
+ 
+  thead, tbody tr {
+    display:table;
+    width: 100%;
+    table-layout:fixed;
+  }.d-flex.flex-wrap.justify-content-between.mt-4 {
+    align-items: center;
+}

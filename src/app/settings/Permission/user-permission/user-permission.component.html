@@ -1,0 +1,358 @@
+<app-breadcrumb></app-breadcrumb>
+
+<section>
+  <div class="col-sm-12">
+    <div class="card">
+      <div class="card-body">
+        <div  class="heading-new">
+          <h5  class="mb-0">Add User Permission</h5>
+        </div>
+        <form class="" [formGroup]="Permission">
+          <div class="row mb-3">
+            <!-- <div class="col-12">
+                <h5 class="form-title"><span>Role Based Permission</span></h5>
+              </div> -->
+            <div class="col-12 col-sm-4">
+              <div class="form-group local-forms">
+                <label class=""
+                  >User<span class="login-danger gt">*</span></label
+                >
+
+                <!-- <select
+                  class="form-control form-select select select2-hidden-accessible"
+                  data-select2-id="1"
+                  tabindex="-1"
+                  aria-hidden="true"
+                  aria-label="Default select example"
+                >
+                  <option data-select2-id="3">Select</option>
+                  <option data-select2-id="9">Female</option>
+                  <option data-select2-id="10">Male</option>
+                  <option data-select2-id="11">Others</option>
+                </select> -->
+
+              <ng-select  id="title" name="UserID" class="ng-select" bindValue="id" bindLabel="fullName" [items]="UserList"
+              formControlName="UserID"  placeholder="-Select-"   (change)="BindUser($event)"></ng-select>
+              @if(input.UserID.touched){
+                @if(input.UserID?.errors?.required){
+                    <span class="text-danger">This field is required.</span>
+                }
+            }
+                <span role="presentation" class="select2-selection__arrow"
+                  ><b role="presentation"></b
+                ></span>
+              </div>
+            </div>
+            <div class="col-12 col-sm-4">
+              <div class="form-group local-forms">
+                <label class=""
+                  >Role Based Permission<span class="login-danger gt">*</span>
+                  <a
+                    routerLink="../role-based-permission"
+                    tooltip="Select Role Based Permission"
+
+                    data-toggle="tooltip"
+                    
+                    title="Add User Roles"
+                    class=" add_btn top90"
+                   
+                    ></a
+                ></label>
+
+                <!-- <select
+                  class="form-control form-select select select2-hidden-accessible"
+                  data-select2-id="1"
+                  tabindex="-1"
+                  aria-hidden="true"
+                  aria-label="Default select example"
+                >
+                  <option data-select2-id="3">Select</option>
+                  <option data-select2-id="9">Female</option>
+                  <option data-select2-id="10">Male</option>
+                  <option data-select2-id="11">Others</option>
+                </select> -->
+                <ng-select  id="title" name="RoleID" class="ng-select"  bindLabel="userRole" bindValue="id" [items]="UserRoleList"
+                formControlName="RoleID" placeholder="-Select-"  id="BindUserTypePermission"  (change)="BindUserTypePermission($event)">
+              </ng-select>
+
+              @if(input.RoleID.touched){
+                @if(input.RoleID?.errors?.required){
+                    <span class="text-danger">This field is required.</span>
+                }
+            }
+                <span role="presentation" class="select2-selection__arrow"
+                  ><b role="presentation"></b
+                ></span>
+              </div>
+            </div>
+
+            <div class="col-12 col-sm-4">
+              <div class="student-submit d-flex align-items-center mt-4 ">
+                <button type="submit" class="btn btn-primary me-2 mt-1"  (click)="AssignConfirmation()" [disabled]="Permission.invalid">
+                  Submit
+                </button>
+                <button type="submit" class="btn btn-secondary mt-1" (click)="Reset()">Cancel</button>
+              </div>
+            </div>
+          </div>
+        
+
+
+
+          <!-- <div  class="row ">
+            <div  class="col-lg-6">
+              <ul  class="sitemap">
+                <li >
+                  <a
+                    
+                    href="javascript: void(0);"
+                    class="text-uppercase fw-bold"
+                    >
+                    
+                    <i  class="fa fa-stop-circle me-1"></i
+                    >
+
+                   
+                    
+                    Select Permission</a
+                  >
+                  <ul >
+                    <li  class="">
+                      <a
+                        
+                        href="javascript: void(0);"
+                        class="d-flex"
+                        ><div
+                          
+                          class="form-check form-check-success"
+                        >
+                          <input
+                            
+                            type="checkbox"
+                            
+                            class="input-chec "
+                       
+                     
+                          />
+                        </div>
+                        <span >Dashboard</span></a
+                      >
+                      <ul >
+                        <div ></div>
+                      </ul>
+                    </li>
+                    <li  class="">
+                      <a
+                        
+                        href="javascript: void(0);"
+                        class="d-flex"
+                        ><div
+                          
+                          class="form-check form-check-success"
+                        >
+                        <input
+                            
+                        type="checkbox"
+                        
+                        class="input-chec "
+                   
+                 
+                      />
+                        </div>
+                        <span >Admin</span></a
+                      >
+                      <ul >
+                        <div >
+                          <li  class="">
+                            <a
+                              
+                              href="javascript: void(0);"
+                              class="d-flex"
+                              ><div
+                                
+                                class="form-check form-check-success"
+                              >
+                              <input
+                            
+                              type="checkbox"
+                              
+                              class="input-chec "
+                         
+                       
+                            />
+                              </div>
+                              <span >Edit User</span></a
+                            >
+                            <ul >
+                              <div ></div>
+                            </ul>
+                          </li>
+                          <li  class="">
+                            <a
+                              
+                              href="javascript: void(0);"
+                              class="d-flex"
+                              ><div
+                                
+                                class="form-check form-check-success"
+                              >
+                              <input
+                            
+                              type="checkbox"
+                              
+                              class="input-chec "
+                         
+                       
+                            />
+                              </div>
+                              <span >Add User</span></a
+                            >
+                            <ul >
+                              <div ></div>
+                            </ul>
+                          </li>
+                          <li  class="">
+                            <a
+                              
+                              href="javascript: void(0);"
+                              class="d-flex"
+                              ><div
+                                
+                                class="form-check form-check-success"
+                              >
+                              <input
+                            
+                              type="checkbox"
+                              
+                              class="input-chec "
+                         
+                       
+                            />
+                              </div>
+                              <span 
+                                >Manage User</span
+                              ></a
+                            >
+                            <ul >
+                              <div ></div>
+                            </ul>
+                          </li>
+                         
+                         
+                        </div>
+                      </ul>
+                    </li>
+                    <li  class="">
+                        <a
+                          
+                          href="javascript: void(0);"
+                          class="d-flex"
+                          ><div
+                            
+                            class="form-check form-check-success"
+                          >
+                          <input
+                              
+                          type="checkbox"
+                          
+                          class="input-chec "
+                     
+                   
+                        />
+                          </div>
+                          <span >Settings</span></a
+                        >
+                        <ul >
+                          <div >
+                            <li  class="">
+                              <a
+                                
+                                href="javascript: void(0);"
+                                class="d-flex"
+                                ><div
+                                  
+                                  class="form-check form-check-success"
+                                >
+                                <input
+                              
+                                type="checkbox"
+                                
+                                class="input-chec "
+                           
+                         
+                              />
+                                </div>
+                                <span >User Role</span></a
+                              >
+                              <ul >
+                                <div ></div>
+                              </ul>
+                            </li>
+                            <li  class="">
+                              <a
+                                
+                                href="javascript: void(0);"
+                                class="d-flex"
+                                ><div
+                                  
+                                  class="form-check form-check-success"
+                                >
+                                <input
+                              
+                                type="checkbox"
+                                
+                                class="input-chec "
+                           
+                         
+                              />
+                                </div>
+                                <span >Role Based Permission</span></a
+                              >
+                              <ul >
+                                <div ></div>
+                              </ul>
+                            </li>
+                            <li  class="">
+                              <a
+                                
+                                href="javascript: void(0);"
+                                class="d-flex"
+                                ><div
+                                  
+                                  class="form-check form-check-success"
+                                >
+                                <input
+                              
+                                type="checkbox"
+                                
+                                class="input-chec "
+                           
+                         
+                              />
+                                </div>
+                                <span 
+                                  >User Permission</span
+                                ></a
+                              >
+                              <ul >
+                                <div ></div>
+                              </ul>
+                            </li>
+                           
+                           
+                          </div>
+                        </ul>
+                      </li>
+                    
+                   
+                   
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </div> -->
+        </form>
+      </div>
+    </div>
+  </div>
+</section>

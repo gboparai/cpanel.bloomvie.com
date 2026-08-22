@@ -1,0 +1,124 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="col-12">
+        <div class="card-header d-flex align-items-center dasboard-header"
+          style=" border-bottom: 0px;">
+          <h5 class="card-title">Customized Events </h5>
+          <ul class="chart-list-out">
+            <li><span class="circle-green"></span>{{todaySelectedDate | date :
+              'MM-dd-yyyy'}}</li>
+          </ul>
+        </div>
+      </div>
+      <div class="card-body">
+
+        <div class="calendar-event">
+          <full-calendar [options]="calendarOptions">
+            <ng-template #eventContent let-arg>
+              <i>{{arg.event.title}}</i>
+            </ng-template>
+          </full-calendar>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="calendarDateModal" tabindex="-1"
+  aria-labelledby="calendarModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="calendarModalLabel">Add Event</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"
+          aria-label="Close"
+          (click)="resetForm()"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="eventForm" (ngSubmit)="onSubmitEvent()">
+          <div class="row">
+            <div class="col-md-6 mb-2">
+              <div class="form-group local-forms ins-input-field">
+                <label>Event Type <span class="text-danger">*</span></label>
+                <ng-select class="form-control" [items]="eventList"
+                  bindLabel="name" bindValue="id" [multiple]="false"
+                  class="input-group" placeholder="-Select-"
+                  formControlName="eventTypeID">
+                </ng-select>
+                <small class="text-danger" *ngIf="
+                    eventForm.get('eventTypeID')?.touched &&
+                    eventForm.get('eventTypeID')?.invalid
+                  ">
+                  This field is required.
+                </small>
+              </div>
+            </div>
+            <div class="col-md-6 mb-2">
+              <div class="form-group local-forms ins-input-field">
+                <label>Event Name <span class="text-danger">*</span></label>
+                <input type="text" class="form-control border rounded w-100"
+                  formControlName="eventName"
+                  placeholder="Enter Name" name="eventName" />
+                <small class="text-danger" *ngIf="
+                    eventForm.get('eventName')?.touched &&
+                    eventForm.get('eventName')?.invalid
+                  ">
+                  This field is required.
+                </small>
+              </div>
+            </div>
+            <div class="col-md-12 mb-2">
+              <div class="form-group local-forms ins-input-field">
+                <label>Event Description <span
+                    class="text-danger">*</span></label>
+                <textarea type="text" class="form-control border rounded w-100"
+                  formControlName="eventDescription"
+                  row="4" placeholder="Enter Description"
+                  name="eventDescription"></textarea>
+                <small class="text-danger" *ngIf="
+                    eventForm.get('eventDescription')?.touched &&
+                    eventForm.get('eventDescription')?.invalid
+                  ">
+                  This field is required.
+                </small>
+              </div>
+            </div>
+            <div class="col-md-12 mb-2">
+              <div class="form-group local-forms ins-input-field">
+                <label>Select Color <span class="text-danger">*</span></label>
+                <div class="color-select">
+                  <span class="Click to pick color">Click here to pick
+                    color</span>
+                  <span (click)="toggleDropdown()">
+                    <span *ngIf="selectedValue"
+                      [ngStyle]="{ background: selectedValue }"
+                      style="position: absolute;right: 33px;top: 6px;"></span>
+                  </span>
+                  <ul *ngIf="isOpen">
+                    <li *ngFor="let option of colorOptions"
+                      [ngStyle]="{ background: option.value }"
+                      (click)="selectColor(option)">
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <!-- <button type="submit" class="btn btn-primary">Submit</button> -->
+            <button type="submit" class="btn btn-primary">
+              {{ IsEdit ? "Update" : "Submit" }}
+            </button>
+
+            <button type="button" class="btn btn-secondary"
+              data-bs-dismiss="modal" (click)="resetForm()">
+              Close
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

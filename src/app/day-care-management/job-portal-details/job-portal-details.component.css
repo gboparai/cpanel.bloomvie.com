@@ -1,0 +1,6 @@
+.deatil-subscription p {
+    height: 68px;
+    overflow: auto;
+    text-wrap: wrap;
+    margin-bottom: 0px;
+}

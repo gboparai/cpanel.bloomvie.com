@@ -1,0 +1,300 @@
+<app-breadcrumb></app-breadcrumb>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class>
+      <div class="card">
+        <div class="card-body">
+          <div class="heading-new">
+            <h5 class="mb-0">Reminder Settings</h5>
+          </div>
+          <form [formGroup]="reminderForm">
+
+            <div class="local-forms d-flex mb-3">
+              <label for="cars">Is Monthly/Yearly<span class="text-danger">*</span></label>
+              <div class="form-check mb-2 d-flex align-items-center">
+                <input class="form-check-input me-2" type="radio" id="monthly" name="isMonthly_Yearly" value="Monthly"
+                  formControlName="isMonthly_Yearly" />
+                <label class="form-check-label cust-color" for="monthly">Monthly</label>
+              </div>
+              <div class="form-check mb-2 d-flex align-items-center">
+                <input class="form-check-input me-2" type="radio" id="yearly" name="isMonthly_Yearly" value="Yearly"
+                  formControlName="isMonthly_Yearly" />
+                <label class="form-check-label cust-color" for="yearly">Yearly</label>
+              </div>
+
+       
+
+            </div>
+
+            <div class="row brd-br">
+              <div class="local-forms col-md-4 mt-4">
+                <div class="form-group">
+                  <label for="cars">Select Reminder Type
+                    <span class="text-danger">*</span></label>
+
+                  <ng-select [items]="ReminderTypeList || []" bindLabel="reminderType" bindValue="id"
+                    (change)="selectedReminder($event.id)" formControlName="reminderTypeID" placeholder="-Select-"
+                    name="reminderTypeID">
+                  </ng-select>
+                  @if(reminderForm.controls['reminderTypeID']?.invalid &&
+                  reminderForm.controls['reminderTypeID'].touched){
+                  <span class="text-danger">This field is required</span>
+                  }
+                </div>
+              </div>
+
+              <div class="local-forms col-md-4 mt-4">
+                <div class="form-group">
+                  <label for="cars">Email To <span class="text-danger">*</span></label>
+
+                  <ng-select id="title" name="toUserTypeID" class="ng-select" bindLabel="userRole"
+                    (change)="selectedToUser($event.id)" bindValue="id" [items]="ToUserRoleList"
+                    formControlName="toUserTypeID" placeholder="-Select-" id="BindUserTypePermission">
+                  </ng-select>
+
+                  @if(reminderForm.controls['toUserTypeID']?.invalid &&
+                  reminderForm.controls['toUserTypeID'].touched){
+                  <span class="text-danger">This field is required</span>
+                  }
+                </div>
+              </div>
+              <div class="local-forms col-md-4 mt-4">
+                <div class="form-group">
+                  <label for="cars">Email CC <span class="text-danger">*</span></label>
+
+                  <ng-select id="title" bindLabel="userRole" class="ng-select" bindLabel="userRole" bindValue="id"
+                    [items]="UserRoleList" formControlName="ccUserTypeID" placeholder="-Select-"
+                    id="BindUserTypePermission" (change)="selectedCC($event.id)">
+                  </ng-select>
+
+                  @if(reminderForm.controls['ccUserTypeID']?.invalid &&
+                  reminderForm.controls['ccUserTypeID'].touched){
+                  <span class="text-danger">This field is required</span>
+                  }
+                </div>
+              </div>
+            </div>
+            <div class="row brd-br">
+              <div class="local-forms col-md-6 mt-4">
+                <div class="form-group">
+                  <label for="cars">Reminder 1 (Days Before) </label>
+                  <input type="text" class="form-control" formControlName="reminder1DaysBefore" placeholder="Enter Days"
+                    name="reminder1DaysBefore" />
+                </div>
+              </div>
+              <div class="local-forms col-md-6 mt-4">
+                <div class="form-group">
+                  <label for="cars">Subject </label>
+                  <input type="text" class="form-control" formControlName="reminderSubject1" placeholder="Enter Subject"
+                    name="reminderSubject1" />
+                </div>
+              </div>
+              <div class="local-forms col-md-12">
+                <div class="form-group">
+                  <label for="cars">Description </label>
+                  <textarea formControlName="reminderBody1" placeholder="Enter Description" name="reminderBody1"
+                    rows="4" class="form-control" ng-reflect-name="address"></textarea>
+                </div>
+              </div>
+            </div>
+            <div class="row brd-br">
+              <div class="local-forms col-md-6 mt-4">
+                <div class="form-group">
+                  <label for="cars">Reminder 2 (Days Before)</label>
+                  <input type="text" class="form-control" formControlName="reminder2DaysBefore" placeholder="Enter Days"
+                    name="reminder2DaysBefore" />
+                </div>
+              </div>
+              <div class="local-forms col-md-6 mt-4">
+                <div class="form-group">
+                  <label for="cars">Subject</label>
+                  <input type="text" class="form-control" name="reminderSubject2" placeholder="Enter Subject"
+                    formControlName="reminderSubject2" />
+                </div>
+              </div>
+              <div class="local-forms col-md-12">
+                <div class="form-group">
+                  <label for="cars">Description</label>
+                  <textarea formcontrolname="reminderBody2" placeholder="Enter Description" name="reminderBody2"
+                    rows="4" class="form-control" ng-reflect-name="address"></textarea>
+                </div>
+              </div>
+            </div>
+            <div class="row brd-br">
+              <div class="local-forms col-md-6 mt-4">
+                <div class="form-group">
+                  <label for="cars">Reminder 3 (Days Before)</label>
+                  <input type="text" class="form-control" formControlName="reminder3DaysBefore" placeholder="Enter Days"
+                    name="reminder3DaysBefore" />
+                </div>
+              </div>
+              <div class="local-forms col-md-6 mt-4">
+                <div class="form-group">
+                  <label for="cars">Subject</label>
+                  <input type="text" class="form-control" formControlName="reminderSubject3" placeholder="Enter Subject"
+                    name="reminderSubject3" />
+                </div>
+              </div>
+              <div class="local-forms col-md-12">
+                <div class="form-group">
+                  <label for="cars">Description</label>
+                  <textarea formcontrolname="reminderBody3" placeholder="Enter Description" name="reminderBody3"
+                    rows="4" class="form-control" ng-reflect-name="address"></textarea>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12 button-alignment text-end pe-0">
+                <div class="form-buttons text-end">
+                  <button type="submit" class="btn btn-primary me-2 waves-effect waves-light padd-rt"
+                    (click)="addreminderValues()">
+                    {{ reminderForm.value.id > 0 ? "Update" : "Add" }}
+                  </button>
+                  <button type="button" class="btn btn-secondary waves-effect waves-light m-0">
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+
+          <div class="row">
+            <div class="col-md-12 mt-5">
+              <div class="accordion" id="accordionExample">
+                <div class="table-responsive">
+                  <table class="table table-hover mb-0">
+                    <thead class="student-thread">
+                      <tr>
+                        <th>#</th>
+                        <th>Reminder Type</th>
+                        <th>To User</th>
+                        <th>CC User</th>
+                        <th>Reminder Days</th>
+                        <th>Subject</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    @if (skeletonShow === 'Skelton') {
+                    <tbody>
+                      <tr>
+                        <td colspan="100%">
+                          <app-skeleton-loader skeletonShow="Skelton" viewType="table" [tableRows]="5" [tableCols]="6">
+                          </app-skeleton-loader>
+                        </td>
+                      </tr>
+                    </tbody>
+                    }
+                    @else if (reminderList.length > 0) {
+
+
+
+                    <tbody *ngFor="let reminder of reminderList; let i = index" class="accordion-item">
+                      <tr>
+                        <td>
+                          <div class="accordion-header toogle-classroom" [attr.id]="'heading' + i">
+                            <button class="btn-toggle" type="button" data-bs-toggle="collapse"
+                              [attr.data-bs-target]="'#collapse' + i" aria-expanded="false"
+                              [attr.aria-controls]="'collapse' + i" (click)="getOtherReminderList(reminder)">
+                              <i class="fa"></i>
+                            </button>
+                          </div>
+                        </td>
+                        <td>{{ reminder?.reminderType }}</td>
+                        <td>{{ reminder?.toUserType }}</td>
+                        <td>{{ reminder?.ccUserType }}</td>
+                        <td>{{ reminder?.reminder1DaysBefore }}</td>
+                        <td>{{ reminder?.reminderSubject1 }}</td>
+                        <td>
+                          <div class="actions">
+                            <a class="action-btn bg-danger-light me-2" (click)="getPatchedValue(reminder)">
+                              <i class="feather-edit"></i>
+                            </a>
+                            <label class="switch mb-0">
+                              <input value="isActive" name="isActive" type="checkbox" />
+                            </label>
+                          </div>
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td colspan="8" class="p-0">
+                          <div [attr.id]="'collapse' + i" class="accordion-collapse collapse collapse-table"
+                            [attr.aria-labelledby]="'heading' + i" data-bs-parent="#accordionExample">
+                            <table class="table sub-table mb-0">
+                              <thead class="table-light">
+                                <tr>
+                                  <th>#</th>
+                                  <th>Reminder Type</th>
+                                  <th>To User</th>
+                                  <th>CC User</th>
+                                  <th>Reminder Days</th>
+                                  <th>Subject</th>
+                                </tr>
+                              </thead>
+
+
+
+                              <tbody>
+                                @if (skeletonShow === 'Skelton') {
+                                <tr>
+                                  <td colspan="100%">
+                                    <app-skeleton-loader skeletonShow="Skelton" viewType="table" [tableRows]="5"
+                                      [tableCols]="7">
+                                    </app-skeleton-loader>
+                                  </td>
+                                </tr>
+                                }
+                                @else if (reminderSubList.length > 0) {
+                                <tr *ngFor="let remind of reminderSubList; let j = index">
+                                  <td>{{ j + 1 }}</td>
+                                  <td>{{ remind?.reminderType }}</td>
+                                  <td>{{ remind?.toUserType }}</td>
+                                  <td>{{ remind?.ccUserType }}</td>
+                                  <td>{{ remind?.reminderDays }}</td>
+                                  <td>{{ remind?.reminderSubject }}</td>
+                                </tr>
+                                } @else {
+                                <tr>
+                                  <td colspan="100%">
+                                    <app-skeleton-loader skeletonShow="NoRecord">
+                                    </app-skeleton-loader>
+                                  </td>
+
+                                </tr>
+
+                                }
+                              </tbody>
+                            </table>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+
+                    } @else {
+                    <tbody>
+
+                      <tr>
+                        <td colspan="100%">
+                          <app-skeleton-loader skeletonShow="NoRecord">
+                          </app-skeleton-loader>
+                        </td>
+
+                      </tr>
+                    </tbody>
+
+                    }
+
+
+
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

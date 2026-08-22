@@ -1,0 +1,207 @@
+@if(isToken){
+<div class="container mt-5">
+  <div class="terms-container">
+    <div class="terms-header pb-1">
+      <h2><strong>Terms and Conditions</strong></h2>
+      <p>
+        Please read the following terms and conditions carefully before
+        proceeding.
+      </p>
+    </div>
+
+    <div class="terms-text">
+      <div class="int-box">
+         <h5><strong>Work Hours:</strong></h5>
+      <!-- <p>
+        Your role requires you to work from 8:00 AM to 4:00 PM, Monday to
+        Friday.
+      </p> -->
+
+      <span *ngIf="DayCareDetail && DayCareDetail.length > 0" class="grid">
+        <span *ngFor="let item2 of DayCareDetail[0].workingDays">
+          {{ item2.day }} ({{ item2.startTime | TimeFormatAmPm}} - {{ item2.endTime | TimeFormatAmPm}})
+          <!-- {{ item2.day }} ({{ item2.startTime | date: 'HH:mm' }} - {{ item2.endTime | date: 'HH:mm' }}) -->
+        </span>
+      </span>
+      </div>
+
+      <!-- <h5><strong>Salary Payment:</strong></h5>
+      <p>Your salary of $35,000 per year will be paid monthly.</p> -->
+
+    <div class="int-box">
+        <h5><strong>Salary Payment:</strong></h5>
+      <span *ngIf="DayCareDetail[0].salary && DayCareDetail[0].salary > 0">
+        Your salary of ${{ DayCareDetail[0].salary | number }}.00 per month will be paid monthly.
+      </span>
+    </div>
+
+      <div *ngIf="DayCareDetail[0].wages && DayCareDetail[0].wages > 0" class="int-box">
+      <h5><strong>Wages Payment:</strong></h5>
+      <span *ngIf="DayCareDetail[0].wages && DayCareDetail[0].wages > 0">
+        You will be paid an hourly wage of ${{ DayCareDetail[0].wages | number }}.00
+      </span>
+      </div>
+
+      <div class="int-box">
+        <h5><strong>Contract Renewal:</strong></h5>
+      <p class="m-0">
+        This contract is valid for 1 year and may be renewed upon mutual
+        agreement.
+      </p>
+
+      </div>
+      <div class="int-box">
+        <h5><strong>Termination:</strong></h5>
+      <p class="m-0">
+        Either party can terminate the agreement with a 30-day notice period.
+      </p>
+
+      <p>
+        If you have any questions regarding the terms and conditions, please
+        contact us before proceeding.
+      </p>
+      </div>
+    </div>
+
+ <div class="row">
+  <div class="col-md-12">
+       <div class="d-flex justify-content-center gap-10">
+      <button
+        class="btn btn-accept btn-custom "
+        (click)="approveReject(18, 1, 'teacherApprove')">
+        Accept Terms
+      </button>
+
+      <!-- <a *ngIf="student.status != 'Rejected' && student.status != 'Approved'"
+        class="approve-rec" [id]="'checkBoxAinA' + student.teacherId"
+        (click)="approveReject2(student.teacherId,'shortlisted')"> -->
+
+      <button
+        class="btn btn-reject btn-custom"
+        (click)="cancelTerms(10, 0, 'teacherReject')"
+      >
+        Reject Terms
+      </button>
+    </div>
+  </div>
+ </div>
+
+    <!-- <div class="mt-3 text-center">
+        <p>For questions, contact us at <strong>hrbrightfuturesdaycare.com</strong> or call <strong>(555) 123-4567</strong>.</p>
+      </div> -->
+  </div>
+</div>
+}@else { @if(viewThankYou == true) {
+<div
+  class="d-flex justify-content-center align-items-center"
+  style="height: 100vh"
+>
+  <div class="container">
+    <div class="row ">
+      <div class="col-md-12">
+        <div
+          class="than-ma d-flex flex-column justify-content-center align-items-center"
+        >
+          <div class="content">
+            <div class="wrapper-1">           
+              <div
+                class="main-img d-flex flex-column justify-content-center align-items-center"
+              >
+                <div class="imgg">
+                  <img
+                    src="assets/img/happy.gif"
+                    alt="gigy"
+                    width="100%"
+                    height="auto
+                    "
+                  />
+                </div>
+              </div>
+              <div class="wrapper-2 mb-2">
+                <h3 style="color: var(--main-color)">Thank you !</h3>
+
+                <p>
+                  Welcome aboard! Your registration is successfully
+                  completed—get ready to inspire young minds at Bloomvie
+                </p>
+              </div>
+              <div class="row">
+                <div class=" col-md-12 mb-3 text-center">
+                  <button
+                    type="submit"
+                    class="btn btn-primary me-2"
+                    (click)="RedirectToAdminPannel()"
+                  >
+                    Redirect To Admin Pannel
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</div>
+} @else {
+<div
+  class="d-flex justify-content-center align-items-center"
+  style="height: 100vh"
+>
+  <div class="container">
+    <div class="row ">
+      <div class="col-md-12">
+        <div
+          class="than-ma d-flex flex-column justify-content-center align-items-center"
+        >
+          <div class="content">
+            <div class="wrapper-1">
+              <div
+                class="main-img d-flex flex-column justify-content-center align-items-center"
+              >
+                <div class="imgg1 mb-3">
+                  <img
+                    src="assets/img/alert.gif"
+                    alt="gigy"
+                    width="100%"
+                    height="auto
+                    "
+                  />
+                </div>
+              </div>
+              <div class="wrapper-2 mb-2">
+                <h3 style="color: var(--main-color)" class="mb-3">
+                  Terms and Conditions Rejected !
+                </h3>
+
+                <p>
+                  We're sorry to see you reject the terms and conditions. Please
+                  contact the daycare administration for further assistance or
+                  clarification.
+                </p>
+              </div>
+
+              <div class="row">
+                <div class="col-md-12 mb-3 text-center">
+                  <button
+                    type="submit"
+                    class="btn btn-primary me-2"
+                    (click)="RedirectToFrontendWebsite()"
+                  >
+                    Redirect To Bloomvie Website
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+}
+
+<!-- reject case -->
+
+}

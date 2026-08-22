@@ -1,0 +1,198 @@
+<app-breadcrumb></app-breadcrumb>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <div  class="heading-new">
+          <h5  class="mb-0">Day Care Settings</h5>
+        </div>
+        <form> 
+          <div class="row">
+            <div class="col-md-12 mb-4">
+              <div class="me-3">
+                <label class=""
+                  >Add Age Group<span class="login-danger">*</span></label
+                >
+              </div>
+
+              <div class="check-grid br-btm">
+                @for (age of AgeList; track age) {
+
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    value=""
+                    [id]="'flexCheckDefaults' + age.ageGroupID"
+                    (change)="onBoxAge($event, age.ageGroupID)"
+                    [checked]="selectedAge.includes(age.ageGroupID)"
+                  />
+                  <label
+                    class="form-check-label"
+                    [for]="'flexCheckDefaults' + age.ageGroupID"
+                  >
+                    {{ age.groupName }}
+                  </label>
+                </div>
+                }
+              </div>
+            </div>
+            <div class="col-md-12 mb-4">
+              <div class="me-3">
+                <label >Add Facility<span class="login-danger">*</span></label>
+                <div class="check-grid br-btm">
+                  <div class="form-check" *ngFor="let facility of FacilityList">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      [checked]="selectedFacility.includes(facility.facilityID)"
+                      id="flexCheckDefault"
+                      (change)="onBoxFacility($event, facility.facilityID)"
+                    />
+                    <label class="form-check-label" for="flexCheckDefault">
+                      {{ facility.facilityName }}
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- <div class="check-grid br-btm">
+                      <div class="form-check">
+                          <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                          <label class="form-check-label" for="flexCheckDefault">
+                            Bus
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                          <label class="form-check-label" for="flexCheckDefault">
+                            Snacks
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                          <label class="form-check-label" for="flexCheckDefault">
+                            E-learning
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                          <label class="form-check-label" for="flexCheckDefault">
+                            Outdoor Play
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                          <label class="form-check-label" for="flexCheckDefault">
+                            Indoor Play
+                          </label>
+                        </div>                                    
+                     </div> -->
+            </div>
+
+            <div class="col-md-12 mb-4">
+              <div class="me-3">
+                <label class=""
+                  >Add Class<span class="login-danger">*</span></label
+                >
+              </div>
+              <div class="check-grid br-btm">
+                <div class="form-check" *ngFor="let class of CLassList">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    [checked]="selectedClass.includes(class.classID)"
+                    id="flexCheckDefault"
+                    (change)="onBoxClass($event, class.classID)"
+                  />
+                  <label class="form-check-label" for="flexCheckDefault">
+                    {{ class.className }}
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12 mb-4">
+              <div class="me-3">
+                <label class=""
+                  >Add Activity<span class="login-danger">*</span></label
+                >
+              </div>
+              <div class="check-grid">
+                <div class="form-check" *ngFor="let item of activitiesList">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    [checked]="selectedPlans.includes(item.id)"
+                    [id]="'flexCheckDefaults' + item.id"
+                    (change)="onActivityboxChange($event, item.id)"
+                  />
+
+                  <label
+                    class="form-check-label"
+                    [for]="'flexCheckDefaults' + item.id"
+                  >
+                    {{ item.planName }}
+                  </label>
+                </div>
+
+                <!-- <div class="form-check">
+                          <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                          <label class="form-check-label" for="flexCheckDefault">
+                            Puzzles
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                          <label class="form-check-label" for="flexCheckDefault">
+                            Paper Craft
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                          <label class="form-check-label" for="flexCheckDefault">
+                            Alphabet Case Match
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                          <label class="form-check-label" for="flexCheckDefault">
+                            Pom Pom Drop
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                          <label class="form-check-label" for="flexCheckDefault">
+                            Hungry Bunny
+                          </label>
+                        </div> -->
+              </div>
+            </div>
+          </div>
+
+          <!-- <div class="row"> 
+              <div class="form-group mb-0 col-md-12 text-end">
+                  <div class="settings-btns">
+                  <button type="submit" class="btn btn-primary me-3">Submit</button>
+                  <button type="submit" class="btn btn-secondary">Cancel</button>
+                  </div>
+                  </div>
+          </div> -->
+        </form>
+
+        <div class="col-md-12 button-alignment text-end">
+          <div class="form-buttons">
+            <button
+              type="submit"
+              (click)="submitData()"
+              class="btn btn-primary me-2"
+            >
+              Submit
+            </button>
+            <button type="reset" class="btn btn-secondary ">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

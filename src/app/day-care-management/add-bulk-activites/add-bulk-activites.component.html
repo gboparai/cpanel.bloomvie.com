@@ -1,0 +1,689 @@
+<app-breadcrumb></app-breadcrumb>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <div id="pills-staff" role="tabpanel" aria-labelledby="pills-staff-tab" tabindex="0">
+          <div class="heading-new">
+            <h5 class="mb-0">Activities</h5>
+          </div>
+          <div class="row">
+            <div class="col-md-12 mb-4">
+              <div class="student-submit text-end">
+                <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#exampleModal8">
+                  Skipped
+                </button>
+                <button (click)="downloadBulkFormatSheet()" class="btn btn-primary me-2">
+                  Download Format
+                </button>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                  (click)="onBulkUploadClick()">
+                  Bulk Upload
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="exampleModal8" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="">
+              <div class="">
+                <div class="heading-new new-student d-flex justify-content-between align-items-center">
+                  <h5 class="mb-0">Skipped Records</h5>
+
+                  <!-- <div class="dropdown" style="z-index: 10">
+                    <a
+                      href="javascript:void(0);"
+                      class="btn btn-secondary dropdown-toggle t"
+                      data-bs-toggle="dropdown"
+                      >Export</a
+                    >
+
+                    <ul
+                      class="dropdown-menu"
+                      aria-labelledby="dropdownMenuButton1"
+                    >
+                      <li>
+                        <a class="dropdown-item" href="#"
+                          ><span
+                            ><img
+                              src="assets/img/pdf.png"
+                              class="flat-icon me-2" /></span
+                          ><span>PDF</span></a
+                        >
+                      </li>
+                      <li>
+                        <a class="dropdown-item" href="#"
+                          ><span
+                            ><img
+                              src="assets/img/xls.png"
+                              class="flat-icon me-2" /></span
+                          ><span>Excel</span></a
+                        >
+                      </li>
+                    </ul>
+                  </div> -->
+                </div>
+
+                <!-- sample -->
+
+                <ul class="nav nav-pills menu-tabs m-0" id="myTab" role="tablist">
+                  <li class="nav-item" role="presentation">
+                    <a class="nav-link reboot active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home"
+                      type="button" role="tab" aria-controls="home" aria-selected="true">
+                      Nap Time
+                    </a>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                    <a class="nav-link reboot" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile"
+                      type="button" role="tab" aria-controls="profile" aria-selected="false" (click)="viewFoodRecord()">
+                      Food
+                    </a>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                    <a class="nav-link reboot" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact"
+                      type="button" role="tab" aria-controls="contact" aria-selected="false"
+                      (click)="viewMedicineRecord()">
+                      Medicine
+                    </a>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                    <a class="nav-link reboot" id="contact-tab1" data-bs-toggle="tab" data-bs-target="#contact1"
+                      type="button" role="tab" aria-controls="contact1" aria-selected="false"
+                      (click)="viewHealthRecord()">
+                      Health
+                    </a>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                    <a class="nav-link reboot" id="contact-tab2" data-bs-toggle="tab" data-bs-target="#contact2"
+                      type="button" role="tab" aria-controls="contact2" aria-selected="false"
+                      (click)="viewNoteRecord()">
+                      Note
+                    </a>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                    <a class="nav-link reboot" id="contact-tab3" data-bs-toggle="tab" data-bs-target="#contact3"
+                      type="button" role="tab" aria-controls="contact3" aria-selected="false"
+                      (click)="viewIncidentRecord()">
+                      Incident
+                    </a>
+                  </li>
+                </ul>
+
+                <!-- content  -->
+
+                <div class="bts">
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="inn-bt text-end">
+                        <button type="submit" class="btn btn-primary me-2" (click)="downloadInvalidRecordsSheet()">
+                          Download Sheet
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="tab-content" id="myTabContent">
+                  <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                    <div class="table-responsive">
+                      <table class="table table-hover mb-0">
+                        <thead class="student-thread">
+                          <tr>
+                            <th>#</th>
+                            <th>Class</th>
+                            <!-- <th>Section</th> -->
+                            <th>Student</th>
+                            <th>Date</th>
+                            <th>Nap Start Time</th>
+                            <th>Nap End Time</th>
+                            <th>Note</th>
+                            <th class="text-start">Image Names</th>
+                          </tr>
+                        </thead>
+                        @if(NapTimeSkippedRecords.length > 0) {
+                        <tbody>
+                          <tr *ngFor="
+                              let napTime of NapTimeSkippedRecords
+                                | paginate
+                                  : {
+                                      itemsPerPage: contentSizeNapTime,
+                                      currentPage: currentPageNapTime,
+                                      id: 'NapTimeActivity'
+                                    };
+                              let i = index
+                            ">
+                            <td>{{ i + 1 }}</td>
+                            <td>{{ napTime.Class ? napTime.Class : "--" }}</td>
+                            <!-- <td>
+                              {{ napTime.Section ? napTime.Section : "--" }}
+                            </td> -->
+                            <td>
+                              {{
+                              napTime.studentName ? napTime.studentName : "--"
+                              }}
+                            </td>
+                            <td>{{ napTime.Date ? napTime.Date : "--" }}</td>
+                            <td>
+                              {{ napTime.startTime ? napTime.startTime : "--" }}
+                            </td>
+                            <td>
+                              {{ napTime.endTime ? napTime.endTime : "--" }}
+                            </td>
+                            <td>{{ napTime.note ? napTime.note : "--" }}</td>
+                            <td class="text-start">
+                              {{ napTime.Image ? napTime.Image : "--" }}
+                            </td>
+                          </tr>
+                        </tbody>
+                        } @else {
+                        <tbody>
+                          <tr>
+                            <td colspan="9">
+                              <div class="no-data">
+                                <img src="assets/img/no-data-img.png" alt="No Record Found" />
+                                <span>No Record Found</span>
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                        }
+                      </table>
+                    </div>
+                    <div class="col pagination-style">
+                      <div class="datatable-pager datatable-paging-loaded">
+                        @if(NapTimeSkippedRecords.length > 0) {
+                        <pagination-controls previousLabel="prev" nextLabel="next" [maxSize]="5"
+                          class="datatable-pager-nav my-2 mb-sm-0" id="NapTimeActivity"
+                          (pageChange)="currentPageNapTime = $event">
+                        </pagination-controls>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                  <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                    <div class="table-responsive">
+                      <table class="table table-hover mb-0">
+                        <thead class="student-thread">
+                          <tr>
+                            <th>#</th>
+                            <th>Class</th>
+                            <!-- <th>Section</th> -->
+                            <th>Student</th>
+                            <th>Date</th>
+                            <th>Food Type</th>
+                            <th>Meal Type</th>
+                            <th>Meal Item</th>
+                            <th>Time</th>
+                            <th>Note</th>
+                            <th class="text-start">Image Names</th>
+                          </tr>
+                        </thead>
+                        @if(FoodSkippedRecords.length > 0) {
+                        <tbody>
+                          <tr *ngFor="
+                              let food of FoodSkippedRecords
+                                | paginate
+                                  : {
+                                      itemsPerPage: contentSizeFood,
+                                      currentPage: currentPageFood,
+                                      id: 'foodActivity'
+                                    };
+                              let i = index
+                            ">
+                            <td>{{ i + 1 }}</td>
+                            <td>{{ food.Class ? food.Class : "--" }}</td>
+                            <!-- <td>{{ food.Section ? food.Section : "--" }}</td> -->
+                            <td>
+                              {{ food.studentName ? food.studentName : "--" }}
+                            </td>
+                            <td>{{ food.Date ? food.Date : "--" }}</td>
+                            <td>{{ food.foodType ? food.foodType : "--" }}</td>
+                            <td>{{ food.mealType ? food.mealType : "--" }}</td>
+                            <td>{{ food.mealItem ? food.mealItem : "--" }}</td>
+                            <td>
+                              {{ food.startTime ? food.startTime : "--" }}
+                            </td>
+                            <td>{{ food.note ? food.note : "--" }}</td>
+                            <td class="text-start">
+                              {{ food.Image ? food.Image : "--" }}
+                            </td>
+                          </tr>
+                        </tbody>
+                        } @else {
+                        <tbody>
+                          <tr>
+                            <td colspan="9">
+                              <div class="no-data">
+                                <img src="assets/img/no-data-img.png" alt="No Record Found" />
+                                <span>No Record Found</span>
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                        }
+                      </table>
+                    </div>
+                    <div class="col pagination-style">
+                      <div class="datatable-pager datatable-paging-loaded">
+                        @if(FoodSkippedRecords.length > 0) {
+                        <pagination-controls previousLabel="prev" nextLabel="next" [maxSize]="5"
+                          class="datatable-pager-nav my-2 mb-sm-0" id="foodActivity"
+                          (pageChange)="currentPageFood = $event">
+                        </pagination-controls>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                  <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+                    <div class="table-responsive">
+                      <table class="table table-hover mb-0">
+                        <thead class="student-thread">
+                          <tr>
+                            <th>#</th>
+                            <th>Class</th>
+                            <!-- <th>Section</th> -->
+                            <th>Student</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Note</th>
+                            <th class="text-start">Image Names</th>
+                          </tr>
+                        </thead>
+                        @if(MedicineSkippedRecords.length > 0) {
+                        <tbody>
+                          <tr *ngFor="
+                              let medicine of MedicineSkippedRecords
+                                | paginate
+                                  : {
+                                      itemsPerPage: contentSizeMedicine,
+                                      currentPage: currentPageMedicine,
+                                      id: 'medicineActivity'
+                                    };
+                              let i = index
+                            ">
+                            <td>{{ i + 1 }}</td>
+                            <td>
+                              {{ medicine.Class ? medicine.Class : "--" }}
+                            </td>
+                            <!-- <td>
+                              {{ medicine.Section ? medicine.Section : "--" }}
+                            </td> -->
+                            <td>
+                              {{
+                              medicine.studentName
+                              ? medicine.studentName
+                              : "--"
+                              }}
+                            </td>
+                            <td>{{ medicine.Date ? medicine.Date : "--" }}</td>
+                            <td>
+                              {{
+                              medicine.startTime ? medicine.startTime : "--"
+                              }}
+                            </td>
+                            <td>{{ medicine.note ? medicine.note : "--" }}</td>
+                            <td class="text-start">
+                              {{ medicine.Image ? medicine.Image : "--" }}
+                            </td>
+                          </tr>
+                        </tbody>
+                        } @else {
+                        <tbody>
+                          <tr>
+                            <td colspan="9">
+                              <div class="no-data">
+                                <img src="assets/img/no-data-img.png" alt="No Record Found" />
+                                <span>No Record Found</span>
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                        }
+                      </table>
+                    </div>
+
+                    <div class="col pagination-style">
+                      <div class="datatable-pager datatable-paging-loaded">
+                        @if(MedicineSkippedRecords.length > 0) {
+                        <pagination-controls previousLabel="prev" nextLabel="next" [maxSize]="5"
+                          class="datatable-pager-nav my-2 mb-sm-0" id="medicineActivity"
+                          (pageChange)="currentPageMedicine = $event">
+                        </pagination-controls>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                  <div class="tab-pane fade" id="contact1" role="tabpanel" aria-labelledby="contact-tab1">
+                    <div class="table-responsive">
+                      <table class="table table-hover mb-0">
+                        <thead class="student-thread">
+                          <tr>
+                            <th>#</th>
+                            <th>Class</th>
+                            <!-- <th>Section</th> -->
+                            <th>Student</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Body Temperature</th>
+                            <th>Note</th>
+                            <th class="text-start">Image Names</th>
+                          </tr>
+                        </thead>
+                        @if(HealthSkippedRecords.length > 0) {
+                        <tbody>
+                          <tr *ngFor="
+                              let health of HealthSkippedRecords
+                                | paginate
+                                  : {
+                                      itemsPerPage: contentSizeHealth,
+                                      currentPage: currentPageHealth,
+                                      id: 'healthActivity'
+                                    };
+                              let i = index
+                            ">
+                            <td>{{ i + 1 }}</td>
+                            <td>{{ health.Class ? health.Class : "--" }}</td>
+                            <!-- <td>
+                              {{ health.Section ? health.Section : "--" }}
+                            </td> -->
+                            <td>
+                              {{
+                              health.studentName ? health.studentName : "--"
+                              }}
+                            </td>
+                            <td>{{ health.Date ? health.Date : "--" }}</td>
+                            <td>
+                              {{ health.startTime ? health.startTime : "--" }}
+                            </td>
+                            <td>
+                              {{ health.bodyTemp ? health.bodyTemp : "--" }}
+                            </td>
+                            <td>{{ health.note ? health.note : "--" }}</td>
+                            <td class="text-start">
+                              {{ health.Image ? health.Image : "--" }}
+                            </td>
+                          </tr>
+                        </tbody>
+                        } @else {
+                        <tbody>
+                          <tr>
+                            <td colspan="9">
+                              <div class="no-data">
+                                <img src="assets/img/no-data-img.png" alt="No Record Found" />
+                                <span>No Record Found</span>
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                        }
+                      </table>
+                    </div>
+                    <div class="col pagination-style">
+                      <div class="datatable-pager datatable-paging-loaded">
+                        @if(HealthSkippedRecords.length > 0) {
+                        <pagination-controls previousLabel="prev" nextLabel="next" [maxSize]="5"
+                          class="datatable-pager-nav my-2 mb-sm-0" id="healthActivity"
+                          (pageChange)="currentPageHealth = $event">
+                        </pagination-controls>
+                        }
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="tab-pane fade" id="contact2" role="tabpanel" aria-labelledby="contact-tab2">
+                    <div class="table-responsive">
+                      <table class="table table-hover mb-0">
+                        <thead class="student-thread">
+                          <tr>
+                            <th>#</th>
+                            <th>Class</th>
+                            <!-- <th>Section</th> -->
+                            <th>Student</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Note</th>
+                            <th class="text-start">Image Names</th>
+                          </tr>
+                        </thead>
+                        @if(NoteSkippedRecords.length > 0) {
+                        <tbody>
+                          <tr *ngFor="
+                              let note of NoteSkippedRecords
+                                | paginate
+                                  : {
+                                      itemsPerPage: contentSizeNote,
+                                      currentPage: currentPageNote,
+                                      id: 'noteActivity'
+                                    };
+                              let i = index
+                            ">
+                            <td>{{ i + 1 }}</td>
+                            <td>{{ note.Class ? note.Class : "--" }}</td>
+                            <!-- <td>{{ note.Section ? note.Section : "--" }}</td> -->
+                            <td>
+                              {{ note.studentName ? note.studentName : "--" }}
+                            </td>
+                            <td>{{ note.Date ? note.Date : "--" }}</td>
+                            <td>
+                              {{ note.startTime ? note.startTime : "--" }}
+                            </td>
+                            <td>{{ note.note ? note.note : "--" }}</td>
+                            <td class="text-start">
+                              {{ note.Image ? note.Image : "--" }}
+                            </td>
+                          </tr>
+                        </tbody>
+                        } @else {
+                        <tbody>
+                          <tr>
+                            <td colspan="9">
+                              <div class="no-data">
+                                <img src="assets/img/no-data-img.png" alt="No Record Found" />
+                                <span>No Record Found</span>
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                        }
+                      </table>
+                    </div>
+                    <div class="col pagination-style">
+                      <div class="datatable-pager datatable-paging-loaded">
+                        @if(NoteSkippedRecords.length > 0) {
+                        <pagination-controls previousLabel="prev" nextLabel="next" [maxSize]="5"
+                          class="datatable-pager-nav my-2 mb-sm-0" id="noteActivity"
+                          (pageChange)="currentPageNote = $event">
+                        </pagination-controls>
+                        }
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="tab-pane fade" id="contact3" role="tabpanel" aria-labelledby="contact-tab3">
+                    <div class="table-responsive">
+                      <table class="table table-hover mb-0">
+                        <thead class="student-thread">
+                          <tr>
+                            <th>#</th>
+                            <th>Class</th>
+                            <!-- <th>Section</th> -->
+                            <th>Student</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Note</th>
+                            <th class="text-start">Image Names</th>
+                          </tr>
+                        </thead>
+                        @if(IncidentSkippedRecords.length > 0) {
+                        <tbody>
+                          <tr *ngFor="
+                              let incident of IncidentSkippedRecords
+                                | paginate
+                                  : {
+                                      itemsPerPage: contentSizeIncident,
+                                      currentPage: currentPageIncident,
+                                      id: 'incidentActivity'
+                                    };
+                              let i = index
+                            ">
+                            <td>{{ i + 1 }}</td>
+                            <td>
+                              {{ incident.Class ? incident.Class : "--" }}
+                            </td>
+                            <!-- <td>
+                              {{ incident.Section ? incident.Section : "--" }}
+                            </td> -->
+                            <td>
+                              {{
+                              incident.studentName
+                              ? incident.studentName
+                              : "--"
+                              }}
+                            </td>
+                            <td>{{ incident.Date ? incident.Date : "--" }}</td>
+                            <td>
+                              {{
+                              incident.startTime ? incident.startTime : "--"
+                              }}
+                            </td>
+                            <td>{{ incident.note ? incident.note : "--" }}</td>
+                            <td class="text-start">
+                              {{ incident.Image ? incident.Image : "--" }}
+                            </td>
+                          </tr>
+                        </tbody>
+                        } @else {
+                        <tbody>
+                          <tr>
+                            <td colspan="9">
+                              <div class="no-data">
+                                <img src="assets/img/no-data-img.png" alt="No Record Found" />
+                                <span>No Record Found</span>
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                        }
+                      </table>
+                    </div>
+                    <div class="col pagination-style">
+                      <div class="datatable-pager datatable-paging-loaded">
+                        @if(IncidentSkippedRecords.length > 0) {
+                        <pagination-controls previousLabel="prev" nextLabel="next" [maxSize]="5"
+                          class="datatable-pager-nav my-2 mb-sm-0" id="incidentActivity"
+                          (pageChange)="currentPageIncident = $event">
+                        </pagination-controls>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Content of the modal -->
+        <!-- <div class="col-xl-6 col-lg-6 mt-4">
+                                        <div class="form-group local-forms" style="position: relative;">
+                                          <label>Image & Video</label>
+                                            
+                                          <input
+                                            accept="image/*,video/*"
+                                            type="file"
+                                            class="form-control updated"
+                                            formControlName="bulkFile"
+                                            [accept]="fileAcceptType"
+                                            id="file-upload"
+                                            #FileInput
+                                            (change)="fileChange($event, 'bulkUpload')"
+                                            multiple
+                                          />
+                                        </div>
+                                      </div> -->
+
+        <!-- content close -->
+        <div class="modal-footer">
+          <div class="student-submit">
+            <!-- <button type="submit" class="btn btn-primary me-2">Submit</button> -->
+            <!-- <button  type="reset" class="btn btn-secondary"> Cancel </button> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Bulk Upload</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="col-xl-12 align-items-center justify-content-between me-2">
+              <div class="form-group local-forms mb-4" style="position: relative">
+                <label>Image & Video</label>
+
+                <input accept="image/*,video/*" type="file" class="form-control updated" formControlName="bulkFile"
+                  [accept]="fileAcceptType" id="file-upload" #FileInput (change)="fileChange($event)" multiple />
+              </div>
+
+              <div class="form-group local-forms mb-4" style="position: relative">
+                <label>Upload Bulk Record</label>
+                <input type="file" #FileInputBulk (change)="selectUploadedFile($event)" class="form-control"
+                  id="bulkFile" />
+              </div>
+
+              <button type="submit" class="btn btn-primary me-2" style="float: right" (click)="manageBulkUpload()">
+                Submit
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- Content of the modal -->
+        <!-- <div class="col-xl-6 col-lg-6 mt-4">
+                                        <div class="form-group local-forms" style="position: relative;">
+                                          <label>Image & Video</label>
+                                            
+                                          <input
+                                            accept="image/*,video/*"
+                                            type="file"
+                                            class="form-control updated"
+                                            formControlName="bulkFile"
+                                            [accept]="fileAcceptType"
+                                            id="file-upload"
+                                            #FileInput
+                                            (change)="fileChange($event, 'bulkUpload')"
+                                            multiple
+                                          />
+                                        </div>
+                                      </div> -->
+
+        <!-- content close -->
+        <!-- <div class="modal-footer">
+                    <div class="student-submit">
+                        <button type="submit" class="btn btn-primary me-2" (click)="manageBulkUpload()"> Submit
+                        </button>
+                    
+                </div> -->
+      </div>
+    </div>
+  </div>
+</div>

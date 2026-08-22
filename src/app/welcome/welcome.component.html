@@ -1,0 +1,201 @@
+<app-header></app-header>
+
+<main class="d-flex min-vh-100">
+  <div class="bd- p-0 bd-card">
+    <div class="card-body">
+      <section
+        class="hero-section"
+      >
+        <!-- Adjust the padding-top (pt-5) to create space -->
+        <div class="container">
+          <div class="row">
+            <!-- Left Column with Text -->
+            <div class="col-lg-6 pt-5">
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="my-heading-welcome">
+                    <h4>Welcome {{ role }}</h4>
+                  </div>
+                  <p class="welcome-pera">
+                    Thank you for choosing our platform to help manage your
+                    daycare efficiently and effectively. We’re here to assist
+                    you in making the day-to-day operations smooth, organized,
+                    and stress-free.
+                  </p>
+                  <p class="welcome-pera2">
+                    To fully unlock the potential of
+                    {{ daycareName }} Management System, please take a few
+                    minutes to complete your onboarding process.
+                  </p>
+                  <div class="hero-btn mb-4">
+                    <a
+                      class="animate__animated animate__fadeInUp"
+                      (click)="startOnboarding()"
+                      >Start Onboarding</a
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Column with Image -->
+
+            <!-- For Daycare -->
+
+            <div class="col-lg-6">
+              <div class="row mb-5" *ngIf="UserRoleId == 3">
+                <div class="row mb-5">
+                  <owl-carousel-o [options]="customOptions1">
+                    <ng-template carouselSlide *ngFor="let item of dayCareLogo">
+                      <div class="testimonial-div">
+                        <img
+                          [src]="rootUrl + item.imagePath + item.image"
+                          alt="Image"
+                          width="100% "
+                          height="auto"
+                        />
+                      </div>
+                    </ng-template>
+                  </owl-carousel-o>
+                </div>
+
+                <div class="row mb-3">
+                  <div class="col-lg-12">
+                    <div class="demo mb-5">
+                      <div class="container">
+                        <div class="row">
+                          <div class="col-md-12">
+                            @if(skeletonShow == true) {
+                            <app-skeleton-loader
+                              skeletonShow="Skelton"
+                              viewType="carousel"
+                            >
+                            </app-skeleton-loader>
+                            } @else {
+                            <owl-carousel-o [options]="customOptions">
+                              <ng-template
+                                carouselSlide
+                                *ngFor="let item of dayCareContent"
+                              >
+                                <div class="testimonial-block">
+                                  <div class="inner-box">
+                                    <div class="image">
+                                      <img
+                                        [src]="item.s3ImageUrl"
+                                        alt="Image"
+                                      />
+                                    </div>
+                                    <div class="content">
+                                      <i class="fas fa-quote-right"></i>
+                                      <div class="author-info">
+                                        {{ item.dayCareCentreName }}
+                                        <span
+                                          >/ {{ item.dayCareOwnerName }}</span
+                                        >
+                                      </div>
+                                      <div class="text">
+                                        {{ item.testimonails }}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </ng-template> </owl-carousel-o
+                            >}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- For Parent -->
+              <!-- <div *ngIf="UserRoleId == 5 && dayCareGallery.length > 0;else noGallery">              
+                <owl-carousel-o [options]="customOptions" *ngFor="let item of dayCareGallery">
+                  <ng-template carouselSlide *ngFor="
+                      let image of item.daycareImage.includes(',')
+                        ? item.daycareImage.split(',')
+                        : [item.daycareImage]">
+                    <img [src]="rootUrl + image.trim()" class="img-fluid mt-5 rounded-custom" alt="apply" />
+                  </ng-template>
+                </owl-carousel-o>
+              </div>
+
+              <ng-template #noGallery>
+                <owl-carousel-o [options]="customOptions">
+                  <ng-template carouselSlide>
+                    <div href="https://ibb.co/w7cJPr0" class="imger"><img
+                        src="https://i.ibb.co/C6PJYs1/f8e855da754c7b4a9112ca6604ec5e87.jpg"
+                        alt="f8e855da754c7b4a9112ca6604ec5e87" border="0" width="100%" /></div></ng-template>
+                  <ng-template carouselSlide>
+                    <div href="https://ibb.co/6nh1vx8" class="imger"><img
+                        src="https://i.ibb.co/LkwJQWr/2015-08-19-Lisa-i-Stock-000038272018-Medium-web.jpg"
+                        alt="2015-08-19-Lisa-i-Stock-000038272018-Medium-web" border="0"  width="100%" /></div></ng-template>
+                </owl-carousel-o>
+              </ng-template> -->
+
+              <ng-container *ngIf="UserRoleId == 5">
+                <div *ngIf="dayCareGallery.length > 0; else noGallery">
+                  @if(skeletonShow == true) {
+                  <app-skeleton-loader
+                    skeletonShow="Skelton"
+                    viewType="carousel"
+                  >
+                  </app-skeleton-loader>
+                  } @else {
+                  <owl-carousel-o
+                    [options]="customOptions"
+                    *ngFor="let item of dayCareGallery"
+                  >
+                    <ng-template
+                      carouselSlide
+                      *ngFor="
+                        let image of item.daycareImage.includes(',')
+                          ? item.daycareImage.split(',')
+                          : [item.daycareImage]
+                      "
+                    >
+                      <img
+                        [src]="rootUrl + image.trim()"
+                        class="img-fluid mt-5 rounded-custom"
+                        alt="apply"
+                      />
+                    </ng-template> </owl-carousel-o
+                  >}
+                </div>
+
+                <!-- Fallback Images -->
+                <ng-template #noGallery>
+                  <owl-carousel-o [options]="customOptions">
+                    <ng-template carouselSlide>
+                      <div class="imger">
+                        <img
+                          src="https://i.ibb.co/C6PJYs1/f8e855da754c7b4a9112ca6604ec5e87.jpg"
+                          alt="Fallback Image 1"
+                          border="0"
+                          width="100%"
+                        />
+                      </div>
+                    </ng-template>
+                    <ng-template carouselSlide>
+                      <div class="imger">
+                        <img
+                          src="https://i.ibb.co/LkwJQWr/2015-08-19-Lisa-i-Stock-000038272018-Medium-web.jpg"
+                          alt="Fallback Image 2"
+                          border="0"
+                          width="100%"
+                        />
+                      </div>
+                    </ng-template>
+                  </owl-carousel-o>
+                </ng-template>
+              </ng-container>
+            </div>
+          </div>
+
+          <!-- client testimonial -->
+        </div>
+      </section>
+    </div>
+  </div>
+</main>

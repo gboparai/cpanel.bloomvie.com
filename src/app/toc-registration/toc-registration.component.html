@@ -1,0 +1,967 @@
+<div *ngIf="!IsPatchedValues">
+  <app-breadcrumb></app-breadcrumb>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <div class="card flex-fill comman-shadow">
+      <div class="toc card-body">
+        <form class="" [formGroup]="TOCRegistration">
+          <div class="aply">
+            <div class="row">
+              <div class="col-md-3 mb-2">
+                <div class="form-group local-forms mb-4 ins-input-field">
+                  <label>First Name <span class="text-danger">*</span></label>
+                  <input type="text" class="form-control border rounded w-100" formControlName="firstName"
+                    name="firstName" />
+                  <div *ngIf="
+                      TOCRegistration.get('firstName').invalid &&
+                      (TOCRegistration.get('firstName').dirty ||
+                        TOCRegistration.get('firstName').touched)
+                    ">
+                    <small class="text-danger" *ngIf="TOCRegistration.get('firstName').errors?.required">This field is
+                      required.</small>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3 mb-2">
+                <div class="form-group local-forms mb-4 ins-input-field">
+                  <label>Last Name</label>
+                  <input type="text" class="form-control border rounded w-100" formControlName="lastName"
+                    name="lastName" />
+                </div>
+              </div>
+              <div class="col-md-3 mb-2">
+                <div class="form-group local-forms mb-4 ins-input-field">
+                  <label>Email <span class="text-danger">*</span></label>
+                  <input type="text" class="form-control border rounded w-100" formControlName="email" name="email"
+                    id="emailField" />
+                  <!-- readonly -->
+                  <!-- (change)="getTOCUserDetailByEmail()" -->
+
+                  <div *ngIf="
+                      TOCRegistration.get('email').invalid &&
+                      (TOCRegistration.get('email').dirty ||
+                        TOCRegistration.get('email').touched)
+                    ">
+                    <small class="text-danger" *ngIf="TOCRegistration.get('email').errors?.required">This field is
+                      required.</small>
+                    <!-- Show pattern error if the field is filled but the pattern doesn't match -->
+                    <small class="text-danger" *ngIf="TOCRegistration.get('email').errors?.pattern">Email does not match
+                      the required pattern.</small>
+                  </div>
+                </div>
+              </div>
+
+
+
+
+
+
+              <div class="col-md-3 mb-2 position-relative custom-flag">
+                <div class="form-group local-forms mb-4 ins-input-field">
+                  <label>Mobile No <span class="text-danger">*</span></label>
+
+                  <div class="position-absolute flag" style="
+                                          top: 38px;
+                                          left: 15px;
+                                          display: flex;
+                                          align-items: center;
+                                          gap: 4px;
+                                        ">
+                    <div class="country-selector" (click)="toggleDropdown()">
+                      <img [src]="selectedCountry.flag" class="new-flag" alt="Flag">
+                      <span class="me-1">{{ selectedCountry.code }}</span>
+                      <span class="arrow">
+                        <i [class]="dropdownOpen ? 'fas fa-chevron-up' : 'fas fa-chevron-down'"></i>
+                      </span>
+
+                      <!-- Dropdown list -->
+                      <div class="dropdown" *ngIf="dropdownOpen">
+                        <div class="dropdown-item" *ngFor="let country of countries" (click)="selectCountry(country)">
+                          <img [src]="country.flag" class="flag" alt="Flag">
+                          <span class="color-black">({{ country.code }})</span>
+                        </div>
+                      </div>
+                    </div>
+
+
+
+
+
+                    <!-- <span>+1</span>
+                                        <img
+                                          src="https://i.postimg.cc/VLCndSHd/canada.png"
+                                          style="width: 18px; height: 18px"
+                                        /> -->
+                  </div>
+
+                  <input type="text" class="form-control border rounded w-100" maxlength="12" id="mobileNumber"
+                    style="padding-left: 90px;" formControlName="mobile" name="mobile"
+                    (input)="formatPhoneNumber($event); onEnterMobileNumber($event)" />
+
+                  <!-- Flag and Code -->
+
+
+                  <!-- Validation Errors -->
+                  <div *ngIf="
+        TOCRegistration.get('mobile').invalid &&
+        (TOCRegistration.get('mobile').dirty || TOCRegistration.get('mobile').touched)
+      ">
+                    <small class="text-danger" *ngIf="TOCRegistration.get('mobile').errors?.required">
+                      This field is required.
+                    </small>
+                    <small class="text-danger" *ngIf="TOCRegistration.get('mobile').errors?.pattern">
+                      Enter a valid mobile number.
+                    </small>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <div class="row bg-clr1 row d-flex justify-content-center align-items-center me-1">
+                  <div class="col-md-6 mb-2">
+                    <div class="form-group local-forms ins-input-field">
+                      <label>Qualification <span class="text-danger">*</span></label>
+                      <ng-select class="form-control" [items]="QualificationList" bindLabel="name" bindValue="id"
+                        [multiple]="true" class="input-group" placeholder="-Select Qualification-"
+                        formControlName="qualificationID">
+                      </ng-select>
+
+                      <div *ngIf="
+                          TOCRegistration.get('qualificationID').invalid &&
+                          TOCRegistration.get('qualificationID').touched
+                        ">
+                        <small class="text-danger" *ngIf="
+                            TOCRegistration.get('qualificationID').errors
+                              ?.required
+                          ">This field is required.</small>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6 mb-2">
+                    <div class="form-group local-forms ins-input-field">
+                      <label>Educational Credential</label>
+                      <input class="form-control" type="file" id="formFileEducationDocument"
+                        (change)="onFileChangeEducationalDocument($event)" />
+
+                      <a *ngIf="TOCUserDetail && EducationalCredentails" class="eye-box"
+                        href="{{ EducationalCredentails }}" target="_blank" title="View">
+                        <i class="fa fa-eye"></i>
+                      </a>
+
+                      <div *ngIf="
+                          TOCRegistration.get('documentEducationalCredentails')
+                            .touched
+                        ">
+                        <small class="text-danger" *ngIf="
+                            TOCRegistration.get(
+                              'documentEducationalCredentails'
+                            ).errors?.required
+                          ">This field is required.</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 mb-3">
+                <div class="row bg-clr d-flex justify-content-center align-items-center">
+                  <div class="col-md-6 mb-2">
+                    <div class="form-group local-forms ins-input-field">
+                      <label>
+                        Photo Id Type<span class="text-danger">*</span></label>
+                      <ng-select class="form-control" [items]="documentTypeList" bindLabel="documentType" bindValue="id"
+                        class="input-group" placeholder="-Select Photo Id Type-" formControlName="documentTypeID">
+                      </ng-select>
+
+                      <div *ngIf="
+                          TOCRegistration.get('documentTypeID').invalid &&
+                          TOCRegistration.get('documentTypeID').touched
+                        ">
+                        <small class="text-danger" *ngIf="
+                            TOCRegistration.get('documentTypeID').errors
+                              ?.required
+                          ">This field is required.</small>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6 mb-2">
+                    <div class="form-group local-forms ins-input-field">
+                      <label for="formFile" class="">Upload Photo Id Document
+                        <span class="text-danger">* </span>
+                      </label>
+                      <input class="form-control position-rel" type="file" id="formFileDocument"
+                        (change)="onFileChangeDocument($event)" />
+                      <a *ngIf="TOCUserDetail && UploadedDocument" class="eye-box" href="{{ UploadedDocument }}"
+                        target="_blank" title="View">
+                        <i class="fa fa-eye"></i>
+                      </a>
+                      <div *ngIf="TOCRegistration.get('documentImage').touched">
+                        <small class="text-danger" *ngIf="
+                            TOCRegistration.get('documentImage').errors
+                              ?.required
+                          ">This field is required.</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-3 mb-2">
+
+
+                <div class="form-group local-forms mb-4 ins-input-field">
+                  <label>Zip Code / Postal Code
+                    <span class="text-danger">*</span></label>
+                  <input type="text" class="form-control border rounded w-100" placeholder="A1A A1A / 56786"
+                    formControlName="pinCode" name="pinCode" (blur)=" 
+                      fetchLocationData(TOCRegistration.get('pinCode')?.value)
+                    " (input)="formatPostalCode($event)" />
+                  <div *ngIf="
+                      TOCRegistration.get('pinCode').invalid &&
+                      (TOCRegistration.get('pinCode').dirty ||
+                        TOCRegistration.get('pinCode').touched)
+                    ">
+                    <small class="text-danger" *ngIf="TOCRegistration.get('pinCode').errors?.required">This field is
+                      required.</small>
+                  </div>
+                </div>
+
+
+              </div>
+
+              <div class="col-md-3 mb-2">
+                <!-- <div class="form-group local-forms mb-4 ins-input-field">
+                  <label for="preferredArea">Preferred Area <span class="text-danger">*</span></label>
+                  <input type="text" class="form-control inpu" formControlName="preferredArea" name="preferredArea"
+                    placeholder="K1A 0A0 or K1A 0A0,K1A 0A0" />
+                  <div *ngIf="TOCRegistration.get('preferredArea').touched">
+                    <small class="text-danger" *ngIf="
+                        TOCRegistration.get('preferredArea').errors?.required
+                      ">
+                      This field is required.
+                    </small>
+                    <small class="text-danger" *ngIf="
+                        TOCRegistration.get('preferredArea').errors
+                          ?.commaSeparated
+                      ">
+                      Please enter a valid value (e.g., K1A 0A0) or
+                      comma-separated values.
+                    </small>
+                  </div>
+                </div> -->
+
+                <div class="form-group local-forms mb-4 ins-input-field">
+                  <label>Country <span class="text-danger"></span></label>
+                  <input readonly type="text" class="form-control border rounded w-100" formControlName="country"
+                    id="country" name="country" />
+
+
+                </div>
+              </div>
+
+              <div class="col-md-3 mb-2">
+                <!-- <div class="form-group local-forms mb-4 ins-input-field">
+                  <label for="formFile" class="">Upload Resume <span class="text-danger">*</span></label>
+                  <input class="form-control" type="file" id="formFile" (change)="onFileChange($event)" />
+
+                  <a *ngIf="
+                      TOCUserDetail && TOCUserDetail.documentResumes.length > 0
+                    " class="eye-box" href="{{ rootUrl }}{{ TOCUserDetail.documentResumes[0] }}" target="_blank"
+                    title="View">
+                    <i class="fa fa-eye"></i>
+                  </a>
+
+                  <div *ngIf="TOCRegistration.get('documentResume').touched">
+                    <small class="text-danger" *ngIf="
+                        TOCRegistration.get('documentResume').errors?.required
+                      ">This field is required.</small>
+                  </div>
+                </div> -->
+
+                <div class="form-group local-forms mb-4 ins-input-field">
+                  <label>State<span class="text-danger"></span></label>
+                  <input readonly type="text" class="form-control border rounded w-100" formControlName="state"
+                    id="state" name="state" />
+
+
+                </div>
+              </div>
+
+              <div class="col-md-3 mb-2">
+                <!-- <div class="form-group local-forms mb-4 ins-input-field">
+                  <label>Zip Code <span class="text-danger">*</span></label>
+                  <input type="text" class="form-control border rounded w-100" formControlName="pinCode" name="pinCode"
+                    (blur)="
+                      fetchLocationData(TOCRegistration.get('pinCode')?.value)
+                    " maxlength="7" />
+                  <div *ngIf="
+                      TOCRegistration.get('pinCode').invalid &&
+                      (TOCRegistration.get('pinCode').dirty ||
+                        TOCRegistration.get('pinCode').touched)
+                    ">
+                    <small class="text-danger" *ngIf="TOCRegistration.get('pinCode').errors?.required">This field is
+                      required.</small>
+                  </div>
+                </div> -->
+                <div class="form-group local-forms mb-4 ins-input-field">
+                  <label>City <span class="text-danger"></span></label>
+                  <input readonly type="text" class="form-control border rounded w-100" formControlName="city"
+                    name="city" id="city" />
+
+                </div>
+              </div>
+              <div class="col-md-3 mb-2">
+                <div class="form-group local-forms mb-4 ins-input-field">
+                  <label class="d-flex align-items-center" for="radius">Radius (in km)<span class="text-danger">*</span>
+                    <input type="checkbox" class="ml-2" id="radiusCheckbox" (change)="getUserCurrentLocation($event)"
+                      title="Enable Current Location" id="radiusCurrentlocation" />
+                  </label>
+                  <input type="text" class="form-control input" formControlName="radius" name="radius"
+                    (change)="GetAllDayCaresNearBy($event)" id="radiusField" />
+                  <div *ngIf="TOCRegistration.get('radius').touched">
+                    <small class="text-danger" *ngIf="TOCRegistration.get('radius').errors?.required">
+                      This field is required.
+                    </small>
+                    <!-- <small class="text-danger" *ngIf="TOCRegistration.get('preferredArea').errors?.commaSeparated">
+                      Please enter a valid value (e.g., K1A 0A0) or comma-separated values.
+                    </small> -->
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3 mb-2">
+                <div class="form-group local-forms mb-4 ins-input-field">
+                  <label>Experience (in years)
+                    <span class="text-danger">*</span></label>
+                  <input type="number" class="form-control border rounded w-100" formControlName="experience"
+                    name="experience" (input)="onExperienceInput($event)" pattern="[0-9]*" />
+
+                  <div *ngIf="
+                      TOCRegistration.get('experience').invalid &&
+                      (TOCRegistration.get('experience').dirty ||
+                        TOCRegistration.get('experience').touched)
+                    ">
+                    <small class="text-danger" *ngIf="TOCRegistration.get('experience').errors?.required">This field is
+                      required.</small>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3 mb-2">
+                <div class="form-group local-forms mb-4 ins-input-field">
+                  <label for="formFile" class="">Upload Resume <span class="text-danger">*</span></label>
+                  <input class="form-control" type="file" id="formFile" (change)="onFileChange($event)" />
+
+                  <a *ngIf="TOCUserDetail && DocumentResumes" class="eye-box" href="{{ DocumentResumes }}"
+                    target="_blank" title="View">
+                    <i class="fa fa-eye"></i>
+                  </a>
+
+                  <div *ngIf="TOCRegistration.get('documentResume').touched">
+                    <small class="text-danger" *ngIf="
+                        TOCRegistration.get('documentResume').errors?.required
+                      ">This field is required.</small>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-3 mb-2">
+                <div class="form-group local-forms mb-4 ins-input-field">
+                  <label>Area of Expertise <span class="text-danger">*</span></label>
+                  <ng-select [items]="expertise" bindLabel="name" bindValue="id" [multiple]="true"
+                    formControlName="expertise">
+                  </ng-select>
+                  <!-- <input
+                    type="text"
+                    class="form-control border rounded w-100"
+                    formControlName="expertise"
+                    name="expertise"
+                    id="areaField"
+                  /> -->
+                  <div *ngIf="
+                      TOCRegistration.get('expertise').invalid &&
+                      (TOCRegistration.get('expertise').dirty ||
+                        TOCRegistration.get('expertise').touched)
+                    ">
+                    <small class="text-danger" *ngIf="TOCRegistration.get('expertise').errors?.required">This field is
+                      required.</small>
+                    <!-- <small
+                      class="text-danger"
+                      *ngIf="TOCRegistration.get('expertise').errors?.charOnly"
+                    >
+                      Only characters are allowed.
+                    </small> -->
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6" *ngIf="!IsPatchedValues">
+                <div class="mb-4 ins-input-field">
+                  <label for="partTimeWorkingDays">Working Days <span class="text-danger">*</span></label>
+                  <div class="d-flex flex-wrap d-flex flex-wrap mb-3 justify-content-between">
+                    <ul class="avail mb-0">
+                      <li *ngFor="let day of daysOfWeek">
+                        <!-- [checked]="TOCRegistration.get('partTimeWorkingDays').value.split(',').includes(daysOfWeekMapping[day].toString())" -->
+                        <label class="mr-3" *ngIf="!TOCUserDetail || TOCUserDetail.length === 0">
+                          <input type="checkbox" [id]="day" [value]="day" (change)="onWorkingDaysChange(day, $event)"
+                            [checked]="
+                              TOCRegistration.get('partTimeWorkingDays')
+                                .value.split(',')
+                                .includes(daysOfWeekMapping[day].toString())
+                            " />
+                          {{ day }}
+                        </label>
+
+                        <label class="mr-3" *ngIf="TOCUserDetail">
+                          <input type="checkbox" [id]="day" [value]="day" (change)="onWorkingDaysChange(day, $event)"
+                            [checked]="selectedWorkingDays1.includes(day)" />
+                          {{ day }}
+                        </label>
+                        <!-- [checked]="selectedWorkingDays1.includes(day)" -->
+                      </li>
+                    </ul>
+                    <div *ngIf="TOCRegistration.get('partTimeWorkingDays').touched">
+                      <small class="text-danger" *ngIf="
+                          TOCRegistration.get('partTimeWorkingDays').errors
+                            ?.required
+                        ">Select atleast one working day</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="form-group local-forms mb-4 ins-input-field">
+                  <label for="yourMessage" class="mb-1" style="z-index: 9">Message</label>
+                  <div class="input-group mb-3">
+                    <textarea class="form-control" id="yourMessage" style="height: 106px; resize: none"
+                      formControlName="message" name="message"></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer justify-content-between" style="border: none; padding-right: 0">
+            <div class="lft-btn" *ngIf="!IsPatchedValues">
+              <button type="button" class="btn btn-primary w-100 hvr-shutter-out-horizontal" (click)="showmodal()">
+                Mark Your Availability
+              </button>
+              <small class="text-danger" *ngIf="ValidatorForAvailability">
+                Mark Your Availability</small>
+            </div>
+
+            <div class="lft-btn" *ngIf="IsPatchedValues"></div>
+
+            <div class="right-btn">
+              <button *ngIf="!IsPatchedValues" type="button" class="btn btn-primary hvr-shutter-out-horizontal"
+                style="margin-right: 11px" (click)="onSubmit()">
+                Submit
+              </button>
+
+              <button *ngIf="IsPatchedValues" type="button" class="btn btn-primary hvr-shutter-out-horizontal"
+                style="margin-right: 11px" (click)="onUpdate()">
+                Update
+              </button>
+
+              <button *ngIf="!IsPatchedValues" type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                (click)="resetForm()">
+                Cancel
+              </button>
+
+              <button *ngIf="IsPatchedValues" type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                Cancel
+              </button>
+            </div>
+          </div>
+        </form>
+
+        <div *ngIf="!IsPatchedValues">
+          <div class="table-responsive mt-5">
+            <div class="row">
+              <div class="col-md-9"></div>
+              <div class="col-md-3 text-end">
+                <div class="search" *ngIf="radiusValue > 0">
+                  <input placeholder="Type here.." type="text" [(ngModel)]="searchTerm"
+                    (input)="filterNearbyDaycares()" />
+                  <button type="submit">Search</button>
+                </div>
+              </div>
+            </div>
+            <table class="table table-hover mb-0">
+              <thead class="student-thread" style="
+                  position: sticky;
+                  top: -1px;
+                  background: white;
+                  z-index: 2;
+                ">
+                <tr>
+               
+                  <th style="width: 8%">
+                    <div class="d-flex gp-5">
+                      <input type="checkbox" class="" id="radiusCheckbox" *ngIf="
+                          NearbyDayCareList && NearbyDayCareList.length > 0
+                        " (change)="applyforAllDC($event)" title="Apply For All" />
+                      <span class="me-1">Select All</span>
+                    </div>
+                  </th>
+                  <th>Centre Name</th>
+               
+                  <th class="text-start">Centre Mobile</th>
+                  <th class="text-center">Address</th>
+                  <!-- <th class="text-start"> 
+                  <input type="checkbox" class="ml-2" id="radiusCheckbox"       
+                    (change)="applyforAllDC($event)" title="Apply For All"/> Select All
+                </th> -->
+                </tr>
+              </thead>
+
+              <tbody *ngIf="
+                  NearbyDayCareList && NearbyDayCareList.length > 0;
+                  else noRecords
+                ">
+                <tr class="" *ngFor="
+                    let record of NearbyDayCareList
+                      | paginate
+                        : {
+                            itemsPerPage: Contentsize,
+                            currentPage: ContentP,
+                            id: 'toccontrol'
+                          };
+                    let rowIndex = index
+                  ">
+                  <td>
+                    <input type="checkbox" class="" [checked]="selectedDayCareIds.includes(record.id)"
+                      (change)="applyforParticularDC($event, record.id)" id="radiusCheckbox{{ record.id }}" />
+                  </td>
+                  <!-- <td>{{ rowIndex + 1 }}</td> -->
+                  <!-- <td>{{ record.centreName }}</td>
+                  <td>{{ record.centreEmail }}</td> -->
+
+                  <td>
+                    <div class="tooltip-wrapper" style="position: relative" (mouseenter)="hoveredRow = record"
+                      (mouseleave)="hoveredRow = null">
+                      <span class="hover-anchor">{{ record.centreName }}</span>
+                    
+
+
+                      <app-tooltip *ngIf="hoveredRow===record" [employee]="{
+                           fullName: record.centreName,
+                           email:  record.centreEmail,
+                           profile: record.staffProfile
+                          }"></app-tooltip>
+                    </div>
+                  </td>
+
+
+
+                  <td>{{ record.centreMobile ? '+1 ' + record.centreMobile : '--' }}</td>
+                  <td>
+                    {{ record.city }},{{ record.state }},{{ record.country }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <ng-template #noRecords>
+            <tbody>
+              <tr>
+                <td colspan="8">
+                  <div class="no-data">
+                    <img src="assets/img/no-data-img.png" alt="No Record Found" />
+                    <span>No Record Found</span>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </ng-template>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center"
+          *ngIf="NearbyDayCareList && NearbyDayCareList.length > 0">
+          <div class="total-entry" style="font-size: small">
+            <span>Total Entries:</span>
+            <span class="entry-count">{{ NearbyDayCareList.length }} </span>
+          </div>
+
+          @if(NearbyDayCareList.length > 0) {
+          <pagination-controls previousLabel="prev" nextLabel="next" [maxSize]="10"
+            class="datatable-pager-nav my-2 mb-sm-0" id="toccontrol" (pageChange)="onPageChange($event)">
+          </pagination-controls>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Day Care List -->
+
+  <!-- <div class="col-md-12" *ngIf="NearbyDayCareList && NearbyDayCareList.length > 0">
+    <div class="table-responsive" style="max-height: 400px; overflow-y: auto; border: 1px solid #ddd;">
+      <table class="table table-bordered">
+        <thead class="thead-light" style="position: sticky; top: -1px; background: white; z-index: 2;">
+          <tr>
+            <th>#</th>
+            <th>Centre Name</th>
+            <th>Centre Email</th>
+            <th>Centre Mobile</th>
+            <th class="text-start"> 
+              <input type="checkbox" class="ml-2" id="radiusCheckbox"       
+                (change)="applyforAllDC($event)" title="Apply For All"/> Select All
+            </th>
+          </tr>
+        </thead>
+  
+        <tbody>
+          <ng-container *ngFor="let record of NearbyDayCareList; let rowIndex = index">
+            <tr class="table-light">
+              <td>{{ rowIndex + 1 }}</td>
+              <td>{{ record.centreName }}</td>
+              <td>{{ record.centreEmail }}</td>
+              <td>{{ record.centreMobile }}</td>
+              <td>
+                <input type="checkbox" class="ml-2"
+                  [checked]="selectedDayCareIds.includes(record.id)"
+                  (change)="applyforParticularDC($event, record.id)"
+                  id="radiusCheckbox{{record.id}}"/>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>         
+      </table>
+    </div>
+    <hr>
+  </div> -->
+
+  <div class="col-md-12">
+    <hr />
+  </div>
+</div>
+
+<div class="modal fade" tabindex="-1" id="TimeSlotModal" aria-hidden="true" aria-labelledby="TimeSlotModalLabel"
+  data-bs-keyboard="false" data-bs-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="TimeSlotModalLabel">
+          Add Time Availability
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="ResetModalForm()"></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <form class="" [formGroup]="TOCModalRegistration">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group local-forms ins-input-field">
+                  <label for="partTimeStartDate">Start Date <span class="text-danger">*</span></label>
+                  <input type="date" class="form-control" id="startDate" (change)="onDateChange('start', $event)"
+                    name="partTimeStartDate" />
+                  <div *ngIf="
+                      TOCModalRegistration.get('partTimeStartDate').touched
+                    ">
+                    <small class="text-danger" *ngIf="
+                        TOCModalRegistration.get('partTimeStartDate').errors
+                          ?.required
+                      ">This field is required.</small>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group local-forms ins-input-field">
+                  <label for="partTimeEndDate">End Date <span class="text-danger">*</span></label>
+                  <input type="date" class="form-control" id="endDate" (change)="onDateChange('end', $event)"
+                    name="partTimeEndDate" />
+
+                  <div *ngIf="TOCModalRegistration.get('partTimeEndDate').touched">
+                    <small class="text-danger" *ngIf="
+                        TOCModalRegistration.get('partTimeEndDate').errors
+                          ?.required
+                      ">This field is required.</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+
+          <div class="col-md-12 p-0">
+            <div>
+              <div class="today-tomorrow" *ngIf="
+                  availableDays &&
+                  availableDays.length > 0 &&
+                  labelTextForSlider == 'None'
+                ">
+                <div class="left-arrow arrow" (click)="navigateWeek('prev')" [class.disabled]="currentWeekIndex === 0">
+                  <i class="fa fa-angle-left" aria-hidden="true"></i>
+                </div>
+
+                <h6 class="m-0">
+                  <span class="final-date">
+                    {{
+                    availableWeeks[currentWeekIndex]?.week ||
+                    "No Week Available"
+                    }}
+                  </span>
+                </h6>
+
+                <div class="right-arrow arrow" (click)="navigateWeek('next')" [class.disabled]="
+                    currentWeekIndex === availableWeeks.length - 1
+                  ">
+                  <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </div>
+              </div>
+
+              <div class="today-tomorrow" *ngIf="
+                  (availableDays &&
+                    availableDays.length > 0 &&
+                    labelTextForSlider == 'Apply For Whole Calendar') ||
+                  labelTextForSlider == ''
+                ">
+                <h6 class="m-0">
+                  <span class="final-date">
+                    {{
+                    startDate && endDate
+                    ? "(" +
+                    (startDate | date : "MM-dd-yyyy") +
+                    ") - (" +
+                    (endDate | date : "MM-dd-yyyy") +
+                    ")"
+                    : "No Week Available"
+                    }}
+                  </span>
+                </h6>
+              </div>
+
+              <div class="today-tomorrow" *ngIf="
+                  availableDays &&
+                  availableDays.length > 0 &&
+                  labelTextForSlider == 'Apply For Current Week'
+                ">
+                <h6 class="m-0">
+                  <span class="final-date">
+                    {{
+                    availableWeeks[currentWeekIndex]?.week ||
+                    "No Week Available"
+                    }}
+                  </span>
+                </h6>
+              </div>
+
+              <div class="today-tomorrow" *ngIf="
+                  availableDays &&
+                  availableDays.length > 0 &&
+                  labelTextForSlider == 'Apply For Current Month'
+                ">
+                <h6 class="m-0">
+                  <span class="final-date">
+                    {{
+                    startDate && endDate
+                    ? "(" +
+                    (dateRange.split(" - ")[0] | date : "MM-dd-yyyy" ) +
+                    ") (" +
+                    (dateRange.split(" - ")[1] | date : "MM-dd-yyyy") +
+                    ")"
+                    : "No Week Available"
+                    }}
+                  </span>
+                </h6>
+              </div>
+
+              <!-- *ngIf="availableDays && availableDays.length > 0" -->
+              <form class="" [formGroup]="TOCModalRegistration" *ngIf="availableWeeks && availableWeeks.length > 0">
+                <div class="">
+                  <label class="">Select Option<span class="text-danger">*</span></label>
+                  <div class="form-check">
+                    <input class="form-check-input1" type="radio" name="option" value="Option 1" formControlName="option"
+                      (change)="isSelectedRadio()" />
+                    <label class="form-check-label">
+                      Apply For Whole Calendar
+                    </label>
+                  </div>
+                  <!-- *ngIf="isCurrentMonthOptionVisible" -->
+                  <div class="form-check">
+                    <input class="form-check-input1" type="radio" name="option" id="" value="Option 2"
+                      formControlName="option" (change)="isSelectedRadio()" />
+                    <label class="form-check-label">
+                      Apply For Current Month
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input1" type="radio" name="option" value="Option 3" formControlName="option"
+                      (change)="isSelectedRadio()" />
+                    <label class="form-check-label">
+                      Apply For Current Week
+                    </label>
+                  </div>
+
+                  <div class="form-check">
+                    <input class="form-check-input1" type="radio" name="option" value="Option 4" formControlName="option"
+                      (change)="isSelectedRadio()" />
+                    <label class="form-check-label"> None </label>
+                  </div>
+                  <small class="text-danger" *ngIf="!isSelectOption">Select an option</small>
+                </div>
+              </form>
+
+              <label class="mt-3" *ngIf="availableDays && availableDays.length > 0">Available Days<span
+                  class="text-danger">*</span></label>
+              <div class="grid-container">
+                <div *ngFor="let dayInfo of availableDays" class="grider">
+                  <label>
+                    <!-- [checked]="selectedDay === dayInfo.date" -->
+                    <input type="radio" [value]="dayInfo.date" name="selectedDay"
+                      (change)="onDaySelect(dayInfo.dayName)" [checked]="dayInfo.dayName === selectedDayRadio" />
+                    {{ dayInfo.dayName }}
+                  </label>
+                </div>
+              </div>
+              <small class="text-danger" *ngIf="!isSelectDay">Select Available Day.</small>
+              <hr />
+
+              <!-- Commented on 01/04/25 -->
+              <!-- <label *ngIf="filteredGroupedTimeSlots2 && filteredGroupedTimeSlots2.length > 0">
+                <input type="checkbox" id="isApplyforAlldays" [checked]="IsApplyForAllDaysChecked"
+                  (change)="ApplytoAllworkingDays($event, selectedDay)" />
+                Apply to all working days
+              </label> -->
+
+              <!-- *ngIf="timeRowsByDayForList.length > 0" -->
+              <div class="col-md-12" *ngIf="
+                  filteredGroupedTimeSlots2 &&
+                  filteredGroupedTimeSlots2.length > 0
+                ">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Day Name</th>
+                      <th>Start Time</th>
+                      <th>End Time</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    <ng-container *ngFor="
+                        let record of filteredGroupedTimeSlots2;
+                        let rowIndex = index
+                      ">
+                      <tr class="table-light">
+                        <td>{{ rowIndex + 1 }}</td>
+                        <td>{{ record.dayName }}</td>
+                        <td>{{ record.startTime | TimeFormatAmPm }}</td>
+                        <td>{{ record.endTime | TimeFormatAmPm }}</td>
+                        <td>
+                          <i class="fa fa-pencil" aria-hidden="true" (click)="editRow(record, rowIndex)"></i>&nbsp;
+                          <i class="fa fa-trash" aria-hidden="true" (click)="deleteRow(record, rowIndex)"></i>
+                        </td>
+                      </tr>
+                    </ng-container>
+                  </tbody>
+                </table>
+                <hr />
+              </div>
+
+              <!-- <div *ngIf="selectedDay"> -->
+              <!-- <div *ngIf="selectedDay && selectedDay != filteredDayNameAfterAdded  || isEditMode"> -->
+              <div *ngIf="
+                  selectedDay &&
+                  (labelTextForSlider === 'None'
+                    ? selectedDay !== filteredDayNameAfterAdded ||
+                      (selectedDay == filteredDayNameAfterAdded &&
+                        selectedWeekName != filteredWeekAfterAdded) ||
+                      isEditMode
+                    : selectedDay !== filteredDayNameAfterAdded || isEditMode)
+                ">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <h5 class="mb-0">Availability for {{ selectedDay }}</h5>
+                </div>
+                <div class="row" *ngFor="let timeRow of timeRows; let i = index">
+                  <div class="col-md-6">
+                    <label for="startTime">Start Time</label>
+                    <input type="time" [(ngModel)]="timeRow.startTime" class="form-control"
+                      (change)="validateTime(timeRow); timeRow.isEdited = true" />
+                  </div>
+                  <div class="col-md-6">
+                    <label for="endTime">End Time</label>
+                    <input type="time" [(ngModel)]="timeRow.endTime" class="form-control"
+                      (change)="validateTime(timeRow); timeRow.isEdited = true" />
+                    <small class="text-danger" *ngIf="timeRow?.isInvalid">
+                      End time must be greater than start time.
+                    </small>
+                  </div>
+                  <small class="text-danger" *ngIf="!isAddedSlot">Add atleast One Availability</small>
+                </div>
+              </div>
+
+              <!-- Commented on 01/04/2025 -->
+              <!-- <div class="row">
+                <div class="col-md-12 mt-3">
+                  <div class="lft-div text-end">
+                    <div *ngIf="selectedDay" class="">
+                      <button type="button" class="btn btn-primary saver-class hvr-shutter-out-horizontal"
+                        (click)="saveTimeRows('save')" id="Addupdateslotbutton">
+                        Add Slot
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div> -->
+
+              <!-- Added on 01/04/25 -->
+              <div class="row">
+                <div class="col-md-12 mt-3">
+                  <div class="lft-div text-end">
+                    <!-- <div *ngIf="selectedDay && selectedDay !== filteredDayNameAfterAdded || isEditMode"> -->
+                    <div *ngIf="
+                        selectedDay &&
+                        (labelTextForSlider === 'None'
+                          ? selectedDay !== filteredDayNameAfterAdded ||
+                            (selectedDay == filteredDayNameAfterAdded &&
+                              selectedWeekName != filteredWeekAfterAdded) ||
+                            isEditMode
+                          : selectedDay !== filteredDayNameAfterAdded ||
+                            isEditMode)
+                      ">
+                      <button *ngIf="!isEditMode; else updateSlotTemplate" type="button"
+                        class="btn btn-primary saver-class hvr-shutter-out-horizontal" (click)="saveTimeRows('save')"
+                        id="Addupdateslotbutton">
+                        Add Availability
+                      </button>
+                      <ng-template #updateSlotTemplate>
+                        <button type="button" class="btn btn-primary saver-class hvr-shutter-out-horizontal"
+                          (click)="saveTimeRows('save')" id="Addupdateslotbutton">
+                          Update Availability
+                        </button>
+                      </ng-template>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer" style="border: none !important">
+        <div class="row">
+          <div class="col-md-6">
+            <button type="button" class="btn btn-primary w-100 hvr-shutter-out-horizontal" id="submitTimeSlotButton"
+              (click)="saveTimeRows('submit')">
+              Submit
+            </button>
+          </div>
+
+          <div class="col-md-6">
+            <button type="button" class="btn btn-secondary " id="submitTimeSlotButton" (click)="ResetModalForm()">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

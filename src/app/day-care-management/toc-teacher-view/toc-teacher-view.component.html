@@ -1,0 +1,437 @@
+<!-- <app-breadcrumb></app-breadcrumb> -->
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="heading-new">
+          <h5 class="mb-0">TOC Teacher Approved List</h5>
+        </div>
+
+        <div>
+          <div>
+            <div class="row mt-3">
+              <div class="col-md-6">
+                <div class="row">
+                  <div class="col-md-8"></div>
+                </div>
+              </div>
+              <div class="col-md-12">
+                <div class="table-responsive">
+                  <table class="table table-hover mb-0">
+                    <thead class="student-thread">
+                      <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Working Day</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                        <th>Date Range</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    @if(tocTeacher.length > 0) {
+                    <tbody
+                      *ngFor="
+                        let toc of tocTeacher
+                          | paginate
+                            : {
+                                itemsPerPage: contentPerPage,
+                                currentPage: currentPage,
+                                id: 'tocTeacherView'
+                              };
+                        let index = index
+                      "
+                    >
+                      <tr>
+                        <td>{{ index + 1 }}</td>
+                        <td>{{ toc.teacherName }}</td>
+                        <td>{{ toc.email }}</td>
+                        <td>{{ toc.workingDayName }}</td>
+                        <td>{{ toc.slotStartTime | timeFormat }}</td>
+                        <td>{{ toc.slotEndTime | timeFormat }}</td>
+                        <td>{{ toc.dateRange }}</td>
+                        <td>
+                          <div class="actions">
+                            <a
+                              class="anchor btn btn-primary apoint-button"
+                              (click)="getTocUserDetailsByID(toc)"
+                            >
+                              <i class="fa fa-eye" aria-hidden="true"></i
+                            ></a>
+                            <button
+                              type="button"
+                              class="btn btn-primary apoint-button button-wd"
+                              (click)="displayClassAssignment(toc)"
+                            >
+                              Assign Class
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                    } @else {
+                    <tbody>
+                      <tr>
+                        <td colspan="8">
+                          <div class="no-data">
+                            <img
+                              src="assets/img/no-data-img.png"
+                              alt="No Record Found"
+                            />
+                            <span>No Record Found</span>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                    }
+                  </table>
+                  <div class="col pagination-style">
+                    <div class="datatable-pager datatable-paging-loaded">
+                      @if(tocTeacher.length > 0) {
+                      <pagination-controls
+                        previousLabel="prev"
+                        nextLabel="next"
+                        [maxSize]="5"
+                        class="datatable-pager-nav my-2 mb-sm-0"
+                        id="tocTeacherView"
+                        (pageChange)="currentPage = $event"
+                      >
+                      </pagination-controls>
+                      }
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="view-del">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">TOC Details</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="row" *ngIf="TocDetail != null">
+          <div class="col-md-12">
+            <div class="col-lg-6">
+              <div class="personal-activity">
+                <div class="personal-icons">
+                  <i class="fa-solid fa-user"></i>
+                </div>
+                <div class="views-personal">
+                  <h4>Teacher Name</h4>
+                  <h5>
+                    {{ TocDetail.firstName }}&nbsp;{{
+                      TocDetail.lastName ? TocDetail.lastName : ""
+                    }}
+                  </h5>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="personal-activity">
+                <div class="personal-icons">
+                  <i class="fa-solid fa-envelope"></i>
+                </div>
+                <div class="views-personal">
+                  <h4>Email</h4>
+                  <h5>{{ TocDetail.email }}</h5>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-6">
+              <div class="personal-activity">
+                <div class="personal-icons">
+                  <i class="fa-solid fa-phone"></i>
+                </div>
+                <div class="views-personal">
+                  <h4>Mobile</h4>
+                  <h5>{{ TocDetail.phone }}</h5>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-6">
+              <div class="personal-activity">
+                <div class="personal-icons">
+                  <i class="fa-solid fa-suitcase"></i>
+                </div>
+                <div class="views-personal">
+                  <h4>Experience (in years)</h4>
+                  <h5>{{ TocDetail.experience }}</h5>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-6">
+              <div class="personal-activity">
+                <div class="personal-icons">
+                  <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+                <div class="views-personal">
+                  <h4>Qualification</h4>
+                  <h5>{{ TocDetail.qualificationName }}</h5>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-6">
+              <div class="personal-activity">
+                <div class="personal-icons">
+                  <i class="fa-solid fa-calendar-days"></i>
+                </div>
+                <div class="views-personal">
+                  <h4>Working Days</h4>
+                  <h5>{{ TocDetail.workingDaysNames }}</h5>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-6">
+              <div class="personal-activity">
+                <div class="personal-icons">
+                  <i class="fa-solid fa-message"></i>
+                </div>
+                <div class="views-personal">
+                  <h4>Area Of Expertise</h4>
+                  <!-- <h5>{{TocDetail.expertise ? TocDetail.expertise : '--'}}</h5> -->
+                  <h5>
+                    {{
+                      TocDetail?.expertiseName ? TocDetail?.expertiseName : "--"
+                    }}
+                  </h5>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-6">
+              <div class="personal-activity">
+                <div class="personal-icons">
+                  <i class="fa-solid fa-message"></i>
+                </div>
+                <div class="views-personal">
+                  <h4>Message</h4>
+                  <h5>{{ TocDetail.message ? TocDetail.message : "--" }}</h5>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-6">
+              <div class="personal-activity">
+                <div class="personal-icons">
+                  <i class="fa-solid fa-file"></i>
+                </div>
+                <div class="views-personal">
+                  <h4>Photo-ID Document ({{ TocDetail.documentTypeNames }})</h4>
+                  <div
+                    class="action-buttons"
+                    *ngIf="TocDetail.uploadedDocument.length > 0"
+                  >
+                    <h5>
+                      <a
+                        href="{{ ImageRootURL }}{{
+                          TocDetail.uploadedDocument[0]
+                        }}"
+                        target="_blank"
+                        title="View"
+                      >
+                        <i class="fa fa-eye"></i> View
+                      </a>
+                    </h5>
+                    <h5>
+                      <a
+                        href="javascript:void(0)"
+                        (click)="
+                          downloadFile(
+                            ImageRootURL + TocDetail.uploadedDocument[0]
+                          )
+                        "
+                        title="Download"
+                      >
+                        <i class="fa fa-download"></i> Download
+                      </a>
+                    </h5>
+                  </div>
+                  <div
+                    class="action-buttons"
+                    *ngIf="TocDetail.uploadedDocument.length == 0"
+                  >
+                    <span>--</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-6">
+              <div class="personal-activity">
+                <div class="personal-icons">
+                  <i class="fa-solid fa-file"></i>
+                </div>
+                <div class="views-personal">
+                  <h4>Resume Document</h4>
+                  <div
+                    class="action-buttons"
+                    *ngIf="TocDetail.documentResumes.length > 0"
+                  >
+                    <h5>
+                      <a
+                        href="{{ ImageRootURL }}{{
+                          TocDetail.documentResumes[0]
+                        }}"
+                        target="_blank"
+                        title="View"
+                      >
+                        <i class="fa fa-eye"></i> View
+                      </a>
+                    </h5>
+                    <h5>
+                      <a
+                        href="javascript:void(0)"
+                        (click)="
+                          downloadFile(
+                            ImageRootURL + TocDetail.documentResumes[0]
+                          )
+                        "
+                        title="Download"
+                      >
+                        <i class="fa fa-download"></i> Download
+                      </a>
+                    </h5>
+                  </div>
+                  <div
+                    class="action-buttons"
+                    *ngIf="TocDetail.documentResumes.length == 0"
+                  >
+                    <span>--</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-6">
+              <div class="personal-activity">
+                <div class="personal-icons">
+                  <i class="fa-solid fa-file"></i>
+                </div>
+                <div class="views-personal">
+                  <h4>Educational Credentails Document</h4>
+                  <div
+                    class="action-buttons"
+                    *ngIf="TocDetail.educational_Credentails.length > 0"
+                  >
+                    <h5>
+                      <a
+                        href="{{ ImageRootURL }}{{
+                          TocDetail.educational_Credentails[0]
+                        }}"
+                        target="_blank"
+                        title="View"
+                      >
+                        <i class="fa fa-eye"></i> View
+                      </a>
+                    </h5>
+                    <h5>
+                      <a
+                        href="javascript:void(0)"
+                        (click)="
+                          downloadFile(
+                            ImageRootURL + TocDetail.educational_Credentails[0]
+                          )
+                        "
+                        title="Download"
+                      >
+                        <i class="fa fa-download"></i> Download
+                      </a>
+                    </h5>
+                  </div>
+                  <div
+                    class="action-buttons"
+                    *ngIf="TocDetail.educational_Credentails.length == 0"
+                  >
+                    <span>--</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Assign class -->
+
+<div
+  class="modal fade"
+  id="exampleModal2"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+  data-bs-backdrop="static"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header" style="border: none">
+        <h5 class="modal-title" id="exampleModalLabel2">Class Assignment</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body pt-0">
+        <form class="row" [formGroup]="tocClassTeacherAssignmentForm">
+          <div class="col-md-12 mb-4">
+            <div class="form-group local-forms">
+              <label>Teacher Name</label>
+              <input
+                class="form-control"
+                type="text"
+                readonly
+                formControlName="teacherName"
+              />
+            </div>
+          </div>
+          <div class="col-md-12 mb-4">
+            <div class="form-group local-forms">
+              <label>Class</label>
+
+              <ng-select
+                [items]="classList"
+                bindLabel="className"
+                bindValue="classID"
+              >
+              </ng-select>
+            </div>
+          </div>
+
+          <div class="col-md-12">
+            <div class="student-submit text-end">
+              <button class="btn btn-primary me-2">Submit</button>
+              <button class="btn btn-secondary" data-bs-dismiss="modal">
+                Cancel
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

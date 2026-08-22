@@ -1,0 +1,64 @@
+<div class="heading-new" style="width: 100%">
+  <h5 class="mb-0">View Slots</h5>
+</div>
+
+<!-- <div class="row justify-content-end">
+  <div class="col-md-4 mb-4 mt-4">
+    <div class="form-group local-forms">
+      <label class="form-label font-wt">Select Date</label>
+      <input
+        type="date"
+        mwlFlatpickr
+        name="date"
+        [(ngModel)]="selectedDate"
+        id="date"
+        class="form-control"
+        placeholder="-Select-"
+        (change)="onDateChange()"
+      />
+    </div>
+  </div>
+</div> -->
+<div class="row justify-content-start">
+  <div class="col-md-4 mb-4 mt-4">
+    <div class="form-group local-forms position-relative">
+      <label class="form-label font-wt">Select Date</label>
+      <input
+        type="text"
+        id="datePicker"
+        class="form-control"
+        placeholder="-Select-"
+        (change)="onDateChange($event)"
+      />
+    </div>
+  </div>
+  <div class="col-md-3 mt-1">
+    <button class="btn btn-primary mt-5 suber">Submit</button>
+  </div>
+</div>
+
+<div class="time-slots margin-top-none">
+  <h6 class="slot">{{ Date | date : "dd/MM/yyyy" }}&nbsp; Available slots</h6>
+  <div *ngFor="let item of slotDate" class="time-slot">
+    {{ item.slotStartTime | TimeFormatAmPm }}-{{
+      item.slotEndTime | TimeFormatAmPm
+    }}
+    ({{ item.counsellorCount }})
+  </div>
+  <div *ngIf="slotDate == null" class="w-100">
+    <div class="no-data">
+      <img src="assets/img/no-data-img.png" alt="No Record Found" />
+      <span>No Record Found</span>
+    </div>
+  </div>
+</div>
+
+<!-- <div class="time-slots booked">
+        <h6 class="slot">Booked slots</h6>
+
+        <div class="time-slot">06:30-07:00 PM</div>
+        <div class="time-slot">07:30-08:00 PM</div>
+        <div class="time-slot">08:30-09:00 PM</div>
+        <div class="time-slot">09:30-10:00 PM</div>
+        <div class="time-slot">10:30-11:00 PM</div>
+      </div> -->

@@ -1,0 +1,1494 @@
+<app-breadcrumb></app-breadcrumb>
+
+
+
+
+
+<!-- Bootstrap Modal -->
+<div class="modal fade" id="cropperModal" tabindex="-1" aria-labelledby="cropperModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="cropperModalLabel">Crop Image</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="resetImage()"></button>
+      </div>
+      <div class="modal-body">
+        <image-cropper [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="true" [aspectRatio]="4 / 3"
+          format="png" (imageCropped)="imageCropped($event)"></image-cropper>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="resetImage()">
+          Cancel
+        </button>
+        <button type="button" class="btn btn-primary" (click)="uploadCroppedImage()">
+          Upload
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- daycare teacher parent owner profile -->
+<div class="row" *ngIf="UserRoleID !== 8 && UserRoleID !== null">
+  <div class="col-md-7">
+    <form [formGroup]="imageForm">
+      <div class="card">
+        <div class="card-header new-profile-card p-0">
+          <div class="user">
+            <div class="user-media">
+              <div class="avatar-upload">
+                <div class="avatar-preview" style="border:  8px solid #fff !important;">
+                  <div class="outer-image">
+                    <img class="screen1" [src]="profileImage || 'assets/img/dummy-avatar.jpg'"
+                      style="border: none !important" />
+                  </div>
+                </div>
+              </div>
+              <!-- <div *ngFor="let image of Images"></div> -->
+              <div class="form-group students-up-files profile-edit-icon mb-0" *ngIf="UserRoleID != 5">
+                <div class="uplod d-flex">
+                  <label class="file-upload profile-upbtn mb-0">
+                    <i class="feather-edit"></i><input type="file" id="profileInputId"
+                      accept="image/png, image/jpeg, image/jpg" (change)="onFileSelected($event, 'Profile_Image')" />
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="user-bg w-100">
+            <div class="user-svg">
+              <svg width="264" height="109" viewBox="0 0 264 109" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="0.0107422" y="0.6521" width="263.592" height="275.13" rx="20" fill="#FCC43E"></rect>
+              </svg>
+            </div>
+            <div class="user-svg-1">
+              <svg width="264" height="59" viewBox="0 0 264 59" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect y="0.564056" width="263.592" height="275.13" rx="20" fill="#FB7D5B"></rect>
+              </svg>
+            </div>
+          </div>
+          <div class="btn-box" *ngIf="UserRoleID != 5">
+            <button type="submit" class="btn btn-primary follow-btns me-2" data-bs-toggle="modal"
+              data-bs-target="#staticBackdrop" (click)="OnEdit()">
+              Edit Details
+            </button>
+                        <a routerLink="/change-the-password" class="btn btn-primary">Change Password</a>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="col-xxl-12">
+            <div class="row" *ngIf="UserRoleID != 5">
+              <div class="col-sm-6">
+                <div class="contact-info">
+                  <h6>Name</h6>
+
+
+                  <ng-container *ngIf="profileDetailSkelton == true; else profileSkelton">
+
+                    <p>
+                      {{ data?.firstName
+                      }}{{ data?.middleName ? " " + data?.middleName + " " : " "
+                      }}{{ data?.lastName }}
+                    </p>
+
+                  </ng-container>
+
+
+
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <!-- <div class="contact-info">
+                  <h6>Mobile Number</h6>
+                  <p id="mobile">{{ '+1 ' + data?.mobile }}</p>
+                  <span class="nmar m-0" *ngIf="data?.mobile == null">
+                    -----------
+                  </span>
+                </div> -->
+                <div class="contact-info">
+                  <h6>Mobile Number</h6>
+
+                  <ng-container *ngIf="profileDetailSkelton == true; else profileSkelton">
+
+                    <p id="mobile">
+                      {{ data.mobile ? '+1 ' + data.mobile : '--' }}
+                    </p>
+
+                  </ng-container>
+
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="contact-info">
+                  <h6>Email</h6>
+                  <ng-container *ngIf="profileDetailSkelton == true; else profileSkelton">
+
+
+                    <p id="email">{{ data.email ? data.email : '--' }}</p>
+
+                  </ng-container>
+                </div>
+              </div>
+
+              <div class="col-sm-6">
+                <div class="contact-info">
+                  <h6>Pin Code</h6>
+                  <ng-container *ngIf="profileDetailSkelton == true; else profileSkelton">
+
+                    <p id="text">{{ data.pincode || '--' }}</p>
+
+                  </ng-container>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="contact-info">
+                  <h6>Gender</h6>
+
+                  <ng-container *ngIf="profileDetailSkelton == true; else profileSkelton">
+
+
+                    @if (data?.gender == null) {
+                    --
+                    }@else{
+                    <p id="gender" class="pmar">
+                      <span class="nmar m-0" *ngIf="data?.gender == 'M'">
+                        Male
+                      </span>
+                      <span class="nmar m-0" *ngIf="data?.gender == 'F'">
+                        Female
+                      </span>
+                      <span class="nmar m-0" *ngIf="data?.gender == 'O'">
+                        Other
+                      </span>
+
+                    </p>
+                    }
+
+                  </ng-container>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="contact-info">
+                  <h6>Date of Birth</h6>
+                  <ng-container *ngIf="profileDetailSkelton == true; else profileSkelton">
+
+                    <p id="dob1">
+
+                      @if (data?.dob == null) {
+                      --
+                      }@else{
+                      <span> {{ data?.dob | date : "MM/dd/yyyy" }}</span>
+                      }
+                    </p>
+
+                  </ng-container>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="contact-info">
+                  <h6>Address</h6>
+                  <ng-container *ngIf="profileDetailSkelton == true; else profileSkelton">
+
+                    @if (data?.address == null) {
+                    --
+                    }@else{
+                    <p id="address">
+                      {{ data?.address }}{{ data?.city }}{{ data?.state
+                      }}{{ data?.country }}
+                    </p>
+                    }
+
+
+                  </ng-container>
+
+                </div>
+              </div>
+            </div>
+
+            <!-- Student Detail  for parent-->
+
+            <div *ngIf="UserRoleID == 5">
+              <div class="heading-new">
+                <h5 class="mb-0">Student Information</h5>
+              </div>
+              <div class="row">
+                <div class="col-md-12 text-end mb-3">
+                  <div class="lft-div d-flex justify-content-end align-items-center">
+                    <div class="diver">
+                      <button class="btn-primary btn" type="button" (click)="selectStudentDetails(data.id)">
+                        View Student Detail
+                      </button>
+                    </div>
+                    <div class="diver">
+                      <button class="btn-primary btn" type="button" (click)="selectClassRoom(data.id)">
+                        View Other Detail
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-6">
+                  <div class="contact-info">
+                    <h6>Student Name</h6>
+                    <ng-container *ngIf="profileDetailSkelton == true; else profileSkelton">
+                      <p>{{ data?.firstName }} {{ data?.lastName || '' }}</p>
+                    </ng-container>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="contact-info">
+                    <h6>AgeGroup</h6>
+                    <ng-container *ngIf="profileDetailSkelton == true; else profileSkelton">
+                      <p id="mobile">{{ data?.ageGroup ? data?.ageGroup : '--' }}</p>
+
+                    </ng-container>
+                  </div>
+                </div>
+
+
+                <div class="col-sm-6">
+                  <div class="contact-info">
+                    <h6>Student Gender</h6>
+                    <ng-container *ngIf="profileDetailSkelton == true; else profileSkelton">
+
+                      @if (data.gender == null) {
+                      --
+                      }@else{
+                      <p id="gender" class="pmar">
+                        <span class="nmar m-0" *ngIf="data?.gender == 'male'">
+                          Male
+                        </span>
+                        <span class="nmar m-0" *ngIf="data?.gender == 'female'">
+                          Female
+                        </span>
+                        <span class="nmar m-0" *ngIf="data?.gender == 'Other'">
+                          Other
+                        </span>
+
+                      </p>
+                      }
+                    </ng-container>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="contact-info">
+                    <h6>Student Date of Birth</h6>
+                    <ng-container *ngIf="profileDetailSkelton == true; else profileSkelton">
+                      <p id="dob1">
+                        <span> {{ data?.dob | date : "MM/dd/yyyy" }}</span>
+
+                      </p>
+                    </ng-container>
+                  </div>
+                </div>
+
+                <div class="col-sm-6">
+                  <div class="contact-info">
+                    <h6>Student Class</h6>
+                    <ng-container *ngIf="profileDetailSkelton == true; else profileSkelton">
+                      <p id="mobile">{{ data?.studentClass }}</p>
+
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- daycare and parent plan -->
+  <div *ngIf="UserRoleID == 5 || UserRoleID == 3" class="col-md-5">
+    <!-- ADD -->
+    <div class="card">
+      <div class="card-body spc-hei">
+        <div class="row">
+          <div class="col-xxl-12">
+            <div class="heading-new">
+              <h5 class="mb-0">Plan Information</h5>
+            </div>
+            <div class="det">
+              <ul class="nav nav-tabs mb-0" role="tablist" id="mb-0">
+                <li class="nav-item" role="presentation">
+                  <a class="nav-link active" href="#basictab2" data-bs-toggle="tab" aria-selected="false" role="tab"
+                    tabindex="-1" (click)="getPlansDetails('Active')">Active Plans</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <a class="nav-link" href="#basictab3" data-bs-toggle="tab" aria-selected="false" role="tab"
+                    tabindex="-1" (click)="getPlansDetails('Expired')">Expired Plans</a>
+                </li>
+              </ul>
+              <div class="tab-content" id="">
+                <div class="tab-pane active" id="basictab2" role="tabpanel">
+                  <!-- sample new design -->
+                  <div class="mai">
+                    <div class="" id="">
+                      <div>
+                        <!-- below  should be main plan example: GOLD PLAN   -->
+                        @if (planInfoskeletonShow === 'PlanInfo') {
+
+                        <app-skeleton-loader planInfoskeletonShow="PlanInfo" viewType="plan-Information">
+                        </app-skeleton-loader>
+
+
+                        } @else if (regularPlans.length > 0) {
+                        <div class=" " *ngFor="let item of regularPlans">
+                          <div class="jj">
+                            <h2 class="plan-infos" id="headingTwo">
+                              <div class="d-block" type="button" data-bs-toggle="collapse">
+                                <div class="row">
+                                  <div class="col-md-6 d-flex justify-content-start">
+                                    <h6 class="package-name text-primary d-block">
+                                      {{ item?.planName }}
+                                    </h6>
+                                  </div>
+
+                                  <div class="col-md-6 d-flex justify-content-end">
+                                    <h6 class="price-del">
+                                      ${{ item?.price | number : "1.2-2"
+                                      }}<span class="listal-data">/month</span>
+                                    </h6>
+                                  </div>
+                                </div>
+
+                                <div class="row">
+                                  <div class="col-md-6 d-flex justify-content-start py-2 align-items-center">
+                                    <h6 class="package-name text-secondary fz-5 d-block mb-0">
+                                      <i class="fa fa-calendar"></i>
+
+                                      {{
+                                      item.startDate | date : "MM/dd/yyyy"
+                                      }}
+                                      -
+                                      {{ item.dueDate | date : "MM/dd/yyyy" }}
+                                    </h6>
+                                  </div>
+                                </div>
+                                <div class="row">
+                                  <div class="col-md-6 d-flex justify-content-start">
+                                    <p class="price-del" *ngIf="item.discount > 0">
+                                      Discount : {{ item.discount }}%
+                                    </p>
+                                  </div>
+                                  <div class="col-md-6 d-flex justify-content-end align-items-start">
+                                    <button class="btn btn-primary" data-bs-toggle="modal"
+                                      data-bs-target="#staticBackdrop2">
+                                      View Details
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            </h2>
+                            <div id="collapseTwo" class=" " aria-labelledby="headingTwo">
+                              <div class="">
+
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        } @else {
+
+                        <app-skeleton-loader skeletonShow="NoRecord">
+                        </app-skeleton-loader>
+
+
+                        }
+
+                        <div class="row" *ngIf="addonPlans.length > 0">
+                          <div class="col-md-12 mt-5 mb-2">
+                            <div class="adder pt-2 pb-2 d-flex align-items-center">
+                              <h6 class="m-0">Add On Plans</h6>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- below should be ADD ON plans    -->
+                        @if (planInfoskeletonShow === 'PlanInfo') {
+
+                        <app-skeleton-loader planInfoskeletonShow="PlanInfo" viewType="plan-Information">
+                        </app-skeleton-loader>
+
+
+                        } @else if (addonPlans.length > 0) {
+                        <div class="j-star" *ngFor="let item of addonPlans">
+                          <div class="jj pt-2 pb-2">
+                            <h2 class="plan-infos" id="headingOne">
+                              <div class="d-block" type="button">
+                                <div class="row">
+                                  <div class="col-md-6 d-flex justify-content-start">
+                                    <h6 class="package-name text-primary d-block">
+                                      {{ item?.planName }}
+                                    </h6>
+                                  </div>
+                                  <div class="col-md-6 d-flex justify-content-end">
+                                    <h6 class="price-del">
+                                      ${{ item?.price
+                                      }}<span class="listal-data">/month</span>
+                                    </h6>
+                                  </div>
+                                </div>
+
+                                <div class="row">
+                                  <div class="col-md-6 d-flex justify-content-start align-items-center">
+                                    <h6 class="package-name text-secondary fz-5 d-block mb-0">
+                                      <i class="fa fa-calendar"></i>
+
+                                      {{ item.startDate | date : "MM/dd/yyyy" }}
+                                      - {{ item.dueDate | date : "MM/dd/yyyy" }}
+                                    </h6>
+                                  </div>
+                                  <div class="col-md-6 d-flex justify-content-end align-items-center">
+                                    <button href="" class="btn btn-primary follow-btns" data-bs-toggle="modal"
+                                      data-bs-target="#staticBackdrop1">
+                                      View Details
+                                    </button>
+                                  </div>
+                                </div>
+
+
+                              </div>
+                            </h2>
+                          </div>
+                        </div>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="tab-pane" id="basictab3" role="tabpanel">
+                  <div class="mai">
+
+                    <div class="jj">
+                      @if (planInfoskeletonShow === 'PlanInfo') {
+
+                      <app-skeleton-loader planInfoskeletonShow="PlanInfo" viewType="plan-Information">
+                      </app-skeleton-loader>
+
+
+                      } @else if (plan.length > 0) {
+                      <div class="plan-infos" *ngFor="let item of plan">
+                        <div class="">
+                          <div class="row">
+                            <div class="col-md-6 d-flex justify-content-start">
+                              <h6 class="package-name text-primary d-block">
+                                {{ item?.planName }}
+                              </h6>
+                            </div>
+                            <div class="col-md-6 d-flex justify-content-end">
+                              <h6 class="price-del">
+                                $ {{ item?.price
+                                }}<span class="listal-data">/month</span>
+                              </h6>
+                            </div>
+                          </div>
+
+                          <div class="row">
+                            <div class="col-md-6 d-flex justify-content-start align-items-center">
+                              <h6 class="package-name text-secondary fz-5 d-block mb-0">
+                                <i class="fa fa-calendar"></i>
+                                {{ item.startDate | date : "MM/dd/yyyy" }} -
+                                {{ item.dueDate | date : "MM/dd/yyyy" }}
+                              </h6>
+                            </div>
+                          </div>
+
+                          <div class="row">
+                            <div class="col-md-6 d-flex justify-content-start">
+                              <p class="price-del" *ngIf="item.discount > 0">
+                                Discount : {{ item.discount }}%
+                              </p>
+                            </div>
+                            <div class="col-md-6 d-flex justify-content-end align-items-start">
+                              <button class="btn btn-primary follow-btns" (click)="displayExpireDetails(item)">
+                                View Details
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      } @else {
+
+                      <app-skeleton-loader skeletonShow="NoRecord">
+                      </app-skeleton-loader>
+
+
+                      }
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- form Edit  -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header" style="border: none">
+        <h5 class="modal-title" id="staticBackdropLabel">
+          Edit Personal Details
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" style="padding-bottom: none">
+        <form [formGroup]="profileform">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="editter">
+                <div class="row">
+
+
+                  <div class="local-forms col-md-6">
+                    <div class="form-group">
+                      <label style="left: 24px">Name <span class="star-red">*</span></label>
+                      <input type="text" class="form-control" formControlName="name" name="name"
+                        (input)="onNameInput($event)" />
+                      @if(input.name.touched){ @if(input.name.errors?.required){
+                      <span class="text-danger">This field is required.</span>
+                      } }
+                    </div>
+                  </div>
+
+                  <div class=" col-md-6 custom-flag">
+
+                    <div class="form-group local-forms">
+
+
+                      <label for="contactNumber">Mobile Number <span class="text-danger">*</span></label>
+
+                      <div class="position-absolute flag" style="
+                                                                                            top: 35px;
+                                                                                            left: 0px;
+                                                                                            display: flex;
+                                                                                            align-items: center;
+                                                                                            gap: 4px;
+                                                                                          ">
+                        <div class="country-selector" (click)="toggleDropdown()">
+                          <img [src]="selectedCountry.flag" class="new-flag" alt="Flag">
+                          <span class="me-1">{{ selectedCountry.code }}</span>
+                          <span class="arrow">
+                            <i [class]="dropdownOpen ? 'fas fa-chevron-up' : 'fas fa-chevron-down'"></i>
+                          </span>
+
+                          <!-- Dropdown list -->
+                          <div class="dropdown" *ngIf="dropdownOpen">
+                            <div class="dropdown-item" *ngFor="let country of countries"
+                              (click)="selectCountry(country)">
+                              <img [src]="country.flag" class="flag" alt="Flag">
+                              <span class="color-black">({{ country.code }})</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Mobile Input -->
+                      <input id="contactNumber" class="form-control" type="text" formControlName="mobile" maxlength="12"
+                        (input)="formatPhoneNumber($event)" (blur)="CheckInterestedMobileExist($event)"
+                        placeholder="Enter mobile number" style="padding-left: 90px" />
+
+                    </div>
+
+                    <!-- Validation Error -->
+                    <div *ngIf="profileform.get('mobile')?.invalid && profileform.get('mobile')?.touched">
+                      <span class="text-danger">This field is required.</span>
+                    </div>
+                  </div>
+
+
+                  <!-- <div class="local-forms col-md-6">
+                    <div class="form-group">
+                      <label style="left: 24px">Mobile<span class="star-red">*</span></label>
+                      <input type="text" class="form-control" formControlName="mobile" name="mobile" maxlength="10"
+                        minlength="10" (keypress)="validateNumber($event)" />
+                      @if(input.mobile.touched){
+                      @if(input.mobile.errors?.required){
+                      <span class="text-danger">This field is required.</span>
+                      } @if(input.mobile.errors?.pattern){
+                      <span class="text-danger">Enter a valid mobile number.</span>
+                      } }
+                    </div>
+                  </div> -->
+                </div>
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class="local-forms col-md-12 p-0">
+                      <div class="form-group">
+                        <label>Email <span class="star-red">*</span></label>
+                        <input ng-disabled="all" type="text" class="form-control" formControlName="email" name="email"
+                          readonly />
+
+                        @if(input.email.touched){
+                        @if(input.email.errors?.required){
+                        <span class="text-danger">This field is required.</span>
+                        } @if(input.email.errors?.pattern){
+                        <span class="text-danger">Enter a valid email address.</span>
+                        } }
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="local-forms col-md-12 p-0">
+                      <div class="form-group">
+                        <label class="">Select Gender<span class="login-danger">*</span></label>
+                        <ng-select formControlName="gender" name="gender" [items]="genderOptions" bindLabel="label"
+                          bindValue="value" placeholder="Select">
+                        </ng-select>
+                        @if(input.gender.touched){
+                        @if(input.gender.errors?.required){
+                        <span class="text-danger">This field is required.</span>
+                        } }
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="local-forms col-md-12 p-0">
+                      <div class="form-group">
+                        <label>DOB<span class="star-red">*</span></label>
+                        <input id="dob" type="text" class="form-control" formControlName="dob" name="dob" />
+                        @if(input.dob.touched){ @if(input.dob.errors?.required){
+                        <span class="text-danger">This field is required.</span>
+                        } }
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="col-md-12 left-pd p-0">
+                      <div class="local-forms">
+                        <div class="form-group">
+                          <label style="left: 11px !important">Address <span class="star-red">*</span></label>
+                          <textarea class="form-control" spellcheck="false" style="
+                              resize: none;
+                              height: 144px;
+                              min-height: 144px !important;
+                            " formControlName="address" name="address"></textarea>
+                          @if(input.address.touched){
+                          @if(input.address.errors?.required){
+                          <span class="text-danger">This field is required.</span>
+                          } }
+                        </div>
+                        <div class="form-group mb-0"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6" *ngIf="UserRoleID == 3">
+                    <div class="local-forms"><label>Daycare Logo</label></div>
+
+                    <div class="user daycare logo">
+                      <div class="user-media">
+                        <div class="avatar-upload">
+                          <div class="avatar-preview" style="border: none !important">
+                            <img class="avatar avatar-xxl" src="{{ logoImage }}" />
+                          </div>
+                        </div>
+
+                        <div class="form-group students-up-files profile-edit-icon mb-0">
+                          <div class="uplod d-flex">
+                            <label class="file-upload profile-upbtn mb-0">
+                              <i class="feather-edit"></i><input type="file" accept="image/png, image/jpeg, image/jpg"
+                                (change)="onFileSelected($event, 'Logos')" />
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer" style="border: none; padding-top: none">
+        <button type="submit" class="btn btn-primary" (click)="onSubmit()">
+          Update
+        </button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Arsh -->
+<div class="rounded-custom bg-white custom-shadow p-4" *ngIf="UserRoleID == 8">
+  <div class="heading-new heading-new d-flex justify-content-between">
+    <h5 class="mb-0">Teacher Information</h5>
+    <h5 class="me-1" *ngIf="centreName">Daycare Centre: {{centreName}}</h5>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <section class="">
+        <div class="">
+          <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-md-12">
+              <div class="card mb-3" style="border-radius: 0.5rem">
+                <div class="row g-0">
+                  <div class="col-md-12">
+                    <div
+                      class="gradient-custom text-center text-white d-flex flex-column justify-content-center p-3 align-items-start"
+                      style="
+                        border-top-left-radius: 0.5rem;
+                        border-bottom-left-radius: 0.5rem;
+                      ">
+                      <div class="user-outer">
+                        <div class="user user2" style="position: relative" id="user2">
+                          <div class="user-media">
+                            <div class="avatar-upload">
+                              <div class="avatar-preview" style="border: none !important">
+                                <!-- <img *ngIf="!IsImageAvailable"
+                                src="data:image/jpeg;base64,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"
+                                alt="User Image" class="avatar avatar-xxl"> -->
+
+                                <img [src]="
+                                    profileImage || 'assets/img/dummy-avatar.jpg'
+                                    
+                                  " alt="assets/img/profiles/avatar-14.jpg" class="avatar avatar-xxl"
+                                  style="width: 150px" />
+
+
+                              </div>
+                            </div>
+                            <div class="form-group students-up-files profile-edit-icon mb-0">
+                              <div class="uplod d-flex">
+                                <label class="file-upload profile-upbtn mb-0">
+                                  <i class="feather-edit"></i><input type="file" (change)="
+                                      onFileSelected($event, 'Profile_Image')" id="profileUpload"/>
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- <i class="far fa-edit mb-5" ></i> -->
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="card-body p-4">
+                      <div class="row">
+                        <div class="col-md-12 text-end mb-3">
+                          <div class="diver text-end">
+                            <button class="btn-primary btn" type="button" data-bs-toggle="modal"
+                              data-bs-target="#staticBackdropEdit">
+                              Edit Details
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="ser">
+                        <div class="row btm-bor">
+                          <div class="col-md-6">
+                            <div class="row">
+                              <div class="personal-icons1 col-md-6">
+                                <div class="ico">
+                                  <i class="fa-solid fa-user"></i>
+                                </div>
+                                <h4>Teacher Name</h4>
+                              </div>
+                              <ng-container *ngIf="TocUserDetailSkelton == true; else tocSkelton">
+                                <div class="col-md-6 infor">
+                                  <h5>{{ TocUserDetail?.teacherName || '--'}}</h5>
+                                </div>
+                              </ng-container>
+
+
+
+                            </div>
+                          </div>
+
+                          <div class="col-md-6">
+                            <div class="row">
+                              <div class="personal-icons1 col-md-6">
+                                <div class="ico">
+                                  <i class="fa-solid fa-envelope"></i>
+                                </div>
+                                <h4>Email</h4>
+                              </div>
+
+                              <ng-container *ngIf="TocUserDetailSkelton == true; else tocSkelton">
+                                <div class="col-md-6 infor">
+                                  <h5>{{ TocUserDetail?.teacherEmail || '--'}}</h5>
+                                </div>
+                              </ng-container>
+
+
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="row btm-bor">
+                          <div class="col-md-6">
+                            <div class="row">
+                              <div class="personal-icons1 col-md-6">
+                                <div class="ico">
+                                  <i class="fa-solid fa-phone"></i>
+                                </div>
+                                <h4>Mobile Number</h4>
+                              </div>
+
+
+                              <ng-container *ngIf="TocUserDetailSkelton == true; else tocSkelton">
+                                <div class="col-md-6 infor">
+                                  <h5>{{ TocUserDetail?.mobileNumber ? '+1 ' + TocUserDetail?.mobileNumber  : '--'}}</h5>
+                                </div>
+                              </ng-container>
+
+                            </div>
+                          </div>
+
+                          <div class="col-md-6">
+                            <div class="row">
+                              <div class="personal-icons1 col-md-6">
+                                <div class="ico">
+                                  <i class="fa-solid fa-suitcase"></i>
+                                </div>
+                                <h4>Experience (in years)</h4>
+                              </div>
+
+
+
+                              <ng-container *ngIf="TocUserDetailSkelton == true; else tocSkelton">
+                                <div class="col-md-6 infor">
+                                  <h5>{{ TocUserDetail?.experience || '--'}}</h5>
+                                </div>
+                              </ng-container>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="row btm-bor">
+                          <div class="col-md-6">
+                            <div class="row">
+                              <div class="personal-icons1 col-md-6">
+                                <div class="ico">
+                                  <i class="fa-solid fa-calendar-days"></i>
+                                </div>
+                                <h4>Start Date</h4>
+                              </div>
+                              <ng-container *ngIf="TocUserDetailSkelton == true; else tocSkelton">
+                                <div class="col-md-6 infor">
+                                  <h5> {{
+                                    (TocUserDetail?.startDate
+                                    | date : "MM/dd/yyyy" ) || '--'
+                                    }}</h5>
+                                </div>
+                              </ng-container>
+                            </div>
+                          </div>
+
+                          <div class="col-md-6">
+                            <div class="row">
+                              <div class="personal-icons1 col-md-6">
+                                <div class="ico">
+                                  <i class="fa-solid fa-calendar-days"></i>
+                                </div>
+                                <h4>End Date</h4>
+                              </div>
+
+                              <ng-container *ngIf="TocUserDetailSkelton == true; else tocSkelton">
+                                <div class="col-md-6 infor">
+                                  <h5> {{
+                                    TocUserDetail?.endDate
+                                    ? (TocUserDetail?.endDate
+                                    | date : "MM/dd/yyyy")
+                                    : "--"
+                                    }}</h5>
+                                </div>
+                              </ng-container>
+
+
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="row btm-bor">
+                          <div class="col-md-6">
+                            <div class="row">
+                              <div class="personal-icons1 col-md-6">
+                                <div class="ico">
+                                  <i class="fa-solid fa-graduation-cap"></i>
+                                </div>
+                                <h4>Qualification</h4>
+                              </div>
+
+                              <ng-container *ngIf="TocUserDetailSkelton == true; else tocSkelton">
+                                <div class="col-md-6 infor">
+                                  <h5>{{ TocUserDetail?.qualificationNames || '--'}}</h5>
+                                </div>
+                              </ng-container>
+
+
+                            </div>
+                          </div>
+
+                          <div class="col-md-6">
+                            <div class="row">
+                              <div class="personal-icons1 col-md-6">
+                                <div class="ico">
+                                  <i class="fa-solid fa-file"></i>
+                                </div>
+                                <h4 class="me-2">
+                                  Educational Credentials Document
+                                </h4>
+                              </div>
+
+
+                              <ng-container *ngIf="TocUserDetailSkelton == true; else tocSkelton">
+                                <div class="col-md-6 infor">
+                                  <div class="action-buttons">
+                                    <span *ngIf="TocUserDetail?.Educational_Credentails !== null && TocUserDetail?.Educational_Credentails !== ''; else empty"
+                                      class="d-flex justify-content-center align-items-center views">
+                                      <a (click)="
+                                        openPreview(
+                                          TocUserDetail?.Educational_Credentails,
+                                          getMimeTypeFromExtension(
+                                            TocUserDetail?.educational_Credentails_ex
+                                          )
+                                        )
+                                      " title="View" class="personal-icons" style="cursor: pointer">
+                                        <i class="fa fa-eye"></i>
+                                      </a>
+
+                                      <a href="javascript:void(0)" (click)="
+                                        downloadFile(
+                                          TocUserDetail?.Educational_Credentails
+                                        )
+                                      " title="Download" class="personal-icons">
+                                        <i class="fa fa-download"></i>
+                                      </a>
+                                    </span>
+                                  </div>
+                                </div>
+                              </ng-container>
+                               <ng-template #empty>
+                                  <span>--</span>
+                                </ng-template>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="row btm-bor">
+                          <div class="col-md-6">
+                            <div class="row">
+                              <div class="personal-icons1 col-md-6">
+                                <div class="ico">
+                                  <i class="fa-solid fa-message"></i>
+                                </div>
+                                <h4>Area Of Expertise</h4>
+                              </div>
+                              <ng-container *ngIf="TocUserDetailSkelton == true; else tocSkelton">
+
+                                <div class="col-md-6 infor">
+
+                                  <!-- <h5>{{TocUserDetail?.expertise ? TocUserDetail?.expertise : '--'}}</h5> -->
+                                  <h5>
+                                    {{
+                                    TocUserDetail?.expertiseNames
+                                    ? TocUserDetail?.expertiseNames
+                                    : "--"
+                                    }}
+                                  </h5>
+                                </div>
+                              </ng-container>
+                            </div>
+                          </div>
+
+                          <div class="col-md-6">
+                            <div class="row">
+                              <div class="personal-icons1 col-md-6">
+                                <div class="ico">
+                                  <i class="fa-solid fa-file"></i>
+                                </div>
+                                <h4 class="me-2">Photo-ID Document</h4>
+                              </div>
+
+                              <ng-container *ngIf="TocUserDetailSkelton == true; else tocSkelton">
+
+                                <div class="col-md-6 infor">
+
+                                  <div class="row">
+                                    <div class="col-md-6" style="    display: flex
+;
+    justify-content: space-between;
+    align-items: start;
+    width: 100%;
+    gap: 31px;">
+                                      <div *ngIf="TocUserDetail?.documentTypeNames !== ''; else empty"
+                                        >
+
+                                        <h5>
+                                          ({{ TocUserDetail?.documentTypeNames }})
+                                        </h5>
+
+                                      </div>
+                                      <div class="d-flex justify-content-center align-items-center">
+
+                                        <div class="action-buttons"
+                                          *ngIf="TocUserDetail?.UploadedDocument !== null; else empty">
+                                          <span class="d-flex justify-content-center align-items-center views">
+
+
+                                            <a (click)="
+                                                                    openPreview(
+                                                                      TocUserDetail?.UploadedDocument,
+                                                                      getMimeTypeFromExtension(
+                                                                        TocUserDetail?.uploadedDocument_ex
+                                                                      )
+                                                                    )
+                                                                  " title="View" class="personal-icons"
+                                              style="cursor: pointer">
+                                              <i class="fa fa-eye"></i>
+                                            </a>
+                                            <a href="javascript:void(0)" (click)="
+                                                                    downloadFile(
+                                                                      TocUserDetail?.UploadedDocument
+                                                                    )
+                                                                  " title="Download" class="personal-icons">
+                                              <i class="fa fa-download"></i>
+                                            </a>
+                                          </span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                </div>
+
+
+
+
+
+                              </ng-container>
+
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row btm-bor">
+                        <div class="col-md-6">
+                          <div class="row">
+                            <div class="personal-icons1 col-md-6">
+                              <div class="ico">
+                                <i class="fa-solid fa-file"></i>
+                              </div>
+                              <h4 class="me-2">Resume Document</h4>
+                            </div>
+
+
+                            <div class="col-md-6 infor">
+                              <div class="action-buttons">
+                                <ng-container *ngIf="TocUserDetailSkelton == true; else tocSkelton">
+
+                                  <span *ngIf="TocUserDetail?.DocumentResumes !== null; else empty"
+                                    class="d-flex justify-content-center align-items-center views">
+
+                                    <a (click)="
+                                        openPreview(
+                                          TocUserDetail?.DocumentResumes,
+                                          getMimeTypeFromExtension(
+                                            TocUserDetail?.documentResumes_ex
+                                          )
+                                        )
+                                      " title="View" class="personal-icons" style="cursor: pointer">
+                                      <i class="fa fa-eye"></i>
+                                    </a>
+
+                                    <a href="javascript:void(0)" (click)="
+                                        downloadFile(
+                                          TocUserDetail?.DocumentResumes
+                                        )
+                                      " title="Download" class="personal-icons">
+                                      <i class="fa fa-download"></i>
+                                    </a>
+                                  </span>
+
+
+                                </ng-container>
+                              </div>
+
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="col-md-6">
+                          <div class="row">
+                            <div class="personal-icons1 col-md-6">
+                              <div class="ico">
+                                <i class="fa-solid fa-calendar-days"></i>
+                              </div>
+                              <h4>Working Days</h4>
+                            </div>
+
+
+                            <ng-container *ngIf="TocUserDetailSkelton == true; else tocSkelton">
+
+                              <div class="col-md-6 infor">
+
+                                <h5>{{
+                                  TocUserDetail?.workingDaysNames || '--' }}</h5>
+
+                              </div>
+
+                            </ng-container>
+                          </div>
+                        </div>
+
+                        <div class="row btm-bor">
+                          <div class="col-md-6">
+                            <div class="row">
+                              <div class="personal-icons1 col-md-6">
+                                <div class="ico">
+                                  <i class="fa-solid fa-message"></i>
+                                </div>
+                                <h4>Message</h4>
+                              </div>
+
+                              <div class="col-md-6">
+                                <ng-container *ngIf="TocUserDetailSkelton == true; else tocSkelton">
+
+                                  <div class="col-md-6 infor">
+
+
+                                    <h5>
+                                      {{TocUserDetail?.message ? TocUserDetail?.message : '--'}}
+                                    </h5>
+                                  </div>
+
+                                </ng-container>
+                              </div>
+
+
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="col-md-4" *ngFor="let group of TocUserDetail?.groupedSlots">
+                          <div class="row">
+                            <div class="personal-icons1 col-md-6">
+                              <i class="fa-solid me-2 fa-message"></i>
+                              <h4>{{ group.day }}</h4>
+                            </div>
+                            <div class="col-md-6 infor">
+                              <!-- Day Name as Header -->
+
+                              <!-- List of Times -->
+                              <ul class="time-list">
+                                <li *ngFor="let time of group.times">
+                                  {{ time || "--" }}
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+
+</div>
+
+<div *ngIf="UserRoleID == 8" class="modal fade" id="staticBackdropEdit" data-bs-backdrop="static"
+  data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header" style="border: none">
+        <h5 class="modal-title" id="staticBackdropLabel">
+          Edit Personal Details
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" style="padding-bottom: none">
+        <app-toc-registration [userId]="UserId" [EducationalCredentails]="EducationalCredentails"
+          [DocumentResumes]="DocumentResumes" [UploadedDocument]="UploadedDocument"></app-toc-registration>
+      </div>
+      <!-- <div class="modal-footer" style="border: none; padding-top: none">
+        <button type="submit" class="btn btn-primary" (click)="onSubmit()">
+          Submit
+        </button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cancel
+        </button>
+      </div> -->
+    </div>
+  </div>
+</div>
+
+
+
+<!-- <app-header></app-header> -->
+
+<!-- sampler modals -->
+
+<!-- Button trigger modal -->
+
+<!-- Modal   regular plans -->
+
+<!-- modal add -on plans  -->
+<div class="modal fade" id="staticBackdrop2" tabindex="-1" aria-labelledby="staticBackdrop2Label" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content" *ngFor="let item of regularPlans">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdrop2Label">
+          {{ item?.planName }} Features
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="pricing-info ng-star-inserted">
+              <ul class="pricing-feature-list list-unstyled m-0 d-grid">
+                <li *ngFor="let feature of item?.featureList">
+                  <svg class="svg-inline--fa fa-circle fa-2xs text-primary me-2" aria-hidden="true" focusable="false"
+                    data-prefix="fas" data-icon="circle" role="img" xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 512 512" data-fa-i2svg="">
+                    <path fill="currentColor" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512z"></path>
+                  </svg>
+
+                  <span class="listal-data" [ngClass]="{
+                      strikethrough: feature.isJobPostingDisabled
+                    }">
+                    {{ feature?.featureName }}
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer"></div>
+    </div>
+  </div>
+</div>
+
+<!-- modal for Expired Plans -->
+
+<div class="modal fade" id="staticBackdrop3" tabindex="-1" aria-labelledby="staticBackdrop3Label" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content" *ngFor="let item of viewDetails">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdrop3Label">
+          {{ item?.planName }} Features
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="pricing-info ng-star-inserted">
+              <ul class="pricing-feature-list list-unstyled m-0 d-grid">
+                <li *ngFor="let feature of item?.featureList">
+                  <svg class="svg-inline--fa fa-circle fa-2xs text-primary me-2" aria-hidden="true" focusable="false"
+                    data-prefix="fas" data-icon="circle" role="img" xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 512 512" data-fa-i2svg="">
+                    <path fill="currentColor" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512z"></path>
+                  </svg>
+
+                  <span class="listal-data" [ngClass]="{
+                      strikethrough: feature.isJobPostingDisabled
+                    }">
+                    {{ feature?.featureName }}
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer"></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="staticBackdrop1" tabindex="-1" aria-labelledby="staticBackdrop1Label" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content" *ngFor="let item of addonPlans">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdrop1Label">
+          {{ item?.planName }} Features
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="pricing-info ng-star-inserted">
+              <ul class="pricing-feature-list list-unstyled m-0 d-grid">
+                <li *ngFor="let feature of item?.featureList">
+                  <svg class="svg-inline--fa fa-circle fa-2xs text-primary me-2" aria-hidden="true" focusable="false"
+                    data-prefix="fas" data-icon="circle" role="img" xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 512 512" data-fa-i2svg="">
+                    <path fill="currentColor" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512z"></path>
+                  </svg>
+
+                  <span class="listal-data" [ngClass]="{
+                      strikethrough: feature.isJobPostingDisabled
+                    }">
+                    {{ feature?.featureName }}
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer"></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" tabindex="-1" id="AvailabilityModal" aria-hidden="true" aria-labelledby="TimeSlotModalLabel11"
+  data-bs-keyboard="false" data-bs-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="TimeSlotModalLabel11">
+          Complete Your Profile
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="CloseModal()"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12">
+            <p>
+              To use certain services, you may be required to register on the
+              platform. You agree to provide accurate, current, and complete
+              information during the registration process and update such
+              information as necessary.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer" style="border: none !important">
+        <div class="row">
+          <div class="col-md-12">
+            <button type="button" class="btn btn-primary me-2" (click)="Redirection()">
+              Complete&nbsp;Profile
+            </button>
+
+            <button type="reset" class="btn btn-primary" (click)="CloseModal()">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" tabindex="-1" id="chooseDayCareCentre" aria-hidden="true" aria-labelledby="TimeSlotModalLabel11"
+  data-bs-keyboard="false" data-bs-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="TimeSlotModalLabel11">
+          choose your Day Care
+        </h5>
+        <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" ></button> -->
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12">
+            <p>
+              To proceed further, please select any one Day Care Centre from the
+              list provided.
+            </p>
+          </div>
+        </div>
+
+        <ng-select placeholder="-Select-" [items]="TOCUserCentreList" bindLabel="centreName" bindValue="id"
+          class="w-100" (change)="onCentreChange($event)">
+        </ng-select>
+      </div>
+      <!-- <div class="modal-footer" style="border: none !important">
+        <div class="row">
+          <div class="col-md-12">
+            <button type="button" class="btn btn-primary me-2" (click)="Redirection()">Complete&nbsp;Profile
+            </button>
+            <button type="reset" class="btn btn-primary" (click)="CloseModal()">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div> -->
+    </div>
+  </div>
+</div>
+
+<!-- smooth open modal -->
+<!-- <div *ngIf="previewUrl" [ngClass]="{'modal-backdrop': true, 'closing': isClosing}" (click)="closePreview()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <button class="close-button" (click)="closePreview()">&#10006;</button>
+    <img [src]="previewUrl" alt="Preview" class="preview-image" />
+  </div>
+</div> -->
+
+<!-- Added on 23/06/25 Arshdeep -->
+<div *ngIf="previewUrl" [ngClass]="{ 'modal-backdrop': true }" (click)="closePreview()">
+  <div class="modal-content specific-size" (click)="$event.stopPropagation()">
+    <button class="close-button" (click)="closePreview()">&#10006;</button>
+    <div class="block-div">
+
+      <!-- Show image -->
+      <img *ngIf="previewMime?.startsWith('image/')" [src]="previewUrl" alt="Preview" class="preview-image" />
+
+      <!-- Show PDF -->
+      <iframe *ngIf="previewMime === 'application/pdf'" [src]="previewUrl" class="preview-pdf"></iframe>
+
+      <!-- Show unsupported -->
+      <div *ngIf="
+        previewMime &&
+        !previewMime.startsWith('image/') &&
+        previewMime !== 'application/pdf'
+      ">
+        <p>Preview not available for this file type.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<ng-template #profileSkelton>
+  <span class="skeleton-line shimmer w-25 mb-0 d-inline-block"></span>
+</ng-template>
+
+<ng-template #tocSkelton>
+  <div class="col-md-6 infor">
+    <span class="skeleton-line shimmer w-25 mb-0 d-inline-block"></span>
+  </div>
+</ng-template>
+
+<ng-template #empty>
+  <h5>--</h5>
+</ng-template>
+
+
+<!-- <ng-template #emptyValue>
+  <span class="nmar m-0">
+    -----------
+  </span></ng-template> -->

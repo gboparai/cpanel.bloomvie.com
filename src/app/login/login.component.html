@@ -1,0 +1,653 @@
+<div class="main-wrapper login-body">
+  <div class="login-wrapper">
+    <div class="container">
+      <div class="loginbox">
+        <div class="login-left">
+          <img class="img-fluid" src="assets/img/login-left-img.png" alt="Logo" />
+        </div>
+        <div class="login-right">
+          <div class="login-right-wrap loginComponent" [class.hidden]="showForgotPassword">
+            <div class="logo-img responsive-logo-new">
+              <img src="assets/img/logo-new.png" alt="">
+            </div>
+            <h1 class="text-center">Welcome to Bloomvie Portal</h1>
+
+            <form class="mt-5" [formGroup]="loginForm">
+              <div class="form-group">
+                <div class="iny">
+                  <label for="email">Email <span class="login-danger">*</span></label>
+                  <input class="form-control" id="email" type="email" placeholder="Enter Email"
+                    formControlName="email" />
+
+                  <!-- [ngClass]="{ 'is-invalid': loginForm.get('email')?.invalid && loginForm.get('email')?.touched}" -->
+
+                  <span class="profile-views"><i class="fas fa-user-circle"></i></span>
+                </div>
+
+                <!-- @if(loginForm.get('email')?.hasError('required') && loginForm.get('email')?.touched) {
+                      @if(loginForm.get('email')?.errors){
+                        @if (loginForm.get('email')?.errors?.["required"]) {
+                          <span class="text-danger">This field is required.</span>
+                        }
+                        @if (loginForm.get('email')?.errors?.['required'] && loginForm.get('email')?.errors?.['email']) {
+                          <span class="text-danger">Please enter a valid email address.</span>
+                        }
+                      }
+                    } -->
+
+                <div *ngIf="
+                    loginForm.get('email')?.touched &&
+                    loginForm.get('email')?.invalid
+                  ">
+                  <span class="text-danger" *ngIf="loginForm.get('email')?.errors?.['required']">
+                    This field is required.
+                  </span>
+                  <span class="text-danger" *ngIf="loginForm.get('email')?.errors?.['email']">
+                    Please enter a valid email address.
+                  </span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <div class="iny">
+                  <label for="password">Password <span class="login-danger">*</span></label>
+                  <input class="form-control pass-input" id="password" [type]="passwordField"
+                    placeholder="Enter Password" formControlName="password" />
+
+                  @if(passwordField == 'password') {
+                  <span class="profile-views feather-eye-off" (click)="showPasswordIcon()"></span>
+                  } @else {
+                  <span class="profile-views feather-eye" (click)="showPasswordIcon()"></span>
+                  }
+
+                  <!-- [ngClass]="{ 'is-invalid': loginForm.get('password')?.invalid && loginForm.get('password')?.touched }" -->
+                </div>
+                @if(loginForm.get('password')?.hasError('required') &&
+                loginForm.get('password')?.touched) { @if
+                (loginForm.get('password')?.errors) {
+                <span class="text-danger">This field is required.</span>
+                } }
+              </div>
+
+              <!-- Added on 27/06/25 For TOC user -->
+              <div class="form-group" *ngIf="isTocUser">
+                <div class="iny">
+                  <label for="password">Select Daycare <span class="login-danger">*</span></label>
+                  <ng-select placeholder="-Select-" [items]="TOCUserCentreList" bindLabel="centreName" bindValue="id" 
+                    class="w-100" (change)="onCentreChange($event)">
+                  </ng-select>
+
+                  <span class="text-danger" *ngIf="IsshowCentreValidation">
+                    This field is required.
+                  </span>
+                </div>
+              </div>
+
+
+              <div class="forgotpass">
+                <div class="remember-me">
+                  <label class="custom_check mr-2 mb-0 d-inline-flex remember-me">
+                    Remember me
+                    <input type="checkbox" id="rememberMe" formControlName="rememberMe" />
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
+
+                <a (click)="forgotPassword()">Forgot Password </a>
+                <!-- @if(showForgotPassword)
+                  {
+
+                    <div >
+                      <app-forgot-password></app-forgot-password>
+                    </div>
+                  } -->
+              </div>
+
+              <div class="form-group">
+                <!-- commented on 30/06/2025 -->
+                <!-- <button type="submit" class="btn btn-primary btn-block" (click)="login()"
+                  [disabled]="loginForm.invalid">
+                  Login
+                </button> -->
+
+                <!-- Added on 30/06/25 -->
+                <button type="submit" class="btn btn-primary btn-block" (click)="IsUserExit()"
+                  [disabled]="loginForm.invalid">
+                  Login
+                </button>
+
+              </div>
+            </form>
+          </div>
+
+          <div [class.hidden]="!showForgotPassword">
+            <app-forgot-password (backLogin)="backtoLoginScreen()"></app-forgot-password>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="staticBackdropEdit" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header" style="border: none">
+        <h5 class="modal-title" id="staticBackdropLabel">Renew Plan</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" style="padding-bottom: none">
+        <div class="row">
+          <div class="col-md-6 mb-2">
+            <div class="form-group local-forms ins-input-field">
+              <label>Select child <span class="text-danger">*</span></label>
+              <ng-select class="form-control" [items]="student" bindLabel="firstName" bindValue="id"
+                [(ngModel)]="selectedStudentId" [multiple]="false" class="input-group" placeholder="-Select Child-">
+              </ng-select>
+              <small class="text-danger" *ngIf="IsshowValidation">
+                This field is required.
+              </small>
+            </div>
+          </div>
+          <div class="col-md-6 mt-4 text-center">
+            <div class="form-group local-forms ins-input-field">
+              <button type="button" class="btn btn-primary" (click)="renewPlan()">
+                Renew Same Plan
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Added on 18/07/25 -->
+<div class="modal fade" id="addMoreCentre" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header" style="border: none">
+        <h5 class="modal-title" id="staticBackdropLabel">Add More Centre's</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" style="padding-bottom: none">
+        <form class="" [formGroup]="TOCRegistration">
+          <div class="col-md-12">
+            <div class="row">
+              <div class="col-md-6">
+                <label>Zip Code <span class="text-danger">*</span></label>
+                <input type="text" class="form-control border rounded w-100" placeholder="Ex: A0A 0A0" name="pinCode" readonly
+                  id="zipcode" (blur)="fetchLocationData()" (input)="formatPostalCode($event)"
+                  formControlName="pinCode" />
+                <div *ngIf="
+                      TOCRegistration.get('pinCode').invalid &&
+                      (TOCRegistration.get('pinCode').dirty ||
+                        TOCRegistration.get('pinCode').touched)
+                    ">
+                  <small class="text-danger" *ngIf="TOCRegistration.get('pinCode').errors?.required">This field is
+                    required.</small>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label class="d-flex align-items-center" for="radius">Radius (in km)<span class="text-danger">*</span>
+                  <input type="checkbox" class="ml-2" id="radiusCheckbox" (change)="getUserCurrentLocation($event)"
+                    title="Enable Current Location" id="radiusCurrentlocation" />
+                </label>
+                <input type="text" class="form-control input" name="radius" formControlName="radius"
+                  (change)="GetAllDayCaresNearBy($event)" id="radiusField" />
+                <div *ngIf="TOCRegistration.get('radius').touched">
+                  <small class="text-danger" *ngIf="TOCRegistration.get('radius').errors?.required">
+                    This field is required.
+                  </small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-12">
+            <div class="mb-4 ins-input-field">
+              <label for="partTimeWorkingDays">Working Days <span class="text-danger">*</span></label>
+              <div class="d-flex flex-wrap d-flex flex-wrap mb-3 justify-content-between">
+                <ul class="avail mb-0">
+                  <li *ngFor="let day of daysOfWeek">
+                    <label class="mr-3">
+                      <input type="checkbox" [id]="day" [value]="day" (change)="onWorkingDaysChange(day, $event)"
+                        [checked]="
+                              TOCRegistration.get('partTimeWorkingDays').value.split(',').includes(daysOfWeekMapping[day].toString())" />
+                      {{ day }}
+                    </label>
+                  </li>
+                </ul>
+                <!-- <div *ngIf="TOCRegistration.get('partTimeWorkingDays').touched">
+                <small class="text-danger" *ngIf="TOCRegistration.get('partTimeWorkingDays').errors?.required">Select
+                  atleast one working day</small>
+              </div> -->
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer justify-content-between" style="border: none; padding-right: 0">
+            <div class="lft-btn">
+              <button type="button" class="btn btn-primary w-100 hvr-shutter-out-horizontal" (click)="showmodal()">
+                Mark Your Availability
+              </button>
+                <small class="text-danger" *ngIf="ValidatorForAvailability">
+                Mark Your Availability</small>
+            </div>
+
+            <div class="lft-btn"></div>
+            <div class="right-btn">
+              <button type="button" class="btn btn-primary hvr-shutter-out-horizontal" style="margin-right: 11px" (click)="onSubmit()">
+                Submit
+              </button>
+
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                Cancel
+              </button>
+            </div>
+          </div>
+        </form>
+
+        <div class="col-md-12">
+          <div class="table-responsive mt-5">
+            <div class="row">
+              <div class="col-md-9"></div>
+              <div class="col-md-3 text-end">
+                <div class="search" *ngIf="radiusValue > 0">
+                  <input placeholder="Type here.." type="text" [(ngModel)]="searchTerm"
+                    (input)="filterNearbyDaycares()" />
+                  <button type="submit">Search</button>
+                </div>
+              </div>
+            </div>
+            <table class="table table-hover mb-0">
+              <thead class="student-thread" style="position: sticky; top: -1px; background: white; z-index: 2;">
+                <tr>
+                  <th style="width: 8%">
+                    <div class="d-flex gp-5">
+                      <input type="checkbox" class="" id="radiusCheckbox"
+                        *ngIf=" NearbyDayCareList && NearbyDayCareList.length > 0 " (change)="applyforAllDC($event)"
+                        title="Apply For All" />
+                      <span class="me-1">Select All</span>
+                    </div>
+                  </th>
+                  <th>Centre Name</th>
+                  <th class="text-start">Centre Mobile</th> 
+                  <th class="text-start">Address</th>
+                  <!-- <th class="text-start"> 
+                  <input type="checkbox" class="ml-2" id="radiusCheckbox"       
+                    (change)="applyforAllDC($event)" title="Apply For All"/> Select All
+                </th> -->
+                </tr>
+              </thead>
+
+              <tbody *ngIf="NearbyDayCareList && NearbyDayCareList.length > 0;  else noRecords">
+                <tr class=""
+                  *ngFor="let record of NearbyDayCareList | paginate : {itemsPerPage: Contentsize, currentPage: ContentP,id: 'toccontrol'}; let rowIndex = index">
+                  <td>
+                    <input type="checkbox" class="" [checked]="selectedDayCareIds.includes(record.id)"
+                      (change)="applyforParticularDC($event, record.id)" id="radiusCheckbox{{ record.id }}" />
+                  </td>
+                  <!-- <td>{{ rowIndex + 1 }}</td> -->
+                  <td>
+                    <div class="tooltip-wrapper" style="position: relative" (mouseenter)="hoveredRow = record"
+                      (mouseleave)="hoveredRow = null">
+                      <span class="hover-anchor">{{ record.centreName }}</span>
+                      <app-tooltip *ngIf="hoveredRow === record" [employee]="{
+                      fullName: record.centreName,
+                      email: record.centreEmail,
+                           profile: record.staffProfile
+
+                    }"></app-tooltip>
+
+
+                  
+                    </div>
+                  </td>
+                  <td>{{ record.centreMobile ? '+1 ' + record.centreMobile : '--' }}</td>
+                  <td>
+                    {{ record.city }},{{ record.state }},{{ record.country }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <ng-template #noRecords>
+            <tbody>
+              <tr>
+                <td colspan="8">
+                  <div class="no-data">
+                    <img src="assets/img/no-data-img.png" alt="No Record Found" />
+                    <span>No Record Found</span>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </ng-template>
+
+          <div class="d-flex justify-content-between align-items-center"
+            *ngIf="NearbyDayCareList && NearbyDayCareList.length > 0">
+            <div class="total-entry" style="font-size: small">
+              <span>Total Entries:</span>
+              <span class="entry-count">{{ NearbyDayCareList.length }} </span>
+            </div>
+
+            @if(NearbyDayCareList.length > 0) {
+            <pagination-controls previousLabel="prev" nextLabel="next" [maxSize]="10"
+              class="datatable-pager-nav my-2 mb-sm-0" id="toccontrol" (pageChange)="onPageChange($event)">
+            </pagination-controls>
+            }
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" tabindex="-1" id="TimeSlotModal" aria-hidden="true" aria-labelledby="TimeSlotModalLabel"
+  data-bs-keyboard="false" data-bs-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="TimeSlotModalLabel">
+          Add Time Availability
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          (click)="ResetModalForm()"></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <form class="" [formGroup]="TOCModalRegistration">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group local-forms ins-input-field">
+                  <label for="partTimeStartDate">Start Date <span class="text-danger">*</span></label>
+                  <input type="date" class="form-control" id="startDate" (change)="onDateChange('start', $event)"
+                    name="partTimeStartDate" />
+                  <div *ngIf="TOCModalRegistration.get('partTimeStartDate').touched">
+                    <small class="text-danger"
+                      *ngIf="TOCModalRegistration.get('partTimeStartDate').errors ?.required">This field is
+                      required.</small>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group local-forms ins-input-field">
+                  <label for="partTimeEndDate">End Date <span class="text-danger">*</span></label>
+                  <input type="date" class="form-control" id="endDate" (change)="onDateChange('end', $event)"
+                    name="partTimeEndDate" />
+
+                  <div *ngIf="TOCModalRegistration.get('partTimeEndDate').touched">
+                    <small class="text-danger" *ngIf="TOCModalRegistration.get('partTimeEndDate').errors?.required">This
+                      field is required.</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+
+          <div class="col-md-12 p-0">
+            <div>
+              <div class="today-tomorrow"
+                *ngIf="availableDays && availableDays.length > 0 && labelTextForSlider == 'None'">
+                <div class="left-arrow arrow" (click)="navigateWeek('prev')" [class.disabled]="currentWeekIndex === 0">
+                  <i class="fa fa-angle-left" aria-hidden="true"></i>
+                </div>
+
+                <h6 class="m-0">
+                  <span class="final-date">
+                    {{
+                    availableWeeks[currentWeekIndex]?.week ||
+                    "No Week Available"
+                    }}
+                  </span>
+                </h6>
+
+                <div class="right-arrow arrow" (click)="navigateWeek('next')"
+                  [class.disabled]="currentWeekIndex === availableWeeks.length - 1">
+                  <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </div>
+              </div>
+
+              <div class="today-tomorrow"
+                *ngIf="(availableDays && availableDays.length > 0 && labelTextForSlider == 'Apply For Whole Calendar') ||labelTextForSlider == ''">
+                <h6 class="m-0">
+                  <span class="final-date">
+                    {{
+                    startDate && endDate
+                    ? "(" +
+                    (startDate | date : "MM-dd-yyyy") +
+                    ") - (" +
+                    (endDate | date : "MM-dd-yyyy") +
+                    ")"
+                    : "No Week Available"
+                    }}
+                  </span>
+                </h6>
+              </div>
+
+              <div class="today-tomorrow" *ngIf="
+                  availableDays &&
+                  availableDays.length > 0 &&
+                  labelTextForSlider == 'Apply For Current Week'
+                ">
+                <h6 class="m-0">
+                  <span class="final-date">
+                    {{
+                    availableWeeks[currentWeekIndex]?.week ||
+                    "No Week Available"
+                    }}
+                  </span>
+                </h6>
+              </div>
+
+              <div class="today-tomorrow" *ngIf="
+                  availableDays &&
+                  availableDays.length > 0 &&
+                  labelTextForSlider == 'Apply For Current Month'
+                ">
+                <h6 class="m-0">
+                  <span class="final-date">
+                    {{
+                    startDate && endDate
+                    ? "(" +
+                    (dateRange.split(" - ")[0] | date : "MM-dd-yyyy") +
+                    ") (" +
+                    (dateRange.split(" - ")[1] | date : "MM-dd-yyyy") +
+                    ")"
+                    : "No Week Available"
+                    }}
+                  </span>
+                </h6>
+              </div>
+
+              <form class="" [formGroup]="TOCModalRegistration" *ngIf="availableWeeks && availableWeeks.length > 0">
+                <div class="">
+                  <label class="">Select Option<span class="text-danger">*</span></label>
+                  <div class="form-check">
+                    <input class="form-check-input1" name="option"
+                     type="radio" value="Option 1"  
+                    formControlName="option"
+                      (change)="isSelectedRadio()" />
+                    <label class="form-check-label">
+                      Apply For Whole Calendar
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input1" type="radio" name="option" id="" value="Option 2"
+                      formControlName="option" (change)="isSelectedRadio()" />
+                    <label class="form-check-label">
+                      Apply For Current Month
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input1" type="radio" name="option" value="Option 3" formControlName="option"
+                      (change)="isSelectedRadio()" />
+                    <label class="form-check-label">
+                      Apply For Current Week
+                    </label>
+                  </div>
+
+                  <div class="form-check">
+                    <input class="form-check-input1" type="radio" name="option" value="Option 4" formControlName="option"
+                      (change)="isSelectedRadio()" />
+                    <label class="form-check-label"> None </label>
+                  </div>
+                  <small class="text-danger" *ngIf="!isSelectOption">Select an option</small>
+                </div>
+              </form>
+
+              <label class="mt-3" *ngIf="availableDays && availableDays.length > 0">Available Days<span
+                  class="text-danger">*</span></label>
+              <div class="grid-container">
+                <div *ngFor="let dayInfo of availableDays" class="grider">
+                  <label>
+                    <input type="radio" [value]="dayInfo.date" name="selectedDay"
+                      (change)="onDaySelect(dayInfo.dayName)" [checked]="dayInfo.dayName === selectedDayRadio" />
+                    {{ dayInfo.dayName }}
+                  </label>
+                </div>
+              </div>
+              <small class="text-danger" *ngIf="!isSelectDay">Select Available Day.</small>
+              <hr />
+
+              <div class="col-md-12" *ngIf="
+                  filteredGroupedTimeSlots2 &&
+                  filteredGroupedTimeSlots2.length > 0
+                ">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Day Name</th>
+                      <th>Start Time</th>
+                      <th>End Time</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    <ng-container *ngFor="
+                        let record of filteredGroupedTimeSlots2;
+                        let rowIndex = index
+                      ">
+                      <tr class="table-light">
+                        <td>{{ rowIndex + 1 }}</td>
+                        <td>{{ record.dayName }}</td>
+                        <td>{{ record.startTime | TimeFormatAmPm }}</td>
+                        <td>{{ record.endTime | TimeFormatAmPm}}</td>
+                        <td>
+                          <i class="fa fa-pencil" aria-hidden="true" (click)="editRow(record, rowIndex)"></i>&nbsp;
+                          <i class="fa fa-trash" aria-hidden="true" (click)="deleteRow(record, rowIndex)"></i>
+                        </td>
+                      </tr>
+                    </ng-container>
+                  </tbody>
+                </table>
+                <hr />
+              </div>
+
+              <div *ngIf="
+                  selectedDay &&
+                  (labelTextForSlider === 'None'
+                    ? selectedDay !== filteredDayNameAfterAdded ||
+                      (selectedDay == filteredDayNameAfterAdded &&
+                        selectedWeekName != filteredWeekAfterAdded) ||
+                      isEditMode
+                    : selectedDay !== filteredDayNameAfterAdded || isEditMode)
+                ">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <h5 class="mb-0">Availability for {{ selectedDay }}</h5>
+                </div>
+                <div class="row" *ngFor="let timeRow of timeRows; let i = index">
+                  <div class="col-md-6">
+                    <label for="startTime">Start Time</label>
+                    <input type="time" [(ngModel)]="timeRow.startTime" class="form-control"
+                      (change)="validateTime(timeRow); timeRow.isEdited = true" />
+                  </div>
+                  <div class="col-md-6">
+                    <label for="endTime">End Time</label>
+                    <input type="time" [(ngModel)]="timeRow.endTime" class="form-control"
+                      (change)="validateTime(timeRow); timeRow.isEdited = true" />
+                    <small class="text-danger" *ngIf="timeRow?.isInvalid">
+                      End time must be greater than start time.
+                    </small>
+                  </div>
+                  <small class="text-danger" *ngIf="!isAddedSlot">Add atleast One Availability</small>
+                </div>
+              </div>
+
+
+              <!-- Added on 01/04/25 -->
+              <div class="row">
+                <div class="col-md-12 mt-3">
+                  <div class="lft-div text-end">
+                    <div *ngIf="
+                        selectedDay &&
+                        (labelTextForSlider === 'None'
+                          ? selectedDay !== filteredDayNameAfterAdded ||
+                            (selectedDay == filteredDayNameAfterAdded &&
+                              selectedWeekName != filteredWeekAfterAdded) ||
+                            isEditMode
+                          : selectedDay !== filteredDayNameAfterAdded ||
+                            isEditMode)
+                      ">
+                      <button *ngIf="!isEditMode; else updateSlotTemplate" type="button"
+                        class="btn btn-primary saver-class hvr-shutter-out-horizontal" (click)="saveTimeRows('save')"
+                        id="Addupdateslotbutton">
+                        Add Availability
+                      </button>
+                      <ng-template #updateSlotTemplate>
+                        <button type="button" class="btn btn-primary saver-class hvr-shutter-out-horizontal"
+                          (click)="saveTimeRows('save')" id="Addupdateslotbutton">
+                          Update Availability
+                        </button>
+                      </ng-template>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer" style="border: none !important">
+        <div class="row">
+          <div class="col-md-6">
+            <button type="button" class="btn btn-primary w-100 hvr-shutter-out-horizontal" id="submitTimeSlotButton"
+              (click)="saveTimeRows('submit')">
+              Submit
+            </button>
+          </div>
+
+          <div class="col-md-6">
+            <button type="button" class="btn btn-secondary w-100 hvr-shutter-out-horizontal" id="submitTimeSlotButton"
+              (click)="ResetModalForm()">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function () {
+    $(".toggle-password").click(function () {
+      $(this).find("i").toggleClass("feather-eye feather-eye-off");
+      var input = $("#password");
+      if (input.attr("type") === "password") {
+        input.attr("type", "text");
+      } else {
+        input.attr("type", "password");
+      }
+    });
+  });
+</script>

@@ -1,0 +1,744 @@
+<app-breadcrumb></app-breadcrumb>
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="heading-new">
+          <h5 class="mb-0">TOC List</h5>
+        </div>
+
+        <div *ngIf="statusId == 6">
+          <div>
+            <div class="row mt-3">
+              <div class="col-md-12 mb-4">
+                <div class="row">
+                  <div class="col-md-4 mb-4">
+                    <div class="search">
+                      <input placeholder="Type here.." type="text" [(ngModel)]="Name" (input)="onSearchName()" />
+                      <button type="submit">Search</button>
+                    </div>
+                  </div>
+                  <div class="col-md-8">
+                    <div class="text-end">
+                      <a class="anchor btn btn-primary apoint-button" (click)="toggleFilter()">
+                        <i class="fa fa-filter" aria-hidden="true"></i>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <!-- *ngIf="isFilterVisible" -->
+                <div class="row" [hidden]="!isFilterVisible">
+                  <!-- <div class="row" *ngIf="isFilterVisible"> -->
+                  <!-- <div class="col-md-3 mb-4">
+                                        <div class="form-group local-forms">
+                                            <label>Select Date Range</label>
+                                            <input  type="text" id="dateRangePicker" Class="form-control"  placeholder="Select date"/>
+                                        </div>                                        
+                                    </div> -->
+
+                  <!-- <div class="col-md-3 mb-4">
+                                        <div class="form-group local-forms">
+                                            <label>Select Start Date</label>
+                                            <input  type="text" id="startdatePicker" class="form-control" placeholder="-Select-" (change)="onstartDateChange($event)"/> 
+                                        </div>                                        
+                                    </div> -->
+
+                  <!-- <div class="col-md-3 mb-4">
+                                        <div class="form-group local-forms">
+                                            <label>Select End Date</label>
+                                            <input  type="text" id="enddatePicker" class="form-control" placeholder="-Select-" (change)="onendDateChange($event)"/> 
+                                        </div>                                        
+                                    </div> -->
+
+                  <div class="col-md-3 mb-4">
+                    <div class="form-group local-forms">
+                      <label>Select Start Date</label>
+                      <input type="text" id="startdatePicker" class="form-control" placeholder="-Select-"
+                        [(ngModel)]="StartDate" />
+                    </div>
+                  </div>
+
+                  <div class="col-md-3 mb-4">
+                    <div class="form-group local-forms">
+                      <label>Select End Date</label>
+                      <input type="text" id="enddatePicker" class="form-control" placeholder="-Select-"
+                        [(ngModel)]="EndDate" />
+                    </div>
+                  </div>
+
+                  <div class="col-md-3">
+                    <div class="form-group local-forms">
+                      <label>Qualifications</label>
+                      <ng-select class="form-control" [items]="QualificationList" bindLabel="name" bindValue="id"
+                        [multiple]="false" class="input-group" placeholder="-Select Qualification-"
+                        [(ngModel)]="selectedQualification" id="qualificationId">
+                      </ng-select>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3">
+                    <div class="form-group local-forms">
+                      <label>Days</label>
+                      <ng-select class="form-control" [items]="DayList" bindLabel="day" bindValue="id"
+                        [multiple]="false" class="input-group" placeholder="-Select Day-" [(ngModel)]="selectedDay"
+                        id="daysId">
+                      </ng-select>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3">
+                    <div class="form-group local-forms">
+                      <label>Time</label>
+                      <input type="time" class="form-control" id="timeId" />
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-8"></div>
+                    <div class="col-md-4 end text-end pe-0">
+                      <div class="row">
+                        <div class="col-md-6"></div>
+                        <div class="col-md-6 pe-0">
+                          <button class="btn btn-primary me-2" type="button" (click)="Onsearchclick()">
+                            Search
+                          </button>
+                          <button class="btn btn-primary" type="reset" (click)="resetfilter()">
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-12">
+                <div class="table-responsive">
+                  <table class="table table-hover mb-0">
+                    <thead class="student-thread">
+                      <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <!-- <th>Email</th> -->
+                        <th>Experience (in years)</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+
+                    <ng-container *ngIf="AppliedJobTocList?.length > 0; else noRecords">
+                      <tbody>
+                        <tr *ngFor="
+                            let toclist of AppliedJobTocList
+                              | paginate
+                                : {
+                                    itemsPerPage: Contentsize,
+                                    currentPage: ContentP,
+                                    id: 'toccontrol'
+                                  };
+                            let Index = index
+                          ">
+                          <td>
+                            {{ (ContentP - 1) * Contentsize + Index + 1 }}
+                          </td>
+                          <!-- <td>
+                            <div class="cont1">{{ toclist.teacherName }}</div>
+                          </td>
+                          <td>
+                            <div class="cont1">{{ toclist.teacherEmail }}</div>
+                          </td> -->
+
+
+                          <td>
+                            <div class="tooltip-wrapper" style="position: relative"
+                              (mouseenter)="hoveredRow = toclist" (mouseleave)="hoveredRow = null">
+                              <span class="hover-anchor"> {{ toclist.teacherName }}&nbsp;{{
+                                toclist.parentLastName
+                                ? toclist.parentLastName
+                                : ""}}</span>
+
+                              <app-tooltip *ngIf="hoveredRow === toclist" [employee]="{
+                      fullName: toclist.teacherName + '' + (toclist.teacherLastName ? ' ' + toclist.teacherLastName : ''),
+                      email: toclist.teacherEmail,
+                      profile:toclist.staffProfile
+                    }"></app-tooltip>
+                            </div>
+                          </td>
+
+
+
+
+                          <td>
+                            <div class="cont1">{{ toclist.experience }}</div>
+                          </td>
+                          <td>
+                            <!-- <div class="cont1">{{ toclist.status }}</div> -->
+                            <span [class.badge]="true" [class.bg-warning]="
+                                toclist.status === 'Shortlisted'
+                              " [class.bg-success]="toclist.status === 'Accepted'"
+                              [class.bg-danger]="toclist.status === 'Rejected'"
+                              [class.bg-info]="toclist.status === 'On Hold'">
+                              {{ toclist?.status }}
+                              By Bloomvie
+                            </span>
+                          </td>
+                          <td>
+                            <div class="actions">
+                              <a class="anchor btn btn-primary apoint-button me-2" data-bs-toggle="modal"
+                                 (click)="getByIDForView(toclist.userMasterId)">
+                                <i class="fa fa-eye" aria-hidden="true"></i></a>
+                                <!-- data-bs-target="#view-del" -->
+
+                              <a *ngIf="userRoleID == 3" class="btn-primary btn" data-bs-toggle="modal"
+                                 (click)="
+                                  getTOCUserDetailByID(toclist.userMasterId)
+                                ">
+                                View Availability
+                              </a>
+                              <!-- data-bs-target="#staticBackdropEdit" -->
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </ng-container>
+                  </table>
+                </div>
+                <ng-template #noRecords>
+                  <tbody>
+                    <tr>
+                      <td colspan="8">
+                        <div class="no-data">
+                          <img src="assets/img/no-data-img.png" alt="No Record Found" />
+                          <span>No Record Found</span>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </ng-template>
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="total-entry" style="font-size: small">
+                    <span>Total Entries:</span><span class="entry-count">
+                      {{ AppliedJobTocList?.length }}
+                    </span>
+                  </div>
+                  @if(AppliedJobTocList?.length > 5) {
+                  <pagination-controls previousLabel="prev" nextLabel="next" [maxSize]="5"
+                    class="datatable-pager-nav my-2 mb-sm-0" id="toccontrol" (pageChange)="onPageChange($event)">
+                  </pagination-controls>
+                  }
+                </div>
+                <!-- <div class="pagination-style" *ngIf="AppliedJobTocList.length > 0">
+                                    <pagination-controls previousLabel="prev" nextLabel="next" [maxSize]="5"
+                                        class="datatable-pager-nav my-2 mb-sm-0" id="toccontrol"
+                                        (pageChange)="onPageChange($event)">
+                                    </pagination-controls>
+                                </div> -->
+              </div>
+            </div>
+          </div>
+          <div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- The Modal -->
+<div class="modal" id="view-del">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">TOC Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="row" *ngIf="TocDetail != null">
+          <!-- <div class="col-md-12">
+                        <div class="btn-box text-end">
+                            <a class="btn-primary btn" data-bs-toggle="modal" data-bs-target="#staticBackdropEdit"
+                                (click)="getTOCUserDetailByID(TocDetail.userMasterId)">
+                                View Availability
+                            </a>
+                        </div>
+                    </div> -->
+
+          <div class="col-lg-6">
+            <div class="personal-activity">
+              <div class="personal-icons">
+                <i class="fa-solid fa-user"></i>
+              </div>
+              <div class="views-personal">
+                <h4>Teacher Name</h4>
+                <h5>{{ TocDetail.teacherName }}</h5>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="personal-activity">
+              <div class="personal-icons">
+                <i class="fa-solid fa-envelope"></i>
+              </div>
+              <div class="views-personal">
+                <h4>Email</h4>
+                <h5>{{ TocDetail.teacherEmail }}</h5>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="personal-activity">
+              <div class="personal-icons">
+                <i class="fa-solid fa-phone"></i>
+              </div>
+              <div class="views-personal">
+                <h4>Mobile</h4>
+                <h5>{{ TocDetail.mobileNumber != null ? "+1 " +TocDetail.mobileNumber : "--" }}</h5>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="personal-activity">
+              <div class="personal-icons">
+                <i class="fa-solid fa-suitcase"></i>
+              </div>
+              <div class="views-personal">
+                <h4>Experience (in years)</h4>
+                <h5>{{ TocDetail.experience }}</h5>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="personal-activity">
+              <div class="personal-icons">
+                <i class="fa-solid fa-calendar-days"></i>
+              </div>
+              <div class="views-personal">
+                <h4>Start Date</h4>
+                <!-- <h5>{{TocDetail.startDate}}</h5> -->
+                <h5>{{ TocDetail.startDate | date : "MM-dd-yyyy" }}</h5>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="personal-activity">
+              <div class="personal-icons">
+                <i class="fa-solid fa-calendar-days"></i>
+              </div>
+              <div class="views-personal">
+                <h4>End Date</h4>
+                <h5>
+                  {{
+                  TocDetail.endDate
+                  ? (TocDetail.endDate | date : "MM-dd-yyyy")
+                  : "--"
+                  }}
+                </h5>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="personal-activity">
+              <div class="personal-icons">
+                <i class="fa-solid fa-graduation-cap"></i>
+              </div>
+              <div class="views-personal">
+                <h4>Qualification</h4>
+                <h5>{{ TocDetail.qualificationNames }}</h5>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="personal-activity">
+              <div class="personal-icons">
+                <i class="fa-solid fa-calendar-days"></i>
+              </div>
+              <div class="views-personal">
+                <h4>Working Days</h4>
+                <h5>{{ TocDetail.workingDaysNames }}</h5>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="personal-activity">
+              <div class="personal-icons">
+                <i class="fa-solid fa-message"></i>
+              </div>
+              <div class="views-personal">
+                <h4>Area Of Expertise</h4>
+                <!-- <h5>{{TocDetail.expertise ? TocDetail.expertise : '--'}}</h5> -->
+                <h5>
+                  {{
+                  TocDetail?.expertiseNames ? TocDetail?.expertiseNames : "--"
+                  }}
+                </h5>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="personal-activity">
+              <div class="personal-icons">
+                <i class="fa-solid fa-message"></i>
+              </div>
+              <div class="views-personal">
+                <h4>Message</h4>
+                <h5>{{ TocDetail.message ? TocDetail.message : "--" }}</h5>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="personal-activity">
+              <div class="personal-icons">
+                <i class="fa-solid fa-file"></i>
+              </div>
+              <div class="views-personal">
+                <h4>Photo-ID Document ({{ TocDetail.documentTypeNames }})</h4>
+                <div class="action-buttons" *ngIf="TocDetail.UploadedDocument?.length > 0">
+                  <h5>
+                    <!-- <a (click)="openPreview(TocDetail?.UploadedDocument)" title="View"
+                                            class="personal-icons" style="cursor: pointer;">
+                                            <i (click)="onclick()" class="fa fa-eye"></i>
+                                        </a> -->
+                    <a (click)="
+                        openPreview(
+                          TocDetail?.UploadedDocument,
+                          getMimeTypeFromExtension(
+                            TocDetail?.uploadedDocument_ex
+                          )
+                        )
+                      " title="View" class="personal-icons" style="cursor: pointer">
+                      <i class="fa fa-eye"></i>
+                    </a>
+                  </h5>
+                  <h5>
+                    <a href="javascript:void(0)" (click)="downloadFile(TocDetail?.UploadedDocument)" title="Download"
+                      class="personal-icons">
+                      <i class="fa fa-download"></i>
+                    </a>
+                  </h5>
+                </div>
+                <div class="action-buttons" *ngIf="TocDetail.UploadedDocument?.length == 0">
+                  <span>--</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="personal-activity">
+              <div class="personal-icons">
+                <i class="fa-solid fa-file"></i>
+              </div>
+              <div class="views-personal">
+                <h4>Resume Document</h4>
+                <div class="action-buttons" *ngIf="TocDetail.DocumentResumes?.length > 0">
+                  <h5>
+                    <!-- <a (click)="openPreview(TocDetail?.DocumentResumes)" title="View"
+                                            class="personal-icons" style="cursor: pointer;">
+                                            <i (click)="onclick()" class="fa fa-eye"></i>
+                                        </a> -->
+                    <a (click)="
+                        openPreview(
+                          TocDetail?.DocumentResumes,
+                          getMimeTypeFromExtension(
+                            TocDetail?.documentResumes_ex
+                          )
+                        )
+                      " title="View" class="personal-icons" style="cursor: pointer">
+                      <i class="fa fa-eye"></i>
+                    </a>
+                  </h5>
+                  <h5>
+                    <a href="javascript:void(0)" (click)="downloadFile(TocDetail?.DocumentResumes)" title="Download"
+                      class="personal-icons">
+                      <i class="fa fa-download"></i>
+                    </a>
+                  </h5>
+                </div>
+                <div class="action-buttons" *ngIf="TocDetail.DocumentResumes?.length == 0">
+                  <span>--</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="personal-activity">
+              <div class="personal-icons">
+                <i class="fa-solid fa-file"></i>
+              </div>
+              <div class="views-personal">
+                <h4>Educational Credentails Document</h4>
+                <div class="action-buttons" *ngIf="
+                    TocDetail?.Educational_Credentails &&
+                    TocDetail.Educational_Credentails?.length > 0
+                  ">
+                  <h5>
+                    <!-- <a (click)="openPreview(TocDetail?.Educational_Credentails)" title="View"
+                                            class="personal-icons" style="cursor: pointer;">
+                                            <i (click)="onclick()" class="fa fa-eye"></i>
+                                        </a> -->
+                    <a (click)="
+                        openPreview(
+                          TocDetail?.Educational_Credentails,
+                          getMimeTypeFromExtension(
+                            TocDetail?.educational_Credentails_ex
+                          )
+                        )
+                      " title="View" class="personal-icons" style="cursor: pointer">
+                      <i class="fa fa-eye"></i>
+                    </a>
+                  </h5>
+                  <h5>
+                    <a href="javascript:void(0)" (click)="downloadFile(TocDetail?.Educational_Credentails)"
+                      title="Download" class="personal-icons">
+                      <i class="fa fa-download"></i>
+                    </a>
+                  </h5>
+                </div>
+                <div class="action-buttons" *ngIf="TocDetail?.Educational_Credentails?.length == 0">
+                  <span>--</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="staticBackdropEdit" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header" style="border: none">
+        <h5 class="modal-title" id="staticBackdropLabel">
+          Availability Details
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body" style="padding-bottom: none">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0" >
+            <thead>
+              <tr>
+                <th colspan="5" class="text-start">
+                  <label *ngIf="TOCUserDetail?.length">
+                    <input type="checkbox" [checked]="
+                        isAllWeeksCheckedAndDisabled() || isAllWeeksChecked()
+                      " [disabled]="
+                        isAllWeeksCheckedAndDisabled() || isAllWeeksDisabled()
+                      " (change)="onSelectAllChange($event)" />
+                    Select All
+                  </label>
+                </th>
+              </tr>
+            </thead>
+            <tbody *ngIf="TOCUserDetail?.length > 0; else noRecords">
+              <ng-container *ngFor="let slotDetail of TOCUserDetail  | paginate: { itemsPerPage: TocContentSize, currentPage: TocContentP, id: 'tocslotcontrol' }; let i = index">
+              <tr>
+                <td colspan="5">
+                  <div class="toogle-classroom">
+                    <button class="btn-toggle" data-bs-toggle="collapse" [attr.data-bs-target]="'#collapseTable' + i"
+                      [attr.aria-controls]="'collapseTable' + i" [attr.aria-expanded]="
+                        currentExpandedDay?.slotIndex === i &&
+                        currentExpandedDay?.weekName === slotDetail?.weekName
+                      " (click)="onPlusClick(slotDetail, i)">
+                      <i class="fa"></i>
+                    </button>
+
+                    <input type="checkbox" [id]="'week_checkbox_' + i" [checked]="
+                        selectedWeeks.includes(slotDetail?.weekName) ||
+                        isWeekFullyCheckedAndDisabled(slotDetail) ||
+                        containsRequestByDayCare(slotDetail?.slots)
+                      " [disabled]="
+                        isWeekFullyCheckedAndDisabled(slotDetail) ||
+                        containsRequestByDayCare(slotDetail?.slots)
+                      " (change)="
+                        onWeekCheckboxChange(slotDetail?.weekName, $event)
+                      " />
+                    <span>{{ slotDetail?.weekName }}
+                       <b>({{ formatDateRange(slotDetail?.dateRange) }})</b></span>
+
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="5" class="p-0">
+                  <div class="collapse collapse-table" [ngClass]="{
+                      show:
+                        currentExpandedDay?.slotIndex === i &&
+                        currentExpandedDay?.weekName === slotDetail?.weekName
+                    }" [attr.id]="'collapseTable' + i">
+                    <table class="table sub-table mb-0">
+                      <tbody *ngFor="let dayName of uniqueWorkingDayNames">
+                        <tr>
+                          <td>
+                            <div class="toogle-classroom">
+                              <button class="btn-toggle" data-bs-toggle="collapse" [attr.data-bs-target]="
+                                  '#collapseTable1' + i + '-' + dayName
+                                " [attr.aria-controls]="
+                                  'collapseTable1' + i + '-' + dayName
+                                " [attr.aria-expanded]="
+                                  isExpanded
+                                    ? currentExpandedDay?.slotIndex === i &&
+                                      currentExpandedDay?.dayName === dayName
+                                    : false
+                                " (click)="
+                                  bindGridClick(
+                                    slotDetail,
+                                    dayName,
+                                    i,
+                                    slotDetail?.weekName
+                                  )
+                                ">
+                                <i class="fa"></i>
+                              </button>
+
+                              <input type="checkbox" [id]="'day_checkbox_' + i + '_' + dayName" [checked]="
+                                  selectedDays[slotDetail?.weekName]?.includes(
+                                    dayName
+                                  ) ||
+                                  containsRequestByDayCare(
+                                    slotDetail?.slots,
+                                    dayName
+                                  )
+                                " [disabled]="
+                                  containsRequestByDayCare(
+                                    slotDetail?.slots,
+                                    dayName
+                                  )
+                                " (change)="
+                                  onDayCheckboxChange(
+                                    slotDetail?.weekName,
+                                    dayName,
+                                    $event
+                                  )
+                                " />
+                              <span>{{ dayName }}</span>
+                            </div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td colspan="5" class="p-0">
+                            <div class="collapse collapse-table" [ngClass]="{
+                                show:
+                                  currentExpandedDay?.slotIndex === i &&
+                                  currentExpandedDay?.dayName === dayName
+                              }" [attr.id]="'collapseTable1' + i + '-' + dayName">
+                              <table class="table sub-table mb-0">
+                                <thead class="table-light">
+                                  <tr>
+                                    <th>#</th>
+                                    <th>Day Name</th>
+                                    <th>Start Time</th>
+                                    <th>End Time</th>
+                                    <th>Status</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr *ngFor="
+                                      let item of filteredSlotsByDay;
+                                      let j = index
+                                    ">
+                                    <td>{{ j + 1 }}</td>
+                                    <td>{{ item?.workingDayName }}</td>
+                                    <td>{{ item?.startTime?.slice(0, 5) | TimeFormatAmPm }}</td>
+                                    <td>{{ item?.endTime?.slice(0, 5) | TimeFormatAmPm }}</td>
+                                    <td class="p-0 text-center">
+                                      <span class="badge" [class.bg-warning]="
+                                          item.StatusName === 'Pending'
+                                        " [class.bg-success]="
+                                          item.StatusName === 'Accepted'
+                                        " [class.bg-danger]="
+                                          item.StatusName === 'Rejected'
+                                        " [class.bg-info]="
+                                          item.StatusName === 'On Hold'
+                                        ">
+                                        {{ item?.StatusName }}
+                                      </span>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </td>
+              </tr>
+            </ng-container>
+            </tbody>
+          </table>
+
+          <ng-template #noRecords>
+  <tbody>
+    <tr>
+      <td colspan="8">
+        <div class="no-data">
+          <img src="assets/img/no-data-img.png" alt="No Record Found" />
+          <span>No Record Found</span>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</ng-template>
+
+          <div class="sendRequest text-end mt-4">
+            <button *ngIf="TOCUserDetail != null && TOCUserDetail.length > 0" class="btn btn-primary" [disabled]="
+                isAllWeeksCheckedAndDisabled() || isAllWeeksDisabled()
+              " (click)="SendRequestAtOnce()">
+              Send Request
+            </button>
+          </div>
+        </div>
+        <div class="pagination-style mt-4 no-flex" *ngIf="TOCUserDetail?.length > 5">
+            <pagination-controls previousLabel="prev" nextLabel="next" [maxSize]="5"
+              class="datatable-pager-nav my-2 mb-sm-0" id="tocslotcontrol" (pageChange)="onPageChangeToc($event)">
+            </pagination-controls>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- smooth open modal -->
+<!-- <div *ngIf="previewUrl" [ngClass]="{'modal-backdrop': true, 'closing': isClosing}" (click)="closePreview()">                     
+        <div class="modal-content" (click)="$event.stopPropagation()">
+        <button class="close-button text-end" (click)="closePreview()">&#10006;</button>
+        <img [src]="previewUrl" alt="Preview" class="preview-image" />
+    </div>
+</div> -->
+
+<!-- Added on 23/06/25 Arshdeep -->
+<div *ngIf="previewUrl" [ngClass]="{ 'modal-backdrop': true }" (click)="closePreview()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <button class="close-button" (click)="closePreview()">&#10006;</button>
+
+    <!-- Show image -->
+    <img *ngIf="previewMime?.startsWith('image/')" [src]="previewUrl" alt="Preview" class="preview-image" />
+
+    <!-- Show PDF -->
+    <iframe *ngIf="previewMime === 'application/pdf'" [src]="previewUrl" class="preview-pdf"></iframe>
+
+    <!-- Show unsupported -->
+    <div *ngIf="
+        previewMime &&
+        !previewMime.startsWith('image/') &&
+        previewMime !== 'application/pdf'
+      ">
+      <p>Preview not available for this file type.</p>
+    </div>
+  </div>
+</div>

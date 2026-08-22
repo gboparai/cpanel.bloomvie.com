@@ -1,0 +1,194 @@
+<app-breadcrumb></app-breadcrumb>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <div
+          id="pills-profile"
+          role="tabpanel"
+          aria-labelledby="pills-profile-tab"
+          tabindex="0">
+          <form [formGroup]="socialLinksForm">
+            <div class="heading-new">
+              <h5 class="mb-0">Social Media Information</h5>
+            </div>
+            <div class="row">
+              <div class="col-md-6 mb-4">
+                <div class="links-info">
+                  <div class="row form-row">
+                    <div class="form-placeholder d-flex">
+                      <button class="btn social-icon">
+                        <i class="feather-facebook"></i>
+                      </button>
+                      <input
+                        formControlName="facebook"
+                        type="text"
+                        class="form-control"
+                        placeholder="https://www.facebook.com" />
+                    </div>
+                  </div>
+                  <!-- @if(socialLinksFormControls.facebook.touched && socialLinksFormControls.facebook.errors){
+                    @if(socialLinksFormControls.facebook.errors?.required){
+                        <div class="text-danger">
+                            This field is required.
+                        </div>
+                    }
+                   
+                } -->
+                </div>
+              </div>
+              <div class="col-md-6 mb-4">
+                <div class="links-info">
+                  <div class="row form-row">
+                    <div class="form-placeholder d-flex justify-content-end">
+                      <button class="btn social-icon">
+                        <i class="fa-brands fa-x-twitter"></i>
+                      </button>
+                      <input
+                        formControlName="twitter"
+                        type="text"
+                        class="form-control"
+                        placeholder="https://www.x.com" />
+                    </div>
+                  </div>
+                  <!-- @if(socialLinksFormControls.twitter.touched && socialLinksFormControls.twitter.errors){
+                    @if(socialLinksFormControls.twitter.errors?.required){
+                        <div class="text-danger">
+                            This field is required.
+                        </div>
+                    }
+                   
+                } -->
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-4">
+                <div class="links-info">
+                  <div class="row form-row">
+                    <div class="form-placeholder d-flex justify-content-end">
+                      <button class="btn social-icon">
+                        <i class="feather-instagram"></i>
+                      </button>
+                      <input
+                        formControlName="instagram"
+                        type="text"
+                        class="form-control"
+                        placeholder="https://www.instagram.com" />
+                    </div>
+                  </div>
+                  <!-- @if(socialLinksFormControls.instagram.touched && socialLinksFormControls.instagram.errors){
+                    @if(socialLinksFormControls.instagram.errors?.required){
+                        <div class="text-danger">
+                            This field is required.
+                        </div>
+                    }
+                   
+                } -->
+                </div>
+              </div>
+              <div class="col-md-6 mb-4">
+                <div class="links-info">
+                  <div class="row form-row">
+                    <div class="form-placeholder d-flex justify-content-end">
+                      <button class="btn social-icon">
+                        <i class="feather-linkedin"></i>
+                      </button>
+                      <input
+                        formControlName="linkedIn"
+                        type="text"
+                        class="form-control"
+                        placeholder="https://www.linkedin.com" />
+                    </div>
+                  </div>
+                  <!-- @if(socialLinksFormControls.linkedIn.touched && socialLinksFormControls.linkedIn.errors){
+                    @if(socialLinksFormControls.linkedIn.errors?.required){
+                        <div class="text-danger">
+                            This field is required.
+                        </div>
+                    }
+                   
+                } -->
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <div
+          id="pills-profile"
+          role="tabpanel"
+          aria-labelledby="pills-profile-tab"
+          tabindex="0">
+          <form [formGroup]="payrollFrequencyForm" (ngSubmit)="submitForm()">
+            <div class="heading-new">
+              <h5 class="mb-0">Select Payroll Frequency</h5>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-4">
+                <label for="payrollFrequency">Payroll Frequency</label>
+                <div class="d-flex">
+                  <ng-select
+                  [items]="payrollFrequencies"
+                  style="width: 100%; margin-right: 30px;"
+                  bindLabel="label"
+                  bindValue="value"
+                  placeholder="-Select-"
+                  formControlName="payrollFrequency">
+                </ng-select>
+                 <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+              </div>
+            </div>
+
+           
+            <div class="row">
+              {{ getTrackValue() }}
+              <div class="form-group mb-0 col-md-12 text-end">
+                <div class="text-end">
+                  <div class="settings-btns">
+                    <button
+                      [ngStyle]="{
+                        display: !onBoardingService.isOnboarding
+                          ? 'none'
+                          : 'block'
+                      }"
+                      type="reset"
+                      (click)="onBoardingService.onChangeTab('Tab-6')"
+                      type="submit"
+                      class="btn btn-secondary me-3">
+                      Previous
+                    </button>
+                    <button
+                      (click)="onSubmitLinks()"
+                      [disabled]="disableFeature"
+                      type="submit"
+                      class="btn btn-primary"
+                      [innerText]="
+                        onBoardingService.isOnboarding
+                          ? 'Save & Proceed'
+                          : 'Save'
+                      "></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-switcher-component></app-switcher-component>

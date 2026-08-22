@@ -1,0 +1,103 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="heading-new">
+          <h5 class="mb-0">Add Activity</h5>
+        </div>
+        <form>
+          <div class="row">
+            <div class="col-md-6 mb-4">
+              <div class="form-group local-forms">
+                <label style="left: 10px !important"
+                  >Activity Name<span class="login-danger">*</span></label
+                >
+                <input type="text" class="form-control" />
+              </div>
+            </div>
+
+            <div class="col-md-6 mb-4">
+              <div class="form-group local-forms">
+                <label style="left: 10px !important" class=""
+                  >Activity Time<span class="login-danger gt">*</span></label
+                >
+
+                <!-- add a calander  _|0..0|_  here to add date  and time -->
+                <select class="form-control form-select">
+                  <option value=""></option>
+                  <option value="1">05/08/2024 9:00 AM</option>
+                  <option value="2">08/05/2024 10:00 AM</option>
+                  <option value="3">2024/08/05 11:00 AM</option>
+                </select>
+
+                <span role="presentation" class="select2-selection__arrow"
+                  ><b role="presentation"></b
+                ></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-4">
+              <div class="local-forms">
+                <div class="form-group">
+                  <label style="left: 11px !important"
+                    >Activity Description <span class="star-red">*</span></label
+                  >
+                  <textarea
+                    class="form-control"
+                    spellcheck="false"
+                    style="
+                      resize: none;
+                      height: 130px;
+                      min-height: 130px !important;
+                    "
+                    formControlName="description"
+                  >
+                  </textarea>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 mb-4 local-forms">
+              <div class="form-group">
+                <label class="settings-label"
+                  >Activity Photos <span class="star-red">*</span></label
+                >
+                <div class="settings-btn">
+                  <input
+                    type="file"
+                    accept="image/png, image/gif, image/jpeg"
+                    name="favicon"
+                    class="hide-input"
+                  />
+
+                  <div class="divw">
+                    <img src="assets/img/default-img.png" alt="activity Logo" />
+                  </div>
+                </div>
+
+                <div class="editer">
+                  <i class="far fa-edit"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group mb-4 col-md-12 text-end">
+              <div class="settings-btns">
+                <button type="submit" class="btn btn-primary me-3">
+                  Submit
+                </button>
+                <button type="submit" class="btn btn-secondary">Cancel</button>
+              </div>
+            </div>
+          </div>
+        </form>
+
+        <!-- table -->
+      </div>
+    </div>
+  </div>
+</div>

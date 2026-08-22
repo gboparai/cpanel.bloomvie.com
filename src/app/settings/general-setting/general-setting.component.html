@@ -1,0 +1,393 @@
+<app-breadcrumb></app-breadcrumb>
+
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="heading-new">
+          <h5 class="mb-0">General Settings</h5>
+        </div>
+        <form [formGroup]="form">
+          <div class="row">
+            <div class="col-md-12 br-btm pb-3 mb-3">
+              <label class="fw-bold">Add Age Group<span class="login-danger">*</span></label>
+              <div class="selectBoxGroup">
+
+                @if (skeletonShow === 'Skelton') {
+
+                <app-skeleton-loader class="d-flex" skeletonShow="Skelton" viewType="age-Group">
+                </app-skeleton-loader>
+
+                } @else if (ageGroupsControls.length > 0) {
+                <div formArrayName="ageGroups" class="selectBox pos-rel"
+                  *ngFor="let item of ageGroupsControls; let i = index">
+                  <input *ngIf="centreID && centreID > 0" formControlName="{{ i }}" type="checkbox"
+                    name="ageGroup-{{ i }}" id="ageGroup-{{ i }}" (change)="selectageGroups(i, $event)" />
+
+
+                  <label class="" for="ageGroup-{{ i }}">
+                    {{ ageGroupList[i].label }}
+                  </label>
+
+                  <!-- <span class="edit-ico" *ngIf="ageGroupList[i].createdBy == loginUserID" data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="UpdateAgeGroup(ageGroupList[i])"><i class="fa fa-edit"></i></span> -->
+                </div>
+                }
+                <div class="selectBox add-btn-check">
+                  <label data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    Add More
+                  </label>
+                </div>
+              </div>
+
+
+            </div>
+
+
+            <div class="col-md-12 br-btm pb-3 mb-3">
+              <label class="fw-bold">Add Amenities<span class="login-danger">*</span></label>
+              <div formArrayName="facilities" class="selectBoxGroup">
+
+                @if (skeletonShow === 'Skelton') {
+
+                <app-skeleton-loader  class="d-flex" skeletonShow="Skelton" viewType="age-Group">
+                </app-skeleton-loader>
+
+                } @else if (ageGroupsControls.length > 0) {
+                <div *ngFor="let item of facilitiesControls; let i = index" class="selectBox pos-rel">
+                  <input *ngIf="centreID && centreID > 0" formControlName="{{ i }}" type="checkbox"
+                    name="facility-{{ i }}" id="facility-{{ i }}" (change)="selectFacilities(i, $event)" />
+                  <label class="" for="facility-{{ i }}">
+                    {{ facilityList[i].facilityName }}
+                  </label>
+                  <!-- <span class="edit-ico" *ngIf="facilityList[i].createdBy == loginUserID"><i class="fa fa-edit"></i></span> -->
+                </div>
+
+                }
+
+
+                <div class="selectBox add-btn-check">
+                  <label data-bs-toggle="modal" data-bs-target="#exampleModal2">
+                    Add More
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12 br-btm pb-3 mb-3">
+              <label class="fw-bold">Add Activity<span class="login-danger">*</span></label>
+              <div formArrayName="activities" class="selectBoxGroup">
+
+                @if (skeletonShow === 'Skelton') {
+
+                <app-skeleton-loader class="d-flex" skeletonShow="Skelton" viewType="age-Group">
+                </app-skeleton-loader>
+
+                } @else if (ageGroupsControls.length > 0) {
+                <div *ngFor="let item of activitiesControls; let i = index" class="selectBox pos-rel">
+                  <input *ngIf="centreID && centreID > 0" formControlName="{{ i }}" type="checkbox"
+                    name="activity-{{ i }}" id="activity-{{ i }}" (change)="selectActivity(i, $event)" />
+                  <label class="" for="activity-{{ i }}">
+                    {{ activityList[i].planName }}
+                  </label>
+                  <!-- <span class="edit-ico" *ngIf="activityList[i].createdBy == loginUserID"><i class="fa fa-edit"></i></span> -->
+                </div>
+
+                }
+                <div class="selectBox add-btn-check">
+                  <label data-bs-toggle="modal" data-bs-target="#exampleModal3">
+                    Add More
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row mt-4">
+  {{ trackingFields() }}
+  <div class="col-md-12">
+    <div class="student-submit text-end">
+      <button type="submit" class="btn btn-secondary me-3" *ngIf="onBoardingService.isOnboarding"
+        (click)="onBoardingService.onChangeTab('Tab-1')">
+        Previous
+      </button>
+      <button *ngIf="centreID && centreID > 0" (click)="onSubmit()" id="next-btn" class="btn btn-primary"
+        [disabled]="trackForm" [innerText]="
+          onBoardingService.isOnboarding ? 'Save & Proceed' : 'Submit'
+        "></button>
+    </div>
+  </div>
+</div>
+
+<div data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+  aria-hidden="true" class="modal fade" id="exampleModal" aria-labelledby="exampleModalLabel">
+  <div class="modal-dialog">
+    <form [formGroup]="ageGroupForm" (ngSubmit)="onSubmitAgeGroup()">
+      <div class="modal-content">
+        <div class="modal-header" style="border: none">
+          <h5 class="modal-title" id="exampleModalLabel">Add Age Group</h5>
+          <button type="reset" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <!-- <div class="col-12 col-md-12 mb-4">
+              <div class="form-group local-forms">
+                <label for="role">Age Group Name <span class="login-danger">*</span></label>
+                <input formControlName="ageGroupTitle" type="text" class="form-control" id="role" />
+                <span class="text-danger" *ngIf="ageGroupFormControls.ageGroupTitle.touched">
+                  <span *ngIf="ageGroupFormControls.ageGroupTitle?.errors?.required">This field is required.</span>
+                </span>
+              </div>
+            </div> -->
+
+            <!-- Arsh -->
+            <div class="col-12 col-md-12 mb-4">
+              <div class="form-group local-forms">
+                <label class="me-3">Age Unit <span class="login-danger">*</span></label>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input mt-1" type="radio" name="ageUnit" formControlName="ageUnit" [value]="'Month'"
+                    id="ageUnitMonth" />
+                  <label class="form-check-label" for="ageUnitMonth">Month</label>
+                </div>
+
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input mt-1" type="radio" name="ageUnit"  formControlName="ageUnit" [value]="'Year'"
+                    id="ageUnitYear" />
+                  <label class="form-check-label" for="ageUnitYear">Year</label>
+                </div>
+
+                <!-- <span class="text-danger"
+                  *ngIf="ageGroupFormControls.ageUnit.touched && ageGroupFormControls.ageUnit.errors?.required">
+                  This field is required.
+                </span> -->
+              </div>
+            </div>
+            <!-- EndArsh -->
+
+            <div class="col-12 col-md-12 mb-4">
+              <div class="form-group local-forms">
+                <!-- <label for="role">Min Age <span class="login-danger">*</span></label> -->
+                <label for="role">Start Month <span class="login-danger">*</span></label>
+
+                <input (keypress)="allowOnlyNumericInput($event)" formControlName="minAge" type="text" maxlength="2"
+                  placeholder="Enter Month" min="0" class="form-control" id="role" />
+                <span class="text-danger" *ngIf="ageGroupFormControls.minAge.touched">
+                  <span *ngIf="ageGroupFormControls.minAge?.errors?.required">This field is required.</span>
+                </span>
+              </div>
+            </div>
+            <div class="col-12 col-md-12">
+              <div class="form-group local-forms">
+                <!-- <label for="role">Max Age <span class="login-danger">*</span></label> -->
+                <label for="role">End Month <span class="login-danger">*</span></label>
+                <input (keypress)="allowOnlyNumericInput($event)" formControlName="maxAge" placeholder="Enter Month"
+                  type="text" maxlength="2" min="0" class="form-control" id="role" />
+                <span class="text-danger" *ngIf="ageGroupFormControls.maxAge.touched">
+                  <span *ngIf="ageGroupFormControls.maxAge?.errors?.required">This field is required.</span>
+                </span>
+              </div>
+            </div>
+
+            <!-- <div class="col-12 col-md-12">
+              <div class="form-group local-forms">
+                <label for="role">Is Active <span class="login-danger">*</span></label>
+                <label class="switch mb-0">
+                  <input 
+                  formControlName="isActive"
+                  type="checkbox"
+                  />
+                  <div class="slider">
+                    <div class="circle">
+                      <svg
+                        class="cross"
+                        xml:space="preserve"
+                        style="enable-background: new 0 0 512 512"
+                        viewBox="0 0 365.696 365.696"
+                        y="0"
+                        x="0"
+                        height="6"
+                        width="6"
+                        xmlns:xlink="http://www.w3.org/1999/xlink"
+                        version="1.1"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <g>
+                          <path
+                            data-original="#000000"
+                            fill="currentColor"
+                            d="M243.188 182.86 356.32 69.726c12.5-12.5 12.5-32.766 0-45.247L341.238 9.398c-12.504-12.503-32.77-12.503-45.25 0L182.86 122.528 69.727 9.374c-12.5-12.5-32.766-12.5-45.247 0L9.375 24.457c-12.5 12.504-12.5 32.77 0 45.25l113.152 113.152L9.398 295.99c-12.503 12.503-12.503 32.769 0 45.25L24.48 356.32c12.5 12.5 32.766 12.5 45.247 0l113.132-113.132L295.99 356.32c12.503 12.5 32.769 12.5 45.25 0l15.081-15.082c12.5-12.504 12.5-32.77 0-45.25zm0 0"
+                          ></path>
+                        </g>
+                      </svg>
+                      <svg
+                        class="checkmark"
+                        xml:space="preserve"
+                        style="enable-background: new 0 0 512 512"
+                        viewBox="0 0 24 24"
+                        y="0"
+                        x="0"
+                        height="10"
+                        width="10"
+                        xmlns:xlink="http://www.w3.org/1999/xlink"
+                        version="1.1"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <g>
+                          <path
+                            class=""
+                            data-original="#000000"
+                            fill="currentColor"
+                            d="M9.707 19.121a.997.997 0 0 1-1.414 0l-5.646-5.647a1.5 1.5 0 0 1 0-2.121l.707-.707a1.5 1.5 0 0 1 2.121 0L9 14.171l9.525-9.525a1.5 1.5 0 0 1 2.121 0l.707.707a1.5 1.5 0 0 1 0 2.121z"
+                          ></path>
+                        </g>
+                      </svg>
+                    </div>
+                  </div>
+                </label>
+              </div>
+            </div> -->
+          </div>
+        </div>
+
+        <div class="modal-footer" style="border: none">
+          <div class="student-submit">
+            <button type="submit" class="btn btn-primary me-2">Submit</button>
+            <button type="reset" class="btn btn-secondary" data-bs-dismiss="modal">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+  data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel">
+  <div class="modal-dialog">
+    <form [formGroup]="facilityForm" (ngSubmit)="onSubmitFacility()">
+      <div class="modal-content">
+        <div class="modal-header" style="border: none">
+          <h5 class="modal-title" id="exampleModalLabel">Add Facility</h5>
+          <button type="reset" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-12 col-md-12 mb-4">
+              <div class="form-group local-forms">
+                <label for="role">Facility Name <span class="login-danger">*</span></label>
+                <input formControlName="facilityName" type="text" placeholder="Enter Facility" class="form-control" />
+                <span class="text-danger" *ngIf="facilityFormControls.facilityName.touched">
+                  <span *ngIf="facilityFormControls.facilityName?.errors?.required">This field is required.</span>
+                </span>
+              </div>
+            </div>
+            <div class="col-12 col-md-12">
+              <div class="form-group local-forms">
+                <label for="role">Facility Description
+                  <span class="login-danger">*</span></label>
+                <textarea formControlName="facilityDescription" placeholder="Enter Description" class="form-control"
+                  rows="4"></textarea>
+                <span class="text-danger" *ngIf="facilityFormControls.facilityDescription.touched">
+                  <span *ngIf="
+                      facilityFormControls.facilityDescription?.errors?.required
+                    ">This field is required.</span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer" style="border: none">
+          <div class="student-submit">
+            <button type="submit" class="btn btn-primary me-2">Submit</button>
+            <button type="reset" class="btn btn-secondary">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="modal fade" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header" style="border: none">
+        <h5 class="modal-title" id="exampleModalLabel">Add Activity</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <form [formGroup]="activityForm" style="padding: 0px">
+            <!-- <div class="col-12 col-md-12 mb-4">
+            <div class="form-group local-forms">
+              <label for="role"
+                >Activity Group<span class="login-danger">*</span></label
+              >
+              <input type="text" class="form-control" />
+            </div>
+          </div> -->
+            <div class="col-12 col-md-12 mb-4">
+              <div class="form-group local-forms">
+                <label for="role">Activity Name<span class="login-danger">*</span></label>
+                <input type="text" class="form-control" formControlName="activityName" placeholder="Enter Activity" />
+                @if(activityForm.controls['activityName']?.invalid &&
+                activityForm.controls['activityName'].touched){
+                <span class="text-danger">This field is required</span>
+                }
+              </div>
+            </div>
+
+            <!-- <div class="col-12 col-md-12 mb-4">
+            <div class="form-group local-forms">
+              <label for="role"
+                >Activity Material<span class="login-danger">*</span></label
+              >
+              <input type="text" class="form-control" />
+            </div>
+          </div> -->
+
+            <!-- <div class="col-12 col-md-12 mb-4">
+            <div class="form-group local-forms">
+              <label for="role"
+                >Activity Duration<span class="login-danger">*</span></label
+              >
+              <input type="number" class="form-control" />
+            </div>
+          </div> -->
+            <div class="col-md-12 col-12 mb-4">
+              <div class="form-group local-forms">
+                <label>Activity Description <span class="star-red">*</span></label>
+                <textarea class="form-control" placeholder="Enter Description" spellcheck="false" style="
+                    resize: none;
+                    height: 91px;
+                    min-height: 91px !important;
+                  " formControlName="activityDescription"></textarea>
+                @if(activityForm.controls['activityDescription']?.invalid &&
+                activityForm.controls['activityDescription'].touched){
+                <span class="text-danger">This field is required</span>
+                }
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="modal-footer" style="border: none">
+        <div class="student-submit">
+          <button type="submit" class="btn btn-primary me-2" (click)="manageMasterActivities()">
+            Submit
+          </button>
+          <button type="reset" class="btn btn-secondary" data-bs-dismiss="modal">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-switcher-component></app-switcher-component>

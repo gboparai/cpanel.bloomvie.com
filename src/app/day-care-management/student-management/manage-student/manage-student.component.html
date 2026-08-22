@@ -1,0 +1,714 @@
+<app-breadcrumb></app-breadcrumb>
+<form [formGroup]="form" (ngSubmit)="onAddStudent()">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="heading-new">
+            <h5 class="mb-0">Student Details</h5>
+          </div>
+          <div class="row">
+            <div class="col-md-12 mb-4">
+              <div class="student-submit text-end">
+                <button type="button" class="btn btn-primary me-2" (click)="downloadBulkFormatSheet()">
+                  Download Template
+                </button>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                  Bulk Upload
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div formGroupName="studentInformation" class="row">
+            <div class="col-md-4 mb-4">
+              <div class="form-group local-forms">
+                <label>First Name<span class="login-danger">*</span></label>
+                <input formControlName="firstName" type="text" class="form-control" placeholder="Enter First Name" />
+              </div>
+              <span *ngIf="studentFormControls.firstName.touched" class="text-danger">
+                <span *ngIf="studentFormControls.firstName.errors?.required">This field is required.</span>
+              </span>
+            </div>
+            <div class="col-md-4 mb-4">
+              <div class="form-group local-forms">
+                <label>Last Name
+                  <!-- <span class="login-danger">*</span> -->
+                </label>
+                <input formControlName="lastName" type="text" class="form-control" placeholder="Enter Last Name" />
+              </div>
+              <!-- <span *ngIf="studentFormControls.lastName.touched" class="text-danger">
+                                <span *ngIf="studentFormControls.lastName.errors?.required">This field is
+                                    required.</span>
+                            </span> -->
+            </div>
+            <div class="col-md-4 mb-4">
+              <div class="form-group local-forms">
+                <label> Age Group<span class="login-danger">*</span></label>
+                <ng-select (change)="getClassesByAgeGroup($event.id)" formControlName="ageGroupID"
+                  placeholder="-Select-" [items]="ageGroupList" bindLabel="name" bindValue="id"></ng-select>
+              </div>
+              <span *ngIf="studentFormControls.ageGroupID.touched" class="text-danger">
+                <span *ngIf="studentFormControls.ageGroupID.errors?.required">This field is required.</span>
+              </span>
+            </div>
+            <!-- <div class="col-md-4 mb-4">
+              <div class="form-group local-forms">
+                <label> Class<span class="login-danger">*</span></label>
+                <ng-select
+                  (clear)="onClearClass()"
+                  formControlName="classID"
+                  (change)="onChangeClass($event.id)"
+                  placeholder="-Select-"
+                  [items]="classList"
+                  bindLabel="name"
+                  bindValue="id"
+                ></ng-select>
+              </div>
+              @if(studentInformation?.id == null){ @if(classDetails){
+              <span>Available Student Enrollment:</span
+              ><span class="entry-count">
+                {{ classDetails?.remainingCapacity }}/{{
+                  classDetails?.maxCapacity
+                }}
+              </span>
+              } }
+
+              <span
+                *ngIf="studentFormControls.classID.touched"
+                class="text-danger"
+              >
+                <span *ngIf="studentFormControls.classID.errors?.required"
+                  >This field is required.</span
+                >
+              </span>
+            </div> -->
+            <!-- <div class="col-md-4 mb-4">
+                            <div class="form-group local-forms">
+                                <label>Select Section<span class="login-danger">*</span></label>
+                                <ng-select formControlName="sectionID" [items]="sectionList" bindLabel="name"
+                                    bindValue="id"></ng-select>
+                            </div>
+                            <span *ngIf="studentFormControls.sectionID.touched" class="text-danger">
+                                <span *ngIf="studentFormControls.sectionID.errors?.required">This field is
+                                    required.</span>
+                            </span>
+                        </div> -->
+            <div class="col-md-4 mb-4">
+              <div class="gender-section">
+                <label for="gender" class="gender-label">Gender <span class="login-danger">*</span></label>
+                <div class="gender-options">
+                  <label class="gender-option">
+                    <input formControlName="gender" value="Male" type="radio" name="gender" />
+                    Male</label>
+                  <label class="gender-option">
+                    <input formControlName="gender" value="Female" type="radio" name="gender" />Female</label>
+                  <label class="gender-option">
+                    <input formControlName="gender" value="Other" type="radio" name="gender" />
+                    Other</label>
+                </div>
+                <span *ngIf="studentFormControls.gender.touched" class="text-danger">
+                  <span *ngIf="studentFormControls.gender.errors?.required">This field is required.</span>
+                </span>
+              </div>
+            </div>
+            <div class="col-md-4 mb-4">
+              <div class="form-group local-forms">
+                <label>DOB<span class="login-danger">*</span></label>
+                <input type="text" class="form-control" id="dobDatePicker" formControlName="dob" placeholder="Enter DOB"
+                  [disabled]="isUpdate" />
+
+                <!-- <input type="text" class="form-control" [disabled]="startDateToggle" (change)="getPlanEndDate($event)"
+                  id="datePickerStartDate" /> -->
+
+                <span *ngIf="studentFormControls.dob.touched" class="text-danger">
+                  <span *ngIf="studentFormControls.dob.errors?.required">This field is required.</span>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="heading-new">
+            <h5 class="mb-0">Parent Details</h5>
+          </div>
+
+          <div formGroupName="parentInformation" class="row">
+            <div class="col-md-4 mb-4">
+              <div class="form-group local-forms">
+                <label>Relationship to student<span class="login-danger">*</span>
+                </label>
+                <ng-select (change)="onChangeRelationType1($event)" formControlName="relation" placeholder="-Select-"
+                  [items]="relationTypeList"></ng-select>
+              </div>
+              <span *ngIf="parentFormControls.relation.touched" class="text-danger">
+                <span *ngIf="parentFormControls.relation.errors?.required">This field is required.</span>
+              </span>
+            </div>
+            <div class="col-md-4 mb-4" *ngIf="showSpecifyRelationship1">
+              <div class="form-group local-forms">
+                <label>Specify Relationship<span class="login-danger">*</span></label>
+                <input formControlName="specifyRelationship" type="text" placeholder="Enter Relationship"
+                  class="form-control" />
+              </div>
+              <span *ngIf="parentFormControls.specifyRelationship.touched" class="text-danger">
+                <span *ngIf="
+                    parentFormControls.specifyRelationship.errors?.required
+                  ">This field is required.</span>
+              </span>
+            </div>
+
+            <div class="col-md-4 mb-4">
+              <div class="form-group local-forms">
+                <label>First Name<span class="login-danger">*</span></label>
+                <input formControlName="firstName" type="text" class="form-control" placeholder="Enter First Name" />
+              </div>
+              <span *ngIf="parentFormControls.firstName.touched" class="text-danger">
+                <span *ngIf="parentFormControls.firstName.errors?.required">This field is required.</span>
+              </span>
+            </div>
+            <div class="col-md-4 mb-4">
+              <div class="form-group local-forms">
+                <label>Last Name</label>
+                <input formControlName="lastName" type="text" class="form-control" placeholder="Enter Last Name" />
+              </div>
+              <!-- <span *ngIf="parentFormControls.lastName.touched" class="text-danger">
+                                <span *ngIf="parentFormControls.lastName.errors?.required">This field is
+                                    required.</span>
+                            </span> -->
+            </div>
+            <div class="col-md-4 mb-4">
+              <div class="form-group local-forms">
+                <label>Email<span class="login-danger">*</span></label>
+                <input *ngIf="
+                    form.value.parentInformation.id == 0 ||
+                    !form.value.parentInformation.id
+                  " formControlName="email" type="text" class="form-control"
+                  (blur)="checkEmailExistsForEnrollmentRequest()" [attr.disabled]="isUpdate ? true : null"
+                  placeholder="Enter Email" />
+
+                <input *ngIf="form.value.parentInformation.id > 0" readonly formControlName="email" type="text"
+                  class="form-control" (blur)="checkEmailExistsForEnrollmentRequest()"
+                  [attr.disabled]="isUpdate ? true : null" placeholder="Enter Email" />
+              </div>
+              <span *ngIf="parentFormControls.email.touched" class="text-danger">
+                <span *ngIf="parentFormControls.email.errors?.required">This field is required.</span>
+                <span *ngIf="parentFormControls.email.errors?.email">Invalid email format.</span>
+              </span>
+            </div>
+
+            <div class="col-md-4 mb-4 custom-flag">
+              <div class="form-group local-forms position-relative">
+                <label>Mobile Number <span class="text-danger">*</span></label>
+
+                <!-- Country code and flag -->
+                <div class="position-absolute flag" style="
+                    top: 38px;
+                    left: 15px;
+                    display: flex;
+                    align-items: center;
+                    gap: 4px;
+                  ">
+                  <div class="country-selector" (click)="toggleDropdown()">
+                    <img [src]="selectedCountry.flag" class="new-flag" alt="Flag">
+                    <span class="me-1">{{ selectedCountry.code }}</span>
+                    <span class="arrow">
+                      <i [class]="dropdownOpen ? 'fas fa-chevron-up' : 'fas fa-chevron-down'"></i>
+                    </span>
+
+                    <!-- Dropdown list -->
+                    <div class="dropdown" *ngIf="dropdownOpen">
+                      <div class="dropdown-item" *ngFor="let country of countries" (click)="selectCountry(country)">
+                        <img [src]="country.flag" class="flag" alt="Flag">
+                        <span class="color-black">({{ country.code }})</span>
+                      </div>
+                    </div>
+                  </div>
+
+
+
+
+
+                  <!-- <span>+1</span>
+                  <img
+                    src="https://i.postimg.cc/VLCndSHd/canada.png"
+                    style="width: 18px; height: 18px"
+                  /> -->
+                </div>
+
+                <!-- Mobile input -->
+                <input type="text" class="form-control" maxlength="12" formControlName="mobile"
+                  (keypress)="allowOnlyNumericInput($event)" (input)="
+                    formatPhoneNumber($event); onEnterMobileNumber($event)
+                  " placeholder="Enter Number" style="padding-left: 102px" />
+
+                <!-- Error messages -->
+                <span *ngIf="parentFormControls.mobile.touched" class="text-danger">
+                  <span *ngIf="parentFormControls.mobile.errors?.required">This field is required.</span>
+                  <span *ngIf="parentFormControls.mobile.errors?.minlength">Mobile number must be at least
+                    {{
+                    parentFormControls.mobile.errors?.minlength.requiredLength
+                    }}
+                    digits.</span>
+                </span>
+              </div>
+            </div>
+
+            <!-- select plan and some add ons -->
+
+            <div class="col-md-4 mb-4">
+              <div class="form-group local-forms">
+                <label> Plan<span class="login-danger">*</span></label>
+
+                <input type="text" class="form-control" placeholder="-Select-" id="planName" [disabled]="true"
+                  *ngIf="viewDropDown == false" />
+
+                <ng-select [items]="planList" formControlName="planID" bindLabel="planName" *ngIf="viewDropDown == true"
+                  [(ngModel)]="planInfo" (change)="getPlanDetails($event)" placeholder="-Select-" (clear)="onClear()"
+                  bindValue="planId"></ng-select>
+              </div>
+              <span *ngIf="parentFormControls.planID.touched" class="text-danger">
+                <span *ngIf="parentFormControls.planID.errors?.required">This field is required.</span>
+              </span>
+            </div>
+
+            <div class="col-md-4 mb-4">
+              <div class="form-group local-forms">
+                <label>Billing Date<span class="login-danger">*</span></label>
+                <input type="text" class="form-control" [disabled]="startDateToggle" (change)="getPlanEndDate($event)"
+                  id="datePickerStartDate" />
+              </div>
+            </div>
+
+            <div class="col-md-4 mb-4">
+              <div class="form-group local-forms">
+                <label>Zip Code / Postal Code<span class="login-danger">*</span></label>
+                <input #pinCode (change)="fetchLocationData(pinCode.value)" (input)="formatPostalCode($event)"
+                  type="text" formControlName="pinCode" class="form-control" placeholder="A1A A1A / 56786" />
+              </div>
+              <span *ngIf="parentFormControls.pinCode.touched" class="text-danger">
+                <span *ngIf="parentFormControls.pinCode.errors?.required">This field is required.</span>
+
+              </span>
+            </div>
+
+            <div class="col-md-4 mb-4">
+              <div class="form-group local-forms">
+                <label>Country</label>
+                <input readonly formControlName="country" class="form-control" />
+              </div>
+              <!-- <span *ngIf="parentFormControls.country.touched" class="text-danger">
+                                <span *ngIf="parentFormControls.country.errors?.required">This field is required.</span>
+                            </span> -->
+            </div>
+
+            <div class="col-md-4 mb-4">
+              <div class="form-group local-forms">
+                <label>State</label>
+                <input readonly formControlName="state" class="form-control" />
+              </div>
+              <!-- <span *ngIf="parentFormControls.state.touched" class="text-danger">
+                                <span *ngIf="parentFormControls.state.errors?.required">This field is required.</span>
+                            </span> -->
+            </div>
+
+            <div class="col-md-4 mb-4">
+              <div class="form-group local-forms">
+                <label>City</label>
+                <input readonly formControlName="city" class="form-control" />
+              </div>
+              <!-- <span *ngIf="parentFormControls.city.touched" class="text-danger">
+                                <span *ngIf="parentFormControls.city.errors?.required">This field is required.</span>
+                            </span> -->
+            </div>
+
+            <div class="col-md-4 mb-4">
+              <div class="form-group local-forms">
+                <label>Address<span class="login-danger">*</span></label>
+                <textarea formControlName="address" rows="4" Placeholder="Enter Address"
+                  class="form-control"></textarea>
+              </div>
+              <span *ngIf="parentFormControls.address.touched" class="text-danger">
+                <span *ngIf="parentFormControls.address.errors?.required">This field is required.</span>
+              </span>
+            </div>
+
+            <!-- 
+            <div class="col-md-4 mb-4">
+              <div class="form-group local-forms">
+                <label>Payment Type <span class="login-danger">*</span></label>
+
+                <div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="paymentCash" name="paymentType" [value]="'Cash'"
+                      formControlName="paymentType" />
+                    <label class="form-check-label" for="paymentCash">Cash</label>
+                  </div>
+
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="paymentOnline" name="paymentType"
+                      [value]="'Online'" formControlName="paymentType" />
+                    <label class="form-check-label" for="paymentOnline">Online</label>
+                  </div>
+                </div>
+              </div>
+
+              <span *ngIf="parentFormControls.paymentType.touched && parentFormControls.paymentType.errors?.required"
+                class="text-danger">
+                This field is required.
+              </span>
+            </div> -->
+          </div>
+
+          <div class="row mt-3">
+            <div class="col-md-12 text-end">
+              <div class="student-submit text-end">
+                <button type="submit" class="btn btn-primary me-2" id="submit-btn">
+                  {{ isUpdate == true ? "Update" : "Save" }}
+                </button>
+                <button type="reset" class="btn btn-secondary" (click)="resetForm()">
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+<div *ngIf="userRoleID == 3" class="breadcrumb-none">
+  <app-view-student (update)="onEditStudent($event)" (parentList)="onReceiveParentList($event)"></app-view-student>
+</div>
+
+<div class="row mt-4" [ngStyle]="{ display: !onBoardingService.isOnboarding ? 'none' : 'block' }">
+  <div class="col-md-12">
+    <div class="student-submit text-end">
+      <button type="submit" class="btn btn-secondary me-3" (click)="onBoardingService.onChangeTab('Tab-5')">
+        Previous
+      </button>
+      <button *ngIf="childComponent?.studentList" [disabled]="childComponent.studentList.length < 1"
+        (click)="proceededOnBoarding()" id="next-btn" class="btn btn-primary">
+        Save & Proceed
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="exampleModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" [ngClass]="{ 'modal-xl': inValidRecords.length > 0 }">
+    <div class="modal-content">
+      <div class="modal-header" style="border: none">
+        <h5 class="modal-title" id="exampleModalLabel">Bulk Upload</h5>
+        <button (click)="onBulkUploadModalClose()" type="button" class="btn-close" data-bs-dismiss="modal"
+          aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div *ngIf="inValidRecords.length === 0; else invalidRecordGrid" class="row">
+          <div class="col-12 mb-4" [ngClass]="{
+              'col-md-12': inValidRecords.length === 0,
+              'col-md-4': inValidRecords.length > 0
+            }">
+            <div class="form-group local-forms">
+              <label for="role">Upload Bulk Student <span class="login-danger">*</span></label>
+              <input accept=".xlsx" (change)="onChangeFile($event)" type="file" id="formFile" class="form-control" />
+            </div>
+          </div>
+          <div class="mb-4" [ngClass]="{
+              'col-md-12': inValidRecords.length === 0,
+              'col-md-4': inValidRecords.length > 0
+            }">
+            <div class="student-submit" [ngClass]="{ 'text-end': inValidRecords.length === 0 }">
+              <button (click)="uploadBulkStudent()" type="submit" class="btn btn-primary me-2">
+                Submit
+              </button>
+              <button type="reset" class="btn btn-secondary" data-bs-dismiss="modal">
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+        <ng-template #invalidRecordGrid>
+          <div class="col-md-12">
+            <div class="heading-new">
+              <h5 class="mb-0">
+                Invalid Records
+                <span class="italic font-13">(Total: {{ inValidRecords.length }})</span>
+              </h5>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="table-responsive">
+              <table class="table table-hover mb-0">
+                <thead class="student-thread">
+                  <tr>
+                    <th>#</th>
+                    <th>Student&nbsp;Name</th>
+                    <th>Age&nbsp;Group</th>
+                    <th>Class</th>
+                    <th>Parent&nbsp;Name</th>
+                    <th>Parent&nbsp;Email</th>
+                    <th>Parent&nbsp;Contact&nbsp;Number</th>
+                    <th>Postal Code</th>
+                    <th>start date</th>
+                    <th>Reason</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="
+                      let item of inValidRecords
+                        | paginate
+                          : {
+                              itemsPerPage: 5,
+                              currentPage: currentPage,
+                              id: 'getPaymentHistory'
+                            };
+                      let index = index
+                    ">
+                    <td>{{ index + 1 }}</td>
+                    <td>
+                      {{ item.studentFirstName }}&nbsp;{{
+                      item.studentLastName
+                      }}
+                    </td>
+                    <td>{{ item.studentAgeGroup }}</td>
+                    <td>{{ item.studentClass }}</td>
+
+                    <td>
+                      {{ item.parentFirstName }}&nbsp;{{ item.parentLastName }}
+                    </td>
+                    <td>{{ item.parentEmail }}</td>
+                    <td>{{ item.parentMobile }}</td>
+                    <td>{{ item.parentPinCode }}</td>
+                    <td>{{ item.date }}</td>
+                    <td class="text-danger">{{ item.reason }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <pagination-controls (pageChange)="currentPage = $event" id="getPaymentHistory"></pagination-controls>
+          </div>
+
+          <div class="col-md-12 mt-4">
+            <div class="student-submit text-end">
+              <button (click)="downloadSkipRecordsSheet()" type="submit" class="btn btn-primary">
+                Download Records
+              </button>
+            </div>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- The Modal -->
+<div class="modal" id="more-parent" data-bs-backdrop="static">
+  <div class="modal-dialog modal-lg">
+    <form [formGroup]="parentForm" (ngSubmit)="addParent()">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h5 class="modal-title">Parent/Guardian Details</h5>
+          <button (click)="onModalClose()" type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+          <div class="add-student-parent">
+            <div class="row">
+              <div id="relationDropdownDiv" class="col-md-4 mb-4">
+                <div class="form-group local-forms">
+                  <label>Relationship to student<span class="login-danger">*</span>
+                  </label>
+                  <ng-select (change)="onChangeRelationType($event)" formControlName="relation" placeholder="-Select"
+                    [items]="relationTypeList"></ng-select>
+                </div>
+                <span class="text-danger" *ngIf="parentFormControls1.specifyRelationship.touched">
+                  <span *ngIf="parentFormControls1.relation.errors?.required">This field is required.</span>
+                </span>
+              </div>
+
+              <div class="col-md-4 mb-4" *ngIf="showSpecifyRelationship">
+                <div class="form-group local-forms">
+                  <label>Specify Relationship<span class="login-danger">*</span></label>
+                  <input formControlName="specifyRelationship" type="text" class="form-control" />
+                </div>
+                <span class="text-danger" *ngIf="parentFormControls1.specifyRelationship.touched">
+                  <span *ngIf="
+                      parentFormControls1.specifyRelationship.errors?.required
+                    ">This field is required.</span>
+                </span>
+              </div>
+
+              <div class="col-md-4 mb-4">
+                <div class="form-group local-forms">
+                  <label>First Name<span class="login-danger">*</span></label>
+                  <input formControlName="firstName" type="text" class="form-control" placeholder="Enter First Name" />
+                </div>
+                <span class="text-danger" *ngIf="parentFormControls1.firstName.touched">
+                  <span *ngIf="parentFormControls1.firstName.errors?.required">This field is required.</span>
+                </span>
+              </div>
+              <div class="col-md-4 mb-4">
+                <div class="form-group local-forms">
+                  <label>Last Name
+                    <!-- <span class="login-danger">*</span> -->
+                  </label>
+                  <input formControlName="lastName" type="text" placeholder="Enter Last Name" class="form-control" />
+                </div>
+                <!-- <span class="text-danger" *ngIf="parentFormControls1.lastName.touched">
+                                    <span *ngIf="parentFormControls1.lastName.errors?.required">This field is
+                                        required.</span>
+                                </span> -->
+              </div>
+              <div class="col-md-4 mb-4">
+                <div class="form-group local-forms">
+                  <label>Email<span class="login-danger">*</span></label>
+                  <input formControlName="email" type="text" placeholder="Enter Email" class="form-control" />
+                </div>
+                <span class="text-danger" *ngIf="parentFormControls1.email.touched">
+                  <span *ngIf="parentFormControls1.email.errors?.required">This field is required.</span>
+                  <span *ngIf="parentFormControls1.email.errors?.email">This field is required.</span>
+                </span>
+              </div>
+              <div class="col-md-4 mb-4">
+                <div class="form-group local-forms">
+                  <label>Mobile Number<span class="login-danger">*</span></label>
+                  <input (keypress)="allowOnlyNumericInput($event)" (input)="
+                      formatPhoneNumber($event); onEnterMobileNumber($event)
+                    " formControlName="mobile" placeholder="Enter Number" type="text" class="form-control"
+                    maxlength="12" />
+                </div>
+                <span class="text-danger" *ngIf="parentFormControls1.mobile.touched">
+                  <span *ngIf="parentFormControls1.mobile.errors?.required">This field is required.</span>
+                  <span *ngIf="parentFormControls1.mobile.errors?.minlength">This field is required.</span>
+                </span>
+              </div>
+
+              <div class="col-md-4 mb-4">
+                <div class="form-group local-forms">
+                  <label>Zip Code / Postal Code
+                    <span class="login-danger">*</span></label>
+                  <input #pinCode1 (change)="fetchLocationData(pinCode1.value)" (input)="formatPostalCode($event)"
+                    type="text" formControlName="pinCode" placeholder="A1A A1A / 56786" class="form-control" />
+                </div>
+                <span class="text-danger" *ngIf="parentFormControls1.pinCode.touched">
+                  <span *ngIf="parentFormControls1.pinCode.errors?.required">This field is required.</span>
+                  <span *ngIf="parentFormControls1.pinCode.errors?.pattern">This format.</span>
+                </span>
+              </div>
+
+              <div class="col-md-4 mb-4">
+                <div class="form-group local-forms">
+                  <label>Country</label>
+                  <input readonly formControlName="country" class="form-control" />
+                </div>
+                <!-- <span class="text-danger" *ngIf="parentFormControls1.country.touched">
+                                    <span *ngIf="parentFormControls1.country.errors?.required">This field is
+                                        required.</span>
+                                </span> -->
+              </div>
+
+              <div class="col-md-4 mb-4">
+                <div class="form-group local-forms">
+                  <label>State</label>
+                  <input readonly formControlName="state" class="form-control" />
+                </div>
+                <!-- <span class="text-danger" *ngIf="parentFormControls1.state.touched">
+                                    <span *ngIf="parentFormControls1.state.errors?.required">This field is
+                                        required.</span>
+                                </span> -->
+              </div>
+
+              <div class="col-md-4 mb-4">
+                <div class="form-group local-forms">
+                  <label>City</label>
+                  <input readonly formControlName="city" class="form-control" />
+                </div>
+                <!-- <span class="text-danger" *ngIf="parentFormControls1.city.touched">
+                                    <span *ngIf="parentFormControls1.city.errors?.required">This field is
+                                        required.</span>
+                                </span> -->
+              </div>
+
+              <div class="col-md-12 mb-4">
+                <div class="form-group local-forms">
+                  <label>Address<span class="login-danger">*</span></label>
+                  <textarea formControlName="address" rows="4" class="form-control"
+                    placeholder="Enter Address"></textarea>
+                </div>
+                <span class="text-danger" *ngIf="parentFormControls1.address.touched">
+                  <span *ngIf="parentFormControls1.address.errors?.required">This field is required.</span>
+                </span>
+              </div>
+            </div>
+
+            <div class="col-md-12">
+              <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                  <thead class="student-thread">
+                    <tr>
+                      <th>#</th>
+                      <th>Relation&nbsp;To&nbsp;Student</th>
+                      <th>First&nbsp;Name</th>
+                      <th>Last&nbsp;Name</th>
+                      <th>Email</th>
+                      <th>Contact&nbsp;Number</th>
+                      <th>Address</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="
+                        let item of parentListFormChild;
+                        let index = index
+                      ">
+                      <td>{{ index + 1 }}</td>
+                      <td>{{ item.relation }}</td>
+                      <td>
+                        {{ item.firstName }}&nbsp;{{ item.studentLastName }}
+                      </td>
+                      <td>{{ item.lastName }}</td>
+                      <td>{{ item.email }}</td>
+                      <td>{{ item.mobile }}</td>
+                      <td>{{ item.address }}</td>
+                      <td>
+                        <div class="actions">
+                          <a (click)="onEditParent(item)" class="action-btn bg-danger-light me-2">
+                            <i class="feather-edit"></i>
+                          </a>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr *ngIf="parentListFormChild.length == 0">
+                      <td colspan="9" style="text-align: center">
+                        <div class="no-data">
+                          <img src="assets/img/no-data-img.png" alt="No Record Found" />
+                          <span>No Record Found</span>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col-md-12 text-end">
+              <div class="student-submit text-end">
+                <button type="submit" class="btn btn-primary me-2" id="submit-btn">
+                  Save
+                </button>
+                <button (click)="onModalClose()" type="button" class="btn btn-secondary">
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

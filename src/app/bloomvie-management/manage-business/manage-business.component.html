@@ -1,0 +1,515 @@
+<div class="row">
+    <div class="col-md-12">
+        <ul class="nav nav-pills mb-3 " id="pills-tab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="pills-basic-info" data-bs-toggle="pill"
+                    data-bs-target="#basic-info">Basic Information</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pills-document" data-bs-toggle="pill" data-bs-target="#banking">Banking Details</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="pills-document" data-bs-toggle="pill" data-bs-target="#document">Supported Documents</button>
+                </li>
+        </ul>
+    </div> 
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="tab-content pt-0" id="pills-tabContent">
+                    <div class="tab-pane fade show active" id="basic-info" role="tabpanel"
+                        aria-labelledby="pills-basic-info" tabindex="0">
+                        <!-- <div class="heading-new">
+                            <h5 class="mb-0">Business Centre Information</h5>
+                        </div> -->
+                        <!-- <div class="row">
+                            <div class="col-md-8">
+                                <div class="row">
+                            <div class="col-12 col-md-6 mb-4">
+                                <div class="form-group local-forms">
+                                    <label>Centre Name<span class="login-danger">*</span></label>
+                                    <input class="form-control" type="text">
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6 mb-4">
+                                <div class="form-group local-forms">
+                                    <label> Email<span class="login-danger">*</span></label>
+                                    <input class="form-control" type="text">
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6 mb-4">
+                                <div class="form-group local-forms">
+                                    <label> Phone<span class="login-danger">*</span></label>
+                                    <input class="form-control" type="number">
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6 mb-4">
+                                <div class="form-group local-forms">
+                                    <label>Country<span class="login-danger">*</span></label>
+                                    <select class="form-select">
+                                        <option selected></option>
+                                        <option value="1">One</option>
+                                        <option value="2">Two</option>
+                                        <option value="3">Three</option>
+                                      </select>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6 mb-4">
+                                <div class="form-group local-forms">
+                                    <label>State<span class="login-danger">*</span></label>
+                                    <select class="form-select">
+                                        <option selected></option>
+                                        <option value="1">One</option>
+                                        <option value="2">Two</option>
+                                        <option value="3">Three</option>
+                                      </select>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6 mb-4">
+                                <div class="form-group local-forms">
+                                    <label>City<span class="login-danger">*</span></label>
+                                    <select class="form-select">
+                                        <option selected></option>
+                                        <option value="1">One</option>
+                                        <option value="2">Two</option>
+                                        <option value="3">Three</option>
+                                      </select>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-12 mb-4">
+                                <div class="form-group local-forms">
+                                    <label>Centre Address<span class="login-danger">*</span></label>
+                                   <textarea  rows="4" class="form-control"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="row">
+                                <div class="col-md-12 mb-4">
+                                        <div class="avatar-upload">
+                                                <div class="avatar-preview" title="Upload Logo here">
+                                                    <div id="imagePreview" style="background-image: url(assets/img/image-selector.jpg);">
+                                                    </div>
+                                                    <div class="avatar-edit">
+                                                        <input type='file' id="imageUpload" accept=".png, .jpg, .jpeg" />
+                                                        <label for="imageUpload"></label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                </div>
+                                <div class="col-md-12 mb-4">
+                                        <div class="form-group local-forms">
+                                            <label>Licence Number<span class="login-danger">*</span></label>
+                                            <input class="form-control" type="text">
+                                        </div>
+                                    </div>
+                            </div>
+                           
+                        </div>
+                        </div> -->
+                        <!-- <div class="row">
+                                <div class="col-12 col-md-4 mb-4">
+                                        <div class="form-group local-forms">
+                                                <label>Subscription Plans<span class="login-danger">*</span></label>
+                                                <select class="form-select">
+                                                    <option selected></option>
+                                                    <option value="1">Basic</option>
+                                                    <option value="2">Advance</option>
+                                                    <option value="3">Pro</option>
+                                                  </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-4 mb-4">
+                                            <div class="form-group local-forms">
+                                                    <label>Plan Duration<span class="login-danger">*</span></label>
+                                                    <input class="form-control" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-md-4 mb-4">
+                                                <div class="form-group local-forms">
+                                                        <label>Plan Amount<span class="login-danger">*</span></label>
+                                                        <input class="form-control" type="number">
+                                                </div>
+                                            </div>
+                        </div> -->
+                      
+                        <div class="heading-new">
+                            <h5 class="mb-0">Business Information</h5>
+                        </div>
+                        <div class="row">
+                                <div class="col-md-8">
+                                    <div class="row">
+                                <div class="col-12 col-md-6 mb-4">
+                                    <div class="form-group local-forms">
+                                        <label>Name<span class="login-danger">*</span></label>
+                                        <input class="form-control" type="text">
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6 mb-4">
+                                    <div class="form-group local-forms">
+                                        <label> Email<span class="login-danger">*</span></label>
+                                        <input class="form-control" type="text">
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6 mb-4">
+                                    <div class="form-group local-forms">
+                                        <label> Phone<span class="login-danger">*</span></label>
+                                        <input class="form-control" type="number">
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6 mb-4">
+                                    <div class="form-group local-forms">
+                                        <label>Country<span class="login-danger">*</span></label>
+                                        <select class="form-select">
+                                            <option selected></option>
+                                            <option value="1">One</option>
+                                            <option value="2">Two</option>
+                                            <option value="3">Three</option>
+                                          </select>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6 mb-4">
+                                    <div class="form-group local-forms">
+                                        <label>State<span class="login-danger">*</span></label>
+                                        <select class="form-select">
+                                            <option selected></option>
+                                            <option value="1">One</option>
+                                            <option value="2">Two</option>
+                                            <option value="3">Three</option>
+                                          </select>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6 mb-4">
+                                    <div class="form-group local-forms">
+                                        <label>City<span class="login-danger">*</span></label>
+                                        <select class="form-select">
+                                            <option selected></option>
+                                            <option value="1">One</option>
+                                            <option value="2">Two</option>
+                                            <option value="3">Three</option>
+                                          </select>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-12 mb-4">
+                                    <div class="form-group local-forms">
+                                        <label> Address<span class="login-danger">*</span></label>
+                                       <textarea  rows="4" class="form-control"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="row">
+                                    <div class="col-md-12 mb-4">
+                                            <div class="avatar-upload">
+                                                    <div class="avatar-preview">
+                                                        <div id="imagePreview" style="background-image: url(assets/img/image-selector-profile.jpg);">
+                                                        </div>
+                                                        <div class="avatar-edit" title="Upload Profile Image here">
+                                                            <input type='file' id="imageUpload" accept=".png, .jpg, .jpeg" />
+                                                            <label for="imageUpload"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                    </div>
+                                    <div class="col-md-12 mb-4">
+                                            <div class="form-group local-forms">
+                                                <label>DOB<span class="login-danger">*</span></label>
+                                                <input class="form-control" type="text">
+                                            </div>
+                                        </div>
+                                 
+                                </div>
+                               
+                            </div>
+                            </div>
+
+                        <div class="heading-new">
+                            <h5 class="mb-0">Master Information</h5>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-8">
+                                    <div class="row">
+                                <div class="col-12 col-md-6 mb-4">
+                                    <div class="form-group local-forms">
+                                        <label>Email<span class="login-danger">*</span></label>
+                                        <input class="form-control" type="text">
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6 mb-4">
+                                    <div class="form-group local-forms">
+                                        <label>Time Zone<span class="login-danger">*</span></label>
+                                        <select class="form-select">
+                                            <option selected></option>
+                                            <option value="1">EST</option>
+                                            <option value="2">PST</option>
+                                         
+                                          </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-12 col-md-6 mb-4">
+                                    <div class="form-group local-forms">
+                                        <label>Currency<span class="login-danger">*</span></label>
+                                        <select class="form-select">
+                                            <option selected></option>
+                                            <option value="1">CA$</option>
+                                            <option value="2">AU$</option>
+                                         
+                                          </select>
+                                    </div>
+                                </div>
+                                  <div class="col-12 col-md-6 mb-4">
+                                       <div class="form-group local-forms">
+                                         
+                                              <label class="settings-label">Upload Favicon<span class="star-red">*</span></label>
+                                              <div class="settings-btn">
+                                                <input type="file" accept="image/png, image/gif, image/jpeg" class="hide-input"/>
+                        
+                                                <div class="divw">
+                                                  <img src="assets/img/fest.png" alt="Document" />
+                                                </div>
+                        
+                        
+                                              </div>
+                                         <div class="editer">
+                                                <i class="far fa-edit"></i>
+                                              </div>
+                                            
+                                            </div>
+                                    </div>
+                              
+                             
+                                
+                            </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="row">
+                                    <div class="col-md-12 mb-4">
+                                          <div class="form-group local-forms">
+                                        <label>Upload Business Logo<span class="login-danger">*</span></label>
+                                            <div class="avatar-upload">
+                                                    <div class="avatar-preview">
+                                                        <div id="imagePreview" style="background-image: url(assets/img/image-selector.jpg);">
+                                                        </div>
+                                                        <div class="avatar-edit" title="Upload logo here">
+                                                            <input type='file' id="imageUpload" accept=".png, .jpg, .jpeg" />
+                                                            <label for="imageUpload"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>  
+                                    </div>
+                                
+                                 
+                                </div>
+                               
+                            </div>
+                        </div>
+
+                            <div class="row">
+                                    <div class="col-12 col-md-12 mt-2">
+                                            <div class="student-submit text-end">
+                                              <button type="submit" class="btn btn-primary me-2">Next</button>
+                                              <button type="reset" class="btn btn-secondary">Cancel</button>
+                                            </div>
+                                          </div>
+                            </div>
+                    </div>
+                    <div class="tab-pane fade" id="banking" role="tabpanel" aria-labelledby="pills-document" tabindex="0">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="row">
+                            <div class="col-md-6 mb-4">
+                                    <div class="form-group local-forms">
+                                            <label>Account Holder Name<span class="login-danger">*</span></label>
+                                            <input class="form-control" type="text">
+                                        </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <div class="form-group local-forms">
+                                        <label>Bank Name<span class="login-danger">*</span></label>
+                                        <input class="form-control" type="text">
+                                    </div>
+                        </div>
+                            <div class="col-md-6 mb-4">
+                                    <div class="form-group local-forms">
+                                            <label>IFSC Code<span class="login-danger">*</span></label>
+                                            <input class="form-control" type="text">
+                                        </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                    <div class="form-group local-forms">
+                                            <label>Account Number<span class="login-danger">*</span></label>
+                                            <input class="form-control" type="text">
+                                        </div>
+                            </div>
+                            <div class="col-md-12 mb-4">
+                                <div class="form-group local-forms">
+                                        <label>Branch Address<span class="login-danger">*</span></label>
+                                        <textarea  rows="4" class="form-control"></textarea>
+                                    </div>  
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 col-md-12">
+                                        <div class="student-submit text-end">
+                                          <button type="submit" class="btn btn-primary me-2">Next</button>
+                                          <button type="reset" class="btn btn-secondary">Cancel</button>
+                                        </div>
+                                      </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <img src="assets/img/banking.svg" alt="banking image">
+                            </div>
+                        </div>
+                    </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="document" role="tabpanel" aria-labelledby="pills-document" tabindex="0">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="row">
+                                    <div class="col-md-6 mb-4">
+                                        <div class="form-group local-forms">
+                                        <label>Document Type<span class="login-danger">*</span></label>
+                                        <select class="form-select">
+                                            <option selected></option>
+                                            <option value="1">Centre Licence</option>
+                                            <option value="2">Certificates</option>
+                                            <option value="3">Achivements</option>
+                                          </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-4">
+                                        <div class="form-group local-forms">
+                                        <label>Document Number<span class="login-danger">*</span></label>
+                                        <input class="form-control" type="text">
+                                    </div>
+                                    </div>
+                                    <div class="col-md-6 mb-4">
+                                        <div class="form-group local-forms">
+                                            <label>Document Description</label>
+                                           <textarea  rows="4" class="form-control"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-4">
+                                       <div class="form-group local-forms">
+                                         
+                                              <label class="settings-label">Upload Document<span class="star-red">*</span></label>
+                                              <div class="settings-btn">
+                                                <input type="file" accept="image/png, image/gif, image/jpeg" class="hide-input"/>
+                        
+                                                <div class="divw">
+                                                  <img src="assets/img/image-selector3.jpg" alt="Document" />
+                                                </div>
+                        
+                        
+                                              </div>
+                                         <div class="editer">
+                                                <i class="far fa-edit"></i>
+                                              </div>
+                                            
+                                            </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="student-submit text-end">
+                                            <button type="submit" class="btn btn-primary me-2">Add</button>
+                                            <button type="reset" class="btn btn-secondary">Cancel</button>
+                                          </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="docu-imgage">
+
+                                            <img src="assets/img/document.svg" alt="document image">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-12">
+                                <div class="table-responsive">
+                                    <table class="table table-hover mb-0">
+                                        <thead class="student-thread">
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Document&nbsp;Type</th>
+                                                <th>Document&nbsp;Image</th>
+                                                <th>Document&nbsp;Number</th>
+                                                <th>Document&nbsp;Description</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>1</td>
+                                                <td>Licence</td>
+                                                <td>
+                                                    <div class="doc-img" >
+                                                        <div class="doc-back-img" style="background-image: url(assets/img/image-selector3.jpg);">
+
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>GFB9856325GY</td>
+                                                <td>this is the licence of the centre</td>
+                                                <td>
+                                                    <div class="actions">
+                                                        <a  class="action-btn bg-danger-light me-2">
+                                                        <i class="feather-edit"></i>
+                                                        </a>
+                                                        <label class="switch mb-0  me-2">
+                                                            <input   type="checkbox">
+                                                            <div class="slider">
+                                                                <div class="circle">
+                                                                    <svg class="cross" xml:space="preserve" style="enable-background:new 0 0 512 512" viewBox="0 0 365.696 365.696" y="0" x="0" height="6" width="6" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                                                                        <g>
+                                                                            <path data-original="#000000" fill="currentColor" d="M243.188 182.86 356.32 69.726c12.5-12.5 12.5-32.766 0-45.247L341.238 9.398c-12.504-12.503-32.77-12.503-45.25 0L182.86 122.528 69.727 9.374c-12.5-12.5-32.766-12.5-45.247 0L9.375 24.457c-12.5 12.504-12.5 32.77 0 45.25l113.152 113.152L9.398 295.99c-12.503 12.503-12.503 32.769 0 45.25L24.48 356.32c12.5 12.5 32.766 12.5 45.247 0l113.132-113.132L295.99 356.32c12.503 12.5 32.769 12.5 45.25 0l15.081-15.082c12.5-12.504 12.5-32.77 0-45.25zm0 0"></path>
+                                                                        </g>
+                                                                    </svg>
+                                                                    <svg class="checkmark" xml:space="preserve" style="enable-background:new 0 0 512 512" viewBox="0 0 24 24" y="0" x="0" height="10" width="10" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                                                                        <g>
+                                                                            <path class="" data-original="#000000" fill="currentColor" d="M9.707 19.121a.997.997 0 0 1-1.414 0l-5.646-5.647a1.5 1.5 0 0 1 0-2.121l.707-.707a1.5 1.5 0 0 1 2.121 0L9 14.171l9.525-9.525a1.5 1.5 0 0 1 2.121 0l.707.707a1.5 1.5 0 0 1 0 2.121z"></path>
+                                                                        </g>
+                                                                    </svg>
+                                                                </div>
+                                                            </div>
+                                                        </label>
+
+                                                        <span style="cursor: pointer;"><i class="feather-download"></i></span>
+                                                        </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="student-submit text-end">
+                                    <button type="submit" class="btn btn-primary me-2">Submit</button>
+                                    <button type="reset" class="btn btn-secondary">Cancel</button>
+                                  </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

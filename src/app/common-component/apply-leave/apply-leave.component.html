@@ -1,0 +1,647 @@
+<app-breadcrumb></app-breadcrumb>
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        @if(userRoleId == 4 || userRoleId == 8){
+
+        <!-- Heading -->
+        <div class="row mb-3">
+          <div class="col-12">
+            <div class="heading-new">
+              <h5 class="mb-0">Apply Leave</h5>
+            </div>
+          </div>
+        </div>
+
+        <!-- Leave Application Form -->
+        <form [formGroup]="LeaveFrom" novalidate>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group local-forms mb-4 ins-input-field">
+                <label>Start Date <span class="text-danger">*</span></label>
+                <input type="text" class="form-control startdateRangePicker" placeholder="Enter Date"
+                  formControlName="startDate" id="startDatePicker" (change)="onstartDateChange($event)" />
+                <div *ngIf="
+                    LeaveFrom.get('startDate')?.invalid &&
+                    LeaveFrom.get('startDate')?.touched
+                  " class="text-danger">
+                  <small>This field is required.</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group local-forms mb-4 ins-input-field">
+                <label>End Date<span class="text-danger">*</span></label>
+                <input type="text" class="form-control enddateRangePicker" placeholder="Enter Date"
+                  formControlName="endDate" id="endDatePicker" (change)="onendDateChange($event)" />
+                <div *ngIf="
+                    LeaveFrom.get('endDate')?.invalid &&
+                    LeaveFrom.get('endDate')?.touched
+                  " class="text-danger">
+                  <small>This field is required.</small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group local-forms mb-4 ins-input-field">
+                <label>Type Of Leave <span class="text-danger">*</span></label>
+                <ng-select id="typeOfLeave" [items]="leaveTypeList" bindLabel="leaveType" bindValue="id"
+                  placeholder="--Select--" formControlName="typeOfLeave" (change)="onSelectActivityName($event)">
+                </ng-select>
+                <div *ngIf="
+                    LeaveFrom.get('typeOfLeave')?.invalid &&
+                    LeaveFrom.get('typeOfLeave')?.touched
+                  " class="text-danger">
+                  <small>This field is required.</small>
+                </div>
+              </div>
+            </div>
+
+
+
+            <div class="col-md-6">
+              <div class="form-group local-forms mb-4 ins-input-field">
+                <label>Upload Document <span class="text-danger">*</span></label>
+                <input type="file" accept="image/png, image/jpeg, image/jpg, image/webp, application/pdf"
+                  class="form-control updated" id="file-upload" (change)="FileSelectionBeforeCrop($event)"/>
+                <div *ngIf="
+                    LeaveFrom.get('uploadDocument')?.invalid &&
+                    LeaveFrom.get('uploadDocument')?.touched
+                  " class="text-danger">
+                  <small>This field is required.</small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+
+
+
+
+          <div class="row">
+            <div class="col-md-12">
+              <div class="local-forms">
+                <div class="form-group">
+                  <label for="reason">Reason <span class="text-danger">*</span></label>
+                  <textarea class="form-control" placeholder="Enter Reason" formControlName="reason" rows="5"
+                    (input)="onReasonInput($event, 'description')" maxlength="500" rows="4"></textarea>
+
+                  <small class="text-muted d-block text-end">
+                    {{ LeaveFrom.get("reason")?.value?.length || 0 }}/500
+                    characters
+                  </small>
+                  <div *ngIf="
+                      LeaveFrom.get('reason')?.invalid &&
+                      LeaveFrom.get('reason')?.touched
+                    " class="text-danger">
+                    <small>This field is required.</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Submit and Clear Buttons -->
+          <div class="row">
+            <div class="col-md-12 text-end mb-5">
+              <button class="btn btn-primary me-2" (click)="manageLeaves()">
+                {{ leaveID ? "Update" : "Submit" }}
+              </button>
+              <button class="btn btn-secondary" (click)="clearForm()">
+                Clear
+              </button>
+            </div>
+          </div>
+        </form>
+        }
+        @if(userRoleId == 4 || userRoleId == 3){
+        <!-- Leave Records Section -->
+
+        <div class="">
+          <div class="heading-new d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">View Leaves</h5>
+            <span></span>
+          </div>
+          <div class="row">
+             <div class="search col-md-3 mt-4 mb-4" style="margin-bottom: 0px">
+              <input type="text" class="form-control" placeholder="Search by Name or Email" [(ngModel)]="searchText"
+                (ngModelChange)="applyFilter()" />
+              <button type="submit">Search</button>
+            </div>
+            <div class="col-md-3 mb-3">
+              <div class="form-group local-forms mb-4" style="position: relative">
+                <label>Start Date</label>
+                <input (change)="selectStartDate($event)" type="text" id="uniqueStartDatePicker" class="form-control"
+                  placeholder="-Select-" />
+              </div>
+            </div>
+
+            <div class="col-md-3 mb-3">
+              <div class="form-group local-forms mb-4" style="position: relative">
+                <label>End Date</label>
+                <input (change)="selectEndDate($event)" type="text" id="uniqueEndDatePicker" class="form-control"
+                  placeholder="-Select-" />
+              </div>
+            </div>
+            <div class="col-md-3 mt-4 mb-4">
+              <button class="btn btn-primary me-2 mt-1" type="button" (click)="Onsearchclick()">
+                Search
+              </button>
+              <button class="btn btn-primary me-2 mt-1" type="reset" (click)="clearFilter()">
+                Cancel
+              </button>
+            </div>
+
+           
+          </div>
+
+          <div class="no-padding-mobile">
+            <div class="table-responsive">
+              <table class="table table-hover mb-0">
+                <thead class="student-thread">
+                  <tr>
+                    <th>#</th>
+                    <ng-container *ngIf="userRoleId == 3; else otherHeaders">
+                      <th></th>
+                      <th>Name</th>
+                      <!-- <th>Email</th> -->
+                      <th>Mobile</th>
+                      <th>Address</th>
+                    </ng-container>
+                    <ng-template #otherHeaders>
+                      <th>Start Date</th>
+                      <th>End Date</th>
+                      <th>Leave Type</th>
+                      <th>Leave Apply Date</th>
+                      <th>Reason</th>
+                      <th>Document</th>
+                      <th>Applied Leave Days</th>
+                    </ng-template>
+                  </tr>
+                </thead>
+
+
+                <tbody>
+
+
+                  @if (skeletonShow === 'Skelton') {
+                  <tr class="ram-dom">
+                    <td colspan="100%">
+                      <app-skeleton-loader skeletonShow="Skelton" viewType="table" [tableRows]="5" [tableCols]="5">
+                      </app-skeleton-loader>
+                    </td>
+                  </tr>
+                  }
+                  @else if (displayedApplyLeave.length > 0) {
+
+                  <ng-container *ngFor="
+                        let data of displayedApplyLeave
+                          | paginate
+                            : {
+                                itemsPerPage: Contentsize,
+                                currentPage: ContentP,
+                                id: 'Cmscontrol'
+                              };
+                        let i = index
+                      ">
+                    <tr>
+                      <td>{{ (ContentP - 1) * Contentsize + i + 1 }}</td>
+
+                      <ng-container *ngIf="userRoleId == 3; else nonTeacherRow">
+                        <td>
+                          <div class="toogle-classroom">
+                            <button class="btn btn-sm btn-light me-2 btn-toggle" data-bs-toggle="collapse"
+                              [attr.data-bs-target]="'#collapseTable' + i" aria-expanded="false"
+                              [attr.aria-controls]="'collapseTable' + i">
+                              <i class="fa"></i>
+                            </button>
+                          </div>
+                        </td>
+
+                        <!-- <td>
+                            <span class="table-img-div">
+                              <img [src]="
+                                  data?.profilePhoto ||
+                                  'assets/img/dummy-avatar.jpg'
+                                " class="rounded-circle table-image0new" style="object-fit: cover" />
+                            </span>
+                            {{ data?.firstName }} {{ data?.lastName ?? "" }}
+                          </td> -->
+                        <!-- <td>{{ data?.email ? data?.email : "--" }}</td> -->
+
+
+                        <td>
+                          <!-- tooltip  added here  -->
+                          <div class="tooltip-wrapper" style="position: relative" (mouseenter)="hoveredRow = data"
+                            (mouseleave)="hoveredRow = null">
+                            <span class="hover-anchor">{{ data.firstName }}</span>
+                            <!-- call here   and remove below div if able to call -->
+                            <app-tooltip *ngIf="hoveredRow === data" [employee]="{
+                            fullName: data.firstName + '' + (data.lastName ? ' ' + data.lastName : ''), 
+                            email: data.email,
+                            profile:data.profilePhoto
+                            }">
+                             </app-tooltip>
+                          </div>
+                        </td>
+
+                        <td>
+                        {{ data?.mobile ? "+1 " + data?.mobile : "--" }}
+                        </td>
+
+                        <td>{{ data?.address ? data?.address : "--" }}</td>
+                      </ng-container>
+
+                      <ng-template #nonTeacherRow>
+                        <td>{{ data?.startDate | date : "MM-dd-yyyy" }}</td>
+                        <td>{{ data?.endDate | date : "MM-dd-yyyy" }}</td>
+                        <td>{{ data?.leaveType }}</td>
+                        <td>
+                          {{ data?.createdDate | date : "MM-dd-yyyy" }}
+                        </td>
+                        <td style="
+                              width: 300px;
+                              word-break: break-word;
+                              white-space: normal;
+                            ">
+                          <ng-container *ngIf="data?.reason">
+                            <p *ngIf="expandedReasonIndex !== i">
+                              {{
+                              data?.reason.length > 50
+                              ? (data?.reason | slice : 0 : 50) + "..."
+                              : data?.reason
+                              }}
+                              <a *ngIf="data?.reason.length > 50" href="javascript:void(0)" class="text-primary ms-1"
+                                (click)="expandedReasonIndex = i">Read more</a>
+                            </p>
+                            <p *ngIf="expandedReasonIndex === i">
+                              {{ data?.reason }}
+                              <a href="javascript:void(0)" class="text-primary ms-1"
+                                (click)="expandedReasonIndex = null">Show less</a>
+                            </p>
+                          </ng-container>
+                        </td>
+                        <td>
+                          <ng-container *ngIf="data?.leavesDocument">
+                            <ng-container *ngIf="isImage(data?.leavesDocument)">
+                              <img [src]="data?.documentUrl" alt="Document Image" style="
+                                    max-width: 100px;
+                                    max-height: 100px;
+                                    margin-right: 8px;
+                                    cursor: pointer;
+                                  " (click)="
+                                    openPreview(data?.documentUrl, 'image')
+                                  " />
+                            </ng-container>
+
+                            <ng-container *ngIf="isPdf(data?.leavesDocument)">
+                              <i class="fa-solid fa-file-pdf" style="
+                                    font-size: 24px;
+                                    color: rgb(15, 15, 15);
+                                    cursor: pointer;
+                                    margin-left: 8px;
+                                  " (click)="
+                                    openPreview(data?.leavesDocument, 'pdf')
+                                  ">
+                              </i>
+                            </ng-container>
+                          </ng-container>
+                        </td>
+
+                        <td>{{ data?.appliedLeaveDays }}</td>
+                      </ng-template>
+                    </tr>
+
+                    <!-- Expanded row for teacher -->
+                    <tr *ngIf="userRoleId == 3">
+                      <td colspan="100%" class="p-0 border-0">
+                        <div class="collapse p-2" [attr.id]="'collapseTable' + i" data-bs-parent="#accordionExample">
+                          <div class="card card-body border">
+                            <div class="table-responsive">
+                              <table class="table sub-table mb-0">
+                                <thead class="student-thread">
+                                  <tr>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                    <th>Leave Type</th>
+                                    <th>Leave Apply Date</th>
+                                    <th>Reason</th>
+                                    <th>Document</th>
+                                    <th>Applied Leave Days</th>
+                                    <th>Action</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  @if (skeletonShow === 'Skelton') {
+                                <tbody>
+                                  <tr>
+                                    <td colspan="100%">
+                                      <app-skeleton-loader skeletonShow="Skelton" viewType="table" [tableRows]="5"
+                                        [tableCols]="7">
+                                      </app-skeleton-loader>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                                }
+                                @else if (data.leaves.length > 0) {
+                                <tr *ngFor="
+                                        let item of data.leaves
+                                          | paginate
+                                            : {
+                                                id: 'innerTable' + i,
+                                                itemsPerPage: innerPageSize,
+                                                currentPage:
+                                                  innerPageMap[i] || 1
+                                              };
+                                        let j = index
+                                      ">
+                                  <td>
+                                    {{
+                                    item?.startDate | date : "MM-dd-yyyy"
+                                    }}
+                                  </td>
+                                  <td>
+                                    {{
+                                    item?.endDate | date : "MM-dd-yyyy"
+                                    }}
+                                  </td>
+                                  <td>{{ item?.leaveType }}</td>
+                                  <td>
+                                    {{
+                                    item?.createdDate
+                                    | date : "MM-dd-yyyy"
+                                    }}
+                                  </td>
+                                  <td style="
+                                          width: 300px;
+                                          word-break: break-word;
+                                          white-space: normal;
+                                        ">
+                                    <ng-container *ngIf="item?.reason">
+                                      <p *ngIf="expandedReasonIndex !== j">
+                                        {{
+                                        item?.reason.length > 50
+                                        ? (item?.reason
+                                        | slice : 0 : 50) + "..."
+                                        : item?.reason
+                                        }}
+                                        <a *ngIf="item?.reason.length > 50" href="javascript:void(0)"
+                                          class="text-primary ms-1" (click)="expandedReasonIndex = j">Read more</a>
+                                      </p>
+                                      <p *ngIf="expandedReasonIndex === j">
+                                        {{ item?.reason }}
+                                        <a href="javascript:void(0)" class="text-primary ms-1" (click)="
+                                                expandedReasonIndex = null
+                                              ">Show less</a>
+                                      </p>
+                                    </ng-container>
+                                  </td>
+                                  <td>
+                                    <ng-container *ngIf="item?.leavesDocument">
+                                      <ng-container *ngIf="
+                                              isImage(item?.leavesDocument)
+                                            ">
+                                        <img [src]="item?.documentUrl" alt="Document Image" style="
+                                                max-width: 100px;
+                                                max-height: 100px;
+                                                margin-right: 8px;
+                                                cursor: pointer;
+                                              " (click)="
+                                                openPreview(
+                                                  item?.documentUrl,
+                                                  'image'
+                                                )
+                                              " />
+                                      </ng-container>
+
+                                      <ng-container *ngIf="isPdf(item?.leavesDocument)">
+                                        <i class="fa-solid fa-file-pdf" style="
+                                                font-size: 24px;
+                                                color: rgb(15, 15, 15);
+                                                cursor: pointer;
+                                                margin-left: 8px;
+                                              " (click)="
+                                                openPreview(
+                                                  item?.leavesDocument,
+                                                  'pdf'
+                                                )
+                                              ">
+                                        </i>
+                                      </ng-container>
+                                    </ng-container>
+                                  </td>
+                                  <td>{{ item?.appliedLeaveDays }}</td>
+                                  <!-- <td class="action-cell">
+                                        <i class="fa fa-pencil action-icon" (click)="OnEdit(data, item)" title="Edit"
+                                          data-bs-toggle="modal" data-bs-target="#openModal"></i>
+                                      </td> -->
+                                  <td class="action-cell">
+                                    <i class="fa fa-pencil action-icon" (click)="OnEdit(data, item)" title="Edit"></i>
+                                  </td>
+                                </tr>
+                                } @else {
+                                <tr>
+                                  <td colspan="100%">
+                                    <app-skeleton-loader skeletonShow="NoRecord">
+                                    </app-skeleton-loader>
+                                  </td>
+
+                                </tr>
+
+                                }
+                </tbody>
+              </table>
+            </div>
+            <div class="row">
+              <div class="col-md-12 text-end mt-2">
+                <div class="pagination-style no-flex">
+                  <pagination-controls *ngIf="
+                                        data.leaves?.length > innerPageSize
+                                      " [id]="'innerTable' + i" (pageChange)="innerPageMap[i] = $event" [maxSize]="5"
+                    previousLabel="prev" nextLabel="next" class="datatable-pager-nav my-2">
+                  </pagination-controls>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        </td>
+        </tr>
+        </ng-container>
+
+        } @else {
+        <tr>
+          <td colspan="100%">
+            <app-skeleton-loader skeletonShow="NoRecord">
+            </app-skeleton-loader>
+          </td>
+
+        </tr>
+
+        }
+        </tbody>
+
+        </table>
+
+        <!-- <ng-template #noRecords>
+          <tbody>
+            <tr>
+              <td colspan="8">
+                <div class="no-data">
+                  <img src="assets/img/no-data-img.png" alt="No Record Found" />
+                  <span>No Record Found</span>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </ng-template>
+
+        <ng-template #noRecordsFound>
+          <tbody>
+            <tr>
+              <td colspan="8">
+                <div class="no-data">
+                  <img src="assets/img/no-data-img.png" alt="No Record Found" />
+                  <span>No Record Found</span>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </ng-template> -->
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination-style mt-4 no-flex" *ngIf="displayedApplyLeave?.length > 5">
+        <pagination-controls previousLabel="prev" nextLabel="next" [maxSize]="5"
+          class="datatable-pager-nav my-2 mb-sm-0" id="Cmscontrol" (pageChange)="onPageChange($event)">
+        </pagination-controls>
+      </div>
+    </div>
+  </div>
+
+  }
+</div>
+</div>
+</div>
+</div>
+
+<!-- Leave Form Modal -->
+<div class="modal fade" id="openModal" tabindex="-1" aria-labelledby="leaveModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="leaveModalLabel">Update Leave Date</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="modal-body">
+        <form [formGroup]="LeaveFrom" novalidate>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group local-forms mb-4 ins-input-field">
+                <label>Start Date <span class="text-danger">*</span></label>
+                <!-- <input (change)="onstartDateChange($event)" type="text" class="form-control" placeholder="Enter Date" formControlName="startDate"
+                  id="startDatePicker" /> -->
+
+                <input type="text" class="form-control startdateRangePicker" placeholder="Enter Date"
+                  formControlName="startDate" id="startDatePicker" (change)="onstartDateChangeUpdate($event)" />
+                <div *ngIf="
+                    LeaveFrom.get('startDate')?.invalid &&
+                    LeaveFrom.get('startDate')?.touched
+                  " class="text-danger">
+                  <small>This field is required.</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group local-forms mb-4 ins-input-field">
+                <label>End Date <span class="text-danger">*</span></label>
+                <!-- <input (change)="onendDateChange($event)" type="text" class="form-control" placeholder="Enter Date" formControlName="endDate"
+                  id="endDatePicker" /> -->
+                <input type="text" class="form-control enddateRangePicker" placeholder="Enter Date"
+                  formControlName="endDate" id="endDatePicker" (change)="onendDateChangeUpdate($event)" />
+                <div *ngIf="
+                    LeaveFrom.get('endDate')?.invalid &&
+                    LeaveFrom.get('endDate')?.touched
+                  " class="text-danger">
+                  <small>This field is required.</small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Submit and Clear Buttons -->
+          <div class="row">
+            <div class="col-md-12 text-end mb-2">
+              <button type="button" class="btn btn-primary me-2" (click)="manageLeaves()">
+                Update
+              </button>
+              <button type="button" class="btn btn-secondary" (click)="clearForm()">
+                Clear
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="previewUrl" [ngClass]="{ 'modal-backdrop': true, closing: isClosing }" (click)="closePreview()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <button class="close-button" (click)="closePreview()" style="color: #fff">
+      &#10006;
+    </button>
+
+    <ng-container *ngIf="previewType === 'image'">
+      <img [src]="previewUrl" alt="Image Preview" class="preview-image" />
+    </ng-container>
+
+    <ng-container *ngIf="previewType === 'pdf'">
+      <iframe [src]="sanitizer.bypassSecurityTrustResourceUrl(previewUrl)" width="100%" height="600px"></iframe>
+    </ng-container>
+  </div>
+</div>
+
+
+
+
+
+<!-- Cropper Pop up -->
+
+
+<div class="modal fade" id="cropperModal" tabindex="-1" aria-labelledby="cropperModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="cropperModalLabel">Crop Image</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="resetImage()"></button>
+      </div>
+      <div class="modal-body">
+        <image-cropper [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="true" [aspectRatio]="4 / 3"
+          format="png" (imageCropped)="storeTempCrop($event)"></image-cropper>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="resetImage()">
+          Cancel
+        </button>
+ 
+       
+        <button  type="button" class="btn btn-primary"
+          (click)="fileChangeHandler('leave')">
+          Upload
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+

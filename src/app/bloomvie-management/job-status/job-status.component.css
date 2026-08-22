@@ -1,0 +1,6 @@
+.approve-rec svg {
+    width: 28px;
+  }
+  .actions .approve-rec:hover {
+    background-color: #ffffff00  !important;
+  }

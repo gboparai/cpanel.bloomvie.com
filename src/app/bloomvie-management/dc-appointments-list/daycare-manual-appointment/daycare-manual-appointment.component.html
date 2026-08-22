@@ -1,0 +1,242 @@
+<div>
+    <!-- <div class="student-submit text-end">
+        <button id="btnsubmit" type="button" class="btn btn-link p-0" (click)="closeModal()">
+            <i class="fa fa-times"></i> 
+        </button>
+    </div> -->
+
+
+
+    <form [formGroup]="addAppointmentForm">
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="local-forms form-group">
+                    <label>Name <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" formControlName="name" placeholder="Enter Name">
+                    @if(addAppointmentForm.controls['name']?.invalid && addAppointmentForm.controls['name'].touched){
+                    <span class="text-danger">This field is required</span>
+                    }
+                </div>
+            </div>
+            <div class="col-md-6 mb-4 custom-flag">
+                <div class="local-forms form-group">
+                    <label>Mobile Number <span class="text-danger">*</span></label>
+
+                    <div class="position-absolute flag" style="
+                                                                                            top: 35px;
+                                                                                            left: 0px;
+                                                                                            display: flex;
+                                                                                            align-items: center;
+                                                                                            gap: 4px;
+                                                                                          ">
+                        <div class="country-selector" (click)="toggleDropdown()">
+                            <img [src]="selectedCountry.flag" class="new-flag" alt="Flag">
+                            <span class="me-1">{{ selectedCountry.code }}</span>
+                            <span class="arrow">
+                                <i [class]="dropdownOpen ? 'fas fa-chevron-up' : 'fas fa-chevron-down'"></i>
+                            </span>
+
+                            <!-- Dropdown list -->
+                            <div class="dropdown" *ngIf="dropdownOpen">
+                                <div class="dropdown-item" *ngFor="let country of countries"
+                                    (click)="selectCountry(country)">
+                                    <img [src]="country.flag" class="flag" alt="Flag">
+                                    <span class="color-black">({{ country.code }})</span>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+
+                        <!-- <span>+1</span>
+                                                                                          <img
+                                                                                            src="https://i.postimg.cc/VLCndSHd/canada.png"
+                                                                                            style="width: 18px; height: 18px"
+                                                                                          /> -->
+                    </div>
+
+                    <input type="text" class="form-control " maxlength="12" id="mobileNumberInAddingAppointment"
+                        formControlName="mobile" (input)="formatPhoneNumber($event)"
+                        (input)="onEnterMobileNumber($event)" style="    padding-left: 90px;">
+                    @if(IncorrectMobileNumberFormat){
+                    <span class="text-danger">Incorrect Format</span>
+
+                    }
+                    @else if(addAppointmentForm.controls['mobile']?.invalid &&
+                    addAppointmentForm.controls['mobile'].touched) {
+                    <span class="text-danger">This field is required</span>
+                    }
+                </div>
+
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="local-forms form-group">
+                    <label>Email <span class="text-danger">*</span></label>
+                    <input type="email" class="form-control" formControlName="email"
+                        (change)="CheckInterestedEmailExist()" placeholder="Enter Email">
+                    @if(addAppointmentForm.controls['email']?.invalid && addAppointmentForm.controls['email'].touched){
+                    <span class="text-danger">This field is required</span>
+                    }
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="local-forms form-group">
+                    <label>Centre Name <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" formControlName="centreName"
+                        placeholder="Enter Centre Name">
+                    @if(addAppointmentForm.controls['centreName']?.invalid &&
+                    addAppointmentForm.controls['centreName'].touched){
+                    <span class="text-danger">This field is required</span>
+                    }
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="input-group mb-3 local-forms form-group">
+                    <label> Centre Type <span class="text-danger">*</span></label>
+                    <ng-select placeholder="-Select-" [items]="AllCenterTypes" bindLabel="centerType" bindValue="id"
+                        formControlName="DaycareTypeID" class="w-100">
+                    </ng-select>
+                </div>
+                <!---->
+                <div *ngIf="
+            addAppointmentForm.get('DaycareTypeID').invalid &&
+                (addAppointmentForm.get('DaycareTypeID').dirty ||
+                addAppointmentForm.get('DaycareTypeID').touched)
+              ">
+                    <span class="text-danger" *ngIf="
+              addAppointmentForm.get('DaycareTypeID').errors?.required
+                ">This field is required.</span>
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="local-forms form-group">
+                    <label>Enrollment Capacity <span class="text-danger">*</span></label>
+                    <ng-select [items]="enrollmentCapacity" bindLabel="name" bindValue="name" placeholder="-Select-"
+                        formControlName="enrollmentCapacity"></ng-select>
+                    @if(addAppointmentForm.controls['enrollmentCapacity']?.invalid &&
+                    addAppointmentForm.controls['enrollmentCapacity'].touched){
+                    <span class="text-danger">This field is required </span>
+                    }
+
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="local-forms form-group">
+                    <label>Zip Code / Postal Code <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" formControlName="pinCode"
+                        (blur)="fetchLocationData(addAppointmentForm.get('pinCode')?.value)"
+                        (input)="formatPostalCode($event)" placeholder="A1A A1A / 56786">
+
+                    @if(addAppointmentForm.controls['pinCode']?.invalid &&
+                    addAppointmentForm.controls['pinCode'].touched){
+                    <span class="text-danger">This field is required</span>
+                    }
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="local-forms form-group">
+                    <label>Country <span class="text-danger"></span></label>
+                    <input type="text" class="form-control" formControlName="country">
+                </div>
+
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="local-forms form-group">
+                    <label>State <span class="text-danger"></span></label>
+                    <input type="text" class="form-control" formControlName="state">
+
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="local-forms form-group">
+                    <label>City <span class="text-danger"></span></label>
+                    <input type="text" class="form-control" formControlName="city">
+
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="class d-flex justify-content-start align-items-center" style="gap: 10px;">
+                    <input type="checkbox" formControlName="isCurrentAppointment"
+                        (change)="onCheckOrUncheckToHideSlotDateAndSlotsDropdown($event)" />
+                    <label for="vehicle1" class="mb-0">Is Meet Now?</label>
+                </div>
+            </div>
+
+
+            <!--sahib start-->
+
+            <!--sahib end-->
+
+
+
+
+            <!--formControlName="CounsellorName"-->
+
+
+
+        </div>
+        <div class="row">
+            <div id="selectDateDiv" class="col-md-6 mb-4">
+                <div class="local-forms form-group">
+                    <label> Date <span class="text-danger">*</span></label>
+                    <input type="text" #datePickerSelectDate id="datePickerSelectDate" class="form-control"
+                        formControlName="date" (change)="date($event)" placeholder="-Select-">
+                    <div
+                        *ngIf="addAppointmentForm.controls['date'].invalid && addAppointmentForm.controls['date'].touched">
+                        <span class="text-danger">This field is required</span>
+                    </div>
+                </div>
+            </div>
+            <div id="selectSlotDiv" class="col-md-6 mb-4">
+                <div class="local-forms form-group">
+                    <label>Select Slot <span class="text-danger">*</span></label>
+                    <ng-select formControlName="slotID" [formControl]="SlotTimeListDropdownControl"
+                        placeholder="-Select-" (change)="onSlotSelect($event)" required>
+                        <option value="" disabled>Select a slot</option>
+                        <ng-option *ngFor="let slot of availableSlots" [value]="slot.slotID">
+                            {{ slot.slotStartTime | timeFormat }} - {{ slot.slotEndTime | timeFormat }}
+                        </ng-option>
+                    </ng-select>
+                    <div
+                        *ngIf="addAppointmentForm.controls['slotID']?.invalid && addAppointmentForm.controls['slotID']?.touched">
+                        <span class="text-danger">This field is required</span>
+                    </div>
+
+
+                    <!-- @if(addAppointmentForm.controls['slotID']?.invalid &&
+                addAppointmentForm.controls['slotID'].touched){
+                <span class="text-danger">This field is required</span>
+                } -->
+                </div>
+            </div>
+            <div class="col-md-6 mb-4" *ngIf="UserRoleID === 1">
+                <div class="local-forms form-group">
+                    <label>Counsellors <span class="text-danger">*</span></label>
+                    <ng-select [formControl]="selectedCounsellorControl" (change)="getCounsellorId($event)"
+                        placeholder="Enter Counsellors">
+                        @for (activeCounsellor of ActiveCounsellorsList; track activeCounsellor.id) {
+                        <ng-option [value]="activeCounsellor.id">{{activeCounsellor.firstName}}
+                            {{activeCounsellor.lastName}}</ng-option>
+                        }
+                    </ng-select>
+                    @if(addAppointmentForm.controls['enrollmentCapacity']?.invalid &&
+                    addAppointmentForm.controls['enrollmentCapacity'].touched){
+                    <span class="text-danger">This field is required</span>
+                    }
+                </div>
+            </div>
+        </div>
+
+    </form>
+
+    <div class="row">
+        <div class="col-12 col-md-12">
+            <div class="student-submit text-end"><button id="btnsubmit" type="submit" class="btn btn-primary me-2"
+                    (click)="onSubmit() "> Submit </button><button type="button" class="btn btn-secondary"
+                    (click)="ResetForm()"> Cancel </button></div>
+        </div>
+    </div>
+
+</div>

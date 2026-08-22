@@ -1,0 +1,727 @@
+<app-breadcrumb></app-breadcrumb>
+<div class="card" style=
+    "border: none;">
+             
+
+        <div class="">
+            <div class="col-md-12">
+                <div class=" d-flex align-items-center justify-content-between flex-wrap   row p-25">
+                    <div class="col-md-8">
+                        <div class="searcher">
+                        <div class="">
+                        <input type="text" class="form-control" placeholder="Search by ID ...">
+                        </div>
+                        <div class="search-student-btn">
+                            <button type="btn" class="btn btn-primary">Search</button>
+                            </div>
+                        </div>
+                       
+                  
+                        </div>
+        
+        
+                    <div class="d-flex align-items-center flex-wrap col-md-4 justify-content-end">
+                    <div class="input-icon-start  me-2 position-relative">
+                    <span class="icon-addon">
+                    <i class="ti ti-calendar"></i>
+                    </span>
+                    <!-- <input type="text" class="form-control date-range bookingrange" placeholder="Select" value="Academic Year : 2024 / 2025"> -->
+                    </div>
+                    <div class="d-flex align-items-center bg-white border rounded-2 p-1  ">
+                    <a href="javascript:void(0);" class="  btn btn-light bg-white " data-bs-toggle="dropdown" data-bs-auto-close="outside"  style="border: none;"><i class="fa fa-filter "></i></a>
+                    <div class="dropdown-menu drop-width">
+                    <form action="javascript:;">
+                    <div class="d-flex align-items-center border-bottom p-3">
+                        
+                    <h4>Filter By</h4>
+                    </div>
+                    <div class="p-3 pb-0 border-bottom">
+                    <div class="row">
+                    <div class="col-md-12">
+                        <div class="local-forms ">
+                            <div class="form-group">
+                              <label class="">Status<span class="login-danger">*</span></label>
+                              <select
+                                class="form-control form-select"
+                                formControlName="primaryColor"
+                              >
+                                <option>Select</option>
+                                <option>Paid</option>
+                                <option>Pending</option>
+                                <option>Cancelled</option>
+                              </select>
+                            </div>
+                          </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="local-forms ">
+                            <div class="form-group">
+                              <label class="">Category<span class="login-danger">*</span></label>
+                              <select
+                                class="form-control form-select"
+                                formControlName="primaryColor"
+                              >
+                                <option>Select</option>
+                                <option>New</option>
+                                <option>Old</option>
+                                <option>Gold</option>
+                              </select>
+                            </div>
+                          </div>
+                    </div>
+                    
+                    </div>
+                    </div>
+                    <div class="p-3 d-flex align-items-center justify-content-end">
+                        <button type="submit" class="btn btn-primary me-3">Apply</button>
+                    <a href="javascript:;" class="btn btn-light ">Reset</a>
+                  
+                    </div>
+                    </form>
+                    </div>
+                    </div>
+                    <!-- <div class="d-flex align-items-center bg-white border rounded-2 p-1  me-2">
+                    <a href="javascript:;" class="btn btn-icon btn-sm me-1 bg-primary primary-hover"><i class="fa fa-align-left" style="color:javascript:;fff;"></i></a>
+                    <a href="javascript:;" class="active btn btn-icon btn-sm primary-hover"><i class="fa fa-bars"></i></a>
+                    </div> -->
+                    <div class="dropdown mb-3">
+                    
+                    
+                    </div>
+                    </div>
+                    </div>
+        
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+
+
+
+
+<div class="card">
+    <div class="card-body p-25">
+        <div class="row dt-row">
+            <div class="col-sm-12 table-responsive">
+
+
+               
+
+                        <!-- table from here -->
+
+
+                <table class="table no-footer" id="DataTables_Table_0">
+                    <thead class="thead-light">
+                        <tr>
+                            <th class="no-sort sorting sorting_asc" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1"
+                                colspan="1" aria-sort="ascending" aria-label="
+            
+            
+            
+            : activate to sort column descending" style="width: 21px;">
+                                <div class="form-check form-check-md">
+                                    <input class="form-check-input" type="checkbox" id="select-all">
+                                </div>
+                            </th>
+                            <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
+                                aria-label="Invoice Number: activate to sort column ascending" style="width: 98.6562px;">Invoice
+                                Number</th>
+                            <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
+                                aria-label="Date: activate to sort column ascending" style="width: 80.4688px;">Date</th>
+                            <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
+                                aria-label="Description: activate to sort column ascending" style="width: 136.917px;">
+                                Description</th>
+                            <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
+                                aria-label="Amount: activate to sort column ascending" style="width: 49.9167px;">Amount</th>
+                            <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
+                                aria-label="Payment Method: activate to sort column ascending" style="width: 106.854px;">Payment
+                                Method</th>
+                            <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
+                                aria-label="Due Date: activate to sort column ascending" style="width: 80.4688px;">Due Date</th>
+                            <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
+                                aria-label="Status: activate to sort column ascending" style="width: 66.7708px;">Status</th>
+                            <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
+                                aria-label="Action: activate to sort column ascending" style="width: 40.6354px;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+                        <tr class="odd">
+                            <td class="sorting_1">
+                                <div class="form-check form-check-md">
+                                    <input class="form-check-input" type="checkbox">
+                                </div>
+                            </td>
+                            <td><a href="javascript:;" class="link-primary" data-bs-toggle="modal"
+                                    data-bs-target="#view_invoice">INV681537</a></td>
+                            <td>25 Apr 2024</td>
+                            <td>April Month Fees</td>
+                            <td>
+                                $15,000
+                            </td>
+                            <td>Cash</td>
+                            <td>30 Apr 2024</td>
+                            <td>
+                                <span class="badge badge-soft-success d-inline-flex align-items-center"><i
+                                        class="ti ti-circle-filled fs-5 me-1"></i>Paid</span>
+                            </td>
+                            <td>
+                                <div class="actions">
+                                    <a class="action-btn bg-danger-light me-2" >
+                                        <i class="feather-edit"></i>
+            
+                                    </a>
+                                    <label class="switch mb-0">
+                                        <input id="checkBoxAinA" value="isActive" name="isActive" type="checkbox"
+                                           >
+                                        <div class="slider">
+                                            <div class="circle">
+                                                <svg class="cross" xml:space="preserve" style="enable-background:new 0 0 512 512"
+                                                    viewBox="0 0 365.696 365.696" y="0" x="0" height="6" width="6"
+                                                    xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <g>
+                                                        <path data-original="#000000" fill="currentColor"
+                                                            d="M243.188 182.86 356.32 69.726c12.5-12.5 12.5-32.766 0-45.247L341.238 9.398c-12.504-12.503-32.77-12.503-45.25 0L182.86 122.528 69.727 9.374c-12.5-12.5-32.766-12.5-45.247 0L9.375 24.457c-12.5 12.504-12.5 32.77 0 45.25l113.152 113.152L9.398 295.99c-12.503 12.503-12.503 32.769 0 45.25L24.48 356.32c12.5 12.5 32.766 12.5 45.247 0l113.132-113.132L295.99 356.32c12.503 12.5 32.769 12.5 45.25 0l15.081-15.082c12.5-12.504 12.5-32.77 0-45.25zm0 0">
+                                                        </path>
+                                                    </g>
+                                                </svg>
+                                                <svg class="checkmark" xml:space="preserve"
+                                                    style="enable-background:new 0 0 512 512" viewBox="0 0 24 24" y="0" x="0"
+                                                    height="10" width="10" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <g>
+                                                        <path class="" data-original="#000000" fill="currentColor"
+                                                            d="M9.707 19.121a.997.997 0 0 1-1.414 0l-5.646-5.647a1.5 1.5 0 0 1 0-2.121l.707-.707a1.5 1.5 0 0 1 2.121 0L9 14.171l9.525-9.525a1.5 1.5 0 0 1 2.121 0l.707.707a1.5 1.5 0 0 1 0 2.121z">
+                                                        </path>
+                                                    </g>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="even">
+                            <td class="sorting_1">
+                                <div class="form-check form-check-md">
+                                    <input class="form-check-input" type="checkbox">
+                                </div>
+                            </td>
+                            <td><a href="javascript:;" class="link-primary" 
+                                    data-bs-target="#view_invoice">INV681536</a></td>
+                            <td>29 Apr 2024</td>
+                            <td>STEM Program Grant</td>
+                            <td>
+                                $20,000
+                            </td>
+                            <td>Credit</td>
+                            <td>05 May 2024</td>
+                            <td>
+                                <span class="badge badge-soft-warning d-inline-flex align-items-center"><i
+                                        class="ti ti-circle-filled fs-5 me-1"></i>Overdue</span>
+                            </td>
+                            <td>
+                                <div class="actions">
+                                    <a class="action-btn bg-danger-light me-2" >
+                                        <i class="feather-edit"></i>
+            
+                                    </a>
+                                    <label class="switch mb-0">
+                                        <input id="checkBoxAinA" value="isActive" name="isActive" type="checkbox"
+                                           >
+                                        <div class="slider">
+                                            <div class="circle">
+                                                <svg class="cross" xml:space="preserve" style="enable-background:new 0 0 512 512"
+                                                    viewBox="0 0 365.696 365.696" y="0" x="0" height="6" width="6"
+                                                    xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <g>
+                                                        <path data-original="#000000" fill="currentColor"
+                                                            d="M243.188 182.86 356.32 69.726c12.5-12.5 12.5-32.766 0-45.247L341.238 9.398c-12.504-12.503-32.77-12.503-45.25 0L182.86 122.528 69.727 9.374c-12.5-12.5-32.766-12.5-45.247 0L9.375 24.457c-12.5 12.504-12.5 32.77 0 45.25l113.152 113.152L9.398 295.99c-12.503 12.503-12.503 32.769 0 45.25L24.48 356.32c12.5 12.5 32.766 12.5 45.247 0l113.132-113.132L295.99 356.32c12.503 12.5 32.769 12.5 45.25 0l15.081-15.082c12.5-12.504 12.5-32.77 0-45.25zm0 0">
+                                                        </path>
+                                                    </g>
+                                                </svg>
+                                                <svg class="checkmark" xml:space="preserve"
+                                                    style="enable-background:new 0 0 512 512" viewBox="0 0 24 24" y="0" x="0"
+                                                    height="10" width="10" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <g>
+                                                        <path class="" data-original="#000000" fill="currentColor"
+                                                            d="M9.707 19.121a.997.997 0 0 1-1.414 0l-5.646-5.647a1.5 1.5 0 0 1 0-2.121l.707-.707a1.5 1.5 0 0 1 2.121 0L9 14.171l9.525-9.525a1.5 1.5 0 0 1 2.121 0l.707.707a1.5 1.5 0 0 1 0 2.121z">
+                                                        </path>
+                                                    </g>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="odd">
+                            <td class="sorting_1">
+                                <div class="form-check form-check-md">
+                                    <input class="form-check-input" type="checkbox">
+                                </div>
+                            </td>
+                            <td><a href="javascript:;" class="link-primary" 
+                                    data-bs-target="#view_invoice">INV681535</a></td>
+                            <td>11 May 2024</td>
+                            <td>Alumni Scholarship</td>
+                            <td>
+                                $1000
+                            </td>
+                            <td>Cash</td>
+                            <td>16 May 2024</td>
+                            <td>
+                                <span class="badge badge-soft-success d-inline-flex align-items-center"><i
+                                        class="ti ti-circle-filled fs-5 me-1"></i>Paid</span>
+                            </td>
+                            <td>
+                                <div class="actions">
+                                    <a class="action-btn bg-danger-light me-2" >
+                                        <i class="feather-edit"></i>
+            
+                                    </a>
+                                    <label class="switch mb-0">
+                                        <input id="checkBoxAinA" value="isActive" name="isActive" type="checkbox"
+                                           >
+                                        <div class="slider">
+                                            <div class="circle">
+                                                <svg class="cross" xml:space="preserve" style="enable-background:new 0 0 512 512"
+                                                    viewBox="0 0 365.696 365.696" y="0" x="0" height="6" width="6"
+                                                    xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <g>
+                                                        <path data-original="#000000" fill="currentColor"
+                                                            d="M243.188 182.86 356.32 69.726c12.5-12.5 12.5-32.766 0-45.247L341.238 9.398c-12.504-12.503-32.77-12.503-45.25 0L182.86 122.528 69.727 9.374c-12.5-12.5-32.766-12.5-45.247 0L9.375 24.457c-12.5 12.504-12.5 32.77 0 45.25l113.152 113.152L9.398 295.99c-12.503 12.503-12.503 32.769 0 45.25L24.48 356.32c12.5 12.5 32.766 12.5 45.247 0l113.132-113.132L295.99 356.32c12.503 12.5 32.769 12.5 45.25 0l15.081-15.082c12.5-12.504 12.5-32.77 0-45.25zm0 0">
+                                                        </path>
+                                                    </g>
+                                                </svg>
+                                                <svg class="checkmark" xml:space="preserve"
+                                                    style="enable-background:new 0 0 512 512" viewBox="0 0 24 24" y="0" x="0"
+                                                    height="10" width="10" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <g>
+                                                        <path class="" data-original="#000000" fill="currentColor"
+                                                            d="M9.707 19.121a.997.997 0 0 1-1.414 0l-5.646-5.647a1.5 1.5 0 0 1 0-2.121l.707-.707a1.5 1.5 0 0 1 2.121 0L9 14.171l9.525-9.525a1.5 1.5 0 0 1 2.121 0l.707.707a1.5 1.5 0 0 1 0 2.121z">
+                                                        </path>
+                                                    </g>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="even">
+                            <td class="sorting_1">
+                                <div class="form-check form-check-md">
+                                    <input class="form-check-input" type="checkbox">
+                                </div>
+                            </td>
+                            <td><a href="javascript:;" class="link-primary" 
+                                    data-bs-target="#view_invoice">INV681534</a></td>
+                            <td>16 May 2024</td>
+                            <td>Uniform Sales</td>
+                            <td>
+                                $10,500
+                            </td>
+                            <td>Cash</td>
+                            <td>21 May 2024</td>
+                            <td>
+                                <span class="badge badge-soft-pending d-inline-flex align-items-center"><i
+                                        class="ti ti-circle-filled fs-5 me-1"></i>Pending</span>
+                            </td>
+                            <td>
+                                <div class="actions">
+                                    <a class="action-btn bg-danger-light me-2" >
+                                        <i class="feather-edit"></i>
+            
+                                    </a>
+                                    <label class="switch mb-0">
+                                        <input id="checkBoxAinA" value="isActive" name="isActive" type="checkbox"
+                                           >
+                                        <div class="slider">
+                                            <div class="circle">
+                                                <svg class="cross" xml:space="preserve" style="enable-background:new 0 0 512 512"
+                                                    viewBox="0 0 365.696 365.696" y="0" x="0" height="6" width="6"
+                                                    xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <g>
+                                                        <path data-original="#000000" fill="currentColor"
+                                                            d="M243.188 182.86 356.32 69.726c12.5-12.5 12.5-32.766 0-45.247L341.238 9.398c-12.504-12.503-32.77-12.503-45.25 0L182.86 122.528 69.727 9.374c-12.5-12.5-32.766-12.5-45.247 0L9.375 24.457c-12.5 12.504-12.5 32.77 0 45.25l113.152 113.152L9.398 295.99c-12.503 12.503-12.503 32.769 0 45.25L24.48 356.32c12.5 12.5 32.766 12.5 45.247 0l113.132-113.132L295.99 356.32c12.503 12.5 32.769 12.5 45.25 0l15.081-15.082c12.5-12.504 12.5-32.77 0-45.25zm0 0">
+                                                        </path>
+                                                    </g>
+                                                </svg>
+                                                <svg class="checkmark" xml:space="preserve"
+                                                    style="enable-background:new 0 0 512 512" viewBox="0 0 24 24" y="0" x="0"
+                                                    height="10" width="10" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <g>
+                                                        <path class="" data-original="#000000" fill="currentColor"
+                                                            d="M9.707 19.121a.997.997 0 0 1-1.414 0l-5.646-5.647a1.5 1.5 0 0 1 0-2.121l.707-.707a1.5 1.5 0 0 1 2.121 0L9 14.171l9.525-9.525a1.5 1.5 0 0 1 2.121 0l.707.707a1.5 1.5 0 0 1 0 2.121z">
+                                                        </path>
+                                                    </g>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="odd">
+                            <td class="sorting_1">
+                                <div class="form-check form-check-md">
+                                    <input class="form-check-input" type="checkbox">
+                                </div>
+                            </td>
+                            <td><a href="javascript:;" class="link-primary" 
+                                    data-bs-target="#view_invoice">INV681533</a></td>
+                            <td>21 May 2024</td>
+                            <td>Event Parking Fees</td>
+                            <td>
+                                $8000
+                            </td>
+                            <td>Cash</td>
+                            <td>26 May 2024</td>
+                            <td>
+                                <span class="badge badge-soft-success d-inline-flex align-items-center"><i
+                                        class="ti ti-circle-filled fs-5 me-1"></i>Paid</span>
+                            </td>
+                            <td>
+                                <div class="actions">
+                                    <a class="action-btn bg-danger-light me-2" >
+                                        <i class="feather-edit"></i>
+            
+                                    </a>
+                                    <label class="switch mb-0">
+                                        <input id="checkBoxAinA" value="isActive" name="isActive" type="checkbox"
+                                           >
+                                        <div class="slider">
+                                            <div class="circle">
+                                                <svg class="cross" xml:space="preserve" style="enable-background:new 0 0 512 512"
+                                                    viewBox="0 0 365.696 365.696" y="0" x="0" height="6" width="6"
+                                                    xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <g>
+                                                        <path data-original="#000000" fill="currentColor"
+                                                            d="M243.188 182.86 356.32 69.726c12.5-12.5 12.5-32.766 0-45.247L341.238 9.398c-12.504-12.503-32.77-12.503-45.25 0L182.86 122.528 69.727 9.374c-12.5-12.5-32.766-12.5-45.247 0L9.375 24.457c-12.5 12.504-12.5 32.77 0 45.25l113.152 113.152L9.398 295.99c-12.503 12.503-12.503 32.769 0 45.25L24.48 356.32c12.5 12.5 32.766 12.5 45.247 0l113.132-113.132L295.99 356.32c12.503 12.5 32.769 12.5 45.25 0l15.081-15.082c12.5-12.504 12.5-32.77 0-45.25zm0 0">
+                                                        </path>
+                                                    </g>
+                                                </svg>
+                                                <svg class="checkmark" xml:space="preserve"
+                                                    style="enable-background:new 0 0 512 512" viewBox="0 0 24 24" y="0" x="0"
+                                                    height="10" width="10" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <g>
+                                                        <path class="" data-original="#000000" fill="currentColor"
+                                                            d="M9.707 19.121a.997.997 0 0 1-1.414 0l-5.646-5.647a1.5 1.5 0 0 1 0-2.121l.707-.707a1.5 1.5 0 0 1 2.121 0L9 14.171l9.525-9.525a1.5 1.5 0 0 1 2.121 0l.707.707a1.5 1.5 0 0 1 0 2.121z">
+                                                        </path>
+                                                    </g>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="even">
+                            <td class="sorting_1">
+                                <div class="form-check form-check-md">
+                                    <input class="form-check-input" type="checkbox">
+                                </div>
+                            </td>
+                            <td><a href="javascript:;" class="link-primary" 
+                                    data-bs-target="#view_invoice">INV681532</a></td>
+                            <td>14 Jun 2024</td>
+                            <td>Football Season Pass</td>
+                            <td>
+                                $7000
+                            </td>
+                            <td>Credit</td>
+                            <td>19 Jun 2024</td>
+                            <td>
+                                <span class="badge badge-soft-success d-inline-flex align-items-center"><i
+                                        class="ti ti-circle-filled fs-5 me-1"></i>Paid</span>
+                            </td>
+                            <td>
+                                <div class="actions">
+                                    <a class="action-btn bg-danger-light me-2" >
+                                        <i class="feather-edit"></i>
+            
+                                    </a>
+                                    <label class="switch mb-0">
+                                        <input id="checkBoxAinA" value="isActive" name="isActive" type="checkbox"
+                                           >
+                                        <div class="slider">
+                                            <div class="circle">
+                                                <svg class="cross" xml:space="preserve" style="enable-background:new 0 0 512 512"
+                                                    viewBox="0 0 365.696 365.696" y="0" x="0" height="6" width="6"
+                                                    xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <g>
+                                                        <path data-original="#000000" fill="currentColor"
+                                                            d="M243.188 182.86 356.32 69.726c12.5-12.5 12.5-32.766 0-45.247L341.238 9.398c-12.504-12.503-32.77-12.503-45.25 0L182.86 122.528 69.727 9.374c-12.5-12.5-32.766-12.5-45.247 0L9.375 24.457c-12.5 12.504-12.5 32.77 0 45.25l113.152 113.152L9.398 295.99c-12.503 12.503-12.503 32.769 0 45.25L24.48 356.32c12.5 12.5 32.766 12.5 45.247 0l113.132-113.132L295.99 356.32c12.503 12.5 32.769 12.5 45.25 0l15.081-15.082c12.5-12.504 12.5-32.77 0-45.25zm0 0">
+                                                        </path>
+                                                    </g>
+                                                </svg>
+                                                <svg class="checkmark" xml:space="preserve"
+                                                    style="enable-background:new 0 0 512 512" viewBox="0 0 24 24" y="0" x="0"
+                                                    height="10" width="10" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <g>
+                                                        <path class="" data-original="#000000" fill="currentColor"
+                                                            d="M9.707 19.121a.997.997 0 0 1-1.414 0l-5.646-5.647a1.5 1.5 0 0 1 0-2.121l.707-.707a1.5 1.5 0 0 1 2.121 0L9 14.171l9.525-9.525a1.5 1.5 0 0 1 2.121 0l.707.707a1.5 1.5 0 0 1 0 2.121z">
+                                                        </path>
+                                                    </g>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="odd">
+                            <td class="sorting_1">
+                                <div class="form-check form-check-md">
+                                    <input class="form-check-input" type="checkbox">
+                                </div>
+                            </td>
+                            <td><a href="javascript:;" class="link-primary" 
+                                    data-bs-target="#view_invoice">INV681531</a></td>
+                            <td>20 Jun 2024</td>
+                            <td>Summer Reading Sale</td>
+                            <td>
+                                $3000
+                            </td>
+                            <td>Cash</td>
+                            <td>25 Jun 2024</td>
+                            <td>
+                                <span class="badge badge-soft-warning d-inline-flex align-items-center"><i
+                                        class="ti ti-circle-filled fs-5 me-1"></i>Overdue</span>
+                            </td>
+                            <td>
+                                <div class="actions">
+                                    <a class="action-btn bg-danger-light me-2" >
+                                        <i class="feather-edit"></i>
+            
+                                    </a>
+                                    <label class="switch mb-0">
+                                        <input id="checkBoxAinA" value="isActive" name="isActive" type="checkbox"
+                                           >
+                                        <div class="slider">
+                                            <div class="circle">
+                                                <svg class="cross" xml:space="preserve" style="enable-background:new 0 0 512 512"
+                                                    viewBox="0 0 365.696 365.696" y="0" x="0" height="6" width="6"
+                                                    xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <g>
+                                                        <path data-original="#000000" fill="currentColor"
+                                                            d="M243.188 182.86 356.32 69.726c12.5-12.5 12.5-32.766 0-45.247L341.238 9.398c-12.504-12.503-32.77-12.503-45.25 0L182.86 122.528 69.727 9.374c-12.5-12.5-32.766-12.5-45.247 0L9.375 24.457c-12.5 12.504-12.5 32.77 0 45.25l113.152 113.152L9.398 295.99c-12.503 12.503-12.503 32.769 0 45.25L24.48 356.32c12.5 12.5 32.766 12.5 45.247 0l113.132-113.132L295.99 356.32c12.503 12.5 32.769 12.5 45.25 0l15.081-15.082c12.5-12.504 12.5-32.77 0-45.25zm0 0">
+                                                        </path>
+                                                    </g>
+                                                </svg>
+                                                <svg class="checkmark" xml:space="preserve"
+                                                    style="enable-background:new 0 0 512 512" viewBox="0 0 24 24" y="0" x="0"
+                                                    height="10" width="10" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <g>
+                                                        <path class="" data-original="#000000" fill="currentColor"
+                                                            d="M9.707 19.121a.997.997 0 0 1-1.414 0l-5.646-5.647a1.5 1.5 0 0 1 0-2.121l.707-.707a1.5 1.5 0 0 1 2.121 0L9 14.171l9.525-9.525a1.5 1.5 0 0 1 2.121 0l.707.707a1.5 1.5 0 0 1 0 2.121z">
+                                                        </path>
+                                                    </g>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="even">
+                            <td class="sorting_1">
+                                <div class="form-check form-check-md">
+                                    <input class="form-check-input" type="checkbox">
+                                </div>
+                            </td>
+                            <td><a href="javascript:;" class="link-primary" 
+                                    data-bs-target="#view_invoice">INV681530</a></td>
+                            <td>24 Jun 2024</td>
+                            <td>Library Donation</td>
+                            <td>
+                                $2000
+                            </td>
+                            <td>Cash</td>
+                            <td>29 Jun 2024</td>
+                            <td>
+                                <span class="badge badge-soft-success d-inline-flex align-items-center"><i
+                                        class="ti ti-circle-filled fs-5 me-1"></i>Paid</span>
+                            </td>
+                            <td>
+                                <div class="actions">
+                                    <a class="action-btn bg-danger-light me-2" >
+                                        <i class="feather-edit"></i>
+            
+                                    </a>
+                                    <label class="switch mb-0">
+                                        <input id="checkBoxAinA" value="isActive" name="isActive" type="checkbox"
+                                           >
+                                        <div class="slider">
+                                            <div class="circle">
+                                                <svg class="cross" xml:space="preserve" style="enable-background:new 0 0 512 512"
+                                                    viewBox="0 0 365.696 365.696" y="0" x="0" height="6" width="6"
+                                                    xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <g>
+                                                        <path data-original="#000000" fill="currentColor"
+                                                            d="M243.188 182.86 356.32 69.726c12.5-12.5 12.5-32.766 0-45.247L341.238 9.398c-12.504-12.503-32.77-12.503-45.25 0L182.86 122.528 69.727 9.374c-12.5-12.5-32.766-12.5-45.247 0L9.375 24.457c-12.5 12.504-12.5 32.77 0 45.25l113.152 113.152L9.398 295.99c-12.503 12.503-12.503 32.769 0 45.25L24.48 356.32c12.5 12.5 32.766 12.5 45.247 0l113.132-113.132L295.99 356.32c12.503 12.5 32.769 12.5 45.25 0l15.081-15.082c12.5-12.504 12.5-32.77 0-45.25zm0 0">
+                                                        </path>
+                                                    </g>
+                                                </svg>
+                                                <svg class="checkmark" xml:space="preserve"
+                                                    style="enable-background:new 0 0 512 512" viewBox="0 0 24 24" y="0" x="0"
+                                                    height="10" width="10" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <g>
+                                                        <path class="" data-original="#000000" fill="currentColor"
+                                                            d="M9.707 19.121a.997.997 0 0 1-1.414 0l-5.646-5.647a1.5 1.5 0 0 1 0-2.121l.707-.707a1.5 1.5 0 0 1 2.121 0L9 14.171l9.525-9.525a1.5 1.5 0 0 1 2.121 0l.707.707a1.5 1.5 0 0 1 0 2.121z">
+                                                        </path>
+                                                    </g>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="odd">
+                            <td class="sorting_1">
+                                <div class="form-check form-check-md">
+                                    <input class="form-check-input" type="checkbox">
+                                </div>
+                            </td>
+                            <td><a href="javascript:;" class="link-primary" 
+                                    data-bs-target="#view_invoice">INV681529</a></td>
+                            <td>08 Jul 2024</td>
+                            <td>Cafeteria Income</td>
+                            <td>
+                                $15,000
+                            </td>
+                            <td>Credit</td>
+                            <td>13 Jul 2024</td>
+                            <td>
+                                <span class="badge badge-soft-success d-inline-flex align-items-center"><i
+                                        class="ti ti-circle-filled fs-5 me-1"></i>Paid</span>
+                            </td>
+                            <td>
+                                <div class="actions">
+                                    <a class="action-btn bg-danger-light me-2" >
+                                        <i class="feather-edit"></i>
+            
+                                    </a>
+                                    <label class="switch mb-0">
+                                        <input id="checkBoxAinA" value="isActive" name="isActive" type="checkbox"
+                                           >
+                                        <div class="slider">
+                                            <div class="circle">
+                                                <svg class="cross" xml:space="preserve" style="enable-background:new 0 0 512 512"
+                                                    viewBox="0 0 365.696 365.696" y="0" x="0" height="6" width="6"
+                                                    xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <g>
+                                                        <path data-original="#000000" fill="currentColor"
+                                                            d="M243.188 182.86 356.32 69.726c12.5-12.5 12.5-32.766 0-45.247L341.238 9.398c-12.504-12.503-32.77-12.503-45.25 0L182.86 122.528 69.727 9.374c-12.5-12.5-32.766-12.5-45.247 0L9.375 24.457c-12.5 12.504-12.5 32.77 0 45.25l113.152 113.152L9.398 295.99c-12.503 12.503-12.503 32.769 0 45.25L24.48 356.32c12.5 12.5 32.766 12.5 45.247 0l113.132-113.132L295.99 356.32c12.503 12.5 32.769 12.5 45.25 0l15.081-15.082c12.5-12.504 12.5-32.77 0-45.25zm0 0">
+                                                        </path>
+                                                    </g>
+                                                </svg>
+                                                <svg class="checkmark" xml:space="preserve"
+                                                    style="enable-background:new 0 0 512 512" viewBox="0 0 24 24" y="0" x="0"
+                                                    height="10" width="10" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <g>
+                                                        <path class="" data-original="#000000" fill="currentColor"
+                                                            d="M9.707 19.121a.997.997 0 0 1-1.414 0l-5.646-5.647a1.5 1.5 0 0 1 0-2.121l.707-.707a1.5 1.5 0 0 1 2.121 0L9 14.171l9.525-9.525a1.5 1.5 0 0 1 2.121 0l.707.707a1.5 1.5 0 0 1 0 2.121z">
+                                                        </path>
+                                                    </g>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="even">
+                            <td class="sorting_1">
+                                <div class="form-check form-check-md">
+                                    <input class="form-check-input" type="checkbox">
+                                </div>
+                            </td>
+                            <td><a href="javascript:;" class="link-primary" 
+                                    data-bs-target="#view_invoice">INV681537</a></td>
+                            <td>13 Jul 2024</td>
+                            <td>Daily Visitor Parking</td>
+                            <td>
+                                $4000
+                            </td>
+                            <td>Cash</td>
+                            <td>18 Jul 2024</td>
+                            <td>
+                                <span class="badge badge-soft-pending d-inline-flex align-items-center"><i
+                                        class="ti ti-circle-filled fs-5 me-1"></i>Pending</span>
+                            </td>
+                            <td>
+                                <div class="actions">
+                                    <a class="action-btn bg-danger-light me-2" >
+                                        <i class="feather-edit"></i>
+            
+                                    </a>
+                                    <label class="switch mb-0">
+                                        <input id="checkBoxAinA" value="isActive" name="isActive" type="checkbox"
+                                           >
+                                        <div class="slider">
+                                            <div class="circle">
+                                                <svg class="cross" xml:space="preserve" style="enable-background:new 0 0 512 512"
+                                                    viewBox="0 0 365.696 365.696" y="0" x="0" height="6" width="6"
+                                                    xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <g>
+                                                        <path data-original="#000000" fill="currentColor"
+                                                            d="M243.188 182.86 356.32 69.726c12.5-12.5 12.5-32.766 0-45.247L341.238 9.398c-12.504-12.503-32.77-12.503-45.25 0L182.86 122.528 69.727 9.374c-12.5-12.5-32.766-12.5-45.247 0L9.375 24.457c-12.5 12.504-12.5 32.77 0 45.25l113.152 113.152L9.398 295.99c-12.503 12.503-12.503 32.769 0 45.25L24.48 356.32c12.5 12.5 32.766 12.5 45.247 0l113.132-113.132L295.99 356.32c12.503 12.5 32.769 12.5 45.25 0l15.081-15.082c12.5-12.504 12.5-32.77 0-45.25zm0 0">
+                                                        </path>
+                                                    </g>
+                                                </svg>
+                                                <svg class="checkmark" xml:space="preserve"
+                                                    style="enable-background:new 0 0 512 512" viewBox="0 0 24 24" y="0" x="0"
+                                                    height="10" width="10" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <g>
+                                                        <path class="" data-original="#000000" fill="currentColor"
+                                                            d="M9.707 19.121a.997.997 0 0 1-1.414 0l-5.646-5.647a1.5 1.5 0 0 1 0-2.121l.707-.707a1.5 1.5 0 0 1 2.121 0L9 14.171l9.525-9.525a1.5 1.5 0 0 1 2.121 0l.707.707a1.5 1.5 0 0 1 0 2.121z">
+                                                        </path>
+                                                    </g>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

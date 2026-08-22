@@ -1,0 +1,275 @@
+<app-breadcrumb></app-breadcrumb>
+
+<div class="row local-forms">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <div id="pills-appointment" role="tabpanel" aria-labelledby="pills-appointment-tab" tabindex="0">
+          <div class="heading-new mb-4">
+
+            <h5 class="mb-0">Leave Setting</h5>
+          </div>
+
+          <form [formGroup]="daycareLeaveForm" (ngSubmit)="onSubmit()">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="leave-header">
+                  <!-- <div class="add-leave-type" data-bs-toggle="modal" data-bs-target="#leaveTypeModal"> Add Leave Type
+                  </div> -->
+                  <!-- <div class="mb-3">
+                    <label class="form-label">Leave Type</label><br />
+                    <ng-select [ngClass]="{
+                        'is-invalid':
+                          daycareLeaveForm.controls['leaveTypeId'].invalid &&
+                          daycareLeaveForm.controls['leaveTypeId'].touched
+                      }" placeholder="-Select-" [items]="leaveTypeList" formControlName="leaveTypeId" bindValue="id"
+                      bindLabel="leaveType">
+                    </ng-select>
+
+                    <div class="invalid-feedback" *ngIf="
+                        daycareLeaveForm.controls['leaveTypeId'].invalid &&
+                        daycareLeaveForm.controls['leaveTypeId'].touched
+                      ">
+                      <div *ngIf="daycareLeaveForm.controls['leaveTypeId'].errors?.['required']">
+                        This field is required.
+                      </div>
+                    </div>
+                  </div> -->
+
+                  <div class="mb-3">
+                    <label class="form-label">Leave Type <span class="text-danger">* </span></label><br />
+                    <input type="text" class="form-control" [ngClass]="{
+      'is-invalid':
+        daycareLeaveForm.controls['leaveType'].invalid &&
+        daycareLeaveForm.controls['leaveType'].touched
+    }" placeholder="Enter leave type" formControlName="leaveType" />
+
+                    <div class="invalid-feedback" *ngIf="
+    daycareLeaveForm.controls['leaveType'].invalid &&
+    daycareLeaveForm.controls['leaveType'].touched
+  ">
+                      <div *ngIf="daycareLeaveForm.controls['leaveType'].errors?.['required']">
+                        This field is required.
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+                <div class>
+                  <div class="mb-3">
+                    <label class="form-label">Leave Per Year <span class="text-danger">* </span></label><br />
+                    <input [ngClass]="{
+                        'is-invalid':
+                          daycareLeaveForm.controls['leaveCount'].invalid &&
+                          daycareLeaveForm.controls['leaveCount'].touched
+                      }" formControlName="leaveCount" type="number" class="form-control" placeholder="Enter Number" />
+                    <div class="invalid-feedback" *ngIf="
+                        daycareLeaveForm.controls['leaveCount'].invalid &&
+                        daycareLeaveForm.controls['leaveCount'].touched
+                      ">
+                      <div *ngIf="daycareLeaveForm.controls['leaveCount'].errors?.['required']">
+                        Leave Count is required.
+                      </div>
+                      <div *ngIf="daycareLeaveForm.controls['leaveCount'].errors?.['min']">
+                        Leave Count must be at least 1.
+                      </div>
+                      <div *ngIf="daycareLeaveForm.controls['leaveCount'].errors?.['max']">
+                        Leave Count cannot exceed 20.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label class="form-label">Description <span class="text-danger">* </span></label><br />
+                  <!-- <app-text-counter [control]="groupControl" [maxLength]="50"></app-text-counter> -->
+
+                  <textarea [ngClass]="{
+                      'is-invalid':
+                        daycareLeaveForm.controls['description'].invalid &&
+                        daycareLeaveForm.controls['description'].touched
+                    }" formControlName="description" placeholder="Enter Description" rows="5"
+                    class="form-control"></textarea>
+                  <div class="invalid-feedback" *ngIf="
+                      daycareLeaveForm.controls['description'].invalid &&
+                      daycareLeaveForm.controls['description'].touched
+                    ">
+                    <div *ngIf="daycareLeaveForm.controls['description'].errors?.['required']">
+                      Description is required.
+                    </div>
+                    <div *ngIf="daycareLeaveForm.controls['description'].errors?.['maxlength']">
+                      Description cannot exceed 500 characters.
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-12 text-end">
+                <div class="student-submit text-end">
+                  <button [disabled]="submitted" type="submit" id="submit-btn" class="btn btn-primary me-2">
+                    {{ isEditing ? "Update" : "Save" }}
+                  </button>
+                  <button type="reset" class="btn btn-secondary" (click)="reset()">Cancel</button>
+                </div>
+              </div>
+            </div>
+          </form>
+
+          <br />
+
+          <div class="heading-new">
+            <h5 class="mb-0">Leave Records</h5>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                  <thead class="student-thread">
+                    <tr>
+                      <th>#</th>
+                      <th>Leave Type</th>
+                      <th>Leave Per Year</th>
+                      <th>Description</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+
+                    @if (skeletonShow === 'Skelton') {
+                    <tr>
+                      <td colspan="100%">
+                        <app-skeleton-loader skeletonShow="Skelton" viewType="table" [tableRows]="5" [tableCols]="5">
+                        </app-skeleton-loader>
+                      </td>
+                    </tr>
+                    }
+                    @else if (assignedLeaveList.length > 0) {
+                    <tr *ngFor="let item of assignedLeaveList | paginate
+                              : {
+                                  itemsPerPage: 5,
+                                  currentPage: currentPage,
+                                  id: 'getPaymentHistory'
+                                }; let i = index">
+                      <!-- <td>{{ i + 1 }}</td> -->
+                      <td>{{ i + 1 + (currentPage - 1) * itemsPerPage }}</td>
+                      <td>{{ item.leaveType }}</td>
+                      <td>{{ item.leaveCount }}</td>
+
+
+                      <td style="width: 300px; word-break: break-word; white-space: normal">
+                        <div class="deatil-subscription" style="word-break: break-word; white-space: normal">
+                          <p *ngIf="expandedDescriptionIndex !== i">
+                            {{
+                            item.description.length > 50
+                            ? (item.description | slice : 0 : 50) + "..."
+                            : item.description
+                            }}
+                            <a *ngIf="item.description.length > 50" href="javascript:void(0)" class="text-primary ms-1"
+                              (click)="expandedDescriptionIndex = i">
+                              Read more
+                            </a>
+                          </p>
+
+                          <p *ngIf="expandedDescriptionIndex === i">
+                            {{ item.description }}
+                            <a href="javascript:void(0)" class="text-primary ms-1"
+                              (click)="expandedDescriptionIndex = null">
+                              Show less
+                            </a>
+                          </p>
+                        </div>
+                      </td>
+
+                      <td>
+                        <a (click)="onEdit(item)" class="action-btn bg-danger-light me-2"><i class="feather-edit"></i>
+                        </a>
+
+                        <label class="switch mb-0" style="background: none;">
+                          <input id="check{{ item.id }}" (change)="toggleStatus(item.id, item.isActive)"
+                            [checked]="item.isActive" type="checkbox" />
+                          <div class="slider">
+                            <span class="status-text"></span>
+                            <div class="circle">
+                              <svg class="cross" xml:space="preserve" style="enable-background: new 0 0 512 512"
+                                viewBox="0 0 365.696 365.696" y="0" x="0" height="6" width="6"
+                                xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <g>
+                                  <path data-original="#000000" fill="currentColor"
+                                    d="M243.188 182.86 356.32 69.726c12.5-12.5 12.5-32.766 0-45.247L341.238 9.398c-12.504-12.503-32.77-12.503-45.25 0L182.86 122.528 69.727 9.374c-12.5-12.5-32.766-12.5-45.247 0L9.375 24.457c-12.5 12.504-12.5 32.77 0 45.25l113.152 113.152L9.398 295.99c-12.503 12.503-12.503 32.769 0 45.25L24.48 356.32c12.5 12.5 32.766 12.5 45.247 0l113.132-113.132L295.99 356.32c12.503 12.5 32.769 12.5 45.25 0l15.081-15.082c12.5-12.504 12.5-32.77 0-45.25zm0 0">
+                                  </path>
+                                </g>
+                              </svg>
+                              <svg class="checkmark" xml:space="preserve" style="enable-background: new 0 0 512 512"
+                                viewBox="0 0 24 24" y="0" x="0" height="10" width="10"
+                                xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <g>
+                                  <path class data-original="#000000" fill="currentColor"
+                                    d="M9.707 19.121a.997.997 0 0 1-1.414 0l-5.646-5.647a1.5 1.5 0 0 1 0-2.121l.707-.707a1.5 1.5 0 0 1 2.121 0L9 14.171l9.525-9.525a1.5 1.5 0 0 1 2.121 0l.707.707a1.5 1.5 0 0 1 0 2.121z">
+                                  </path>
+                                </g>
+                              </svg>
+                            </div>
+                          </div>
+                        </label>
+                      </td>
+                    </tr>
+                    }@else{
+                    <tr>
+                      <td colspan="100%">
+                        <app-skeleton-loader skeletonShow="NoRecord">
+                        </app-skeleton-loader>
+                      </td>
+                    </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="d-flex justify-content-between align-items-center mt-4 no-flex"
+                *ngIf="assignedLeaveList.length > 5">
+                <div class="total-entry" style="font-size: small">
+                  <span>Total Entries:</span><span class="entry-count"> {{ totalCount }} </span>
+                </div>
+                <pagination-controls (pageChange)="currentPage = $event" id="getPaymentHistory"></pagination-controls>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="onBoardingService.isOnboarding" class="form-group mb-0  text-end">
+      <div class="text-end">
+        <div class="settings-btns">
+          <button type="reset" (click)="onBoardingService.onChangeTab('Tab-7')" type="submit"
+            class="btn btn-secondary me-3">
+            Previous
+          </button>
+          <button (click)="proceedToOnboarding()" [disabled]="!isValid" type="submit" class="btn btn-primary"
+            [innerText]="
+              onBoardingService.isOnboarding ? 'Save & Proceed' : 'Save'
+            "></button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Modal -->
+<!-- <div class="modal fade" id="leaveTypeModal" tabindex="-1" aria-labelledby="leaveTypeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="leaveTypeModalLabel">Add Leave Type</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <app-manage-master-leave (leaveTypeRefresh)="getLeaveTypeList()"></app-manage-master-leave>
+      </div>
+    </div>
+  </div>
+</div> -->

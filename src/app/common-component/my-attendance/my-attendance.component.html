@@ -1,0 +1,421 @@
+<app-breadcrumb></app-breadcrumb>
+<div class="row">
+  <div class="top-cards">
+    <div class="row">
+      <div class="col-xl-3 col-sm-6 col-12 d-flex">
+        <div class="card bg-comman w-100">
+          <div class="card-body hvr-float-shadow">
+            <div class="db-widgets d-flex justify-content-between align-items-center no-flex">
+              <div class="db-infos teacher-mine">
+
+                @if (fullNameShow === 'fullNameShow') {
+                <div class="skeleton-line user-info-card w-50 mb-2"></div>
+                } @else {
+                <h4>Hi {{ fullName }}</h4>
+                }
+                <h6>
+                  <i class="fa fa-calender"></i>
+                  {{ today | date : "MMMM d, y" }}
+                </h6>
+
+                <div *ngIf="IsAbleToday">
+                  <ng-container *ngIf="TodayAttendanceStatus; else showAbsent">
+                    <span class="presend">Present</span>
+                  </ng-container>
+                  <ng-template #showAbsent>
+                    <span class="absend">Absent</span>
+                  </ng-template>
+                </div>
+
+                <div *ngIf="!IsAbleToday">
+                  <span class="available">Today is not your working day.</span>
+                </div>
+              </div>
+              <div class="db-icon">
+                <img src="assets/img/present-day.png" alt="Dashboard Icon" style="width: 43px !important" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-3 col-sm-6 col-12 d-flex">
+        <div class="card bg-comman w-100">
+          <div class="card-body hvr-float-shadow">
+            <div class="db-widgets d-flex justify-content-between align-items-center">
+              <div class="db-infos">
+                <h6>Present This Month</h6>
+                @if (skalatonShowCard === 'skalatonShowCard') {
+                <div class="skeleton-line user-info-card w-50 mb-2"></div>
+                } @else {
+                <h3>{{ attendanceCount?.presentCount ?? 0 }}</h3>
+                }
+              </div>
+              <div class="db-icon">
+                <img src="assets/img/present-day.png" alt="Dashboard Icon" style="width: 43px !important" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xl-3 col-sm-6 col-12 d-flex">
+        <div class="card bg-comman w-100">
+          <div class="card-body hvr-float-shadow">
+            <div class="db-widgets d-flex justify-content-between align-items-center">
+              <div class="db-infos">
+                <h6>Absent Days</h6>
+                @if (skalatonShowCard === 'skalatonShowCard') {
+                <div class="skeleton-line user-info-card w-50 mb-2"></div>
+                } @else {
+                <h3>{{ attendanceCount?.absentCount ?? 0 }}</h3>
+                }
+              </div>
+              <div class="db-icon">
+                <img src="assets/img/absent-day.png" alt="Dashboard Icon" style="width: 43px !important" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- <div class="col-xl-3 col-sm-6 col-12 d-flex">
+        <div class="card bg-comman w-100">
+          <div class="card-body">
+            <div class="db-widgets d-flex justify-content-between align-items-center">
+              <div class="db-infos">
+                <h6>Leaves Taken</h6>
+                <h3>{{attendanceCount?.leaveCount}}</h3>
+              </div>
+              <div class="db-icon">
+                <img src="assets/img/leave-day.png" alt="Dashboard Icon" style="width: 43px !important;" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> -->
+
+      <div class="col-xl-3 col-sm-6 col-12 d-flex">
+        <div class="card bg-comman w-100">
+          <div class="card-body hvr-float-shadow">
+            <div class="db-widgets d-flex justify-content-between align-items-center">
+              <div class="db-infos">
+                <h6>Upcoming Holidays</h6>
+                <!-- <h3>{{upcomingHolidayCount}}</h3> -->
+                @if (skeletonShow === 'Skelton') {
+                <div class="skeleton-line user-info-card w-50 mb-2"></div>
+                } @else if(upcomingHolidayCount) {
+                <h3>{{ upcomingHolidayCount ?? 0 }}</h3>
+                } @else {
+                <h3> 0 </h3>
+
+                }
+              </div>
+              <div class="db-icon">
+                <img src="assets/img/holidays.png" alt="Dashboard Icon" style="width: 35px !important" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-12">
+    <div class="chart-box">
+      <div class="card">
+        <div class="card-body">
+          <div class="box-img">
+            <div class="row">
+              <div class="col-md-12 text-start mb-3">
+                <div class="text-start">
+                  <p class="fc-title">My Attendance Record</p>
+                </div>
+              </div>
+            </div>
+            <div class="img-box-inner">
+              <div class="row">
+                <div class="col-md-4 mb-3">
+                  <div class="form-group local-forms mb-4" style="position: relative">
+                    <label>Start Date</label>
+                    <input type="text" id="startdatePicker" class="form-control" placeholder="-Select-" />
+                  </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                  <div class="form-group local-forms mb-4" style="position: relative">
+                    <label>End Date</label>
+                    <input type="text" id="enddatePicker" class="form-control" placeholder="-Select-" />
+                  </div>
+                </div>
+                <div class="col-md-4 d-flex align-items-center mb-4">
+                  <div class="btn-gr text-start mt-2">
+                    <a class="btn btn-primary" (click)="filterAttendance()">Search</a>
+                    &nbsp;
+                    <a class="btn btn-primary" (click)="resetFilter()">Cancel</a>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <!-- <div class="col-md-12 mt-3">
+                  <div class="chart-box">
+                    <div class="chart-innner">
+                      <div class="card">
+                        <div class="card-body">
+                          <div class="calendar-new">
+                            <full-calendar [options]="calendarOptions">
+                              <ng-template #eventContent let-arg>
+
+                                <i></i>
+                              </ng-template>
+                            </full-calendar>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div> -->
+                <div class="table-responsive mt-3">
+                  <table class="table table-hover mb-0">
+                    <!-- <thead class="student-thread" style="position: sticky; top: -1px; background: white; z-index: 2;">
+                      <tr>
+                        <th style="width: 8%;">#</th>
+                        <th>Name</th>
+                        <th>Attendance Date</th>
+                        <th>Attendance End Date</th>
+                        <th class="">Working Hours</th>
+                        <th class="">Total Working Hours</th>
+                        <th class="">Overtime</th>
+                        <th class="">Status</th>
+                        <th *ngIf="userRoleID!='5'" class="">Action</th>
+                      </tr>
+                    </thead> -->
+
+                    <thead class="student-thread" style="
+                        position: sticky;
+                        top: -1px;
+                        background: white;
+                        z-index: 2;
+                      ">
+                      <ng-container *ngIf="userRoleID">
+                        <tr>
+                          <th>#</th>
+                          <!-- <th>First Name</th> -->
+                          <th>Date</th>
+                          <!-- <th *ngIf="userRoleID !== '5'">End Date</th> -->
+                          <th *ngIf="userRoleID !== '5'">In Time</th>
+                          <th *ngIf="userRoleID !== '5'">Out Time</th>
+                          <th *ngIf="userRoleID !== '5'">Working Hours</th>
+                          <th *ngIf="userRoleID !== '5'">Total Hours</th>
+                          <th *ngIf="userRoleID !== '5'">Overtime</th>
+                          <th *ngIf="userRoleID == '5'">Mark By</th>
+                          <th>Status</th>
+                          <th *ngIf="userRoleID !== '5'">Action</th>
+                        </tr>
+                      </ng-container>
+                    </thead>
+
+                    @if (skeletonShow === 'Skelton') {
+                    <tbody>
+                      <tr>
+                        <td colspan="100%">
+                          <app-skeleton-loader skeletonShow="Skelton" viewType="table" [tableRows]="5" [tableCols]="8">
+                          </app-skeleton-loader>
+                        </td>
+                      </tr>
+                    </tbody>
+
+                    } @else if (attendanceList.length > 0) {
+
+                    <tbody *ngIf="attendanceList?.length > 0">
+                      <tr class="" *ngFor="
+                          let item of attendanceList
+                            | paginate
+                              : {
+                                  itemsPerPage: Contentsize,
+                                  currentPage: ContentP,
+                                  id: 'toccontrol'
+                                };
+                          let Index = index
+                        ">
+                        <td>{{ (ContentP - 1) * Contentsize + Index + 1 }}</td>
+                        <!-- <td>{{item.firstName}}</td> -->
+                        <td>{{ item.attendanceDate | date : "MM/dd/yyyy" }}</td>
+                        <!-- <td>{{item.endAttendanceDate?? '--' | date: 'MM/dd/yyyy'}}</td> -->
+                        <!-- <td *ngIf="userRoleID!='5'">{{ item.inTime?.slice(0, 5) }}</td>
+                        <td *ngIf="userRoleID!='5'">{{item.outTime?.slice(0, 5)}}</td> -->
+                        <!-- <td *ngIf="userRoleID !== '5'">
+                          {{
+                          item.endAttendanceDate
+                          ? (item.endAttendanceDate | date : "MM/dd/yyyy")
+                          : "--"
+                          }}
+                        </td> -->
+                        <td *ngIf="userRoleID != '5'">
+                          {{ item.inTime ? item.inTime.slice(0, 5) : "--" }}
+                        </td>
+                        <td *ngIf="userRoleID != '5'">
+                          {{ item.outTime ? item.outTime.slice(0, 5) : "--" }}
+                        </td>
+
+                        <td *ngIf="userRoleID !== '5'">
+                          {{
+                          item.workingHours
+                          ? item.workingHours.slice(0, 5)
+                          : "--"
+                          }}
+                        </td>
+                        <td *ngIf="userRoleID !== '5'">
+                          {{
+                          item.totalWorkingHours
+                          ? item.totalWorkingHours.slice(0, 5)
+                          : "--"
+                          }}
+                        </td>
+                        <td *ngIf="userRoleID !== '5'">
+                          {{
+                          item.overTime &&
+                          item.overTime !== "00:00:00" &&
+                          item.overTime !== "00:00"
+                          ? item.overTime.slice(0, 5)
+                          : "--"
+                          }}
+                        </td>
+                        <td *ngIf="userRoleID == '5'">
+                          <span *ngIf="item.type == 'Attendance'" class="badge badge-success text-center">{{ item.markBy
+                            ? item.markBy : "--" }}</span>
+                          <span *ngIf="item.type == 'Absent'">{{ item.markBy ? item.markBy : "--" }}</span>
+
+                        </td>
+                        <td>
+                          <span *ngIf="item.type == 'Attendance'" class="badge badge-success text-center">Present</span>
+                          <span *ngIf="item.type === 'Leave'" class="badge badge-warning text-center">Leave</span>
+                          <span *ngIf="item.type === 'Absent'" class="badge badge-danger text-center">Absent</span>
+                        </td>
+                        <td *ngIf="userRoleID != '5'">
+                          <div class="actions">
+                            <a class="action-btn bg-danger-light me-2" data-bs-toggle="modal" data-bs-target="#view-del"
+                              (click)="
+                                viewDetail(
+                                  item.inDocumentImage,
+                                  item.outDocumentImage
+                                )
+                              " title="view image">
+                              <i class="fa fa-image" aria-hidden="true"></i> </a>&nbsp;
+
+                            <a class="action-btn bg-danger-light me-2" data-bs-toggle="modal" (click)="
+                                openMapPopup(item.inlatitude, item.inlongitude)
+                              " title="view check-in map">
+                              <i class="fa fa-map-marker" aria-hidden="true"></i> </a>&nbsp;
+
+                            <a class="action-btn bg-danger-light me-2" data-bs-toggle="modal" (click)="
+                                openMapPopup(
+                                  item.outlatitude,
+                                  item.outlongitude
+                                )
+                              " title="view check-out map">
+                              <i class="fa fa-map-marker" aria-hidden="true"></i>
+                            </a>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+
+                    } @else {
+                    <tbody>
+                      <tr>
+                        <td colspan="100%">
+                          <app-skeleton-loader skeletonShow="NoRecord">
+                          </app-skeleton-loader>
+                        </td>
+                      </tr>
+                    </tbody>
+
+                    }
+                  </table>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mt-4 no-flex">
+                  <div class="total-entry" style="font-size: small">
+                    <span>Total Entries:</span><span class="entry-count">
+                      {{ attendanceList?.length }}
+                    </span>
+                  </div>
+                  @if(attendanceList?.length > 0) {
+                  <pagination-controls previousLabel="prev" nextLabel="next" [maxSize]="5"
+                    class="datatable-pager-nav my-2 mb-sm-0" id="toccontrol" (pageChange)="onPageChange($event)">
+                  </pagination-controls>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!--  a sample slder -->
+
+          <!-- end ssample -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- The Modal -->
+<div class="modal" id="view-del">
+  <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">View Image</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="imagu row pb-3 bdr-btm">
+          <div class="col-md-7">
+            <h6>Clock In Image</h6>
+          </div>
+          <div class="col-md-5">
+            <div class="img-diver">
+              <img [src]="
+                  inFullPath
+                    ? rootUrl + inFullPath
+                    : 'assets/img/no-data-img.png'
+                " style="width: 100%; height: 100%" alt="" alt="Profile Photo" class="cstm-avatar-lg img-thumbnail" />
+            </div>
+          </div>
+        </div>
+        <div></div>
+        <div class="imagu pt-3 row">
+          <div class="col-md-7">
+            <h6>Clock Out Image</h6>
+          </div>
+          <div class="col-md-5">
+            <div class="img-diver">
+              <img [src]="
+                  outFullPath
+                    ? rootUrl + outFullPath
+                    : 'assets/img/no-data-img.png'
+                " style="width: 100%; height: 100%" alt="" alt="Profile Photo" class="cstm-avatar-lg img-thumbnail" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="mapPopup">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Map</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div *ngIf="!IsnotLatandLong" id="map"></div>
+        <div *ngIf="IsnotLatandLong" id="map" class="no-data text-center">
+          <img src="assets/img/no-data-img.png" alt="No Record Found" />
+          <span>No Record Found</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

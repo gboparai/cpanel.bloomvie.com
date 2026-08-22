@@ -1,0 +1,181 @@
+/*-----------shail css social links-------------*/
+
+
+.settings-form .social-icon{
+    padding: 4px  !important
+}
+
+
+
+.settings-form .social-icon {
+    width: 43px !important;
+    height: 35px !important;
+  
+}
+.tab-content {
+    padding-right: 40PX;
+}
+.settings-form .trash {
+ 
+    height: 35px !important;
+    width: 43px !important;
+   
+}
+.bock-head{
+background: #e8f3f5;
+border-radius: 6px;
+}
+.bock-head p{
+ padding: 10px 8px;
+}
+
+.row.shinzo {
+    margin-bottom: 2.25rem;
+}
+
+ .social-icon {
+    width: 50px;
+    height: 40px;
+    margin-right: 6px;
+    color: #fff;
+    background: var(--main-color);
+    border: 1px solid var(--main-color);
+    border-radius: 5px;
+    font-size: 24px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    position: relative;
+    padding: 4px;
+}
+/*---------------------------------*/
+
+main {
+    padding-right: 230px;
+    padding-left: 31px;
+    padding-top: 84px;
+    padding-bottom: 20px;
+    overflow: auto;
+    position: relative;
+    overflow: hidden;
+}
+
+.bd-card {
+    width: 100%;
+    border-radius: 23px;
+    box-shadow: 0 2px 4px 0 rgba(208, 208, 208, 0.5);
+    background-color: #ffffff;
+    min-height: 825px;
+    margin-top: auto;
+    margin-bottom: auto;
+    position: relative;
+}
+main:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 76%;
+    right: 0;
+    background: var(--main-color);
+}
+ul#pills-tab {
+    justify-content: end;
+    position: relative;
+}
+ul#pills-tab li button {
+    position: absolute;
+    width: 245px;
+    display: flex;
+    align-items: center;
+    justify-content: normal;
+    text-align: start;
+    gap: 10px;
+    right: -244px;
+}
+.btn2 {
+    top: 82px;
+}
+.btn3 {
+    top: 165px;
+}
+.nav-pills .nav-link.active {
+    background: #ce4a4a00;
+    border: none;
+}
+.nav-pills .nav-link.active i {
+    background: var(--main-color);
+    color: #fff;
+}
+
+.nav-pills .nav-link{
+    background: #ff000000;
+    border: none;
+    color:#fff;
+}
+.nav-pills i {
+    /* padding: 10px; */
+    background: white;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px double;
+    color: var(--main-color);
+    font-size: 17px;
+}
+.btn4 {
+    top: 245px;
+}
+.btn5 {
+    top: 325px;
+}
+.bd-card .card-body {
+    padding: 41px;
+}
+div#pills-work .card-body {
+    padding: 0px !important;
+}
+div#pills-smtp .card-body {
+    padding: 0px !important;
+}
+.btn6 {
+    top: 406px;
+}
+.btn7 {
+    top: 487px;
+}   
+.btn8{
+    top: 567px;
+}
+.btn9 {
+    top: 647px;
+}
+.noti-block {
+    align-items: end;
+    display: flex;
+    justify-content: end;
+  
+    padding: 10px;
+  }
+  
+  .pagination span {
+    padding: 0px 10px;
+  }
+  .pagination {
+    /* padding: 0px 32px; */
+    background: var(--main-color);
+    position: relative;
+  
+  }
+  
+  .pagination span {
+    padding: 9px 10px;
+  
+  }.custom-order-tabs {
+  display: flex;
+  flex-wrap: wrap; /* or flex-direction: column; if vertical layout */
+}
+

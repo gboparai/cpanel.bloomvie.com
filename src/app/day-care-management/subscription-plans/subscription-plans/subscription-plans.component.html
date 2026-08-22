@@ -1,0 +1,920 @@
+<app-breadcrumb></app-breadcrumb>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="heading-new">
+          <h5 class="mb-0"> {{UserRoleId == 1 ? 'Add Subscription Plan' :
+            'Student Fees Packages'}}</h5>
+        </div>
+        <div class="col-md-12 text-end">
+          <button
+            type="button"
+            class="btn btn-primary mb-4"
+            (click)="getFeatures()">
+            Add Plan
+          </button>
+        </div>
+        <div class="row">
+          @if (skeletonShow === 'Skelton') {
+
+          <app-skeleton-loader
+            skeletonShow="Skelton"
+            viewType="plan-feature-list">
+          </app-skeleton-loader>
+
+          } @else if (Userplanwithfeaturelist.length > 0) {
+          <div
+            class="col-md-4"
+            *ngFor="
+              let item of Userplanwithfeaturelist
+                | paginate
+                  : {
+                      itemsPerPage: pageSize,
+                      currentPage: page,
+                      id: 'planAndFeatureList'
+                    };
+              let i = index
+            ">
+            <div
+              class="position-relative sch-clh single-pricing-wrap rounded-custom bg-white custom-shadow p-5">
+              <div class="wrap" *ngIf="item.discount > 0">
+                <span class="ribbon6"><span
+                    style="color: #fff !important">Custom Plan</span></span>
+              </div>
+
+              <div class="pricing-header mb-32 content wd-80">
+                <div class="d-flex">
+                  <label
+                    type="text"
+                    placeholder="Enter Plan Name"
+                    class="plan-capital plan-area package-name text-primary wd-break">
+                    {{ item.planName }}
+                  </label>
+                  <div
+                    class="edit-class d-flex justify-content-center align-items-center mt-2"
+                    (click)="UpdatePlanModal(item)">
+                    <i
+                      class="feather-edit me-2"
+                      data-toggle="tooltip"
+                      title="Edit Plan"
+                      aria-hidden="true"></i>
+                    <input
+                      type="checkbox"
+                      id="vehicleA{{ item.planeId }}"
+                      [checked]="item.isActive"
+                      (change)="ActiveInactivePlan(item.planeId, item.isActive)" />
+                  </div>
+                </div>
+                <h4 class="display-6 fw-semi-bold">
+                  <div class="input-container">
+                    <span class="dollar" style="font-size: 24px">$</span>
+                    <label type="number" class="price-input">
+                      {{ item.price }}
+                    </label>
+                    <span class="dollar">
+                      {{
+                      item.daily
+                      ? "Daily"
+                      : item.monthly
+                      ? "Monthly"
+                      : item.yearly
+                      ? "Yearly"
+                      : ""
+                      }}
+                    </span>
+                  </div>
+                </h4>
+
+                <div>
+                  {{
+                  item.description == null || item.description == ""
+                  ? "--"
+                  : item.description
+                  }}
+                </div>
+
+                <!-- *ngIf="IsAlreadyExist" -->
+              </div>
+              <div class="pricing-info">
+                <h6> {{UserRoleId == 1 ? 'Plan Features' :
+                  'Packages Description'}}</h6>
+                <ul class="pricing-feature-list list-unstyled m-0">
+                  @if(UserRoleId == 1) {
+
+                  <div id="view-job-post-feature">
+                    <h5>Job Post Features</h5>
+                    <div *ngFor="let feature of viewJobPostFeature">
+                      <label>
+                        <i
+                          [ngClass]="
+                            item.featureIds.includes(feature.id)
+                              ? 'fa fa-check-circle color'
+                              : 'fa fa-times-circle color-red'
+                          "
+                          aria-hidden="true"></i>
+                        {{ feature.featureName }}
+
+                        <span
+                          *ngIf="
+                            feature.capacity !== null && feature.unit !== null
+                          ">({{ feature.capacity
+                          }}{{ feature.unit ? " " + feature.unit : "" }})</span>
+                      </label>
+                    </div>
+                  </div>
+                  <div id="view-storage-feature">
+                    <h5>Storage Features</h5>
+                    <div *ngFor="let feature of viewStorageFeature">
+                      <label>
+                        <i
+                          [ngClass]="
+                            item.featureIds.includes(feature.id)
+                              ? 'fa fa-check-circle color'
+                              : 'fa fa-times-circle color-red'
+                          "
+                          aria-hidden="true"></i>
+                        {{ feature.featureName }}
+
+                        <span
+                          *ngIf="
+                            feature.capacity !== null && feature.unit !== null
+                          ">({{ feature.capacity
+                          }}{{ feature.unit ? " " + feature.unit : "" }})</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div id="view-enrollment-feature">
+                    <h5>Enrollment Features</h5>
+                    <div *ngFor="let feature of viewEnrollmentFeature">
+                      <label>
+                        <i
+                          [ngClass]="
+                            item.featureIds.includes(feature.id)
+                              ? 'fa fa-check-circle color'
+                              : 'fa fa-times-circle color-red'
+                          "
+                          aria-hidden="true"></i>
+                        {{ feature.featureName }}
+
+                        <span
+                          *ngIf="
+                            feature.capacity !== null && feature.unit !== null
+                          ">({{ feature.capacity
+                          }}{{ feature.unit ? " " + feature.unit : "" }})</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div id="view-other-feature">
+                    <h5>Other Features</h5>
+                    <div *ngFor="let feature of viewOtherFeature">
+                      <label>
+                        <i
+                          [ngClass]="
+                            item.featureIds.includes(feature.id)
+                              ? 'fa fa-check-circle color'
+                              : 'fa fa-times-circle color-red'
+                          "
+                          aria-hidden="true"></i>
+                        {{ feature.featureName }}
+
+                        <span
+                          *ngIf="
+                            feature.capacity !== null && feature.unit !== null
+                          ">({{ feature.capacity
+                          }}{{ feature.unit ? " " + feature.unit : "" }})</span>
+                      </label>
+                    </div>
+                  </div>
+                  } @else {
+                  <div *ngFor="let feature of viewFeatures">
+                    <label>
+                      <i
+                        [ngClass]="
+                          item.featureIds.includes(feature.id)
+                            ? 'fa fa-check-circle color'
+                            : 'fa fa-times-circle color-red'
+                        "
+                        aria-hidden="true"></i>
+                      {{ feature.featureName }}
+
+                      <span
+                        *ngIf="
+                          feature.capacity !== null && feature.unit !== null
+                        ">({{ feature.capacity
+                        }}{{ feature.unit ? " " + feature.unit : "" }})</span>
+                    </label>
+                  </div>
+                  }
+                </ul>
+              </div>
+              <div></div>
+            </div>
+          </div>
+          } @else {
+
+          <app-skeleton-loader skeletonShow="NoRecord"> </app-skeleton-loader>
+          }
+
+          <!-- raman -->
+
+          <!-- <div class="col-md-4">
+            <div class="position-relative sch-clh single-pricing-wrap rounded-custom bg-white custom-shadow p-5">
+              <form [formGroup]="subscriptionFormPlanB">
+                <div class="pricing-header mb-32 content">
+                  <h3 class="package-name text-primary d-block">
+                    <input type="text" placeholder="Plan B" class="plan-area" formControlName="planName">
+                    <div *ngIf="subscriptionFormPlanB.get('planName')?.hasError('required') && subscriptionFormPlanB.get('planName')?.touched">
+                      <span class="text-danger">This field is required.</span>
+                    </div>
+                  </h3>
+                  <h4 class="display-6 fw-semi-bold">
+                    <div class="input-container">
+                      <span class="dollar">$</span>
+                      <input type="number" class="price-input" maxlength="4" placeholder="0000" formControlName="price" (keypress)="validateNumberInput($event)" />
+                      <span class="dollar">Yearly</span>
+                    </div>
+                    <div *ngIf="subscriptionFormPlanB.get('price')?.hasError('required') && subscriptionFormPlanB.get('price')?.touched">
+                      <span class="text-danger">This field is required.</span>
+                    </div>
+                  </h4>
+                  <div class="addition"data-bs-toggle="tooltip"  title="Discount!"><input type="text" class="price-input2 form-control" placeholder="Discount"> </div>
+                  <div class="addition"data-bs-toggle="tooltip"  title="Monthly Increment!"><input type="text" class="price-input2 form-control" placeholder=" Increment"> </div>
+
+                  <div class="active-not" >
+                    <input type="checkbox" 
+                           id="vehicleB" 
+                           formControlName="isActive" 
+                           (change)="ActiveInactivePlan(Userplanwithfeaturelist[1].planeId)">
+                  </div>
+                </div>
+              </form>
+              <div class="pricing-info">
+                <h6>Select Plan Features</h6>
+                <ul class="pricing-feature-list list-unstyled m-0">
+                  <div *ngFor="let feature of features">
+                    <label>
+                      <input type="checkbox" 
+                             [checked]="subscriptionFormPlanB.value.featureList.includes(feature.id)" 
+                             (change)="updateSelectedFeaturesPlanB(feature.id, $event)">
+                      {{ feature.featureName }}
+                      <span *ngIf="feature.capacity !== null && feature.unit !== null">({{ feature.capacity }}{{ feature.unit ? ' ' + feature.unit : '' }})</span>
+                    </label>
+                  </div>
+                </ul>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-4">
+            <div class="position-relative sch-clh single-pricing-wrap rounded-custom bg-white custom-shadow p-5">
+              <form [formGroup]="subscriptionFormPlanC">
+                <div class="pricing-header mb-32 content">
+                  <h3 class="package-name text-primary d-block">
+                    <input type="text" placeholder="Plan C" class="plan-area" formControlName="planName">
+                    <div *ngIf="subscriptionFormPlanC.get('planName')?.hasError('required') && subscriptionFormPlanC.get('planName')?.touched">
+                      <span class="text-danger">This field is required.</span>
+                    </div>
+                  </h3>
+                  <h4 class="display-6 fw-semi-bold">
+                    <div class="input-container">
+                      <span class="dollar">$</span>
+                      <input type="number" class="price-input" maxlength="4" placeholder="0000" formControlName="price" (keypress)="validateNumberInput($event)" />
+                      <span class="dollar">Yearly</span>
+                    </div>
+                    <div *ngIf="subscriptionFormPlanC.get('price')?.hasError('required') && subscriptionFormPlanC.get('price')?.touched">
+                      <span class="text-danger">This field is required.</span>
+                    </div>
+                  </h4>
+                  <div class="addition"data-bs-toggle="tooltip"  title="Discount!"><input type="text" class="price-input2 form-control" placeholder="Discount"> </div>
+                  <div class="addition"data-bs-toggle="tooltip"  title="Monthly Increment!"><input type="text" class="price-input2 form-control" placeholder=" Increment"> </div>
+
+                  <div class="active-not" >
+                    <input type="checkbox" 
+                           id="vehicleC" 
+                           formControlName="isActive" 
+                           (change)="ActiveInactivePlan(Userplanwithfeaturelist[1].planeId)">
+                  </div>
+                </div>
+              </form>
+              <div class="pricing-info">
+                <h6>Select Plan Features</h6>
+                <ul class="pricing-feature-list list-unstyled m-0">
+                  <div *ngFor="let feature of features">
+                    <label>
+                      <input type="checkbox" 
+                             [checked]="subscriptionFormPlanC.value.featureList.includes(feature.id)" 
+                             (change)="updateSelectedFeaturesPlanC(feature.id, $event)">
+                      {{ feature.featureName }}
+                      <span *ngIf="feature.capacity !== null && feature.unit !== null">({{ feature.capacity }}{{ feature.unit ? ' ' + feature.unit : '' }})</span>
+                    </label>
+                  </div>
+                </ul>
+              </div>
+            </div>
+          </div> -->
+        </div>
+        <div class="col pagination-style">
+          <div class="datatable-pager datatable-paging-loaded">
+            @if(Userplanwithfeaturelist.length > 5) {
+            <pagination-controls
+              previousLabel="prev"
+              nextLabel="next"
+              [maxSize]="6"
+              class="datatable-pager-nav my-2 mb-sm-0"
+              id="planAndFeatureList"
+              (pageChange)="onPageChange($event)">
+            </pagination-controls>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add/Edit -->
+
+<div
+  class="modal fade"
+  id="exampleModal1"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+  data-bs-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header" style="border: none">
+        <h5 class="modal-title" id="exampleModalLabel">
+          {{ isEditMode ? "Update Plan" : "Add Plan" }}
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          (click)="close()"></button>
+      </div>
+      <div class="modal-body">
+        <div class="col-md-12 p-0">
+          <div
+            class="position-relative sch-clh single-pricing-wrap rounded-custom bg-white custom-shadow p-2"
+            style="box-shadow: none !important; border: 1px solid #6a5f7a3b">
+            <form [formGroup]="subscriptionFormPlanA" style="padding: 0px 15px">
+              <!-- bloomvie Admin -->
+              <div class="pricing-header mb-32 content">
+                @if(UserRoleId != 3){
+                <div class="row">
+                  <!-- <div class="col-md-5">
+                    <h3 class="package-name text-primary d-block">    
+                      <textarea placeholder="Enter Plan Name" class="plan-area focus-class"
+                        formControlName="planName"></textarea>
+                      <div *ngIf="
+                          subscriptionFormPlanA
+                            .get('planName')
+                            ?.hasError('required') &&
+                          subscriptionFormPlanA.get('planName')?.touched
+                        ">
+                        <span class="text-danger">This field is required.</span>
+                      </div>
+                    </h3>
+                  </div> -->
+
+                  <div class="col-md-12 mb-3">
+                    <div class="form-group local-forms">
+                      <label>Plan Name</label>
+
+                      <input
+                        type="text"
+                        placeholder="Enter Plan Name"
+                        class="plan-capital form-control spacer"
+                        formControlName="planName"
+                        style="font-size: 12px; font-weight: 300"
+                        (input)="onInputValidation($event, 'planName')" />
+                      <small class="text-muted">
+                        {{
+                        subscriptionFormPlanA.get("planName")?.value
+                        ?.length || 0
+                        }}/50 characters
+                      </small>
+
+                      @if
+                      (subscriptionFormPlanA.get('planName')?.hasError('required')
+                      && subscriptionFormPlanA.get('planName')?.touched){
+                      <span class="text-danger">This field is required.</span>
+                      }
+                    </div>
+                  </div>
+                </div>
+                }@else{
+                <div class="row">
+                  <div class="col-md-12 mb-3">
+                    <div class="form-group local-forms">
+                      <label>Select Age Group</label>
+                      <ng-select
+                        [items]="ageGroupList"
+                        bindLabel="name"
+                        bindValue="id"
+                        formControlName="ageGroupID"
+                        placeholder="Select Age Group">
+                      </ng-select>
+                    </div>
+                    <div
+                      *ngIf="
+                        subscriptionFormPlanA
+                          .get('ageGroupID')
+                          ?.hasError('required') &&
+                        subscriptionFormPlanA.get('ageGroupID')?.touched
+                      ">
+                      <span class="text-danger">This field is required.</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12 mb-3">
+                    <div class="form-group local-forms">
+                      <label>Plan Name</label>
+                      <input
+                        type="text"
+                        placeholder="Enter Plan Name"
+                        class="plan-capital form-control spacer"
+                        formControlName="planName"
+                        style="font-size: 12px; font-weight: 300"
+                        (input)="onInputValidation($event, 'planName')" />
+                      <small class="text-muted">
+                        {{
+                        subscriptionFormPlanA.get("planName")?.value
+                        ?.length || 0
+                        }}/50 characters
+                      </small>
+                      <!-- <input type="text" placeholder="Enter Plan Name" class=" plan-capital form-control spacer"
+                        formControlName="planName" style="font-size: 12px; font-weight: 300;" /> -->
+                      <div
+                        *ngIf="
+                          subscriptionFormPlanA
+                            .get('planName')
+                            ?.hasError('required') &&
+                          subscriptionFormPlanA.get('planName')?.touched
+                        ">
+                        <span class="text-danger">This field is required.</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-12 mb-3" *ngIf="viewDiscount">
+                    <div class="form-group local-forms">
+                      <label>Select Discount</label>
+                      <ng-select
+                        id="selectDiscount"
+                        [items]="discountPercantageList"
+                        bindLabel="label"
+                        bindValue="value"
+                        formControlName="discount"></ng-select>
+                    </div>
+                  </div>
+                </div>
+                }
+                <!-- till here -->
+
+                <!-- bloomvie admin -->
+                @if(UserRoleId != 3 ){
+                <div class="row">
+                  <!-- <div class="col-md-12 mb-3">
+                    <div class="form-group local-forms">
+                      <label>Monthly Billing</label>
+
+                      <input type="number" class="price-input" maxlength="4" placeholder="0.00" formControlName="price"
+                        (keypress)="validateNumberInput($event)" />
+                      <div style="position: absolute; bottom: -19px; left: -7px" *ngIf="
+                        subscriptionFormPlanA
+                          .get('price')
+                          ?.hasError('required') &&
+                        subscriptionFormPlanA.get('price')?.touched
+                      ">
+                        <span class="text-danger">This field is required.</span>
+                      </div>
+                    </div>
+                  </div> -->
+
+                  <div class="col-md-12 mb-3">
+                    <div class="form-group local-forms">
+                      <label>Plan Amount (in $)</label>
+                      <input
+                        type="number"
+                        class="form-control"
+                        placeholder="Enter Amount"
+                        formControlName="price"
+                        (change)="validateNumber($event)"
+                        (keypress)="validateNumberInput($event)" />
+
+                      <div
+                        class="mt-1"
+                        *ngIf="
+                          subscriptionFormPlanA
+                            .get('price')
+                            ?.hasError('required') &&
+                          subscriptionFormPlanA.get('price')?.touched
+                        ">
+                        <span class="text-danger">This field is required.</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-6 mt-2">
+                    <div class="position-relative">
+                      <div class="gender-options">
+                        <label class="gender-option">
+                          <input
+                            formControlName="duration"
+                            value="Monthly"
+                            type="radio"
+                            name="duration" />
+                          Monthly</label>
+                        <label class="gender-option">
+                          <input
+                            formControlName="duration"
+                            value="Yearly"
+                            type="radio"
+                            name="duration" />Yearly</label>
+                      </div>
+                      <span
+                        style="position: absolute; bottom: -19px; left: -7"
+                        *ngIf="
+                          subscriptionFormPlanA
+                            .get('duration')
+                            ?.hasError('required') &&
+                          subscriptionFormPlanA.get('duration')?.touched
+                        ">
+                        <span class="text-danger">This field is required.</span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                }@else {
+                <div class="row">
+                  <div class="col-md-12 mb-3">
+                    <div class="form-group local-forms">
+                      <label>Plan Amount (in $)</label>
+                      <input
+                        type="number"
+                        class="form-control"
+                        placeholder="0.00"
+                        formControlName="price"
+                        (keypress)="validateNumberInput($event)" />
+                      <div
+                        class="mt-1 rambo-class"
+                        *ngIf="
+                          subscriptionFormPlanA
+                            .get('price')
+                            ?.hasError('required') &&
+                          subscriptionFormPlanA.get('price')?.touched
+                        ">
+                        <span class="text-danger">This field is required.</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                }
+                <!-- till here -->
+
+                <div class="row">
+                  <div class="col-md-12 mb-3">
+                    <div class="form-group local-forms">
+                      <label>Plan Description</label>
+                      <textarea
+                        id="plan-disc"
+                        name="Description"
+                        class="form-control spacer"
+                        placeholder="Enter Plan Description"
+                        (input)="onInputValidation($event, 'description')"
+                        formControlName="description"
+                        maxlength="500"
+                        style="font-size: 12px; font-weight: 300"></textarea>
+
+                      <small class="text-muted d-block text-end">
+                        {{
+                        subscriptionFormPlanA.get("description")?.value
+                        ?.length || 0
+                        }}/500 characters
+                      </small>
+                    </div>
+                  </div>
+                </div>
+
+                @if(UserRoleId==1){
+                <div class="row">
+                  <div class="col-md-12 mb-1">
+                    <div class="form-group local-forms">
+                      <label class="clr-theme">Plan Type</label>
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div
+                      class="d-flex justify-content-between align-items-center gp-6">
+                      <div
+                        class="form-group local-forms tags"
+                        style="display: flex; justify-content: start; gap: 6px"
+                        *ngIf="storageType">
+                        <input
+                          type="checkbox"
+                          formControlName="isStorageTypePlan"
+                          (change)="displayOnlyStorageFeature($event)"
+                          [checked]="
+                            subscriptionFormPlanA.get('isStorageTypePlan')
+                              ?.value === true
+                          " />
+                        <span>Storage Plan</span>
+                      </div>
+                      <div
+                        class="form-group local-forms tags"
+                        style="display: flex; justify-content: start; gap: 6px"
+                        *ngIf="jobPostType">
+                        <input
+                          type="checkbox"
+                          formControlName="isJobPostPlan"
+                          (change)="displayOnlyJobPostFeature($event)"
+                          [checked]="
+                            subscriptionFormPlanA.get('isJobPostPlan')?.value ==
+                            true
+                          " />
+                        <span>Job Post Plan</span>
+                      </div>
+
+                      <div
+                        class="form-group local-forms tags"
+                        style="display: flex; justify-content: start; gap: 6px"
+                        *ngIf="freeTrailPlan">
+                        <input
+                          type="checkbox"
+                          formControlName="isDefault"
+                          (change)="displayJobPostFeaturesList($event)"
+                          [checked]="
+                            subscriptionFormPlanA.get('isDefault')?.value ===
+                            true
+                          " />
+
+                        <span>Free Trial Plan</span>
+                      </div>
+                      <span
+                        style="position: absolute; bottom: -19px; left: -7"
+                        *ngIf="
+                          subscriptionFormPlanA
+                            .get('type')
+                            ?.hasError('required') &&
+                          subscriptionFormPlanA.get('type')?.touched
+                        ">
+                        <span class="text-danger">This field is required.</span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                }
+              </div>
+            </form>
+
+            <div class="pricing-info">
+              <h6>Plan Features</h6>
+              <div class="out-scroll">
+                <!-- bloomvie admin -->
+                @if(UserRoleId == 1) {
+                <div id="job-post-feature">
+                  <h5>Job Post features</h5>
+                  <div
+                    *ngFor="
+                      let feature of jobPostTypeFeatureList;
+                      let i = index
+                    ">
+                    <label
+                      [ngClass]="{
+                        strikethrough: feature.isDisabled
+                      }">
+                      <input
+                        type="checkbox"
+                        [disabled]="feature.isDisabled"
+                        [checked]="
+                          subscriptionFormPlanA.value.featureList.includes(
+                            feature.id
+                          )
+                        "
+                        (change)="
+                          updateSelectedFeaturesPlanA(
+                            feature.id,
+                            $event,
+                            feature,
+                            i
+                          )
+                        " />
+                      {{ feature.featureName }}
+                      <span
+                        *ngIf="
+                          feature.capacity !== null && feature.unit !== null
+                        ">({{ feature.capacity
+                        }}{{ feature.unit ? " " + feature.unit : "" }})</span>
+                    </label>
+                  </div>
+                </div>
+                <!-- storage Feature List -->
+
+                <div id="storage-feature">
+                  <h5>Storage features</h5>
+                  <div
+                    *ngFor="
+                      let feature of storageTypeFeatureList;
+                      let i = index
+                    ">
+                    <label [ngClass]="{ strikethrough: feature.isDisabled }">
+                      <input
+                        type="checkbox"
+                        [disabled]="feature.isDisabled"
+                        [checked]="
+                          subscriptionFormPlanA.value.featureList.includes(
+                            feature.id
+                          )
+                        "
+                        (change)="
+                          updateSelectedFeaturesPlanA(
+                            feature.id,
+                            $event,
+                            feature,
+                            i
+                          )
+                        " />
+                      {{ feature.featureName }}
+                      <span
+                        *ngIf="
+                          feature.capacity !== null && feature.unit !== null
+                        ">({{ feature.capacity
+                        }}{{ feature.unit ? " " + feature.unit : "" }})</span>
+                    </label>
+                  </div>
+                </div>
+
+                <!-- Enrollment Feature -->
+                <div id="enrollment-feature">
+                  <h5>Enrollment features</h5>
+                  <div
+                    *ngFor="
+                      let feature of enrollmentTypeFeatureList;
+                      let i = index
+                    ">
+                    <label [ngClass]="{ strikethrough: feature.isDisabled }">
+                      <input
+                        type="checkbox"
+                        [disabled]="feature.isDisabled"
+                        [checked]="
+                          subscriptionFormPlanA.value.featureList.includes(
+                            feature.id
+                          )
+                        "
+                        (change)="
+                          updateSelectedFeaturesPlanA(
+                            feature.id,
+                            $event,
+                            feature,
+                            i
+                          )
+                        " />
+                      {{ feature.featureName }}
+                      <span
+                        *ngIf="
+                          feature.capacity !== null && feature.unit !== null
+                        ">({{ feature.capacity
+                        }}{{ feature.unit ? " " + feature.unit : "" }})</span>
+                    </label>
+                  </div>
+                </div>
+                <!-- </ul> -->
+
+                <!-- other Feature List -->
+
+                <div id="other-feature">
+                  <h5>Other features</h5>
+                  <div *ngFor="let feature of otherFeatureList; let i = index">
+                    <label [ngClass]="{ strikethrough: feature.isDisabled }">
+                      <input
+                        type="checkbox"
+                        [disabled]="feature.isDisabled"
+                        [checked]="
+                          subscriptionFormPlanA.value.featureList.includes(
+                            feature.id
+                          )
+                        "
+                        (change)="
+                          updateSelectedFeaturesPlanA(
+                            feature.id,
+                            $event,
+                            feature,
+                            i
+                          )
+                        " />
+                      {{ feature.featureName }}
+                      <span
+                        *ngIf="
+                          feature.capacity !== null && feature.unit !== null
+                        ">({{ feature.capacity
+                        }}{{ feature.unit ? " " + feature.unit : "" }})</span>
+                    </label>
+                  </div>
+                </div>
+                }@else {
+                <div *ngFor="let feature of features; let i = index">
+                  <label [ngClass]="{ strikethrough: feature.isDisabled }">
+                    <input
+                      type="checkbox"
+                      [disabled]="feature.isDisabled"
+                      [checked]="
+                        subscriptionFormPlanA.value.featureList.includes(
+                          feature.id
+                        )
+                      "
+                      (change)="
+                        updateSelectedFeaturesPlanA(
+                          feature.id,
+                          $event,
+                          feature,
+                          i
+                        )
+                      " />
+                    {{ feature.featureName }}
+                    <span
+                      *ngIf="feature.capacity !== null && feature.unit !== null">({{
+                      feature.capacity
+                      }}{{ feature.unit ? " " + feature.unit : "" }})</span>
+                  </label>
+                </div>
+                }
+              </div>
+            </div>
+            <!-- till here -->
+
+            <div class="row">
+              <div class="col-md-12 mb-3">
+                @if(UserRoleId==1){
+                <div class="another-div" *ngIf="discountApplicable != false">
+                  <div class="hea d-flex pricing-info p-0 gp-6">
+                    <!-- <input type="checkbox" class="me-2" id="toggler" [(ngModel)]="isCustomized"> -->
+                    <h6 class="mb-0">Customize your Plan for Discounts!</h6>
+                  </div>
+                  <div class>
+                    <div class="der">
+                      <div
+                        class="boxed"
+                        *ngFor="let discount of discounts; let i = index">
+                        <span class="chec-box">
+                          <input
+                            type="checkbox"
+                            (change)="validateInput(discount.value, i)"
+                            [(ngModel)]="discount.isChecked"
+                            class="checker"
+                            [disabled]="checkboxDisabled" />
+                        </span>
+                        <span class="position-relative mar-rt">
+                          <input
+                            type="number"
+                            [(ngModel)]="discount.value"
+                            (change)="validatingNumberFormat(discount.value, i)"
+                            name="discount{{ i }}"
+                            id="counter"
+                            [value]="discount.value"
+                            min="0"
+                            max="99" />
+                          <span class="position-absolute real-pol">%</span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                }
+                <div class="modal-footer" style="border: none">
+                  <div class="row">
+                    <div class="form-group mb-0 col-md-12 text-end">
+                      <div class="settings-btns">
+                        <button
+                          type="submit"
+                          class="btn btn-primary me-3"
+                          (click)="onSubmit()">
+                          {{ isEditMode ? "Update" : "Save" }}
+                        </button>
+                        <button
+                          type="submit"
+                          class="btn btn-secondary"
+                          (click)="cancel()">
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

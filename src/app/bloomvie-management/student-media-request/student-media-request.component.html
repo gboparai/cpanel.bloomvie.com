@@ -1,0 +1,323 @@
+<app-breadcrumb></app-breadcrumb>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+        <div class="card-body">
+            <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item" role="presentation"><a class="nav-link active" href="#basictab2" data-bs-toggle="tab" aria-selected="false" role="tab" tabindex="-1"
+           >Pending</a></li>
+            <li class="nav-item" role="presentation" ><a class="nav-link" href="#basictab3" data-bs-toggle="tab" aria-selected="false" role="tab" tabindex="-1"
+            >Accepted</a></li>
+            </ul>
+            <div class="tab-content" id="expens-tab">
+           
+            <div class="tab-pane active" id="basictab2" role="tabpanel">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="row">
+                    <div class="col-md-8" *ngIf="userRoleId !=5">
+                      <div class="search">
+                        <input placeholder="Type here.." type="text" [(ngModel)]="Name">
+                        <!-- <input placeholder="Type here.." type="text" [(ngModel)]="Name" (input)="onSearchName()"> -->
+                        <button type="submit">Search</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              
+              </div>
+              
+            <div class="row">
+              <div class="col-md-12">
+                <div class="table-responsive">
+                  <table class="table table-hover mb-0">
+                    <thead class="student-thread">
+                      <tr>
+                        <th>#</th>
+                        
+                        <th>Parent Name</th>
+                        <th>DayCare Name</th>
+                        <th>Email</th>
+                        <th>Start&nbsp;Date</th>
+                        <th>End&nbsp;Date</th>
+                        <th>Status</th>
+                        <th class="text-center">Action</th>
+                       
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngIf="StudentMediaRequest.length === 0">
+                        <td colspan="9" style="text-align: center;">
+                          <div class="no-data">
+                          <img
+                            src="assets/img/no-data-img.png"
+                            alt="No Record Found"
+                          />
+                          <span>No Record Found</span>
+                          </div>
+                        </td>
+                      </tr> 
+                      <tr *ngFor="let user of StudentMediaRequest| paginate:{itemsPerPage:5 ,currentPage: currentPage, id: 'getPaymentHistory'};
+                        let i = index">
+                          <td>{{i+1 + (currentPage-1)*itemsPerPage}}</td>
+                          <td>{{user.parentName}}</td>
+                          <td>{{user.daycareName}}</td>
+                          <td>{{user.email}}</td>
+                          <td>{{user.startDate | date: "MM-dd-yyyy"}}</td>
+                          <td>{{ user.endDate | date: "MM-dd-yyyy" }}</td>
+                          <td> <span
+                            [class.badge]="true"
+                            [class.bg-warning]="user.status === 'Pending'"
+                            [class.bg-info]="user.status === 'On Hold'"
+                          >
+                            {{ user?.status }}
+                          </span></td>
+
+                            <td>
+                              <div class="actions">
+                                <a class="action-btn bg-primary-light" title="Send Email" 
+                                   data-bs-toggle="modal" data-bs-target="#activate-plan"
+                                   (click)="openModal(user)">
+                                   <i class="fa fa-envelope" aria-hidden="true"></i>
+
+                                </a>
+
+                                <a class="action-btn bg-info-light" title="View Details" 
+                                data-bs-toggle="modal" data-bs-target="#viewDetailsModal"
+                                (click)="openModal(user)">
+                                <i class="fa fa-eye"></i>
+                             </a>
+                              </div>
+
+                          
+                            </td>
+                         
+                      </tr>
+                    </tbody>
+                  </table>
+                 
+              </div> 
+              <div class="d-flex justify-content-between align-items-center">
+                <div class=" total-entry" style="font-size: small;">
+                  <span>Total Entries:</span><span class="entry-count"> {{ totalCount }} </span>
+                  
+             </div>
+                <pagination-controls (pageChange)="currentPage = $event" id="getPaymentHistory"></pagination-controls>
+              </div>             
+              </div>
+            </div>
+            </div>
+            
+            
+            <div class="tab-pane" id="basictab3" role="tabpanel">
+
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="row">
+                    <div class="col-md-8" *ngIf="userRoleId !=5">
+                      <div class="search">
+                        <input placeholder="Type here.." type="text" [(ngModel)]="Name2" >
+                        <button type="submit">Search</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="row justify-content-end">
+                    <div class="col-md-4 mb-4">
+                      <div class="form-group local-forms">
+                        <label for="">Select Expiry Date</label>
+                        <input type="text"  id="dateRangePicker2" Class="form-control" >
+                    </div>
+                        <!-- <button (click)="filterData()" class="btn btn-primary">Filter</button> -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                      <thead class="student-thread">
+                        <tr>
+                          <th>#</th>
+                        
+                          <th>Parent Name</th>
+                          <th>DayCare Name</th>
+                          <th>Email</th>
+                          <th>Start&nbsp;Date</th>
+                          <th>End&nbsp;Date</th>
+                          <th>Status</th>
+                         
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngIf="StudentMediaRequest.length === 0">
+                          <td colspan="8" style="text-align: center;">
+                            <div class="no-data">
+                              <img
+                                src="assets/img/no-data-img.png"
+                                alt="No Record Found"
+                              />
+                              <span>No Record Found</span>
+                            </div>
+                          </td>
+                        </tr> 
+                        <tr *ngFor="let user of StudentMediaRequest| paginate:{itemsPerPage:5 ,currentPage: currentPage, id: 'getPaymentHistory'};
+                        let i = index">
+                          <td>{{i+1 + (currentPage-1)*itemsPerPage}}</td>
+                          <td>{{user.parentName}}</td>
+                          <td>{{user.daycareName}}</td>
+                          <td>{{user.email}}</td>
+                          <td>{{user.startDate | date: "MM-dd-yyyy"}}</td>
+                          <td>{{ user.endDate | date: "MM-dd-yyyy" }}</td>
+
+                          
+                          <td>
+                            <span
+                            [class.badge]="true"
+                            [class.bg-warning]="user.status === 'Pending'"
+                            [class.bg-success]="user.status === 'Accepted'"
+                            [class.bg-danger]="user.status === 'Rejected'"
+                            [class.bg-info]="user.status === 'On Hold'"
+                          >
+                            {{ user?.status }}
+                          </span>
+                            
+                          </td>
+                         
+                      </tr>
+                      </tbody>
+                    </table>
+                      <!-- <div class="text-left" style="font-size: small;">
+                        Total Entries: {{ TotalCount }}
+                      </div>
+                      <pagination-controls (pageChange)="currentPageSecond = $event" id="getUpcomingPaymentDetails"></pagination-controls> -->
+                  </div>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div class=" total-entry" style="font-size: small;">
+                      <span>Total Entries:</span><span class="entry-count"> {{ totalCount }} </span>
+                      
+                 </div>
+                 <pagination-controls (pageChange)="currentPageSecond = $event" id="getUpcomingPaymentDetails"></pagination-controls>
+                  </div>   
+                  
+                </div>
+              </div>
+            </div>
+            </div>
+            
+            </div>
+        </div>
+    </div>
+  </div>
+
+
+<!-- View Details Modal -->
+<div class="modal fade" id="viewDetailsModal" tabindex="-1" aria-labelledby="viewDetailsModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="viewDetailsModalLabel">User Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-bordered">
+          <tr>
+            <th>Parent Name</th>
+            <td>{{ selectedUser?.parentName }}</td>
+          </tr>
+          <tr>
+            <th>DayCare Name</th>
+            <td>{{ selectedUser?.daycareName }}</td>
+          </tr>
+          <tr>
+            <th>Email</th>
+            <td>{{ selectedUser?.email }}</td>
+          </tr>
+          <tr>
+            <th>Start Date</th>
+            <td>{{ selectedUser?.formattedStartDate }}</td>
+          </tr>
+          <tr>
+            <th>End Date</th>
+            <td>{{ selectedUser?.formattedEndDate }}</td>
+          </tr>
+          <tr>
+            <th>Duration</th>
+            <td>{{ selectedUser?.duration }} Days</td>
+          </tr>
+          <tr>
+            <th>Data Size</th>
+            <td>{{ selectedUser?.fileSize }} MB</td>
+          </tr>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal Email (Activate Plan) -->
+<div class="modal" id="activate-plan" data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Select Plan</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="resetData()"></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group local-forms">
+          <label class="form-label">Select Plan<span class="login-danger">*</span></label>
+          <ng-select id="planSelect" [items]="getPlansList" bindLabel="planName"
+             [(ngModel)]="planInformation" bindValue="id"
+             (change)="onPlanSelect($event)">
+          </ng-select>
+        </div>
+
+
+
+        <div class="row mt-3" *ngIf="planInformation">
+          <div class="col-6 fw-medium mb-3">Plan Name</div>
+          <div class="col-6 mb-3">
+            {{ planDescriptionDetails?.planName }}
+          </div>
+          <div class="col-6 fw-medium mb-3">Plan Price</div>
+          <div class="col-6 mb-3">${{ planDescriptionDetails?.price }}</div>
+          <div class="col-6 fw-medium mb-3">Plan Duration</div>
+          <div class="col-6 mb-3">
+            {{
+            planDescriptionDetails?.daily == true
+            ? "Daily"
+            : planDescriptionDetails?.monthly == true
+            ? "Montly"
+            : planDescriptionDetails?.yearly == true
+            ? "Yearly"
+            : ""
+            }}
+          </div>
+          <div class="col-6 fw-medium mb-3">Plan Details</div>
+          <div class="col-6 mb-3">{{ planDescriptionDetails?.description }}</div>
+
+    
+        </div>
+
+        <div class="mt-3">
+          <p><strong>Start Date:</strong> {{ selectedUser?.formattedStartDate }}</p>
+          <p><strong>End Date:</strong> {{ selectedUser?.formattedEndDate }}</p>
+          <p><strong>Duration:</strong> {{ selectedUser?.duration }} days</p>
+          <p><strong>Data Size:</strong> {{ selectedUser?.fileSize }} MB</p>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" [disabled]="!planInformation" (click)="sendEmailStudentMediaRequest()">
+          Submit
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

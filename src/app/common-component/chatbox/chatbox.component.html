@@ -1,0 +1,183 @@
+<app-breadcrumb></app-breadcrumb>
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <section class="chatbox-section" id="chatboc-section-new">
+          <div class="home-page__content messages-page">
+            <div class="container-fluid h-100">
+              <div class="row px-0 h-100">
+                <div
+                  class="col-12 col-md-4 col-lg-5 col-xl-3 px-0 messages-page__list-scroll"
+                >
+                  <div class="messages-page__header mb-0 px-4 pt-3 pb-3">
+                    <span class="messages-page__title">Chats</span>
+                    <a
+                      (click)="
+                        selectedGroupMembers.length > 0
+                          ? addGroup()
+                          : toggleGroupCreate()
+                      "
+                      class="create-grp"
+                      ><i class="fa fa-user-plus me-1"></i
+                      >{{ isAddGroup ? "Add Group" : "Create Group" }}</a
+                    >
+                  </div>
+                  <div class="messages-page__search mb-0 px-3 pb-3 ps-0">
+                    <div class="custom-form__search-wrapper">
+                      <input
+                        [(ngModel)]="searchTerm"
+                        type="text"
+                        class="form-control custom-form"
+                        id="search"
+                        placeholder="Search.."
+                        autocomplete="off"
+                      />
+                      <button type="submit" class="custom-form__search-submit">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          class="svg-icon svg-icon--search"
+                          viewBox="0 0 46.6 46.6"
+                        >
+                          <path
+                            d="M46.1,43.2l-9-8.9a20.9,20.9,0,1,0-2.8,2.8l8.9,9a1.9,1.9,0,0,0,1.4.5,2,2,0,0,0,1.5-.5A2.3,2.3,0,0,0,46.1,43.2ZM4,21a17,17,0,1,1,33.9,0A17.1,17.1,0,0,1,33,32.9h-.1A17,17,0,0,1,4,21Z"
+                            fill="#f68b3c"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+
+                  @if (skeletonShow === 'Skelton') {
+                  <ul class="messages-page__list pb-5 px-1 ps-0">
+                    <li>
+                      <app-skeleton-loader
+                        skeletonShow="Skelton"
+                        viewType="card"
+                      >
+                      </app-skeleton-loader>
+                    </li>
+                  </ul>
+
+                  } @else if (filteredClientList.length > 0) {
+
+                  <ul class="messages-page__list pb-5 px-1 ps-0">
+                    <li
+                      *ngFor="let client of filteredClientList"
+                      (click)="!isAddGroup ? onClientSwitch(client) : null"
+                      class="messaging-member messaging-member--new messaging-member--online"
+                    >
+                      <div class="messaging-member__wrapper pt-2 pb-2">
+                        <div
+                          class="messaging-member__avatar messaging-member__avatar chat-member__avatar"
+                        >
+                          <div class="blk-div">
+                            <img
+                              [src]="
+                                client.fileUrl
+                                  ? client.fileUrl
+                                  : client.isGroup
+                                  ? 'assets/img/dummy-group-icon.png'
+                                  : 'assets/img/dummy-avatar.jpg'
+                              "
+                              [alt]="client.name"
+                              loading="lazy"
+                              decoding="async"
+                              fetchpriority="low"
+                              width="100"
+                              height="100"
+                              style="transition: opacity 0.3s ease-in-out"
+                              class="image"
+                              [class.image-loaded]="client.imageLoaded"
+                              (load)="client.imageLoaded = true"
+                            />
+
+                            <div
+                              [ngClass]="{
+                                'user-status': activeUsers.includes(
+                                  client.id.toString()
+                                ),
+                                hide: client.isGroup
+                              }"
+                            ></div>
+                            <input
+                              [checked]="
+                                selectedGroupMembers.includes(client.id)
+                              "
+                              (change)="
+                                onSelectGroupMember(client.id, $event.target)
+                              "
+                              type="checkbox"
+                              class="group-checkbox"
+                              [ngClass]="{ hide: !isAddGroup }"
+                            />
+                          </div>
+                        </div>
+
+                        <div class="d-flex flex-column pt-1 pb-1">
+                          <span
+                            class="messaging-member__name"
+                            [innerText]="client.name"
+                          ></span>
+                          <span class="role-type" *ngIf="client.roleType">{{
+                            client.roleType
+                          }}</span>
+                        </div>
+                        <!-- <span class="messaging-member__message" [innerText]="client.lastMessage"></span> -->
+                        <span class="messaging-member__message">
+                          <ng-container
+                            *ngIf="
+                              client.unreadMessageCount > 0;
+                              else noMessages
+                            "
+                          >
+                            <span class="msg-count">{{
+                              client.unreadMessageCount
+                            }}</span>
+                            <span class="msg-text"
+                              >New Message{{
+                                client.unreadMessageCount > 1 ? "s" : ""
+                              }}
+                              arrived</span
+                            >
+                          </ng-container>
+                          <ng-template #noMessages>
+                            <span class="msg-text">No new messages</span>
+                          </ng-template>
+                        </span>
+                      </div>
+                    </li>
+                  </ul>
+
+                  } @else{
+                  <ul class="messages-page__list pb-5 px-1 ps-0">
+                    <li>
+                      <div class="no-data">
+                        <img
+                          src="assets/img/no-data-img.png"
+                          alt="No Record Found"
+                        />
+                        <span>No Record Found</span>
+                      </div>
+                    </li>
+                  </ul>
+                  }
+                </div>
+                <div
+                  class="chat col-12 col-8 col-md-8 col-lg-7 col-xl-9 px-0 pl-md-1"
+                >
+                  <app-chat-details
+                    (dataForParent)="receiveFromChild($event)"
+                    [receiverData]="receiverData"
+                    [newChat]="newChat"
+                    [senderId]="senderId"
+                  ></app-chat-details>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+</div>

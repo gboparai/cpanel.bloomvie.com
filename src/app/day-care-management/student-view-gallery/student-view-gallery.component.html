@@ -1,0 +1,503 @@
+<app-breadcrumb></app-breadcrumb>
+
+<section class="upload">
+    <div class="card">
+        <div class="card-body">
+            <!-- Header Section -->
+            <div class="row mb-3 ">
+                <div class="col-12">
+                    <div class="heading-new">
+                        <h5 class="mb-0">
+                            Classroom Activites</h5>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Fields Section -->
+            <div class="row ">
+
+                <div class="col-md-4 fiv-days-button">
+                    <div class="today-tomrrow">
+                        <div class="activity-filter-box">
+                            <div class="ng--parent">
+                                <!-- From Date -->
+                                <input type="text" id="selectFromDate" placeholder="Select To Date"
+                                    class="form-control w-100" [(ngModel)]="selectedStartDate" />
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-md-4 fiv-days-button">
+                    <div class="today-tomrrow">
+                        <div class="activity-filter-box">
+                            <div class="ng--parent">
+
+                                <!-- To Date -->
+                                <input type="text" id="selectToDate" placeholder="Select From Date"
+                                    class="form-control w-100" [(ngModel)]="selectedEndDate" />
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 manage-student-gallery-button">
+
+
+                   @if(gallery){
+                    <div class="text-start" *ngIf="showDownloadButton">
+                        <button style="float: left;" class="btn btn-primary" (click)="autoSelectAndDownload()">
+                            Download All Images
+                        </button>
+                    </div>
+
+                    <div class="text-start" *ngIf="!showDownloadButton">
+                        <button tyle="float: left;" class="btn btn-sm down-req" data-bs-toggle="modal" data-bs-target="#view-del"
+                            (click)="clearDatepicker()">
+                            Download Request For Images
+                        </button>
+                    </div>
+                   }
+              
+
+
+
+
+                </div>
+
+                <!-- <div class="col-md-3  sub">
+                    <button type="submit" id="submit-btn" class="btn btn-primary me-2"
+                                (click)="onSubmit()">Search</button>
+                </div> -->
+            </div>
+
+
+
+
+
+            <!-- <div class="">
+                <button style=" float: left;  " class="btn btn-primary" (click)="autoSelectAndDownload()">
+                  Download All
+                </button>
+
+
+                <button class="btn btn-sm down-req" data-bs-toggle="modal" data-bs-target="#view-del">
+                    Download Request
+                  </button>
+              </div> -->
+
+
+            <div class="modal fade" id="view-del" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="viewModalLabel">Select Date for Download</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <label for="datePicker">Select Date:</label>
+                            <div class="row ">
+
+                                <div class="col-md-5 fiv-days-button">
+                                    <div class="today-tomrrow">
+                                        <div class="activity-filter-box">
+                                            <div class="ng--parent">
+                                                <!-- From Date -->
+                                                <input type="text" id="firstToDate" placeholder="Select To Date"
+                                                    class="form-control w-100" [(ngModel)]="selectedFirstStartDate" />
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-md-5 fiv-days-button">
+                                    <div class="today-tomrrow">
+                                        <div class="activity-filter-box">
+                                            <div class="ng--parent">
+
+                                                <!-- To Date -->
+                                                <input type="text" id="firstFromDate" placeholder="Select From Date"
+                                                    class="form-control w-100" [(ngModel)]="selectedFirstEndDate" />
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <!-- <div class="col-md-3  sub">
+                            <button type="submit" id="submit-btn" class="btn btn-primary me-2"
+                                        (click)="onSubmit()">Search</button>
+                        </div> -->
+                            </div>
+                            <br>
+
+                            <div class="download-reqest-item">
+
+                                @if(this.firstStartDate){
+                                @if(!fileSize){
+
+                                <!-- <div class="data-loaidng">
+                              <img src="assets/img/load.gif">Calculating
+                            </div> -->
+
+                                } @else{
+                                <p><b>File Size:-</b> {{fileSize}} MB</p>
+                                <p class="ml-2"> <b> Total Cost:-</b> ${{ this.totalCost }} </p>
+                                }
+                                }
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                                (click)="clearForm()">Close</button>
+                            <button type="button" class="btn btn-primary" (click)="studentActivityDownloadRequest()">Pay
+                                Now</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="row">
+
+                <div class="col-md-12 sev-days-button">
+
+                    <!-- <div *ngIf="userRoleId === '5'" class="btn-area">
+                        <ng-container *ngFor="let student of gallery; track: gallery">
+
+                            @if (isWithinLast7Days(student.fullDate)) {
+
+                            <div class="">
+                                <button style=" float: left;  " class="btn btn-primary"
+                                    (click)="autoSelectAndDownload()">
+                                    Download All
+                                </button>
+
+                            </div>
+                            }
+                            @else {
+
+                            <button class="btn btn-sm down-req" data-bs-toggle="modal" data-bs-target="#view-del">
+                                Download Request
+                            </button>
+                            }
+
+                        </ng-container>
+                    </div> -->
+
+                </div>
+                <div class="col-12">
+                    <div class="no-data  text-center" *ngIf="gallery.length == 0">
+                        <img src="assets/img/no-data-img.png" alt="No Record Found" />
+                        <span>No Record Found</span>
+                    </div>
+                    </div>
+                    <div class="col-12">
+                    <div class="  timeline">
+
+
+
+                        @for(student of gallery;track student){
+                        @for(day of student.days;track day){
+                        <div class="timeline-month">
+
+                            <span class=""> <i class="fa fa-calendar"></i> {{ day.date | date: "dd,MMMM, yy" }}</span>
+                        </div>
+
+                        @for(item of day.studentGalleryData;track item){
+
+
+
+
+                        <!-- @if (shouldShowDownloadButton(item)) { -->
+
+                        <!-- } -->
+
+
+
+                        <!-- this  below timeline-section will be looped here -->
+
+
+                        <div class="row timeline-section" style="width: 100%;">
+                            <div class="inner-pad p-3 mx-3">
+                                <div class="col-md-12  mt-3" style="display:inline-block;">
+
+                                    <div class="font-medium stater">
+                                        <h5 class="activity-name"> {{item.activityName || 'No Activity Name'}} </h5>
+                                    </div>
+                                    <div class="col-md-12 ">
+                                        <div class="cell-width "
+                                            *ngFor="let image of (item.filePath?.includes(',') ? item.filePath?.split(',') : [item?.filePath])">
+                                            @if (shouldShowDownloadButton(item)){
+                                            <button class="btn btn-sm btn-primary"
+                                                (click)="downloadImages(item, image)">
+                                                <i class="fa fa-download"></i>
+                                            </button>
+                                            }
+
+                                            @if (shouldShowDownloadButton(item)) {
+
+                                            <ng-container *ngIf="isVideo(image); else imageTemplate">
+                                                <div class="cell-height">
+                                                    <div class="item bulk-img">
+                                                        <a [href]="rootUrl + 'Content/Image/BulkUpload/' + image"
+                                                            data-fancybox="gallery2" class="fancybox ">
+                                                            <!-- <img alt="Video" style="width: 100%; height: auto;" /> -->
+                                                            <i class="fa fa-play" style="position: absolute; top: 50%; left: 50%;
+                                                                   transform: translate(-50%, -50%);
+                                                                   font-size: 40px; color: #a2719e; opacity: 0.8;"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </ng-container>
+
+                                            <ng-template #imageTemplate>
+                                                <div class="cell-height">
+                                                    <div class="item bulk-img">
+                                                        <a href="javascript:void(0)"
+                                                            [href]="rootUrl + 'Content/Image/BulkUpload/' + image"
+                                                            data-fancybox="gallery2" class="fancybox "
+                                                            (click)="showAllImages = true"
+                                                            (contextmenu)="disableRightClick($event)">
+
+
+                                                            <img [src]="rootUrl + 'Content/Image/BulkUpload/' + image"
+                                                                alt="Image" style="width: 100%; height: auto;"
+                                                                (dragstart)="disableDrag($event)" draggable="false" />
+
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </ng-template>
+
+                                            }@else{
+
+                                            <ng-container *ngIf="isVideo(image); else imageTemplate">
+                                                <div class="cell-height ">
+                                                    <div class="item bulk-img">
+                                                        <a (contextmenu)="disableRightClick($event)"
+                                                            (dragstart)="disableDrag($event)" data-fancybox="gallery2"
+                                                            class="fancybox ">
+                                                            <img (contextmenu)="disableRightClick($event)"
+                                                                (dragstart)="disableDrag($event)" class="blur-image bulk-img"
+                                                                alt="Video" style="width: 100%; height: auto;" />
+                                                            <div class="image-overlay"
+                                                                (click)="blurGalleryDownloadRequest(item.activityDate)"></div>
+
+                                                            <i class="fa fa-play" style="position: absolute; top: 50%; left: 50%;
+                                                                   transform: translate(-50%, -50%);
+                                                                   font-size: 40px; color: #a2719e; opacity: 0.8;"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </ng-container>
+
+                                            <ng-template #imageTemplate>
+                                                <div class="cell-height ">
+                                                    <div class="item bulk-img">
+                                                        <a (click)="showAllImages = true"
+                                                            (contextmenu)="disableRightClick($event)"
+                                                            (dragstart)="disableDrag($event)">
+
+
+                                                            <img [src]="rootUrl + 'Content/Image/BulkUpload/' + image"
+                                                                alt="Image" class="blur-image bulk-img"
+                                                                style="width: 100%; height: auto;"
+                                                                (click)="blurGalleryDownloadRequest(item.activityDate)"
+                                                                (contextmenu)="disableRightClick($event)"
+                                                                (dragstart)="disableDrag($event)" />
+                                                           
+
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </ng-template>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12 mt-3">
+                                    <div >
+                                    <div class="card-header heading-new bg-primary text-white">
+                                        <div class="p-head">
+                                            <h5 class="mb-0  text-secondary">Comment Section</h5>
+                                        </div>
+                     </div>
+                     <div class="card">
+                        <div class="card-body">
+                            <div class="comment p-3 mb-3 rounded">
+                                
+                      
+                                        <div class="main-diver position-relative">
+                                         
+
+                                            <button *ngIf="item.parentComment" class="edit-hover"
+                                                (click)="enableEditComment(item)">
+                                                <i class="fa fa-edit"></i>
+                                            </button>
+
+                                        </div>
+
+
+
+                                        @if(item.parentComment){
+                                        <div class="align-items-center">
+
+
+                                            <div class="comment-details ml-3 flex-grow-1">
+                                                <div class="Parent">
+                                                    <span>P</span>
+                                                </div>
+                                                <h6 class="font-weight-bold mb-0 text-primary">{{parentName}}</h6>
+                                            </div>
+                                            <div class="content-del">
+                                                <div *ngIf="!item.isEditing; else editTemplate">
+                                                    <p class="text-muted date small mb-1"> <b>Commented On: </b> {{
+                                                        (item?.parentModifiedDate ||
+                                                        item?.parentCreatedDate) | date: 'dd/MM/yyyy HH:mm:ss' }} </p>
+                                                    <p class="comment-text mb-0 text-dark">{{ item.parentComment
+                                                        }}</p>
+                                                </div>
+                                            </div>
+                                            <div>
+
+
+                                            </div>
+                                        </div>
+                                        }
+
+                                    </div>
+                                        @if(item.teacherComment){
+                                        <div class="align-items-center ">
+
+
+                                            <div class="comment-details ml-3 flex-grow-1">
+                                                <div class="Parent">
+                                                    <span>T</span>
+                                                </div>
+                                                <h6 class="font-weight-bold mb-0 text-primary">
+                                                    {{teacherName?.firstName}} {{teacherName?.lastName}}</h6>
+
+                                            </div>
+                                            <div class="content-del">
+                                                <div>
+                                                    <p class="text-muted date small mb-1">
+                                                        <b>Commented On:</b>
+                                                        {{ (item?.teacherModifiedDate ? item?.teacherModifiedDate :
+                                                        item?.teacherCreatedDate) | date: "dd/MM/yyyy HH:mm:ss" }}
+                                                    </p>
+
+                                                    <p class="comment-text mb-0 text-dark">{{
+                                                        item?.teacherComment
+                                                        }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        }
+
+
+
+
+                                        <ng-template #editTemplate>
+                                            <div class="mt-2">
+                                                <textarea [(ngModel)]="item.editText"
+                                                    class="form-control mb-2 shadow-sm"
+                                                    placeholder="Edit your comment..."></textarea>
+
+                                                <div class="text-right">
+                                                    <button class="btn btn-sm btn-success shadow-none"
+                                                        (click)="commentAdd(item.editText, 'update', item.activityDate)">
+                                                        Save
+                                                    </button>
+                                                    <button class="btn btn-sm btn-outline-secondary shadow-none ml-1"
+                                                        (click)="cancelEditComment(item)">
+                                                        Cancel
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </ng-template>
+
+
+
+                                        @if (!item.parentComment) {
+                                        <textarea class="form-control shadow-none mb-2" rows="3"
+                                            [(ngModel)]="newCommentTexts[item.id]"
+                                            [attr.placeholder]="'Write a comment...'"></textarea>
+                                        <div class="text-right">
+                                            <button class="btn btn-primary btn-sm shadow-none px-4"
+                                                (click)="commentAdd(newCommentTexts[item.id], 'add', item.activityDate)"
+                                                [disabled]="!newCommentTexts[item.id]">
+                                                Post Comment
+                                            </button>
+                                            <button class="btn btn-outline-secondary btn-sm shadow-none ml-2 px-4"
+                                                (click)="cancelComment()">
+                                                Cancel
+                                            </button>
+                                        </div>
+                                        }
+
+
+
+
+
+
+
+
+                                </div>
+                             </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- parent comment  -->
+
+
+
+                        }
+                        }
+                        }
+                        <div class="arrow-controls text-end mt-3">
+
+                            <!-- Left (Previous Date) -->
+                            <span class="arrow me-2" (click)="goToPreviousDate()">
+                                <i class="fa fa-angle-left me-1" aria-hidden="true"></i> <span>Previous</span>
+                            </span>
+
+                            <!-- Right (Next Date) -->
+                            <span class="arrow" [class.disabled]="isNextDateDisabled()"
+                                (click)="!isNextDateDisabled() && goToNextDate()">
+                                <span class="me-1"> Next</span><i class="fa fa-angle-right" aria-hidden="true"></i>
+                            </span>
+
+                        </div>
+                    </div>
+
+
+
+
+                </div>
+            </div>
+
+
+
+        </div>
+  
+</div>
+</section>

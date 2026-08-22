@@ -1,0 +1,215 @@
+<app-breadcrumb></app-breadcrumb>
+
+<!-- class room section and Sutdent details  -->
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="mb-0 heading-new" *ngIf="classes && classes.length > 0">
+          <div class="row" style="position: relative; z-index: 11">
+            <div class="col-xxl-4 col-lg-6 col-md-6">
+              <div class="profile-user-box mt-2">
+                <div class="names-profiles">
+                  <h4>{{ classes.className }}({{ classes.sectionName }})</h4>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-xxl-4 col-lg-6 col-md-6 d-flex align-items-center">
+              <div class="follow-group">
+                <div class="students-follows">
+                  <h5>Start Timing</h5>
+                  <h4>{{ formatTime(classes.startTime) }}</h4>
+                </div>
+                <div class="students-follows">
+                  <h5>End Timing</h5>
+                  <h4>{{ formatTime(classes.endTime) }}</h4>
+                </div>
+                <div class="students-follows">
+                  <h5>Total Student</h5>
+                  <h4>{{ classes.studentCount }}</h4>
+                </div>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-12 d-flex align-items-center">
+              <div class="follow-btn-group">
+                <button type="submit" class="btn btn-secondary" routerLink="/add-classroom">
+                  <i class="feather-edit me-1"></i>
+                  Edit Classroom
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="row justify-content-end">
+            <div class="container">
+              <div class="heading-new mb-0">
+                <h5 class="mb-0">Classroom Details </h5>
+              </div>
+              <div class="d-flex flex-wrap align-items-center justify-content-between ">
+
+
+                <!-- Class and Section Form -->
+                <div [formGroup]="ClassAndSectionForm" class="col-md-4 ">
+
+
+                  <!--updated section and classes dropdown with ng-select-->
+
+                  <div class="form-group local-forms select-class-room">
+                    <!-- Classroom Selection -->
+                    <label for="classroomSelect" class="form-label">Select a classroom<span
+                        class="login-danger">*</span></label>
+                    <ng-select id="classroomSelect" formControlName="classroomID" (change)="onSelectClass($event)"
+                      bindValue="classroomID" bindLabel="classroomName" [items]="classRoom">
+                    </ng-select>
+                  </div>
+
+                </div>
+                <div class="col-md-4 mt-5 ">
+                  <div class="search">
+                    <input type="text" class="" placeholder="Type here.." (input)="onSearchName($event)" />
+                    <button type="submit" class="">Search</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row ">
+              <div class="col-md-12">
+                <div class="">
+                  <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                      <thead class="student-thread">
+                        <tr>
+                          <th style="width: 10%" *ngIf="UserRoleId != 3 &&
+                          ClassAndSectionForm.value.classroomID != '' &&
+                          ClassAndSectionForm.value.classroomID != null
+                        ">
+                            <div class="checkBox d-flex justify-content-start align-items-center" *ngIf="UserRoleId != 3 &&
+                                ClassAndSectionForm.value.classroomID != '' &&
+                                ClassAndSectionForm.value.classroomID != null
+                              ">
+                              <input type="checkbox" [(ngModel)]="selectAll" (ngModelChange)="onSelectAllChange()" />
+                              <label for="" class="me-2"> </label>
+                              <span>Select All</span>
+                            </div>
+                          </th>
+                          <th *ngIf="UserRoleId == 3">#</th>
+                          <th>Student&nbsp;Name</th>
+                          <th>Age&nbsp;Group</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+
+                      @if (StudentList.length > 0) {
+                        <tbody>
+                          <tr *ngFor="
+                              let student of StudentList
+                                | paginate
+                                  : {
+                                      itemsPerPage: ContentSize,
+                                      currentPage: ContentP,
+                                      id: 'Agentcontrol'
+                                    };
+                              let i = index
+                            ">
+                            <td style="width: 10%" *ngIf="UserRoleId != 3 ">
+                              <div *ngIf="UserRoleId != 3 "
+                                class="checkBox d-flex justify-content-start align-items-center">
+                                <input type="checkbox" [(ngModel)]="student.selected" (ngModelChange)="
+                                    onSelectInput(student.id, student.selected)
+                                  " />
+  
+                                <label for=""> </label>
+                              </div>
+                            </td>
+                            <td *ngIf="UserRoleId == 3">{{ i + 1 + (ContentP - 1) * ContentSize }}</td>
+                            <td>
+                              {{ student.firstName }} {{ student.lastName }}
+                            </td>
+                            <td>{{ student.ageGroup }}</td>
+  
+                            <td>
+                              <div class="actions">
+                                <a class="action-btn bg-danger-light me-2" (click)="selectClassRoom(student.id)">
+                                  <i class="fa-solid fa-eye"></i>
+                                </a>
+  
+                                <!-- Modal -->
+                                <!--exampleModal-->
+                                <div class="modal fade" id="addingStudentActivityModal" tabindex="-1"
+                                  aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                  <div class="modal-dialog modal-xl">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                        <!-- <h5 class="modal-title" id="exampleModalLabel">Add Activity</h5> -->
+                                        <button type="button" (click)="modalClose(true)" class="btn-close"
+                                          data-bs-dismiss="modal" aria-label="Close"></button>
+                                      </div>
+                                      <div class="modal-body">
+                                        <!-- Insert your component here -->
+                                        <!-- <app-manage-student-activities *ngIf="popupOpen"
+                                          [SelectedStudentId]="SelectedStudentId"
+                                          [MasterActivityID]="MasterActivityID"></app-manage-student-activities> -->
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+  
+  
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      } @else {
+                        <tbody>
+                          <tr>
+                            <td colspan="8">
+                              <div class="no-data">
+                                <img src="assets/img/no-data-img.png" alt="No Record Found" />
+                                <span>No Record Found</span>
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      }
+                
+
+                      
+                    </table>
+
+                
+                  <div *ngIf="UserRoleId != 3 && StudentList.length > 0" class="row">
+                    <div class="col-md-12 mt-3 text-end">
+                      <div class="acti-btn text-end">
+                        <button type="button" class="btn btn-primary" (click)="modalOpen(true)"
+                          [disabled]="isDisable()">
+                          <i class="fa fa-plus me-1"></i>
+                          Add Activity
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col pagination-style">
+                    <div class="datatable-pager datatable-paging-loaded">
+                      <pagination-controls previousLabel="prev" nextLabel="next" [maxSize]="5"
+                        class="datatable-pager-nav my-2 mb-sm-0" id="Agentcontrol" (pageChange)="ContentP = $event">
+                      </pagination-controls>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+  </div>
+</div>

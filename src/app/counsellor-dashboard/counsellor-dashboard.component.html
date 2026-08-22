@@ -1,0 +1,391 @@
+<app-breadcrumb></app-breadcrumb>
+<div class="row">
+  <div class="col-md-12">
+    <div class="card bg-card">
+      <!-- Overlay Decorative Shapes -->
+      <div class="overlay-img">
+        <img src="assets/img/shape-04.png" alt="img" class="img-fluid shape-01" />
+        <img src="assets/img/shape-01.png" alt="img" class="img-fluid shape-02" />
+        <img src="assets/img/shape-02.png" alt="img" class="img-fluid shape-03" />
+        <img src="assets/img/shape-03.png" alt="img" class="img-fluid shape-04" />
+      </div>
+
+      <!-- Card Body -->
+      <div class="card-body">
+        <div class="d-flex align-items-xl-center justify-content-xl-between flex-xl-row flex-column">
+          <div class="mb-3 mb-xl-0">
+            <div class="d-flex align-items-center flex-wrap mb-2">
+              <h1 class="text-white me-2" style="text-transform: capitalize">
+                Welcome to your Dashboard!
+              </h1>
+             
+            </div>
+            <p class="text-white" style="margin-bottom: 0">
+              This is where you can manage all your daycare appointments. Stay
+              organized, view upcoming meetings, and explore Bloomvie’s features
+              using demo appointments.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="parent-dashboard">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body teacher-card-body">
+          <div class="row">
+            <!-- Child Attendance -->
+            <div class="col-xl-3 col-sm-6 col-12 d-flex">
+              <div class="card bg-comman dashboard-widget1 w-100 hvr-float-shadow mb-2 logo-first-color">
+                <div class="card-body">
+                  <div class="db-widgets d-flex justify-content-between align-items-center"
+                    (click)="navigateToAssignedDaycares()">
+                    <div class="db-info">
+                      <h6>Assigned Daycares</h6>
+                      @if (DayCaresCount === 'count') {
+                      <div class="skeleton-line user-info-card w-50 mb-2"></div>
+                      } @else {
+                      <h3>{{ assignedDayCaresCount }}</h3>
+                      }
+                    </div>
+                    <div class="db-icon">
+                      <img src="https://cdn-icons-png.flaticon.com/128/1436/1436664.png" alt="Dashboard Icon" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- My Schedule -->
+            <div class="col-xl-3 col-sm-6 col-12 d-flex">
+              <div class="card bg-comman dashboard-widget2 w-100 hvr-float-shadow mb-2 logo-second-color">
+                <div class="card-body">
+                  <div class="db-widgets d-flex justify-content-between align-items-center"
+                    (click)="navigateToAppointmentList()">
+                    <div class="db-info">
+                      <h6>Today's Appointments</h6>
+                      @if (DayCaresCount === 'count') {
+                      <div class="skeleton-line user-info-card w-50 mb-2"></div>
+                      } @else {
+                      <h3>{{pendingActionsCount}}</h3>
+                      }
+                    </div>
+                    <div class="db-icon">
+                      <img src="assets/img/schedule2.png" alt="Dashboard Icon" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Pending Actions -->
+            <!-- <div class="col-xl-3 col-sm-6 col-12 d-flex">
+            <div class="card bg-comman dashboard-widget1 w-100 hvr-float-shadow mb-2 logo-third-color">
+              <div class="card-body" (click)="navigateToAppointmentList()">
+                <div class="db-widgets d-flex justify-content-between align-items-center">
+                  <div class="db-info">
+                    <h6>Pending Actions</h6>
+                      <h3>{{pendingActionsCount}}</h3>
+                  </div>
+                  <div class="db-icon">
+                    <img src="assets/img/icons/pending-task.png" alt="Dashboard Icon">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div> -->
+
+            <!-- Messages -->
+            <div class="col-xl-3 col-sm-6 col-12 d-flex">
+              <div class="card bg-comman dashboard-widget1 w-100 hvr-float-shadow mb-2 logo-four-color">
+                <div class="card-body" (click)="navigateToChatbox()">
+                  <div class="db-widgets d-flex justify-content-between align-items-center">
+                    <div class="db-info">
+                      <h6>Messages</h6>
+                      <h3>--</h3>
+                    </div>
+                    <div class="db-icon">
+                      <img src="assets/img/comments.png" alt="Dashboard Icon" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- row -->
+        </div>
+        <!-- teacher-card-body -->
+      </div>
+      <!-- card -->
+    </div>
+    <!-- col-md-12 -->
+
+    <!-- <div class="card">
+        <div class="card-body">
+          <div class="row ">
+            <div class="col-md-12">
+
+
+              <div class="noti-block mb-2 flex-column">
+                <div class="pag-div" style="width:100%">
+                  <div class="pagination" style="width:100%">
+                    <span style="cursor: pointer; border-left: 1px solid #cdcdcd ;">&laquo;</span>
+                    <div class="pagination" *ngFor="let meetingInfo of meetingDetails; let i = index;">
+                      <span id="toggle-link" style="cursor: pointer;" (click)="getAppointmentInfo(meetingInfo)"
+                        class="bg-border">
+                        Meeting {{ i + 1 }}
+                      </span>
+                    </div>
+
+              
+
+                    <span style="cursor: pointer; border-right: 1px solid #cdcdcd;position: absolute;right: 0px;">&raquo;</span>
+                  </div>
+                </div>
+                @if(handleView == true) {
+                <div class="det-block" id="toggle-div">
+
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="card bg-comman dashboard-widget2 w-100 hvr-float-shadow mb-2">
+                        <div class="card-body">
+                          <div class="db-widgets d-flex justify-content-between align-items-start">
+                            <div class="me-2" style="float: left;">
+                              <label class="">
+                                <input class="" type="checkbox" value="" id="">
+
+                                <span class="checkmark"></span>
+                              </label>
+                            </div>
+                            <div class="db-info">
+                              <h6>{{meetInfo.centreName}}</h6>
+                              <h3>{{meetInfo.slotStartTime | timeFormat}} - {{meetInfo.slotEndTime | timeFormat}}</h3>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                }
+              </div>
+
+            </div>
+          </div>
+        
+        </div>
+      </div>
+  -->
+
+    <!-- <div class="row">
+    <div class="col-md-12 col-lg-6">
+      <div class="card flex-fill comman-shadow">
+        <div class="card-header d-flex align-items-center">
+          <h5 class="card-title">Recent Activity</h5>
+
+        </div>
+        <div class="card-body">
+          <div class="activity-groups">
+            <div class="activity-awards">
+              <div class="award-boxs">
+                <img src="assets/img/icons/award-icon-02.svg" alt="Award" />
+              </div>
+              <div class="award-list-outs">
+                <h4>Participated in "Storytelling"</h4>
+                <h5>John Doe participated in "Storytelling"</h5>
+              </div>
+              <div class="award-time-list">
+                <span>2 hours ago</span>
+              </div>
+            </div>
+            <div class="activity-awards">
+              <div class="award-boxs">
+                <img src="assets/img/icons/award-icon-01.svg" alt="Award" />
+              </div>
+              <div class="award-list-outs">
+                <h4>1st place in "Dance”</h4>
+                <h5>John Doe won 1st place in "Dance"</h5>
+              </div>
+              <div class="award-time-list">
+                <span>1 Day ago</span>
+              </div>
+            </div>
+
+            <div class="activity-awards ">
+              <div class="award-boxs">
+                <img src="assets/img/icons/award-icon-04.svg" alt="Award" />
+              </div>
+              <div class="award-list-outs">
+                <h4>Won 1st place in "Obstacle Course"</h4>
+                <h5>John Doe won 1st place in "Obstacle Course"</h5>
+              </div>
+              <div class="award-time-list">
+                <span>3 Day ago</span>
+              </div>
+            </div>
+
+            <div class="activity-awards">
+              <div class="award-boxs">
+                <img src="assets/img/icons/award-icon-03.svg" alt="Award" />
+              </div>
+              <div class="award-list-outs">
+                <h4>Group Games</h4>
+                <h5>
+                  Cooperative games that promote teamwork and social skills.
+                </h5>
+              </div>
+              <div class="award-time-list">
+                <span>2 Week ago</span>
+              </div>
+            </div>
+
+            <div class="activity-awards ">
+              <div class="award-boxs">
+                <img src="assets/img/icons/award-icon-01.svg" alt="Award" />
+              </div>
+                <h4>1st place in "Dance”</h4>
+                <h5>John Doe won 1st place in "Dance"</h5>
+              </div>
+              <div class="award-time-list">
+                <span>3 week ago</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12 col-lg-6">
+      <div class="card card-chart">
+        <div class="card-header">
+          <div class="row align-items-center">
+            <div class="col-6">
+              <h5 class="card-title">Photos & Videos</h5>
+            </div>
+            <div class="col-6">
+              <ul class="chart-list-out">
+                <li>
+                  <span class="circle-green"></span>last updated 01/08/2024, 10:00
+                  AM
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <main>
+            <div id="gallery" class="photos-grid-container gallery">
+              <div>
+                <div class="sub">
+                  <div class="img-box">
+                    <a href="https://img.freepik.com/free-photo/little-kids-playing-toys-learning-center_53876-139555.jpg?w=740&t=st=1722582778~exp=1722583378~hmac=75fe1b7519cd37d4d7c31707f9a229452cc7e0b6e8f49f99c8cfeddf7697968b"
+                      class="glightbox" data-glightbox="type: image"><img
+                        src="https://img.freepik.com/free-photo/little-kids-playing-toys-learning-center_53876-139555.jpg?w=740&t=st=1722582778~exp=1722583378~hmac=75fe1b7519cd37d4d7c31707f9a229452cc7e0b6e8f49f99c8cfeddf7697968b"
+                        alt="image" /></a>
+                  </div>
+                  <div class="img-box">
+                    <a href="https://img.freepik.com/free-photo/happy-mother-son-drawing-with-color-pencils-is-having-fun-home_231208-1011.jpg?size=626&ext=jpg&ga=GA1.2.1586866630.1705158790&semt=ais_hybrid"
+                      class="glightbox" data-glightbox="type: image"><img
+                        src="https://img.freepik.com/free-photo/happy-mother-son-drawing-with-color-pencils-is-having-fun-home_231208-1011.jpg?size=626&ext=jpg&ga=GA1.2.1586866630.1705158790&semt=ais_hybrid"
+                        alt="image" /></a>
+                  </div>
+                  <div class="img-box">
+                    <a href="https://img.freepik.com/free-photo/parenting-content-creator_23-2151488653.jpg?size=626&ext=jpg&ga=GA1.2.1586866630.1705158790&semt=ais_hybrid"
+                      class="glightbox" data-glightbox="type: image"><img
+                        src="https://img.freepik.com/free-photo/parenting-content-creator_23-2151488653.jpg?size=626&ext=jpg&ga=GA1.2.1586866630.1705158790&semt=ais_hybrid"
+                        alt="image" /></a>
+                  </div>
+                  <div class="img-box">
+                    <a href="https://img.freepik.com/free-photo/children-mother-collecting-toys_1398-4997.jpg?size=626&ext=jpg&ga=GA1.1.1586866630.1705158790&semt=ais_hybrid"
+                      class="glightbox" data-glightbox="type: image"><img
+                        src="https://img.freepik.com/free-photo/children-mother-collecting-toys_1398-4997.jpg?size=626&ext=jpg&ga=GA1.1.1586866630.1705158790&semt=ais_hybrid"
+                        alt="image" /></a>
+                  </div>
+                  <div class="img-box">
+                    <a href="https://img.freepik.com/free-photo/two-toddlers-playing-with-balls-xylophone-sitting-floor-kindergarten_839833-7050.jpg?size=626&ext=jpg&ga=GA1.1.1586866630.1705158790&semt=ais_hybrid"
+                      class="glightbox" data-glightbox="type: image"><img
+                        src="https://img.freepik.com/free-photo/two-toddlers-playing-with-balls-xylophone-sitting-floor-kindergarten_839833-7050.jpg?size=626&ext=jpg&ga=GA1.1.1586866630.1705158790&semt=ais_hybrid"
+                        alt="image" /></a>
+                  </div>
+
+                  <div id="multi-link" class="img-box">
+                    <a href="https://img.freepik.com/free-photo/group-toddlers-playing-with-toys-crawling-floor-kindergarten_839833-28001.jpg?size=626&ext=jpg&ga=GA1.1.1586866630.1705158790&semt=ais_hybrid"
+                      class="glightbox" data-glightbox="type: image">
+                      <img
+                        src="https://img.freepik.com/free-photo/group-toddlers-playing-with-toys-crawling-floor-kindergarten_839833-28001.jpg?size=626&ext=jpg&ga=GA1.1.1586866630.1705158790&semt=ais_hybrid"
+                        alt="image" />
+                      <div class="transparent-box">
+                        <div class="caption">+3</div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+    </div>
+  </div> -->
+
+    <!-- <div class="row">
+    <div class="col-md-12">
+      <div class="card flex-fill comman-shadow">
+        <div class="card-header d-flex align-items-center">
+          <h5 class="card-title">Notice Board</h5>
+        </div>
+        <div class="card-body">
+
+          <div class="calendar-info" style="border: 0px;">
+
+            <div class="upcome-event-date mt-0">
+              <h3>15 Aug</h3>
+              <span><i class="fas fa-ellipsis-h"></i></span>
+            </div>
+            <div class="calendar-details">
+
+              <div class="calendar-box normal-bg">
+                <div class="calandar-event-name">
+                  <h4>Health and Wellness</h4>
+                  <h5> Events focusing on nutrition, where children learn about healthy foods and participate in cooking
+                    activities.</h5>
+                </div>
+                <span>09:00 am- 10:00 am</span>
+              </div>
+            </div>
+            <div class="calendar-details">
+
+              <div class="calendar-box normal-bg">
+                <div class="calandar-event-name">
+                  <h4>Parent and Family Engagement</h4>
+                  <h5>Events where parents can participate in activities with their children, like crafting or sports
+                  </h5>
+                </div>
+                <span>10:00 am - 12:00 pm</span>
+              </div>
+            </div>
+            <div class="upcome-event-date ">
+              <h3>10 Aug</h3>
+              <span><i class="fas fa-ellipsis-h"></i></span>
+            </div>
+            <div class="calendar-details">
+
+              <div class="calendar-box normal-bg">
+                <div class="calandar-event-name">
+                  <h4> Educational Activities</h4>
+                  <h5> Days focused on specific themes like animals, space, or seasons, featuring related activities and
+                    crafts</h5>
+                </div>
+                <span>09:00 am- 12:00 am</span>
+              </div>            
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> -->
+  </div>
+</section>

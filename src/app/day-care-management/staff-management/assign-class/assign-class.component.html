@@ -1,0 +1,389 @@
+<app-breadcrumb></app-breadcrumb>
+<div class="row teachers">
+  <div class="col-xl-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="bank-inner-details">
+
+          <div class="row mb-3">
+            <div class="col-12">
+              <div class="heading-new">
+                <h5 class="mb-0">Assign Class</h5>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <label for="class-select"> Class</label>
+              <ng-select [items]="classList" bindLabel="name" bindValue="id" placeholder="Select Class"
+                (change)="assignClass($event)"></ng-select>
+            </div>
+           <div class="row">
+            <div class="col-md-8">
+              <div class="inf" *ngIf="dayNameArray.length > 0">
+                <p class="assign-teacher">
+                  <span class="teacher-name">
+                    <b>Class Name:</b>{{ className }}
+                  </span>
+
+                  <span class="teacher-name" style="display: block">
+                    <b>Class Scheduled on: </b>
+                    <span *ngFor="let day of dayNameArray; let i = index">
+                      {{ day.dayName }}&nbsp;(&nbsp;{{
+                      day.startTime | TimeFormatAmPm
+                      }}
+                      - {{ day.endTime | TimeFormatAmPm }}&nbsp;)
+                      <span *ngIf="dayNameArray.length - 1 != i">,&nbsp;</span>
+                    </span>
+                  </span>
+                </p>
+              </div>
+            </div>
+           </div>
+            <div class="col-md-12 main-teacher" *ngIf="teachersData.length; else noTeacherRecord">
+             <div class="row">
+              <div class="col-12 mt-5">
+                <div class="heading-new">
+                  <h5 class="mb-0">Assign Available Teacher</h5>
+                </div>
+              </div>
+             </div>
+
+              <div>
+                <div class="teacher2" *ngFor="
+                    let teacher of teachersData
+                      | paginate
+                        : {
+                            itemsPerPage: itemPerPage,
+                            currentPage: currentPage,
+                            id: 'assignClass'
+                          };
+                    let userIndex = index
+                  ">
+                  <label for="teacher1">{{ teacher.teacherFirstName }}&nbsp;{{
+                    teacher.teacherLastName
+                    }}&nbsp;<span *ngIf="teacher.userRoleID == 8">( TOC Teacher )</span></label>
+                  <div class="gp-20">
+                    <b>Teacher's Availability : &nbsp;</b>
+                    <span class="available" *ngFor="
+                        let availableDay of teacher.teacherAvailability;
+                        let i = index
+                      ">
+                      <p style="display: inline">
+                        {{ getDayName(availableDay.dayID) }}&nbsp;(&nbsp;{{
+                        availableDay.startTime | TimeFormatAmPm
+                        }}
+                        - {{ availableDay.endTime | TimeFormatAmPm }}&nbsp;)<span
+                          *ngIf="teacher.teacherAvailability.length - 1 != i">,&nbsp;</span>
+                      </p>
+                    </span>
+
+                    <!-- <span
+                      class="setting-content text-success"
+                      *ngIf="teacher.assignedDays"
+                      >Assigned class for ({{ teacher.assignedDays }})</span
+                    > -->
+                  </div>
+                  <div class="mark-your-class">
+                    <p><b> Mark Class Days for Teacher's Availability</b></p>
+                    <div class="row">
+                      <div class="col-md-8">
+                        <div class="days-box days-box d-flex justify-content-between align-items-center">
+                          <div *ngFor="
+                              let daySlot of masterDays;
+                              let dayIndex = index
+                            " class="day">
+                            <!-- [disabled]="daySlot.isDisabled" -->
+                            <input type="checkbox" [disabled]="isDisableDays(teacher, daySlot.id)"
+                              [id]="'day_' + userIndex + '_' + daySlot.id" [value]="daySlot.id"
+                              [checked]="isChecked(teacher, daySlot.id)" (change)="
+                                createDynamicSlot(
+                                  $event,
+                                  userIndex,
+                                  daySlot.id,
+                                  teacher.teacherID,
+                                  teacher
+                                )
+                              " class="me-1" />
+                            <!-- [(ngModel)]="daySlot.isSelected" -->
+                            <label style="margin-left: 0px" [ngClass]="{
+                                'disabled-label': isDisableDays(
+                                  teacher,
+                                  daySlot.id
+                                )
+                              }" [for]="'day_' + userIndex + '_' + daySlot.id">&nbsp;&nbsp;{{ daySlot.day }}</label>
+                            <a class="action-btn bg-danger-light me-2 ml-2" *ngIf="isChecked(teacher, daySlot.id)"
+                              (click)="
+                                viewSlots(
+                                  teacher.teacherID,
+                                  daySlot.id,
+                                  teacher
+                                )
+                              ">
+                              <i class="feather-clock"></i>
+                            </a>
+
+                            <!-- <div
+                              *ngIf="daySlot.slots.length"
+                              class="class-like"
+                            >
+                              <div
+                                *ngFor="
+                                  let slot of daySlot.slots;
+                                  let slotIndex = index
+                                "
+                              >
+                                <div class="slot-container" id="containersss">
+                                  <label
+                                    >Slot {{ slotIndex + 1 }}:
+                                    {{ slot.startTime }} -
+                                    {{ slot.endTime }}</label
+                                  >
+                                  <input
+                                    [disabled]="
+                                      !daySlot.isSelected || slot.isDisabled
+                                    "
+                                    type="checkbox"
+                                    [(ngModel)]="slot.isSelected"
+                                  />
+                                  Selected
+                                </div>
+                              </div>
+                            </div> -->
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- <div class="col-md-4" *ngIf="teacher.assignments.length">
+                        <div class="lft-data">
+                          <div class="datum">
+                            <div
+                              class=""
+                              href="#"
+                              *ngFor="let assign of teacher.assignments"
+                            >
+                              <span class="assingned-class">
+                                Assigned {{ assign.className }} by
+                                {{ assign.centreName }} for
+                                <span>{{ assign.assignedDays }}</span></span
+                              >
+                            </div>
+                          </div>
+                        </div>
+                      </div> -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col pagination-style text-center" *ngIf="teachersData.length">
+                <div class="datatable-pager datatable-paging-loaded d-flex justify-content-end">
+                  <pagination-controls previousLabel="prev" nextLabel="next" [maxSize]="5"
+                    class="datatable-pager-nav my-2 mb-sm-0" id="assignClass" (pageChange)="currentPage = $event">
+                  </pagination-controls>
+                </div>
+              </div>
+              <div class="col-md-12 mb-3 mt-5" style="text-align: right" *ngIf="teachersData.length">
+                <button class="btn btn-primary" (click)="manageBulkAssignment()">
+                  Assign Selected Teachers
+                </button>
+              </div>
+
+              <div class="col-md-12" style="text-align: right" *ngIf="teachersData.length">
+                <button class="btn btn-secondary mr-2" (click)="onBoardingService.onChangeTab('Tab-5')"
+                  *ngIf="childActive == true">
+                  Previous
+                </button>
+                <button class="btn btn-primary" *ngIf="childActive == true" (click)="proceedToOnboarding()">
+                  Save & Proceed
+                </button>
+              </div>
+            </div>
+
+            <ng-template #noTeacherRecord>
+              <div class="no-data">
+                <img src="assets/img/no-data-img.png" alt="No Record Found" />
+                <span>No Record Found</span>
+              </div>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal" id="AddSlot" data-bs-backdrop="static">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h5 class="modal-title">Add Slot for {{ displayNameInModal }}</h5>
+        <button type="button" class="btn-close" (click)="onClose()" data-bs-dismiss="modal"></button>
+      </div>
+     
+
+      <!-- Modal body -->
+      <div class="modal-body" id="AddSlot">
+
+        <div class="row">
+          <div class="col-md-12">
+            <div   class="avery" *ngIf="teacherRoleID == 8">
+
+              <div class="row">
+                <div class="col-md-12">
+                       <div class="hea">
+                        <h6 style="display: inline ; color: #fff;">Dates&nbsp;</h6>
+                       </div>
+                </div>
+                <div class="col-md-12 p-3">
+                  (
+                    <p *ngFor="let range of dateRange; let i = index" style="display: inline">
+                      {{ range }}<span *ngIf="i != dateRange.length - 1">,&nbsp;</span>
+                    </p>
+                    )
+                </div>
+              </div>
+            
+              
+            </div>
+          </div>
+        </div>
+        <div class="add-student-parent">
+          <div class="col-md-12">
+            <div class="table-responsive" style="overflow-x: hidden;">
+              <form [formGroup]="assignClassForm">
+                <div class="mb-4">
+                  <div class="row">
+                    <!-- <div class="heading-new">
+                    <h5 class="mb-0">
+                      {{ displayDayName[i] }} &nbsp; &nbsp;
+                      <span class="reduce-size"
+                        >Start-Time : {{ displayDayCareTiming[i].startTime }} &nbsp;
+                        &nbsp; End-Time : {{ displayDayCareTiming[i].endTime }}</span
+                      >
+                    </h5>
+                  </div> -->
+                    <div class="col-md-4 mb-4">
+                      <div class="form-group local-forms">
+                        <label>Start Time<span class="login-danger">*</span></label>
+                        <input class="form-control" type="time" id="startTime" formControlName="startTime"
+                          (blur)="ApplyValidationForStartTime()" />
+                        <div *ngIf="
+                            assignClassForm.get('startTime')?.touched &&
+                            assignClassForm.get('startTime')?.invalid
+                          ">
+                          <span *ngIf="assignClassForm.get('startTime')?.errors?.['required']" class="text-danger"
+                            style="display: block">
+                            This field is required.
+                          </span>
+                        </div>
+                        <span class="text-danger" style="display: block" *ngIf="greaterTimeValidationForStartTime">
+                          End Time is greater than Start Time .</span>
+                        <span class="text-danger" style="display: block" *ngIf="timeMatchValidationForStartTime">
+                          Timings Range does not matched .</span>
+                        <span class="text-danger" style="display: block" *ngIf="slotCreatedForSomeOtherClass">
+                          Already Assigned to Someother Classes .</span>
+                      </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                      <div class="form-group local-forms">
+                        <label class="reduce-size">End Time<span class="login-danger">*</span></label>
+                        <input class="form-control" type="time" id="endTime" formControlName="endTime"
+                          (blur)="ApplyValidationForEndTime()" />
+                        <div *ngIf="
+                            assignClassForm.get('endTime')?.touched &&
+                            assignClassForm.get('endTime')?.invalid
+                          ">
+                          <span *ngIf="assignClassForm.get('endTime')?.errors?.['required']" class="text-danger"
+                            style="display: block">
+                            This field is required.
+                          </span>
+                        </div>
+                        <span class="text-danger" style="display: block" *ngIf="greaterTimeValidationForEndTime">
+                          End Time is greater than Start Time .</span>
+                        <span class="text-danger" style="display: block" *ngIf="timeMatchValidationForEndTime">
+                          Timings Range does not matched .</span>
+                        <span class="text-danger" style="display: block" *ngIf="slotCreatedForSomeOtherClassforEndTime">
+                          Already Assigned to Someother Classes .</span>
+                      </div>
+                    </div>
+                    <div class="col-md-4 mt-4" *ngIf="!isUpdate">
+                      <div class="form-group local-forms">
+                        <button class="btn btn-primary" (click)="AddToAssignmentList()">
+                          Add
+                        </button>
+                      </div>
+                    </div>
+
+                    <div class="col-md-4 mt-4" *ngIf="isUpdate">
+                      <div class="form-group local-forms">
+                        <button class="btn btn-primary" (click)="updateAssignmentList()">
+                          Update
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </form>
+              <table class="table table-hover mb-0">
+                <thead class="student-thread">
+                  <tr>
+                    <th>#</th>
+                    <th>Start&nbsp;Time</th>
+                    <th>End&nbsp;Time</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let assignment of TempAssignmentList; let i = index">
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ assignment.startTime | TimeFormatAmPm }}</td>
+                    <td>{{ assignment.endTime | TimeFormatAmPm }}</td>
+                    <td class="wd-20">
+                      <div class="actions">
+                        <a class="action-btn bg-danger-light me-2" (click)="editSlot(i)">
+                          <i class="feather-edit"></i>
+                        </a>
+                        <a class="action-btn bg-danger-light me-2" (click)="removeList(i)">
+                          <i class="fa fa-trash"></i>
+                        </a>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr *ngIf="TempAssignmentList.length == 0">
+                    <td colspan="9" style="text-align: center">
+                      <div class="no-data">
+                        <img src="assets/img/no-data-img.png" alt="No Record Found" />
+                        <span>No Record Found</span>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="form-group local-forms" style="text-align: right; margin-top: 10px; margin-right: 10px">
+            <button class="btn btn-primary" (click)="finalSubmission()">
+              Submit
+            </button>
+          </div>
+          <!-- <div class="col pagination-style">
+            <div class="datatable-pager datatable-paging-loaded">
+              @if( jobPostTeachers.length > 0 ) {
+              <pagination-controls
+                previousLabel="prev"
+                nextLabel="next"
+                [maxSize]="5"
+                class="datatable-pager-nav my-2 mb-sm-0"
+                id="jobPostTeacher"
+                (pageChange)="currentPage = $event"
+              >
+              </pagination-controls>
+              }
+            </div>
+          </div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

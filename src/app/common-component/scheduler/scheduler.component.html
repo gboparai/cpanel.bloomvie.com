@@ -1,0 +1,1366 @@
+<app-breadcrumb></app-breadcrumb>
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <!-- Already present -->
+        <!-- <button id="create-event" class="btn btn-primary">
+          ➕ Create Event
+        </button> -->
+        <div class="row">
+          <div class="col-md-12 pt-2 pb-3 text-end">
+            <button
+              class="btn btn-outline-secondary mt-3"
+              (click)="startTour()"
+            >
+              🔁 Replay Tour
+            </button>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-12">
+            <div class="heading-new">
+              <h5 class="mb-0">Scheduler</h5>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-3 text-start mb-3">
+            <div class="cale-block mb-3" id="calendar-range-btn">
+              <!-- <span><i class="fa-solid fa-chevron-left" (click)="goToPreviousWeek()"></i></span>
+                            <span>{{ weekRangeDisplay }}</span>
+                            <span><i class="fa-solid fa-chevron-right" (click)="goToNextWeek()"></i></span> -->
+              <span
+                ><i
+                  class="fa-solid fa-chevron-left"
+                  (click)="goToPrevious()"
+                ></i
+              ></span>
+              <span style="white-space: nowrap;">{{ weekRangeDisplay }}</span>
+              <span
+                ><i class="fa-solid fa-chevron-right" (click)="goToNext()"></i
+              ></span>
+            </div>
+          </div>
+
+          <div class="col-md-4 text-start pb-res">
+            <div class="fi" id="calendar-range-btn" *ngIf="viewMode === 'day'">
+              <div class="form-group local-forms">
+                <ng-select
+                  [items]="filteredClassesForDay"
+                  bindLabel="name"
+                  bindValue="id"
+                  class="ng-styled"
+                  [multiple]="false"
+                  placeholder="Select Class"
+                  [(ngModel)]="selectedClass"
+                  (change)="onClassChange($event)"
+                >
+                </ng-select>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-5 text-end mb-3 left-button">
+            <!-- <a class="btn btn-primary me-3 mb-2" (click)="goToScheduler('staff')" data-bs-toggle="modal" data-bs-target="#staticBackdrop"> -->
+            <!-- <a class="btn btn-primary me-3 mb-2"  data-bs-toggle="modal" data-bs-target="#staticBackdrop"> -->
+
+            <button
+              class="btn btn-primary me-3 mb-2"
+              id="staff-schedule"
+              (click)="goToScheduler('staff')"
+              [disabled]="disableScheduleButton"
+            >
+              <span><i class="fa fa-plus me-1"></i></span
+              ><span>Staff Schedule</span>
+            </button>
+
+            <button
+              *ngIf="!this.isOnboarding"
+              class="btn btn-primary mb-2"
+              id="student-schedule"
+              [disabled]="disableScheduleButton"
+              (click)="goToScheduler('student')"
+            >
+              <span><i class="fa fa-plus me-1"></i></span
+              ><span>Student Schedule</span>
+            </button>
+          </div>
+        </div>
+        <!-- <div class="row">
+                    <div class="col-auto">
+                        <div class="btn-group" role="group" aria-label="View Toggle">
+                            <input type="radio" class="btn-check" name="viewToggle" id="weekToggle" autocomplete="off"
+                                [checked]="viewMode === 'week'" (change)="onToggleView('week')">
+                            <label class="btn btn-outline-primary" for="weekToggle">Week</label>
+
+                            <input type="radio" class="btn-check" name="viewToggle" id="dayToggle" autocomplete="off"
+                                [checked]="viewMode === 'day'" (change)="onToggleView('day')">
+                            <label class="btn btn-outline-primary" for="dayToggle">Day</label>
+                        </div>
+                    </div>
+                </div> -->
+
+        <div class="row">
+          <div class="col-md-12">
+            <div
+              class="toggle-container d-flex justify-content-between align-items-center mb-3"
+            >
+              <div class="left-f">
+                <input
+                  type="checkbox"
+                  id="toggle"
+                  class="toggleCheckbox"
+                  #jobType
+                />
+                <label for="toggle" class="toggleContainer">
+                  <div
+                    [class.active]="viewMode === 'week'"
+                    (click)="onToggleView('week')"
+                  >
+                    Week
+                  </div>
+                  <div
+                    [class.active]="viewMode === 'day'"
+                    (click)="onToggleView('day')"
+                  >
+                    Day
+                  </div>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row" *ngIf="viewMode == 'week'">
+          <div class="col-md-12">
+            <div class="table-responsive">
+              <table id="example1" class="table table-hover mb-0 random-table">
+                <thead class="student-thread table-sticky">
+                  <tr>
+                    <th style="width: 9%"></th>
+                    <th *ngFor="let day of weekDays" style="width: 13%">
+                      <div
+                        class="d-flex date-head flex-column justify-content-center align-items-center"
+                      >
+                        <span class="">{{ day.dayNumber }}</span>
+                        <span class="font-big">{{ day.dayName }}</span>
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td
+                      colspan=""
+                      class="text-start"
+                      style="background: #edf2fa"
+                    >
+                      <div
+                        class="d-flex align-items-center justify-content-center p-2"
+                      >
+                        <span class="text-bold font-11">Active Staff</span>
+                      </div>
+                    </td>
+
+                    <td style="background: #edf2fa"></td>
+                    <td style="background: #edf2fa"></td>
+                    <td style="background: #edf2fa"></td>
+                    <td style="background: #edf2fa"></td>
+                    <td style="background: #edf2fa"></td>
+                    <td style="background: #edf2fa"></td>
+                    <td style="background: #edf2fa"></td>
+                  </tr>
+
+                  @if(showhide == 'show'){
+                  <tr *ngFor="let s of [1, 2, 3, 4, 5]">
+                    <td style="background: #edf2fa">
+                      <app-skeleton-loader
+                        skeletonShow="Skelton"
+                        viewType="staff-assignment"
+                      >
+                      </app-skeleton-loader>
+                    </td>
+                    <td
+                      *ngFor="let s of [1, 2, 3, 4, 5, 6, 7]"
+                      style="background: #edf2fa"
+                    >
+                      <app-skeleton-loader
+                        skeletonShow="Skelton"
+                        viewType="table"
+                        [tableRows]="1"
+                        [tableCols]="1"
+                      >
+                      </app-skeleton-loader>
+                    </td>
+                  </tr>
+                  } @else if(staffList?.length > 0) {
+
+                  <ng-container *ngFor="let item of staffList">
+                    <tr *ngIf="shouldShowTeacher(item)">
+                      <td style="width: 10%; background: #edf2fa">
+                        <div
+                          class="d-flex justify-content-start flex-column align-items-center hvr-grow"
+                          id="drag-taylor"
+                          draggable="true"
+                        >
+                          <span class="user-img">
+                            <img
+                              width="31"
+                              height="31"
+                              alt="User Image"
+                              class="rounded-circle ng-star-inserted"
+                              [src]="
+                                item.s3Url
+                                  ? item.s3Url
+                                  : 'assets/img/dummy-avatar.jpg'
+                              "
+                            />
+                          </span>
+                          <!-- <span>{{ item.firstName }}</span> -->
+                           <span>{{ (item.firstName || '') + (item.lastName ? ' ' + item.lastName : '') }}</span>
+
+                        </div>
+                      </td>
+
+                      <!-- Loop for each day of the week -->
+                      <td
+                        *ngFor="let day of weekDays"
+                        [ngClass]="{
+                          'gray-background': !isDayAvailable(day.dayId)
+                        }"
+                      >
+                        <ng-container
+                          *ngIf="
+                            getGroupedAssignmentTimes(
+                              item.assignmentList,
+                              day.date
+                            ) as groupedAssignments
+                          "
+                        >
+                          <ng-container
+                            *ngFor="
+                              let className of objectKeys(groupedAssignments)
+                            "
+                          >
+                            <div
+                              id="table-cell-block1"
+                              class="assignment-cell mb-1 table-cell-block border rounded bg-light"
+                              (click)="
+                                onAssignmentClick(
+                                  day,
+                                  item.assignmentList,
+                                  day.date,
+                                  className,
+                                  getClassIdByName(
+                                    item.assignmentList,
+                                    className
+                                  )
+                                )
+                              "
+                            >
+                              <div class="time">
+                                {{
+                                  groupedAssignments[className].join(
+                                    ",
+                                "
+                                  )
+                                }}
+                              </div>
+                              <div class="time-class-name">
+                                <strong>{{ className }}</strong>
+                              </div>
+                            </div>
+                          </ng-container>
+                        </ng-container>
+                      </td>
+                    </tr>
+                  </ng-container>
+
+                  } @if(!this.isOnboarding){
+                  <tr>
+                    <td
+                      colspan="8"
+                      class="text-start"
+                      style="background: #edf2fa"
+                    >
+                      <div class="full-block">
+                        <span class="text-bold font-11">Active Students</span>
+                      </div>
+                    </td>
+                  </tr>
+                  }
+                  <tr>
+                    <!-- fake tr don;t remove -->
+                  </tr>
+
+                  @if(showhide == 'show'){
+                  <tr *ngFor="let s of [1, 2, 3, 4, 5]">
+                    <td style="background: #edf2fa">
+                      <app-skeleton-loader
+                        skeletonShow="Skelton"
+                        viewType="staff-assignment"
+                      >
+                      </app-skeleton-loader>
+                    </td>
+                    <td
+                      *ngFor="let s of [1, 2, 3, 4, 5, 6, 7]"
+                      style="background: #edf2fa"
+                    >
+                      <app-skeleton-loader
+                        skeletonShow="Skelton"
+                        viewType="table"
+                        [tableRows]="1"
+                        [tableCols]="1"
+                      >
+                      </app-skeleton-loader>
+                    </td>
+                  </tr>
+                  } @else if(studentList.length > 0) {
+                  <tr *ngFor="let item of studentList">
+                    <td style="width: 10%; background: #edf2fa">
+                      <div
+                        class="d-flex justify-content-start flex-column align-items-center hvr-grow"
+                        id="drag-taylor4"
+                        draggable="true"
+                      >
+                        <span class="user-img"
+                          ><img
+                            width="31"
+                            height="31"
+                            alt="User Image"
+                            class="rounded-circle ng-star-inserted"
+                            [src]="
+                              item.S3ImageUrl
+                                ? item.S3ImageUrl
+                                : 'assets/img/dummy-avatar.jpg'
+                            "
+                        /></span>
+                        <!-- <span>{{ item.studentFirstName }}</span> -->
+                         <span>{{ (item.studentFirstName || '') + (item.studentLastName ? ' ' + item.studentLastName : '') }}</span>
+
+                      </div>
+                    </td>
+
+                    <!-- With Swal -->
+                    <td
+                      *ngFor="let day of weekDays"
+                      draggable="true"
+                      [ngClass]="{
+                        'gray-background': !isDayAvailable(day.dayId)
+                      }"
+                    >
+                      <ng-container
+                        *ngIf="
+                          getGroupedAssignmentTimes(
+                            item.assignmentList,
+                            day.date
+                          ) as groupedAssignments
+                        "
+                      >
+                        <ng-container
+                          *ngFor="
+                            let className of objectKeys(groupedAssignments)
+                          "
+                        >
+                          <div
+                            class="assignment-cell mb-1 border rounded bg-light"
+                            (click)="
+                              onAssignmentClick(
+                                day,
+                                item.assignmentList,
+                                day.date,
+                                className,
+                                getClassIdByName(item.assignmentList, className)
+                              )
+                            "
+                          >
+                            <!-- the data for swal -->
+
+                            <div class="time">
+                              {{ groupedAssignments[className].join(", ") }}
+                            </div>
+                            <div class="time-class-name">
+                              <strong>{{ className }}</strong>
+                            </div>
+                          </div>
+                        </ng-container>
+                      </ng-container>
+                    </td>
+                  </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="row" *ngIf="viewMode == 'day'">
+          <div class="col-md-12">
+            <div class="table-responsive">
+              <table id="example1" class="table table-hover mb-0 random-table">
+                <thead class="student-thread table-sticky">
+                  <tr>
+                    <th
+                      *ngFor="let day of weekDays"
+                      [attr.colspan]="
+                        currentDayHours?.length
+                          ? currentDayHours.length + 1
+                          : 20
+                      "
+                      class="text-center"
+                    >
+                      <div
+                        class="d-flex date-head justify-content-center align-items-center gap-1"
+                      >
+                        <span>{{ day.date | date : "MMMM d" }}</span>
+                      </div>
+                    </th>
+                  </tr>
+
+                  @if (skeleton === 'show') {
+                  <app-skeleton-loader
+                    skeletonShow="Skelton"
+                    viewType="table"
+                    [tableRows]="1"
+                    [tableCols]="1"
+                  ></app-skeleton-loader>
+                  } @else if (currentDayHours.length > 0) {
+                  <tr>
+                    <th style="width: 10%">&nbsp;</th>
+                    <th
+                      *ngFor="let hour of currentDayHours"
+                      style="width: 3.75%; text-align: center"
+                    >
+                      {{ hour }}
+                    </th>
+                  </tr>
+
+                  }@else{
+                  <tr *ngIf="!currentDayHours || currentDayHours.length === 0">
+                    <th
+                      colspan="20"
+                      class="bg-pink"
+                      style="text-align: center; padding: 10px"
+                    >
+                      No available hours for this day.
+                    </th>
+                  </tr>
+                  }
+                </thead>
+                <tbody>
+                  <!-- Student:Staff Ratio -->
+                  <tr>
+                    <td class="text-start" style="background: #edf2fa">
+                      <div class="d-flex">
+                        <!-- <span class="text-bold font-11">Student:Staff Ratio</span> -->
+                        @if(isOnboarding){
+                        <span class="text-bold font-11">Staff Ratio</span>
+                        } @else{
+                        <span class="text-bold font-11"
+                          >Student:Staff Ratio</span
+                        >
+                        }
+                      </div>
+                    </td>
+
+                    @if (skeleton === 'show') {
+                    <app-skeleton-loader
+                      skeletonShow="Skelton"
+                      viewType="table"
+                      [tableRows]="1"
+                      [tableCols]="1"
+                    ></app-skeleton-loader>
+                    } @else if (filteredClassesForDay.length > 0) {
+
+                    <ng-container
+                      *ngIf="
+                        currentDayHours &&
+                        currentDayHours.length > 0 &&
+                        filteredClassesForDay &&
+                        filteredClassesForDay.length > 0
+                      "
+                    >
+                      <ng-container
+                        *ngFor="let hour of currentDayHours; let i = index"
+                      >
+                        <td
+                          *ngIf="i < startIndex"
+                          style="background: #edf2fa"
+                        ></td>
+                      </ng-container>
+
+                      <td
+                        [attr.colspan]="totalSpan"
+                        style="
+                          background: #fa987a;
+                          color: white;
+                          text-align: center;
+                        "
+                      >
+                        <div>
+                          <strong>{{ filteredClassDetails?.name }}</strong
+                          ><br />
+                          {{ filteredClassDetails?.startTime }} -
+                          {{ filteredClassDetails?.endTime }}
+                          <br />
+                          @if(isOnboarding){ Staff:
+                          {{ filteredStaffForDay?.length ?? 0 }} } @else{
+                          Student: {{ filteredStudentForDay?.length ?? 0 }} :
+                          Staff: {{ filteredStaffForDay?.length ?? 0 }}
+                          }
+                        </div>
+                      </td>
+
+                      <ng-container
+                        *ngFor="let hour of currentDayHours; let i = index"
+                      >
+                        <td
+                          *ngIf="i >= endIndex"
+                          style="background: #edf2fa"
+                        ></td>
+                      </ng-container>
+                    </ng-container>
+                    } @if (skeleton === 'show') {
+                    <app-skeleton-loader
+                      skeletonShow="Skelton"
+                      viewType="table"
+                      [tableRows]="1"
+                      [tableCols]="1"
+                    ></app-skeleton-loader>
+                    } @else if (filteredClassesForDay.length > 0) {
+                    <td
+                      *ngIf="
+                        !(
+                          currentDayHours &&
+                          currentDayHours.length > 0 &&
+                          filteredClassesForDay &&
+                          filteredClassesForDay.length > 0
+                        )
+                      "
+                      [attr.colspan]="
+                        currentDayHours && currentDayHours.length
+                          ? currentDayHours.length + 1
+                          : 20
+                      "
+                      style="background: #edf2fa"
+                    ></td>
+                    }
+                  </tr>
+                  <!-- Class presence check -->
+
+                  @if (skeleton === 'show') {
+                  <app-skeleton-loader
+                    skeletonShow="Skelton"
+                    viewType="table"
+                    [tableRows]="1"
+                    [tableCols]="1"
+                  ></app-skeleton-loader>
+                  } @else if (filteredClassesForDay.length > 0) {
+                  <ng-container
+                    *ngIf="
+                      filteredClassesForDay && filteredClassesForDay.length > 0
+                    "
+                  >
+                    <tr>
+                      <td
+                        *ngIf="!currentDayHours || currentDayHours.length === 0"
+                        [attr.colspan]="
+                          currentDayHours && currentDayHours.length
+                            ? currentDayHours.length + 1
+                            : 20
+                        "
+                        style="background: #edf2fa"
+                      ></td>
+                    </tr>
+                  </ng-container>
+                  } @else{
+                  <!-- No classes -->
+                  <ng-container
+                    *ngIf="
+                      filteredClassesForDay &&
+                      filteredClassesForDay.length === 0
+                    "
+                  >
+                    <tr>
+                      <td
+                        colspan="20"
+                        style="text-align: center; padding: 10px"
+                        class="bg-pink"
+                      >
+                        No classes scheduled for this day.
+                      </td>
+                    </tr>
+                  </ng-container>
+                  }
+
+                  <!-- Scheduled Staff Label -->
+                  <tr>
+                    <td
+                      colspan="1"
+                      class="text-start"
+                      style="background: #edf2fa"
+                    >
+                      <div class="d-flex">
+                        <span class="text-bold font-11">Scheduled Staff</span>
+                      </div>
+                    </td>
+
+                    @if (skeleton === 'show') {
+                    <app-skeleton-loader
+                      skeletonShow="Skelton"
+                      viewType="table"
+                      [tableRows]="1"
+                      [tableCols]="1"
+                    ></app-skeleton-loader>
+                    } @else if (currentDayHours.length > 0) {
+                    <td
+                      *ngFor="let hour of currentDayHours"
+                      style="background: #edf2fa"
+                    ></td>
+                    } @else{
+                    <td
+                      *ngIf="!currentDayHours || currentDayHours.length === 0"
+                      [attr.colspan]="
+                        currentDayHours && currentDayHours.length
+                          ? currentDayHours.length + 1
+                          : 20
+                      "
+                      style="background: #edf2fa"
+                    ></td>
+                    }
+                  </tr>
+
+                  <!-- Staff Timing Row -->
+
+                  @if (skeleton === 'show') {
+                  <app-skeleton-loader
+                    skeletonShow="Skelton"
+                    viewType="table"
+                    [tableRows]="1"
+                    [tableCols]="1"
+                  ></app-skeleton-loader>
+                  } @else if (filteredStaffForDay.length > 0) {
+                  <ng-container
+                    *ngIf="
+                      filteredStaffForDay && filteredStaffForDay.length > 0
+                    "
+                  >
+                    <tr *ngFor="let staff of filteredStaffForDay">
+                      <td style="width: 10%; background: #edf2fa">
+                        <div
+                          class="d-flex justify-content-start flex-column align-items-center hvr-grow"
+                        >
+                          <span class="user-img">
+                            <img
+                              width="31"
+                              height="31"
+                              alt="User Image"
+                              class="rounded-circle"
+                              [src]="
+                                staff.s3Url || '../../../assets/img/user-7.jpg'
+                              "
+                            />
+                          </span>
+                          <span>{{ staff.firstName }}</span>
+                        </div>
+                      </td>
+
+                      <ng-container
+                        *ngFor="let hour of currentDayHours; let i = index"
+                      >
+                        <td
+                          *ngIf="i < staff.startIndex"
+                          style="background: #edf2fa"
+                        ></td>
+                      </ng-container>
+
+                      <td
+                        *ngIf="staff.totalSpan > 0"
+                        [attr.colspan]="staff.totalSpan"
+                        style="
+                          background: #9dab1e;
+                          color: white;
+                          text-align: center;
+                        "
+                      >
+                        <div class="font-11">
+                          {{ staff.assignment?.startTime }} -
+                          {{ staff.assignment?.endTime }}
+                        </div>
+                      </td>
+
+                      <ng-container
+                        *ngFor="let hour of currentDayHours; let i = index"
+                      >
+                        <td
+                          *ngIf="i >= staff.endIndex"
+                          style="background: #edf2fa"
+                        ></td>
+                      </ng-container>
+                    </tr>
+                  </ng-container>
+                  } @else{
+                  <!-- No staff -->
+
+                  <ng-container
+                    *ngIf="
+                      filteredStaffForDay && filteredStaffForDay.length === 0
+                    "
+                  >
+                    <tr>
+                      <td
+                        colspan="20"
+                        style="text-align: center; padding: 10px"
+                        class="bg-pink"
+                      >
+                        No staff assigned for this day.
+                      </td>
+                    </tr>
+                  </ng-container>
+
+                  }
+
+                  <!-- Students Label -->
+                  <tr *ngIf="!isOnboarding">
+                    <td
+                      colspan="1"
+                      class="text-start"
+                      style="background: #edf2fa"
+                    >
+                      <div class="d-flex">
+                        <span class="text-bold font-11"
+                          >Scheduled Students</span
+                        >
+                      </div>
+                    </td>
+                    @if (skeleton === 'show') {
+                    <app-skeleton-loader
+                      skeletonShow="Skelton"
+                      viewType="table"
+                      [tableRows]="1"
+                      [tableCols]="1"
+                    ></app-skeleton-loader>
+                    } @else if (currentDayHours.length > 0) {
+                    <td
+                      *ngFor="let hour of currentDayHours"
+                      style="background: #edf2fa"
+                    ></td>
+                    } @else {
+                    <td
+                      *ngIf="!currentDayHours || currentDayHours.length === 0"
+                      [attr.colspan]="
+                        currentDayHours && currentDayHours.length
+                          ? currentDayHours.length + 1
+                          : 20
+                      "
+                      style="background: #edf2fa"
+                    ></td>
+                    }
+                  </tr>
+
+                  <!-- Student Timing Row -->
+                  @if (skeleton === 'show') {
+                  <app-skeleton-loader
+                    skeletonShow="Skelton"
+                    viewType="table"
+                    [tableRows]="1"
+                    [tableCols]="1"
+                  ></app-skeleton-loader>
+                  } @else if (filteredStudentForDay.length > 0) {
+                  <ng-container
+                    *ngIf="
+                      filteredStudentForDay && filteredStudentForDay.length > 0
+                    "
+                  >
+                    <tr *ngFor="let student of filteredStudentForDay">
+                      <td style="width: 10%; background: #edf2fa">
+                        <div
+                          class="d-flex justify-content-start flex-column align-items-center hvr-grow"
+                        >
+                          <span class="user-img">
+                            <img
+                              width="31"
+                              height="31"
+                              alt="User Image"
+                              class="rounded-circle"
+                              [src]="
+                                student.S3ImageUrl ||
+                                '../../../assets/img/user-7.jpg'
+                              "
+                            />
+                          </span>
+                          <span>{{ student.studentFirstName }}</span>
+                        </div>
+                      </td>
+
+                      <!-- Before block -->
+                      @if (skeleton === 'show') {
+                      <app-skeleton-loader
+                        skeletonShow="Skelton"
+                        viewType="table"
+                        [tableRows]="1"
+                        [tableCols]="1"
+                      ></app-skeleton-loader>
+                      } @else if (currentDayHours.length > 0) {
+
+                      <ng-container
+                        *ngFor="let hour of currentDayHours; let i = index"
+                      >
+                        <td
+                          *ngIf="i < student.startIndex"
+                          style="background: #edf2fa"
+                        ></td
+                      ></ng-container>
+
+                      } @else{
+                      <!-- Timing block -->
+                      <td
+                        *ngIf="student.totalSpan > 0"
+                        [attr.colspan]="student.totalSpan"
+                        style="
+                          background: #8bd3d0;
+                          color: white;
+                          text-align: center;
+                        "
+                      >
+                        <div class="font-11">
+                          {{ student.assignment?.startTime }} -
+                          {{ student.assignment?.endTime }}
+                        </div>
+                        <app-skeleton-loader
+                          skeletonShow="Skelton"
+                          viewType="table"
+                          [tableRows]="1"
+                          [tableCols]="1"
+                        >
+                        </app-skeleton-loader>
+                      </td>
+                      }
+
+                      <!-- After block -->
+
+                      @if (skeleton === 'show') {
+                      <app-skeleton-loader
+                        skeletonShow="Skelton"
+                        viewType="table"
+                        [tableRows]="1"
+                        [tableCols]="1"
+                      ></app-skeleton-loader>
+                      } @else if (currentDayHours.length > 0) {
+
+                      <ng-container
+                        *ngFor="let hour of currentDayHours; let i = index"
+                      >
+                        <td
+                          *ngIf="i >= student.endIndex"
+                          style="background: #edf2fa"
+                        ></td>
+                      </ng-container>
+                      }
+                    </tr>
+                  </ng-container>
+                  } @else{
+                  <!-- No students -->
+                  <ng-container
+                    *ngIf="
+                      !isOnboarding &&
+                      filteredStudentForDay &&
+                      filteredStudentForDay.length === 0
+                    "
+                  >
+                    <tr>
+                      <td
+                        colspan="20"
+                        style="text-align: center; padding: 10px"
+                        class="bg-pink"
+                      >
+                        No students assigned for this day.
+                      </td>
+                    </tr>
+                  </ng-container>
+                  }
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-4" *ngIf="onBoardingService.isOnboarding">
+      <div class="col-md-12">
+        <div class="student-submit text-end">
+          <button
+            type="submit"
+            class="btn btn-secondary me-3"
+            (click)="onBoardingService.onChangeTab('Tab-5')"
+          >
+            Previous
+          </button>
+          <button
+            id="next-btn"
+            class="btn btn-primary"
+            (click)="proceededOnBoarding()"
+          >
+            Save & Proceed
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="assignmentEditModal"
+  tabindex="-1"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form [formGroup]="assignmentForm" (ngSubmit)="handleAction()">
+        <div class="modal-header">
+          <h5 class="modal-title">{{ modalTitle }}</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+            (click)="resetForm()"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <!-- Time Slot -->
+          <p><strong>Time:</strong></p>
+          <div class="d-flex flex-wrap gap-3 mb-3">
+            <ng-container
+              *ngFor="let slot of selectedClassAssignments; let i = index"
+            >
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  [id]="'slot-' + i"
+                  [value]="slot"
+                  formControlName="selectedTimeSlot"
+                  name="selectedTimeSlot"
+                  (change)="selectedEditTimeSlot(slot)"
+                />
+                <label class="form-check-label" [for]="'slot-' + i">
+                  {{ slot.startTime }} -
+                  {{ slot.endTime }}
+                </label>
+              </div>
+            </ng-container>
+          </div>
+
+          <div *ngIf="matchedDays.length > 0">
+            <p><strong>Staff Available Timing:</strong></p>
+            <div>
+              <ng-container *ngFor="let day of matchedDays; let i = index">
+                <span class="me-2"
+                  >({{ day.availability.startTime }} -
+                  {{ day.availability.endTime }})</span
+                >
+              </ng-container>
+            </div>
+          </div>
+
+          <!-- Schedule Type -->
+          <p><strong>Schedule:</strong></p>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="radio"
+              id="select-single"
+              value="single"
+              [readonly]="false"
+              formControlName="selectedScheduleType"
+              name="selectedScheduleType"
+              (change)="onScheduleTypeChange($event)"
+            />
+            <label class="form-check-label" for="select-single"
+              >This Single Instance</label
+            >
+          </div>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="radio"
+              id="select-schedule"
+              value="schedule"
+              [readonly]="selectedSlot?.isRepeated === false"
+              formControlName="selectedScheduleType"
+              name="selectedScheduleType"
+              (change)="onScheduleTypeChange($event)"
+              [ngStyle]="
+                selectedSlot?.isRepeated === false
+                  ? { 'pointer-events': 'none', 'background-color': '#e9ecef' }
+                  : {}
+              "
+            />
+            <label class="form-check-label" for="select-schedule"
+              >This Schedule</label
+            >
+          </div>
+          <div
+            *ngIf="
+              assignmentForm.get('selectedScheduleType')?.touched &&
+              assignmentForm.get('selectedScheduleType')?.invalid
+            "
+          >
+            <span
+              *ngIf="assignmentForm.get('selectedScheduleType')?.errors?.['required']"
+              class="text-danger d-block"
+            >
+              Please select a schedule type.
+            </span>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="startDate">
+                <strong>{{ showEndDate ? "Start Date" : "Date" }}</strong>
+              </label>
+              <input
+                type="date"
+                class="form-control"
+                id="startdatePicker"
+                formControlName="startDate"
+                [readonly]="!showEndDate"
+                placeholder="-Select-"
+                (change)="
+                  selectedSlot?.userRole != 'Student'
+                    ? startDateChange($event)
+                    : null
+                "
+                [ngStyle]="
+                  !showEndDate
+                    ? {
+                        'pointer-events': 'none',
+                        'background-color': '#e9ecef'
+                      }
+                    : {}
+                "
+              />
+              <div
+                *ngIf="
+                  assignmentForm.get('startDate')?.touched &&
+                  assignmentForm.get('startDate')?.invalid
+                "
+              >
+                <span
+                  *ngIf="assignmentForm.get('startDate')?.errors?.['required']"
+                  class="text-danger d-block"
+                >
+                  This field is required.
+                </span>
+              </div>
+            </div>
+
+            <div class="col-md-6" [hidden]="!showEndDate">
+              <label for="endDate"><strong>End Date</strong></label>
+              <input
+                type="date"
+                class="form-control"
+                id="enddatePicker"
+                formControlName="endDate"
+                placeholder="-Select-"
+                (change)="
+                  selectedSlot?.userRole != 'Student'
+                    ? endDateChange($event)
+                    : null
+                "
+              />
+              <div
+                *ngIf="
+                  assignmentForm.get('endDate')?.touched &&
+                  assignmentForm.get('endDate')?.invalid
+                "
+              >
+                <span
+                  *ngIf="assignmentForm.get('endDate')?.errors?.['required']"
+                  class="text-danger d-block"
+                >
+                  This field is required.
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="startTime"><strong>Start Time</strong></label>
+              <input
+                type="time"
+                id="startTime"
+                class="form-control"
+                formControlName="startTime"
+                (blur)="ApplyValidationForStartTime()"
+                [readonly]="selectedSlot?.userRole === 'Student'"
+                [ngStyle]="
+                  selectedSlot?.userRole === 'Student'
+                    ? {
+                        'pointer-events': 'none',
+                        'background-color': '#e9ecef'
+                      }
+                    : {}
+                "
+              />
+              <div
+                *ngIf="
+                  assignmentForm.get('startTime')?.touched &&
+                  assignmentForm.get('startTime')?.invalid
+                "
+              >
+                <span
+                  *ngIf="assignmentForm.get('startTime')?.errors?.['required']"
+                  class="text-danger d-block"
+                >
+                  This field is required.
+                </span>
+              </div>
+              <span
+                class="text-danger"
+                style="display: block"
+                *ngIf="greaterTimeValidationForStartTime"
+              >
+                End Time is greater than Start Time.</span
+              >
+              <span
+                class="text-danger"
+                style="display: block"
+                *ngIf="timeMatchValidationForStartTime"
+              >
+                Timings Range does not matched.</span
+              >
+              <span
+                class="text-danger"
+                style="display: block"
+                *ngIf="slotCreatedForSomeOtherClass"
+              >
+                Already Assigned to Someother Classes.</span
+              >
+            </div>
+            <div class="col-md-6">
+              <label for="endTime"><strong>End Time</strong></label>
+              <input
+                type="time"
+                id="endTime"
+                class="form-control"
+                formControlName="endTime"
+                (blur)="ApplyValidationForEndTime()"
+                [readonly]="selectedSlot?.userRole === 'Student'"
+                [ngStyle]="
+                  selectedSlot?.userRole === 'Student'
+                    ? {
+                        'pointer-events': 'none',
+                        'background-color': '#e9ecef'
+                      }
+                    : {}
+                "
+              />
+              <div
+                *ngIf="
+                  assignmentForm.get('endTime')?.touched &&
+                  assignmentForm.get('endTime')?.invalid
+                "
+              >
+                <span
+                  *ngIf="assignmentForm.get('endTime')?.errors?.['required']"
+                  class="text-danger d-block"
+                >
+                  This field is required.
+                </span>
+                <span
+                  class="text-danger"
+                  style="display: block"
+                  *ngIf="greaterTimeValidationForEndTime"
+                >
+                  End Time is greater than Start Time.</span
+                >
+                <span
+                  class="text-danger"
+                  style="display: block"
+                  *ngIf="timeMatchValidationForEndTime"
+                >
+                  Timings Range does not matched.</span
+                >
+                <span
+                  class="text-danger"
+                  style="display: block"
+                  *ngIf="slotCreatedForSomeOtherClassforEndTime"
+                >
+                  Already Assigned to Someother Classes.</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <!-- [disabled]="!assignmentForm.valid" -->
+          <button type="submit" class="btn btn-primary me-3 mb-2">
+            {{ ModelButtonText }}
+          </button>
+          <button
+            type="button"
+            class="btn btn-secondary mb-2"
+            data-bs-dismiss="modal"
+            (click)="resetForm()"
+          >
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="assignmentDeleteModal"
+  tabindex="-1"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ modalTitle }}</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <p><strong>Time:</strong></p>
+        <div class="d-flex flex-wrap gap-3">
+          <ng-container
+            *ngFor="let slot of selectedClassAssignments; let i = index"
+          >
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="selectedTimeSlot"
+                [id]="'slot-' + i"
+                [value]="slot"
+                [(ngModel)]="selectedTimeSlot"
+              />
+              <label class="form-check-label" [for]="'slot-' + i">
+                {{ slot.startTime }} -
+                {{ slot.endTime }}
+              </label>
+            </div>
+          </ng-container>
+        </div>
+        <div class="text-danger mt-1" *ngIf="submitted && !selectedTimeSlot">
+          Please select a time slot.
+        </div>
+
+        <div class="mb-2">
+          <p><strong>Schedule:</strong></p>
+          <div class="d-flex flex-column gap-2">
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="radio"
+                id="select-single"
+                name="scheduleType"
+                value="single"
+                [(ngModel)]="selectedScheduleType"
+              />
+              <label class="form-check-label" for="select-single">
+                This Single Instance
+              </label>
+            </div>
+
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="radio"
+                id="select-schedule"
+                name="scheduleType"
+                value="schedule"
+                [(ngModel)]="selectedScheduleType"
+              />
+              <label class="form-check-label" for="select-schedule">
+                This Schedule
+              </label>
+            </div>
+            <div
+              class="text-danger mt-1"
+              *ngIf="submitted && !selectedScheduleType"
+            >
+              Please select a schedule type.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-primary me-3 mb-2"
+          [disabled]="!selectedTimeSlot || !selectedScheduleType"
+          (click)="handleAction()"
+        >
+          {{ ModelButtonText }}
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary me-3 mb-2"
+          data-bs-dismiss="modal"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- new modal -->
+<div
+  class="modal fade"
+  id="staticBackdrop"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="staticBackdropLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1
+          class="modal-title fs-5"
+          id="staticBackdropLabel"
+          style="color: #fff"
+        >
+          Staff Schedule
+        </h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <!-- call component here -->
+        <!-- <app-manage-scheduler
+          *ngIf="this.modalType"
+          [type]="modalType"
+          [isOnboarding]="isOnboarding"
+        ></app-manage-scheduler> -->
+
+        <!-- // Added on 24/06/25 Arsh -->
+        <app-manage-scheduler
+          *ngIf="this.modalType"
+          [type]="modalType"
+          [isOnboarding]="isOnboarding"
+          (onBulkAssignmentSuccess)="handleBulkAssignmentSuccess()"
+        ></app-manage-scheduler>
+      </div>
+    </div>
+  </div>
+</div>

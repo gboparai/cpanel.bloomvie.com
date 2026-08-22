@@ -1,0 +1,208 @@
+<app-breadcrumb></app-breadcrumb>
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="heading-new">
+          <h5 class="mb-0">View Jobs</h5>
+        </div>
+
+        <ul class="nav nav-tabs" role="tablist">
+          <li class="nav-item" role="presentation">
+            <a class="nav-link active" href="#basictab2" data-bs-toggle="tab" (click)="getAllJobPostings('active')" role="tab">Active Jobs</a>
+          </li>
+          <li class="nav-item" role="presentation">
+            <a class="nav-link" href="#basictab3" data-bs-toggle="tab" (click)="getAllJobPostings('expired')" role="tab">Expired Jobs</a>
+          </li>
+        </ul>
+
+        <div class="tab-content">
+          <!-- Active Jobs -->
+          <div class="tab-pane active" id="basictab2" role="tabpanel">
+            <div class="table-responsive mt-3 mb-3">
+              <table class="table table-hover mb-0">
+                <thead class="student-thread">
+                  <tr>
+                    <th>#</th>
+                    <th>Job Title</th>
+                    <th>Job Description</th>
+                    <th>Job Type</th>
+                    <th>Hourly Wage</th>
+                    <th>Salary</th>
+                    <th>Application Deadline</th>
+                    <th>No. Of Vacancy</th>
+                    <th>No. of Working Hours</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+
+                @if (skeletonShow === 'Skelton') {
+                  <tbody>
+                    <tr>
+                      <td colspan="100%">
+                        <app-skeleton-loader skeletonShow="Skelton" viewType="table" [tableRows]="5" [tableCols]="10">
+                        </app-skeleton-loader>
+                      </td>
+                    </tr>
+                  </tbody>
+                }
+                @else if (Jobs.length > 0) {
+                  <tbody>
+                    <tr
+                    *ngFor="
+                      let job of Jobs
+                        | paginate
+                          : {
+                              itemsPerPage: Contentsize,
+                              currentPage: ContentP,
+                              id: 'Agentcontrol1'
+                            };
+                      let i = index
+                    ">
+                        <td>{{ (ContentP - 1) * Contentsize + i + 1 }}</td>
+                        <td>{{ job.jobTitle }}</td>
+                        <td style="width: 300px; word-break: break-word;">
+                          <div class="deatil-subscription">
+                            <p *ngIf="expandedJobDescriptionIndex !== i">
+                              {{ job.jobDescription.length > 50 ? (job.jobDescription | slice: 0:50) + '...' : job.jobDescription }}
+                              <a *ngIf="job.jobDescription.length > 50" href="javascript:void(0)" class="text-primary ms-1" (click)="expandedJobDescriptionIndex = i">Read more</a>
+                            </p>
+                            <p *ngIf="expandedJobDescriptionIndex === i">
+                              {{ job.jobDescription }}
+                              <a href="javascript:void(0)" class="text-primary ms-1" (click)="expandedJobDescriptionIndex = null">Show less</a>
+                            </p>
+                          </div>
+                        </td>
+                        <td>{{ job.jobtype }}</td>
+                        <td>{{ job.wages != null ? '$ ' + job.wages : '--' }}</td>
+                        <td>{{ job.salary != null ? '$ ' + job.salary : '--' }}</td>
+                        <td>{{ job.applicationdeadline | date : "fullDate" }}</td>
+                        <td class="text-center">{{ job.vacancyCount }}</td>
+                        <td class="text-center">{{ job.workingHours }}</td>
+                        <td>
+                          <div class="actions">
+                            <a class="action-btn bg-danger-light me-2" (click)="onEdit(job.id)">
+                              <i class="feather-edit"></i>
+                            </a>
+                            <label class="switch mb-0">
+                              <input type="checkbox" [checked]="job.isActive" (change)="activeInActiveByID(job.id, job.isActive)" />
+                              <div class="slider">
+                                <span class="status-text"></span>
+                                <div class="circle">
+                                  <svg class="cross" viewBox="0 0 365.696 365.696" height="6" width="6"><path fill="currentColor" d="..."/></svg>
+                                  <svg class="checkmark" viewBox="0 0 24 24" height="10" width="10"><path fill="currentColor" d="..."/></svg>
+                                </div>
+                              </div>
+                            </label>
+                          </div>
+                        </td>
+                      </tr>
+                  </tbody>
+                }
+              @else {
+                      <tr>
+                        <td colspan="100%">
+                          <app-skeleton-loader skeletonShow="NoRecord">
+                          </app-skeleton-loader>
+                      </td>
+
+                      </tr>
+
+                      }
+              </table>
+            </div>
+
+            <div class="col pagination-style mt-4">
+              <div class="datatable-pager datatable-paging-loaded">
+                @if (Jobs && Jobs.length > 5) {
+                  <pagination-controls previousLabel="prev" nextLabel="next" [maxSize]="5"
+                    class="datatable-pager-nav my-2 mb-sm-0" id="Agentcontrol1" (pageChange)="ContentP = $event">
+                  </pagination-controls>
+                }
+              </div>
+            </div>
+          </div>
+
+          <!-- Expired Jobs -->
+          <div class="tab-pane" id="basictab3" role="tabpanel">
+            <div class="table-responsive mt-3 mb-3">
+              <table class="table table-hover mb-0">
+                <thead class="student-thread">
+                  <tr>
+                    <th>#</th>
+                    <th>Job Title</th>
+                    <th>Job Type</th>
+                    <th>Hourly Wage</th>
+                    <th>Salary</th>
+                    <th>Application Deadline</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+
+                @if (skeletonShow === 'Skelton') {
+                  <tbody>
+                    <tr>
+                      <td colspan="100%">
+                        <app-skeleton-loader skeletonShow="Skelton" viewType="table" [tableRows]="5" [tableCols]="7">
+                        </app-skeleton-loader>
+                      </td>
+                    </tr>
+                  </tbody>
+                }
+                @else if (Jobs.length > 0) {
+                  <tbody>
+                   <tr
+                    *ngFor="
+                      let job of Jobs
+                        | paginate
+                          : {
+                              itemsPerPage: Contentsize,
+                              currentPage: ContentP,
+                              id: 'Agentcontrol2'
+                            };
+                      let i = index
+                    ">
+                        <td>{{ (ContentP - 1) * Contentsize + i + 1 }}</td>
+                        <td>{{ job.jobTitle }}</td>
+                        <td>{{ job.jobtype }}</td>
+                        <td>{{ job.wages != null ? '$ ' + job.wages : '--' }}</td>
+                        <td>{{ job.salary != null ? '$ ' + job.salary : '--' }}</td>
+                        <td>{{ job.applicationdeadline | date: 'fullDate' }}</td>
+                        <td><span class="badge badge-danger">Expired</span></td>
+                        <td class="text-center">
+                          <a class="action-btn bg-danger-light me-2" (click)="reUseJobPost(job)">
+                            <i class="feather-edit"></i>
+                          </a>
+                        </td>
+                      </tr>
+                  </tbody>
+                }
+                 @else {
+                      <tr>
+                        <td colspan="100%">
+                          <app-skeleton-loader skeletonShow="NoRecord">
+                          </app-skeleton-loader>
+                      </td>
+
+                      </tr>
+
+                      }
+              </table>
+            </div>
+
+            <div class="col pagination-style mt-4">
+              <div class="datatable-pager datatable-paging-loaded">
+                @if (Jobs && Jobs.length > 5) {
+                  <pagination-controls previousLabel="prev" nextLabel="next" [maxSize]="5"
+                    class="datatable-pager-nav my-2 mb-sm-0" id="Agentcontrol2" (pageChange)="ContentP = $event">
+                  </pagination-controls>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

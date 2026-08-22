@@ -1,0 +1,1048 @@
+<app-breadcrumb></app-breadcrumb>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <div
+          id="pills-staff"
+          role="tabpanel"
+          aria-labelledby="pills-staff-tab"
+          tabindex="0"
+        >
+          <div class="heading-new">
+            <h5 class="mb-0">Add Staff</h5>
+          </div>
+          <div class="row" *ngIf="UserRoleID == 3 && InActiveImport == false">
+            <div class="col-md-12 mb-4">
+              <div class="student-submit text-end">
+                <button
+                  class="btn btn-primary me-2"
+                  (click)="jobPostingModal()"
+                >
+                  Import from Job Posting
+                </button>
+                <button class="btn btn-primary me-2" (click)="tocModal()">
+                  Import from TOC
+                </button>
+                <!--   data-bs-toggle="modal"
+                  data-bs-target="#exampleModal3" -->
+                <!-- <button class="btn btn-primary">Import from TOC</button> -->
+              </div>
+            </div>
+          </div>
+          <!-- <div class="row" *ngIf="UserRoleID == 3 || 1">
+            <div class="col-md-12 mb-4">
+              <div class="student-submit text-end">
+                <button
+                  (click)="downloadBulkFormatSheet()"
+                  class="btn btn-primary me-2"
+                >
+                  Download Format
+                </button>
+                <button
+                  class="btn btn-primary"
+                  data-bs-toggle="modal"
+                  data-bs-target="#exampleModal3"
+                >
+                  Bulk Upload
+                </button>
+              </div>
+            </div>
+          </div> -->
+          <form [formGroup]="staffForm">
+            <div class="row">
+              <div class="col-md-6 mb-4">
+                <div class="form-group local-forms">
+                  <label>First Name<span class="login-danger">*</span></label>
+                  <input
+                    formControlName="firstName"
+                    class="form-control"
+                    placeholder="Enter First Name"
+                    type="text"
+                  />
+                  @if(staffFormControls.firstName.touched){
+                  @if(staffFormControls.firstName.errors?.required){
+                  <span class="text-danger">This field is required.</span>
+                  } }
+                </div>
+              </div>
+              <div class="col-md-6 mb-4">
+                <div class="form-group local-forms">
+                  <label>Last Name</label>
+                  <input
+                    formControlName="lastName"
+                    class="form-control"
+                    placeholder=" Enter Last Name"
+                    type="text"
+                  />
+                </div>
+              </div>
+              <div class="col-md-6 mb-4">
+                <div class="form-group local-forms">
+                  <label>Email<span class="login-danger">*</span></label>
+                  <input
+                    (change)="onChangeEmail()"
+                    formControlName="email"
+                    placeholder=" Enter Email "
+                    class="form-control"
+                    type="text"
+                  />
+                  @if(staffFormControls.email.touched){
+                  @if(staffFormControls.email.errors?.required){
+                  <span class="text-danger">This field is required.</span>
+                  } @else if(staffFormControls.email.errors?.email){
+                  <span class="text-danger">Invalid email format.</span>
+                  } @else if(staffFormControls.email.errors?.duplicateEmail){
+                  <span class="text-danger">Email is already taken!</span>
+                  } }
+                </div>
+              </div>
+              <div class="col-md-6 mb-4">
+                <div class="form-group local-forms">
+                  <label>Role<span class="login-danger">*</span></label>
+                  <ng-select
+                    (change)="onChangeRole($event)"
+                    formControlName="userRoleID"
+                    [items]="userRoleList"
+                    placeholder="-Select-"
+                    bindLabel="name"
+                    bindValue="id"
+                    *ngIf="!isTOCRecord"
+                  ></ng-select>
+
+                  <ng-select
+                    (change)="onChangeRole($event)"
+                    formControlName="userRoleID"
+                    [items]="tocRoleList"
+                    bindLabel="name"
+                    bindValue="id"
+                    *ngIf="isTOCRecord"
+                  ></ng-select>
+                  @if(staffFormControls.userRoleID.touched){
+                  @if(staffFormControls.userRoleID.errors?.required){
+                  <span class="text-danger">This field is required.</span>
+                  } }
+                </div>
+              </div>
+              <div
+                class="col-md-4 mb-4"
+                *ngIf="UserRoleID == 3 && isJobTypeActive == true"
+              >
+                <div class="form-group local-forms">
+                  <label>Role Type<span class="login-danger">*</span></label>
+                </div>
+                <div class="weekend d-flex align-items-center gp-20">
+                  <div class="part-full mb-1">
+                    <div class="sun">
+                      <input
+                        type="radio"
+                        class="me-1"
+                        formControlName="jobType"
+                        value="partTime"
+                        name="jobType"
+                      />
+                      <label>&nbsp;&nbsp;Part&nbsp;Time</label>
+                    </div>
+                    <div class="sun">
+                      <input
+                        type="radio"
+                        class="me-1"
+                        formControlName="jobType"
+                        value="fullTime"
+                        name="jobType"
+                      />
+                      <label>&nbsp;&nbsp;Full&nbsp;Time</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                class="col-md-4 mb-4"
+                *ngIf="UserRoleID == 3 && isRoleSpecialLizationActive == true"
+              >
+                <div class="form-group local-forms">
+                  <label>Role Specialization</label>
+                  <ng-select
+                    formControlName="roleSpecializationID"
+                    [items]="roleSpecializationList"
+                    placeholder="-Select-"
+                    bindLabel="name"
+                    bindValue="id"
+                  ></ng-select>
+                  <!-- @if(staffFormControls.roleSpecializationID.touched){
+                  @if(staffFormControls.roleSpecializationID.errors?.required){
+                  <span class="text-danger">This field is required.</span>
+                  } } -->
+                </div>
+              </div>
+
+              <div
+                class="col-md-4 mb-4"
+                *ngIf="UserRoleID == 3 && isQualification == true"
+              >
+                <div class="form-group local-forms">
+                  <label>Qualification</label>
+                  <ng-select
+                    formControlName="qualification"
+                    [items]="masterQualificationList"
+                    placeholder="Enter Qualification"
+                    bindLabel="name"
+                    bindValue="id"
+                    [multiple]="true"
+                  ></ng-select>
+                  <!-- @if(staffFormControls.qualification.touched){
+                @if(staffFormControls.qualification.errors?.required){
+                <span class="text-danger">This field is required.</span>
+                } } -->
+                </div>
+              </div>
+              <div
+                class="col-md-3 mb-4"
+                *ngIf="UserRoleID == 3 && isQualification == true"
+              >
+                <div class="form-group local-forms">
+                  <label style="left: 10px !important"
+                    >No. of working hours<span class="login-danger"
+                      >*</span
+                    ></label
+                  >
+                  <input
+                    type="number"
+                    class="form-control"
+                    formControlName="workingHours"
+                    placeholder="Enter Hours"
+                  />
+                </div>
+                <div
+                  *ngIf="
+                    staffForm.get('workingHours')?.invalid &&
+                    staffForm.get('workingHours')?.touched
+                  "
+                >
+                  <span
+                    class="text-danger"
+                    *ngIf="staffForm.get('workingHours')?.errors?.['min']"
+                    >working hours must be greater than 0.</span
+                  >
+                </div>
+              </div>
+
+              <div
+                class="col-md-3 mb-4"
+                *ngIf="UserRoleID == 3 && isQualification == true"
+              >
+                <div class="form-group local-forms">
+                  <label style="left: 10px !important">Wages (Per Hour)</label>
+                  <div class="input-group">
+                    <span class="input-group-text">$</span>
+                    <input
+                      type="number"
+                      class="form-control"
+                      formControlName="wages"
+                      placeholder="Enter Wages"
+                      min="1"
+                    />
+                    <span class="input-group-text">hr</span>
+                  </div>
+                </div>
+              </div>
+              <div
+                *ngIf="
+                  staffForm.get('wages')?.invalid &&
+                  staffForm.get('wages')?.touched
+                "
+              >
+                <span
+                  class="text-danger"
+                  *ngIf="staffForm.get('wages')?.errors?.['min']"
+                  >working hours must be greater than 0.</span
+                >
+              </div>
+
+              <div
+                class="col-md-6 mb-4"
+                *ngIf="UserRoleID == 3 && isQualification == true"
+              >
+                <div class="form-group local-forms">
+                  <label style="left: 10px !important">Salary</label>
+                  <div class="d-flex align-items-center justify-content-start  res-class">
+                    <!-- Arsh -->
+                    <div class="job-type-wages">
+                      <div
+                        class="form-check mb-0 form-check-inline"
+                        *ngIf="isToc"
+                      >
+                        <input
+                          class="form-check-input mt-1"
+                          type="radio"
+                          formControlName="salaryUnit"
+                          [value]="'Daily'"
+                          id="salaryUnitDaily"
+                          name="salaryUnit"
+                        />
+                        <label
+                          class="form-check-label mb-0"
+                          for="salaryUnitDaily"
+                          >Daily</label
+                        >
+                      </div>
+
+                      <div
+                        class="form-check form-check-inline mb-0"
+                        *ngIf="isToc"
+                      >
+                        <input
+                          class="form-check-input mt-1"
+                          type="radio"
+                          formControlName="salaryUnit"
+                          [value]="'Weekly'"
+                          id="salaryUnitWeekly"
+                          name="salaryUnit"
+                        />
+                        <label
+                          class="form-check-label mb-0"
+                          for="salaryUnitWeekly"
+                          >Weekly</label
+                        >
+                      </div>
+
+                      <div class="form-check mb-0 form-check-inline">
+                        <input
+                          class="form-check-input mt-1"
+                          type="radio"
+                          formControlName="salaryUnit"
+                          [value]="'Monthly'"
+                          id="salaryUnitMonth"
+                          name="salaryUnit"
+                        />
+                        <label
+                          class="form-check-label mb-0"
+                          for="salaryUnitMonth"
+                          >Monthly</label
+                        >
+                      </div>
+
+                      <div
+                        class="form-check form-check-inline mb-0"
+                        *ngIf="!isToc"
+                      >
+                        <input
+                          class="form-check-input mt-1"
+                          type="radio"
+                          formControlName="salaryUnit"
+                          [value]="'Yearly'"
+                          id="salaryUnitYear"
+                          name="salaryUnit"
+                        />
+                        <label
+                          class="form-check-label mb-0"
+                          for="salaryUnitYear"
+                          >Yearly</label
+                        >
+                      </div>
+                    </div>
+                    <!-- End -->
+                    <div class="input-group">
+                      <span class="input-group-text">$</span>
+                      <input
+                        type="number"
+                        class="form-control"
+                        formControlName="salary"
+                        placeholder="Enter Amount"
+                        min="1"
+                      />
+                      <span class="input-group-text">Wages</span>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  *ngIf="
+                    staffForm.get('salary')?.invalid &&
+                    staffForm.get('salary')?.touched
+                  "
+                >
+                  <span
+                    class="text-danger"
+                    *ngIf="staffForm.get('salary')?.errors?.['min']"
+                    >working hours must be greater than 0.</span
+                  >
+                </div>
+              </div>
+
+              <!-- Arsh -->
+              <div
+                class="col-md-6 mb-4"
+                [hidden]="!(UserRoleID == 3 && isQualification == true)"
+              >
+                <div class="form-group local-forms">
+                  <div class="d-flex align-items-center justify-content-start">
+                    <div
+                      class="form-group local-forms mb-4"
+                      style="position: relative"
+                    >
+                      <label
+                        >Joining Date<span class="login-danger">*</span></label
+                      >
+                      <input
+                        type="text"
+                        id="startdatePicker"
+                        class="form-control"
+                        formControlName="joiningDate"
+                        (change)="validateJoiningDate($event)"
+                        placeholder="-Select-"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  *ngIf="
+                    staffForm.get('joiningDate')?.invalid &&
+                    staffForm.get('joiningDate')?.touched
+                  "
+                >
+                  <span class="text-danger">This field is required.</span>
+                </div>
+              </div>
+              <div
+                class="col-md-4 mb-4"
+                *ngIf="UserRoleID == 1 && isDayCareListActive == true"
+              >
+                <div class="form-group local-forms">
+                  <label>Assign Daycare</label>
+
+                  <ng-select
+                    formControlName="assignDaycare"
+                    [items]="dayCareList"
+                    bindLabel="centreName"
+                    bindValue="id"
+                    [multiple]="true"
+                  ></ng-select>
+
+                  <!-- @if(staffFormControls.qualification.touched){
+                @if(staffFormControls.qualification.errors?.required){
+                <span class="text-danger">This field is required.</span>
+                } } -->
+                </div>
+              </div>
+            </div>
+          </form>
+
+          <div *ngIf="isAssignmentVisible" class="row">
+            <!-- <ng-container
+              [ngTemplateOutlet]="assignment_section"
+            ></ng-container> -->
+            <ng-container
+              [ngTemplateOutlet]="availability_teacher"
+            ></ng-container>
+          </div>
+
+          <div class="row mt-4">
+            <div class="col-md-12">
+              <div class="student-submit text-end">
+                <button (click)="onSubmitStaff()" class="btn btn-primary me-2">
+                  {{ onSelectEdit == null ? "Submit" : "Update" }}
+                </button>
+                <button (click)="reset()" class="btn btn-secondary">
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mt-3">
+            <div class="card-none">
+              <div class="breadcrumb-none">
+                <app-view-staff (update)="onEdit()"></app-view-staff>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="onBoardingService.isOnboarding" class="row mt-4">
+            <div class="col-md-12">
+              <div class="student-submit text-end">
+                <button
+                  type="submit"
+                  class="btn btn-secondary me-3"
+                  (click)="onBoardingService.onChangeTab('Tab-4')"
+                >
+                  Previous
+                </button>
+                <button
+                  *ngIf="childComponent?.staffList"
+                  [disabled]="childComponent.staffList.length < 1"
+                  (click)="proceededOnBoarding()"
+                  id="next-btn"
+                  class="btn btn-primary"
+                >
+                  Save & Proceed
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <ng-template #assignment_section>
+  <div class="col-md-12">
+    <div class="heading-new">
+      <h5 class="mb-0">Assign Class</h5>
+    </div>
+    <form [formGroup]="assignmentForm" (ngSubmit)="onAssignTeacher()">
+      <div class="row">
+        <div class="col-md-4 mb-4">
+          <div class="form-group local-forms">
+            <label>Select Class<span class="login-danger">*</span></label>
+            <ng-select
+              formControlName="classID"
+              (change)="onChangeClass($event.id)"
+              [items]="classList"
+              bindLabel="name"
+              bindValue="id"
+            ></ng-select>
+          </div>
+          @if(assignmentFormControls.classID.touched){
+          @if(assignmentFormControls.classID.errors?.required){
+          <span class="text-danger">This field is required.</span>
+          } }
+        </div>
+        <div
+          class="col-md-2 mb-2 d-flex align-items-center justify-content-end"
+        >
+          <div class="student-submit">
+            <button type="submit" class="btn btn-primary me-2">Assign</button>
+            <button type="reset" class="btn btn-secondary">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="col-md-12" *ngIf="assignmentList.length > 0">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead class="student-thread">
+              <tr>
+                <th class="wd-20">#</th>
+                <th class="wd-20">Class&nbsp;Name</th>
+
+                <th class="wd-20">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for(item of assignmentList;track item;let i=$index){
+              <tr>
+                <td class="wd-20">{{ i + 1 }}</td>
+                <td class="wd-20">{{ item.className }}</td>
+              
+
+                <td class="wd-20">
+                  <div class="actions">
+                    <a
+                      (click)="onEditSection(item, i)"
+                      class="action-btn bg-danger-light me-2"
+                    >
+                      <i class="feather-edit"></i>
+                    </a>
+                    <a
+                      (click)="onRemoveSection(i)"
+                      class="action-btn bg-danger-light me-2"
+                    >
+                      <i class="fa fa-trash"></i>
+                    </a>
+                  </div>
+                </td>
+              </tr>
+
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template> -->
+
+<ng-template #availability_teacher>
+  <form
+    class="section-grid-boxes px-3 mb-4"
+    [formGroup]="teacherAvailabilityListForm"
+  >
+    <div class="col-md-12">
+      <div class="heading-new">
+        <h5 class="mb-0">Mark Teacher Availability</h5>
+      </div>
+      <div class="weekend d-flex align-items-center gp-20">
+        <div *ngFor="let day of days; let i = index" class="sun">
+          <input
+            type="checkbox"
+            [id]="'day_' + i + '_' + day.id"
+            [value]="day.id"
+            [disabled]="isDisabledDays(day)"
+            class="me-1"
+            [checked]="isChecked(day)"
+            (change)="daysAvailability(day, $event)"
+          />
+          <label
+            [for]="'day_' + i + '_' + day.id"
+            [ngClass]="{ 'disabled-label': isDisabledDays(day) }"
+            >&nbsp;&nbsp;{{ day.day }}</label
+          >
+        </div>
+      </div>
+      <span class="text-danger" *ngIf="availabilityValidationMessage"
+        >Please select at least one day.</span
+      > 
+    </div>
+    <div class="px-3 mb-4 mt-3" formArrayName="teacherAvailabilityList">
+      <div
+        class="row"
+        *ngFor="
+          let availability of teacherAvailabilityList.controls;
+          let i = index
+        "
+        [formGroupName]="i"
+      >
+        <div class="heading-new">
+          <h5 class="mb-0">
+            {{ displayDayName[i] }} &nbsp; &nbsp;
+            <span class="reduce-size"
+              >Start-Time :
+              {{ displayDayCareTiming[i].startTime | TimeFormatAmPm }} &nbsp;
+              &nbsp; End-Time :
+              {{ displayDayCareTiming[i].endTime | TimeFormatAmPm }}</span
+            >
+          </h5>
+        </div>
+        <div class="col-md-4 mb-4">
+          <div class="form-group local-forms">
+            <label>Start Time<span class="login-danger">*</span></label>
+            <input
+              class="form-control"
+              type="time"
+              [id]="i + '_startTime'"
+              formControlName="startTime"
+              (blur)="ValidateStartTime(i)"
+            />
+            <div
+              *ngIf="
+                availability.get('startTime')?.touched &&
+                availability.get('startTime')?.invalid
+              "
+            >
+              <span
+                *ngIf="availability.get('startTime')?.errors?.['required']"
+                class="text-danger"
+                style="display: block"
+              >
+                This field is required.
+              </span>
+
+              <span
+                class="text-danger"
+                style="display: block"
+                *ngIf="greaterTimeValidationForStartTime"
+              >
+                End Time is greater than Start Time .</span
+              >
+              <span
+                class="text-danger"
+                style="display: block"
+                *ngIf="timeMatchValidationForStartTime"
+              >
+                Work timings does not matched .</span
+              >
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-4">
+          <div class="form-group local-forms">
+            <label>End Time<span class="login-danger">*</span></label>
+            <input
+              class="form-control"
+              [id]="i + '_endTime'"
+              type="time"
+              (blur)="ValidateEndTime(i)"
+              formControlName="endTime"
+            />
+            <div
+              *ngIf="
+                availability.get('endTime')?.touched &&
+                availability.get('endTime')?.invalid
+              "
+            >
+              <span
+                *ngIf="availability.get('endTime')?.errors?.['required']"
+                class="text-danger"
+                style="display: block"
+              >
+                This field is required.
+              </span>
+              <span
+                class="text-danger"
+                style="display: block"
+                *ngIf="greaterTimeValidationForEndTime"
+              >
+                End Time is greater than Start Time .</span
+              >
+              <span
+                class="text-danger"
+                style="display: block"
+                *ngIf="timeMatchValidationForEndTime"
+              >
+                Work timings does not matched .</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</ng-template>
+<!-- 
+<div
+  class="modal fade"
+  id="exampleModal3"
+  data-bs-backdrop="static"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div
+    class="modal-dialog"
+    [ngClass]="{ 'modal-xl': inValidRecords.length > 0 }"
+  >
+    <div class="modal-content">
+      <div class="modal-header" style="border: none">
+        <h5 class="modal-title" id="exampleModalLabel">Bulk Upload</h5>
+        <button
+          (click)="onBulkUploadModalClose()"
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div
+          class="row"
+          *ngIf="inValidRecords.length === 0; else invalidRecordGrid"
+        >
+          <div
+            class="col-12 mb-4"
+            [ngClass]="{
+              'col-md-12': inValidRecords.length === 0,
+              'col-md-4': inValidRecords.length > 0
+            }"
+          >
+            <div class="form-group local-forms">
+              <label for="role">Upload Bulk Student </label>
+              <input
+                accept=".xlsx"
+                id="formFile"
+                (change)="onChangeFile($event)"
+                type="file"
+                class="form-control"
+              />
+            </div>
+          </div>
+
+          <div
+            class="student-submit"
+            [ngClass]="{
+              'col-md-12': inValidRecords.length === 0,
+              'col-md-4': inValidRecords.length > 0
+            }"
+          >
+            <button
+              (click)="uploadBulkStaff()"
+              type="submit"
+              class="btn btn-primary me-2"
+            >
+              Submit
+            </button>
+            <button
+              (click)="onBulkUploadModalClose()"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+        <div class="modal-footer p-0" style="border: none"></div>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+<ng-template #invalidRecordGrid>
+  <div class="col-md-12">
+    <div class="heading-new">
+      <h5 class="mb-0">
+        Invalid Records
+        <span class="italic font-13">(Total: {{ inValidRecords.length }})</span>
+      </h5>
+    </div>
+  </div>
+  <div class="col-md-12">
+    <div class="table-responsive">
+      <table class="table table-hover mb-0">
+        <thead class="student-thread">
+          <tr>
+            <th>#</th>
+            <th>First&nbsp;Name</th>
+            <th>Last&nbsp;Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Role&nbsp;Specialization</th>
+            <th>Reason</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of inValidRecords; let index = index">
+            <td>{{ index + 1 }}</td>
+            <td>{{ item.firstName }}&nbsp;{{ item.studentLastName }}</td>
+            <td>{{ item.lastName }}</td>
+            <td>{{ item.email }}</td>
+            <td>{{ item.role.split("|")[0] }}</td>
+            <td>{{ item.roleSpecialization.split("|")[0] }}</td>
+            <td class="text-danger">{{ item.reason }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="col-md-12 mt-4">
+    <div class="student-submit text-end">
+      <button
+        (click)="downloadSkipRecordsSheet()"
+        type="submit"
+        class="btn btn-primary"
+      >
+        Download Template
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<!-- import from jobPosting -->
+<div class="modal" id="jobPostingModal" data-bs-backdrop="static">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h5 class="modal-title">Job Posting Teachers</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body" id="jobPostingModal">
+        <div class="add-student-parent">
+          <div class="col-md-12">
+            <div class="table-responsive">
+              <table class="table table-hover mb-0">
+                <thead class="student-thread">
+                  <tr>
+                    <th>#</th>
+                    <th>First&nbsp;Name</th>
+
+                    <th>Qualification</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    *ngFor="
+                      let jobPost of jobPostTeachers
+                        | paginate
+                          : {
+                              itemsPerPage: itemPerPage,
+                              currentPage: currentPage,
+                              id: 'jobPostTeacher'
+                            };
+                      let i = index
+                    "
+                  >
+                    <td>{{ i + 1 }}</td>
+
+                    <td>
+                      <!-- tooltip  added here  -->
+                      <div
+                        class="tooltip-wrapper"
+                        style="position: relative"
+                        (mouseenter)="hoveredRow = jobPost"
+                        (mouseleave)="hoveredRow = null"
+                      >
+                        <span class="hover-anchor">{{
+                          jobPost.firstName
+                        }}</span>
+                        <!-- call here   and remove below div if able to call -->
+                        <app-tooltip
+                          *ngIf="hoveredRow === jobPost"
+                          [employee]="{
+                            fullName:
+                              jobPost.firstName +
+                              '' +
+                              (jobPost.lastName ? ' ' + jobPost.lastName : ''),
+                            email: jobPost.email,
+                            profile: jobPost.staffProfile
+                          }"
+                        ></app-tooltip>
+                      </div>
+                    </td>
+
+                    <td>{{ jobPost.qualificationNames }}</td>
+                    <td>
+                      <div class="actions">
+                        <button
+                          class="btn btn-primary me-2"
+                          (click)="ImportValueFromJobPosting(jobPost)"
+                        >
+                          Import
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr *ngIf="jobPostTeachers.length == 0">
+                    <td colspan="9" style="text-align: center">
+                      <div class="no-data">
+                        <img
+                          src="assets/img/no-data-img.png"
+                          alt="No Record Found"
+                        />
+                        <span>No Record Found</span>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="col pagination-style mt-4 no-flex">
+            <div class="datatable-pager datatable-paging-loaded">
+              @if( jobPostTeachers.length > 0 ) {
+              <pagination-controls
+                previousLabel="prev"
+                nextLabel="next"
+                [maxSize]="5"
+                class="datatable-pager-nav my-2 mb-sm-0"
+                id="jobPostTeacher"
+                (pageChange)="currentPage = $event"
+              >
+              </pagination-controls>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- import from TOC -->
+
+<div class="modal" id="tocModal" data-bs-backdrop="static">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h5 class="modal-title">TOC Teachers</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          (click)="enableAllDates()"
+        ></button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body" id="tocModal">
+        <div class="add-student-parent">
+          <div class="col-md-12">
+            <div class="table-responsive">
+              <table class="table table-hover mb-0">
+                <thead class="student-thread">
+                  <tr>
+                    <th>#</th>
+                    <th>Teacher&nbsp;Name</th>
+                    <!-- <th>Last&nbsp;Name</th> -->
+                    <th>Email</th>
+                    <th>Qualification</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    *ngFor="
+                      let toc of tocTeachersList
+                        | paginate
+                          : {
+                              itemsPerPage: itemPerPageToc,
+                              currentPage: currentPageToc,
+                              id: 'tocTeacher'
+                            };
+                      let i = index
+                    "
+                  >
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ toc.teacherName }}</td>
+                    <!-- <td>{{ toc.lastName }}</td> -->
+                    <td>{{ toc.email }}</td>
+                    <td>{{ toc.qualificationNames }}</td>
+                    <td>
+                      <div class="actions">
+                        <button
+                          class="btn btn-primary me-2"
+                          (click)="importTocStaff(toc)"
+                        >
+                          Import
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr *ngIf="tocTeachersList.length == 0">
+                    <td colspan="9" style="text-align: center">
+                      <div class="no-data">
+                        <img
+                          src="assets/img/no-data-img.png"
+                          alt="No Record Found"
+                        />
+                        <span>No Record Found</span>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="col pagination-style mt-4 no-flex">
+            <div class="datatable-pager datatable-paging-loaded">
+              @if( tocTeachersList.length > 0 ) {
+              <pagination-controls
+                previousLabel="prev"
+                nextLabel="next"
+                [maxSize]="5"
+                class="datatable-pager-nav my-2 mb-sm-0"
+                id="tocTeacher"
+                (pageChange)="currentPageToc = $event"
+              >
+              </pagination-controls>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

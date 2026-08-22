@@ -1,0 +1,827 @@
+<app-breadcrumb></app-breadcrumb>
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="heading-new">
+          <h5 class="mb-0">Job Applications</h5>
+        </div>
+
+        <!-- <button data-bs-toggle="modal" data-bs-target="#exampleModal2"> reject</button> -->
+
+        <ul class="nav nav-tabs" role="tablist">
+          <li class="nav-item" role="presentation">
+            <a class="nav-link active" href="#basictab2" data-bs-toggle="tab" (click)="getJobList('received')"
+              aria-selected="false" role="tab">Recieved Applications
+            </a>
+          </li>
+          <li class="nav-item" role="presentation">
+            <a class="nav-link" href="#basictab3" data-bs-toggle="tab" (click)="getJobList('shortlisted')"
+              aria-selected="false" role="tab">Shortlisted Applications
+            </a>
+          </li>
+
+          <li class="nav-item" role="presentation">
+            <a class="nav-link" href="#basictab4" data-bs-toggle="tab" (click)="getJobList('Rejected')"
+              aria-selected="false" role="tab">Rejected Applications
+            </a>
+          </li>
+
+        </ul>
+        <div class="tab-content">
+          <!-- 1 -->
+
+          <div class="tab-pane active" id="basictab2">
+            <div class="row">
+              <div class="col-md-4 mb-4">
+                <div class="ins-input-field">
+                  <label>Job Title</label>
+    
+                  <ng-select [items]="jobPostingList || []" bindLabel="jobTitle" bindValue="id" class="input-group"
+                    placeholder="-Select-" formControlName="jobSelect" (change)="onJobPost($event)">
+                  </ng-select>
+
+
+
+                </div>
+              </div>
+              <div class="col-md-4 offset-md-4 mb-4">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="search mt-4">
+
+                    
+                      <input placeholder="Type here.." type="text" #search    [(ngModel)]="searchText"
+                          (ngModelChange)="applyFilter()" />
+                      
+                       
+                      <button type="submit">Search</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-12">
+                <div class="table-responsive">
+                  <table class="table table-hover mb-0">
+                    <thead class="student-thread">
+                      <tr>
+                        <th>#</th>
+
+                        <th>Job&nbsp;Title</th>
+                        <th>Job&nbsp;Type</th>
+                        <th>Candidate&nbsp;Name</th>
+                        <!-- <th>Email</th> -->
+                        <th>Experience</th>
+                        <!-- <th>Applied&nbsp;On</th> -->
+                        <th>Expertise</th>
+                        <th>CV</th>
+                        <th class="text-center">Status</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      <!-- @for(student of displayedJobList;track student | paginate: { itemsPerPage: Contentsize, currentPage: ContentP, id: 'Agentcontrol' }; let i = index")
+                                    { -->
+
+                      @if (skeletonShow === 'Skelton') {
+                      <tr>
+                        <td colspan="100%">
+                          <app-skeleton-loader skeletonShow="Skelton" viewType="table" [tableRows]="5" [tableCols]="10">
+                          </app-skeleton-loader>
+                        </td>
+                      </tr>
+                      }
+                      @else if (displayedJobList?.length > 0) {
+
+                      <tr *ngFor="
+                          let item of displayedJobList
+                            | paginate
+                              : {
+                                  itemsPerPage: Contentsize,
+                                  currentPage: ContentP,
+                                  id: 'Agentcontrol'
+                                };
+                          let i = index
+                        ">
+
+                        <td>{{ (ContentP - 1) * Contentsize + i + 1 }}</td>
+                        <!-- <td>
+                          <div class="checkBox d-flex justify-content-start align-items-center">
+                            <input type="checkbox" [(ngModel)]="item.selected"
+                              (ngModelChange)="onSelectInput(item.teacherId, item.selected)" />
+                            <label></label>
+                          </div>
+                        </td> -->
+
+                        <td>{{ item.jobTitle }}</td>
+                        <td><span class="tocc">{{ item.employmentType
+                            }}</span></td>
+
+                        <td>
+                          <!-- tooltip  added here  -->
+                          <div class="tooltip-wrapper" style="position: relative" (mouseenter)="hoveredRow = item"
+                            (mouseleave)="hoveredRow = null">
+                            <span class="hover-anchor">{{ item.teacherName }}</span>
+                            <!-- call here   and remove below div if able to call -->
+                            <app-tooltip *ngIf="hoveredRow === item" [employee]="{
+                      fullName: item.teacherName,
+                      email: item.teacherEmail,
+                      profile:item.staffProfile
+                    }"></app-tooltip>
+                          </div>
+                        </td>
+
+
+
+
+                        <!-- <td>{{ item.teacherName }}</td> -->
+                        <!-- <td>{{ item.teacherEmail }}</td> -->
+                        <td>{{ item.experience }}</td>
+                        <td>{{ item.expertise }}</td>
+                        <td>
+                          <div class="actions">
+                            <a title="Download Resume" class="action-btn bg-danger-light me-2"
+                              (click)="downloadResume(item.documentImageUrl, item.fileName)">
+                              <i class="feather-download"></i>
+                            </a>
+                          </div>
+                        </td>
+
+                        <td class="text-center">
+                          <div class="form-group local-forms pos-rel  special-padding">
+
+                            <!-- new  ng select design , may cause clashes with ng-select theme  css-->
+                            <ng-select [items]="statusOptions" bindLabel="label" bindValue="value"
+                              [(ngModel)]="item.status" [clearable]="false" appendTo="body" class="status-select wd-80"
+                              [ngClass]="getStatusClass(item.status)"
+                              (change)="onStatusChange(item.teacherId, item.status, item.userId)">
+                              <!-- Dropdown option template -->
+                              <ng-template ng-option-tmp let-item="item">
+                                <div [ngClass]="item.cssClass">
+                                  {{ item.label }}
+                                </div>
+                              </ng-template>
+
+                              <!-- Selected value template -->
+                              <ng-template ng-label-tmp let-item="item">
+                                <span>{{ item.label }}</span>
+                              </ng-template>
+                            </ng-select>
+
+                          </div>
+                        </td>
+
+                        <td>
+                          <div class="actions justify-content-center">
+                            <a class="action-btn bg-danger-light me-2" data-bs-toggle="modal"
+                              (click)="SelectedTeacher(item.teacherId)" data-bs-target="#exampleModal">
+                              <i class="feather-eye"></i>
+                            </a>
+
+                            <label class="switch mb-0 me-2 approve-rec" *ngIf="
+                                item.status != 'Rejected' &&
+                                item.status != 'Approved'
+                              ">
+                            </label>
+                          </div>
+                        </td>
+                      </tr>
+                      } @else {
+                      <tr>
+                        <td colspan="100%">
+                          <app-skeleton-loader skeletonShow="NoRecord">
+                          </app-skeleton-loader>
+                        </td>
+
+                      </tr>
+
+                      }
+
+                    </tbody>
+
+                  </table>
+                </div>
+
+                <div class="col pagination-style mt-4">
+                  <div class="datatable-pager datatable-paging-loaded">
+                    @if(( displayedJobList!= null )&&( displayedJobList.length>5)) {
+                    <pagination-controls previousLabel="prev" nextLabel="next" [maxSize]="5"
+                      class="datatable-pager-nav my-2 mb-sm-0" id="Agentcontrol" (pageChange)="ContentP = $event">
+                    </pagination-controls>
+                    }
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2 -->
+          <div class="tab-pane" id="basictab3">
+            <div class="tab-pane active" id="basictab3">
+              <div class="row">
+                <div class="col-md-4 mb-4">
+                  <div class="ins-input-field">
+                    <label>Job Title</label>
+                    <ng-select [items]="jobPostingList" bindLabel="jobTitle" bindValue="id" class="input-group"
+                      placeholder="-Select-" formControlName="jobSelect" (change)="onJobPost($event)">
+                    </ng-select>
+                  </div>
+                </div>
+              <div class="col-md-4 offset-md-4 mb-4">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="search mt-4">
+                      <input placeholder="Type here.." type="text" #search    [(ngModel)]="searchText"
+                          (ngModelChange)="applyFilter()" />
+                     
+                       
+                      <button type="submit">Search</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+                <div class="col-md-12">
+                  <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                      <thead class="student-thread">
+                        <tr>
+                          <th>#</th>
+
+                          <th>Job&nbsp;Title</th>
+                          <th> Job&nbsp;Type</th>
+                          <th>Candidate&nbsp;Name</th>
+                          <!-- <th>Email</th> -->
+                          <th>Experience</th>
+                          <!-- <th>Applied&nbsp;On</th> -->
+                          <th>Expertise</th>
+                          <th>CV</th>
+                          <th class="text-center" style="width: 400px">
+                            Status
+                          </th>
+                          <!-- <th class="text-center">TC</th> -->
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        @if (skeletonShow === 'Skelton') {
+                        <tr>
+                          <td colspan="100%">
+                            <app-skeleton-loader skeletonShow="Skelton" viewType="table" [tableRows]="5"
+                              [tableCols]="10">
+                            </app-skeleton-loader>
+                          </td>
+                        </tr>
+                        }
+                        @else if (displayedJobList.length > 0) {
+                        <tr *ngFor="
+                            let item of displayedJobList
+                              | paginate
+                                : {
+                                    itemsPerPage: Contentsize,
+                                    currentPage: ContentP,
+                                    id: 'Agentcontrol'
+                                  };
+                            let i = index
+                          ">
+                          <td>{{ (ContentP - 1) * Contentsize + i + 1 }}</td>
+
+                          <td>
+                            {{ item.jobTitle }}
+                          </td>
+                          <td><span class="tocc">{{ item.employmentType
+                              }}</span></td>
+                          <!-- <td>{{ item.teacherName }}</td> -->
+                          <!-- <td>{{ item.teacherEmail }}</td> -->
+                          <td>
+                            <!-- tooltip  added here  -->
+                            <div class="tooltip-wrapper" style="position: relative" (mouseenter)="hoveredRow = item"
+                              (mouseleave)="hoveredRow = null">
+                              <span class="hover-anchor">{{ item.teacherName }}</span>
+                              <!-- call here   and remove below div if able to call -->
+                              <app-tooltip *ngIf="hoveredRow === item" [employee]="{
+                      fullName: item.teacherName,
+                      email: item.teacherEmail,
+                      profile:item.staffProfile
+                    }"></app-tooltip>
+                            </div>
+                          </td>
+
+                          <td>{{ item.experience }}</td>
+                          <td>{{ item.expertise }}</td>
+                          <td>
+                            <div class="actions">
+                              <a title="Download Resume" class="action-btn bg-danger-light me-2"
+                                (click)="downloadResume(item.documentImageUrl, item.fileName)">
+                                <i class="feather-download"></i>
+                              </a>
+                            </div>
+                          </td>
+
+                          <td *ngIf="item.status !== 'Rejected' &&
+         item.status !== 'Approved' &&
+         item.status !== 'On Hold' &&
+         item.status !== 'Approved by Teacher'" class="text-center special-padding">
+                            <ng-select [items]="Shortlisted" bindLabel="label" bindValue="value"
+                              [(ngModel)]="item.status" appendTo="body" class="custom-ng-select status-select"
+                              [clearable]="false" [ngClass]="getStatusClass(item.status)"
+                              (click)="previousStatus = item.status"
+                              (change)="onStatusChange(item.teacherId, item.status, item.userId, i)">
+                              <!-- Dropdown option template -->
+                              <ng-template ng-option-tmp let-item="item">
+                                <div [ngClass]="item.cssClass">{{ item.label
+                                  }}</div>
+                              </ng-template>
+
+                              <!-- Selected value template -->
+                              <ng-template ng-label-tmp let-item="item">
+                                <span>{{ item.label }}</span>
+                              </ng-template>
+                            </ng-select>
+                          </td>
+
+                          <td *ngIf="item.status == 'Approved by Teacher'" class="text-center special-padding">
+                            <!-- <ng-select [items]="approveTeacherList" bindLabel="label" appendTo="body" bindValue="value"
+                              [(ngModel)]="item.status" class="custom-ng-select status-select" [ngClass]="{
+                                'bg-info text-white':
+                                  item.status === 'Approved by Teacher',
+                                'bg-success text-white':
+                                  item.status === 'Approved',
+                                'bg-danger text-white': item.status === 'Reject'
+                              }" (click)="previousStatus = item.status" [clearable]="false"
+                              (change)="onStatusChange(item.teacherId, item.status, item.userId, i, 'Shortlisted')">
+                            </ng-select> -->
+                                    <ng-select [items]="approveTeacherList" bindLabel="label" bindValue="value" [(ngModel)]="item.status" appendTo="body"
+                                      class="custom-ng-select status-select" [ngClass]="{
+                                                                                              'status-approved': item.status === 'Approved',
+                                      'status-approved-by-teacher': item.status === 'Approved by Teacher',
+                                      'status-rejected': item.status === 'Reject'
+                                                                                              }" (click)="previousStatus = item.status" [clearable]="false"
+                                      (change)="onStatusChange(item.teacherId, item.status, item.userId, i, 'Shortlisted')">
+                                     
+                                      <ng-template ng-option-tmp let-item="item">
+                                        <div [ngClass]="item.cssClass">{{ item.label }}</div>
+                                      </ng-template>
+
+                                   
+                                      <ng-template ng-label-tmp let-item="item">
+                                        <span>{{ item.label }}</span>
+                                      </ng-template>
+                                    </ng-select>
+
+
+                          </td>
+
+                          <!-- // mohit -->
+
+                          <td *ngIf="item.status === 'On Hold'" class="text-center">
+                            <span [class.badge]="true" [class.bg-info]="item.status === 'On Hold'">
+                              {{ item.status }}
+                            </span>
+                          </td>
+
+                          <td *ngIf="item.statusID === 1" class="text-center">
+                            <span [class.badge]="true" [class.bg-success]="item.status === 'Approved'">
+                              {{ item.status }}
+                            </span>
+                          </td>
+
+                          <td>
+                            <div class="actions justify-content-center parent-swal">
+                              <a class="action-btn bg-danger-light me-2" data-bs-toggle="modal"
+                                (click)="SelectedTeacher(item.teacherId)" data-bs-target="#exampleModal">
+                                <i class="feather-eye"></i>
+                              </a>
+
+                            </div>
+                          </td>
+                        </tr>
+                        } @else {
+                        <tr>
+                          <td colspan="100%">
+                            <app-skeleton-loader skeletonShow="NoRecord">
+                            </app-skeleton-loader>
+                          </td>
+
+                        </tr>
+
+                        }
+
+
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <div class="col pagination-style mt-4">
+                    <div class="datatable-pager datatable-paging-loaded">
+                      @if(( displayedJobList!= null )&&( displayedJobList.length>5)) {
+                      <pagination-controls previousLabel="prev" nextLabel="next" [maxSize]="5"
+                        class="datatable-pager-nav my-2 mb-sm-0" id="Agentcontrol" (pageChange)="ContentP = $event">
+                      </pagination-controls>
+                      }
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3 -->
+          <div class="tab-pane" id="basictab4">
+            <div class="tab-pane active" id="basictab4">
+              <div class="row">
+                <div class="col-md-4 mb-4">
+                  <div class="ins-input-field">
+                    <label>Job Title</label>
+                    <ng-select [items]="jobPostingList" bindLabel="jobTitle" bindValue="id" class="input-group"
+                      placeholder="-Select-" formControlName="jobSelect" (change)="onJobPost($event)">
+                    </ng-select>
+                  </div>
+                </div>
+              <div class="col-md-4 offset-md-4 mb-4">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="search mt-4">
+                      <input placeholder="Type here.." type="text" #search    [(ngModel)]="searchText"
+                          (ngModelChange)="applyFilter()" />
+                     
+                       
+                      <button type="submit">Search</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+                <div class="col-md-12">
+                  <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                      <thead class="student-thread">
+                        <tr>
+                          <th>#</th>
+                          <th>Job&nbsp;Title</th>
+                          <th>Job&nbsp;Type</th>
+                          <th>Candidate&nbsp;Name</th>
+                          <!-- <th>Email</th> -->
+                          <th>Experience</th>
+                          <!-- <th>Applied&nbsp;On</th> -->
+                          <th>Expertise</th>
+                          <th>CV</th>
+                          <th class="text-center">Status</th>
+                          <!-- <th class="text-center">TC</th> -->
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        @if (skeletonShow === 'Skelton') {
+                        <tr>
+                          <td colspan="100%">
+                            <app-skeleton-loader skeletonShow="Skelton" viewType="table" [tableRows]="5"
+                              [tableCols]="10">
+                            </app-skeleton-loader>
+                          </td>
+                        </tr>
+                        }
+                        @else if (displayedJobList.length > 0) {
+                        <tr *ngFor="
+                            let item of displayedJobList
+                              | paginate
+                                : {
+                                    itemsPerPage: Contentsize,
+                                    currentPage: ContentP,
+                                    id: 'Agentcontrol'
+                                  };
+                            let i = index
+                          ">
+                          <td>{{ (ContentP - 1) * Contentsize + i + 1 }}</td>
+                          <td>
+                            {{ item.jobTitle }}
+                          </td>
+                          <td><span class="tocc">{{ item.employmentType
+                              }}</span></td>
+                          <!-- <td>{{ item.teacherName }}</td>
+                          <td>{{ item.teacherEmail }}</td> -->
+
+                          <td>
+                            <!-- tooltip  added here  -->
+                            <div class="tooltip-wrapper" style="position: relative" (mouseenter)="hoveredRow = item"
+                              (mouseleave)="hoveredRow = null">
+                              <span class="hover-anchor">{{ item.teacherName }}</span>
+                              <!-- call here   and remove below div if able to call -->
+                              <app-tooltip *ngIf="hoveredRow === item" [employee]="{
+                      fullName: item.teacherName,
+                      email: item.teacherEmail,
+                      profile:item.staffProfile
+                    }"></app-tooltip>
+                            </div>
+                          </td>
+                          <td>{{ item.experience }}</td>
+                          <td>{{ item.expertise }}</td>
+                          <td>
+                            <div class="actions">
+                              <a title="Download Resume" class="action-btn bg-danger-light me-2"
+                                (click)="downloadResume(item.documentImageUrl, item.fileName)">
+                                <i class="feather-download"></i>
+                              </a>
+                            </div>
+                          </td>
+
+                          <!-- // mohit -->
+
+                          <td class="text-center">
+                            <span [class.badge]="true" [class.bg-warning]="
+                                item.status === 'Rejected by Teacher'
+                              " [class.bg-danger]="item.status === 'Rejected'">
+                              {{
+                              item.status === "Rejected"
+                              ? "Rejected by Daycare"
+                              : item.status
+                              }}
+                            </span>
+                          </td>
+
+                          <!-- <td>name</td> -->
+
+                          <td>
+                            <div class="actions justify-content-center parent-swal">
+                              <!-- <a (click)="mailsend()" class="action-btn bg-danger-light me-2"
+                              > <i class="fa fa-envelope" aria-hidden="true"></i>
+                               </a> -->
+                              <a class="action-btn bg-danger-light me-2" data-bs-toggle="modal"
+                                (click)="SelectedTeacher(item.teacherId)" data-bs-target="#exampleModal">
+                                <i class="feather-eye"></i>
+                              </a>
+                            </div>
+                          </td>
+                        </tr>
+
+                        } @else {
+                        <tr>
+                          <td colspan="100%">
+                            <app-skeleton-loader skeletonShow="NoRecord">
+                            </app-skeleton-loader>
+                          </td>
+
+                        </tr>
+
+                        }
+
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <div class="col pagination-style mt-4">
+                    <div class="datatable-pager datatable-paging-loaded">
+                      @if(( displayedJobList!= null )&&( displayedJobList.length>5)) {
+                      <pagination-controls previousLabel="prev" nextLabel="next" [maxSize]="5"
+                        class="datatable-pager-nav my-2 mb-sm-0" id="Agentcontrol" (pageChange)="ContentP = $event">
+                      </pagination-controls>
+                      }
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header" style="border: none">
+        <h5 class="modal-title" id="exampleModalLabel">Candidate Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body pt-0">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="student-personals-grp">
+              <div class="card mb-0">
+                <div class="card-body pb-0">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="personal-activity">
+                        <div class="personal-icons">
+                          <i class="fa-briefcase fa-solid"></i>
+                        </div>
+                        <div class="views-personal">
+                          <h4>Job Title</h4>
+                          <h5>{{ ModalList[0]?.jobTitle }}</h5>
+                        </div>
+                      </div>
+                      <div class="personal-activity">
+                        <div class="personal-icons">
+                          <i class="fa-briefcase fa-solid"></i>
+                        </div>
+                        <div class="views-personal">
+                          <h4>Job Type</h4>
+                          <h5>{{ ModalList[0]?.employmentType }}</h5>
+                        </div>
+                      </div>
+                      <div class="personal-activity">
+                        <div class="personal-icons">
+                          <i class="feather-calendar"></i>
+                        </div>
+                        <div class="views-personal">
+                          <h4>Applied On</h4>
+                          <h5>
+                            {{ ModalList[0]?.appliedOn | date : "MM-dd-yyyy" }}
+                          </h5>
+                        </div>
+                      </div>
+                      <div class="personal-activity">
+                        <div class="personal-icons">
+                          <i class="feather-calendar"></i>
+                        </div>
+                        <div class="views-personal">
+                          <h4>Experience</h4>
+                          <h5>{{ ModalList[0]?.experience }} Years</h5>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="personal-activity">
+                        <div class="personal-icons">
+                          <i class="feather-user"></i>
+                        </div>
+                        <div class="views-personal">
+                          <h4>Candidate Name</h4>
+                          <h5>{{ ModalList[0]?.teacherName }}</h5>
+                        </div>
+                      </div>
+                      <div class="personal-activity">
+                        <div class="personal-icons">
+                          <i class="feather-mail"></i>
+                        </div>
+                        <div class="views-personal">
+                          <h4>Email</h4>
+                          <h5>{{ ModalList[0]?.teacherEmail }}</h5>
+                        </div>
+                      </div>
+                      <div class="personal-activity">
+                        <div class="personal-icons">
+                          <i class="feather-phone-call"></i>
+                        </div>
+                        <div class="views-personal">
+                          <h4>Mobile No.</h4>
+                          <h5>{{ ModalList[0]?.mobileNumber ? '+1 ' +
+                            ModalList[0]?.mobileNumber: '--' }}</h5>
+                        </div>
+                      </div>
+                      <div class="personal-activity">
+                        <div class="personal-icons">
+                          <i class="feather-calendar"></i>
+                        </div>
+                        <div class="views-personal">
+                          <h4>Qualification</h4>
+                          <h5>{{ ModalList[0]?.expertise }}</h5>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="personal-activity">
+                        <div class="personal-icons">
+                          <i class="fa-file-invoice-dollar fas"></i>
+                        </div>
+                        <div class="views-personal">
+                          <h4>Message</h4>
+                          <h5>{{ ModalList[0]?.message }}</h5>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-6" *ngIf="ModalList[0]?.status == 'Rejected'">
+                      <div class="personal-activity">
+                        <div class="personal-icons">
+                          <i class="fa-file-invoice-dollar fas"></i>
+                        </div>
+                        <div class="views-personal">
+                          <h4>Reason</h4>
+                          <h5>{{ ModalList[0]?.reason }}</h5>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-6">
+                      <div class="personal-activity">
+                        <div class="views-personal">
+                          <button type="submit" class="btn btn-primary me-2 download-btn" (click)="
+                              downloadResume(ModalList[0]?.documentImageUrl,ModalList[0]?.fileName)
+                            ">
+                            <i class="feather-download"></i> Download CV
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+  data-bs-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header" style="border: none">
+        <h5 class="modal-title" id="exampleModalLabel2">Assign Class</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="resetDropdown()"
+          aria-label="Close"></button>
+      </div>
+      <div class="modal-body pt-0">
+        <form class="row" [formGroup]="assignClassForm">
+          <!-- <div class="col-md-12 mb-4">
+            <div class="form-group local-forms">
+              <label>Teacher Name</label>
+              <input class="form-control" type="text" readonly formControlName="teacherID">
+
+            </div>
+          </div> -->
+
+          <div class="col-md-12 mb-4">
+            <div class="form-group local-forms">
+              <label>Teacher Name</label>
+              <input class="form-control" type="text" readonly [value]="selectedTeacherName" />
+            </div>
+          </div>
+
+          <div class="col-md-12 mb-4">
+            <div class="form-group local-forms">
+              <label>Class</label>
+              <ng-select [items]="classList" bindLabel="className" bindValue="id" formControlName="classID"
+                (change)="getSectionList($event)" [(ngModel)]="selectedClass">
+              </ng-select>
+              @if(assignClassForm.get('classID')?.hasError('required') &&
+              assignClassForm.get('classID')?.touched) { @if
+              (assignClassForm.get('classID')?.errors) {
+              <span class="text-danger">This field is required.</span>
+              } }
+            </div>
+          </div>
+          <!-- <div class="col-md-12 mb-4">
+            <div class="form-group local-forms">
+              <label>Section</label>
+              <ng-select [items]="sectionList" bindLabel="sectionName" (change)="selectedsSection($event)"
+                bindValue="id" formControlName="sectionID" [(ngModel)]="selectedSection">
+              </ng-select>
+              @if(assignClassForm.get('sectionID')?.hasError('required') && assignClassForm.get('sectionID')?.touched) {
+              @if (assignClassForm.get('sectionID')?.errors) {
+              <span class="text-danger">This field is required.</span>
+              }
+              }
+            </div>
+          </div> -->
+          <div class="col-md-12">
+            <div class="student-submit text-end">
+              <button class="btn btn-primary me-2" (click)="onSubmit()">
+                Submit
+              </button>
+              <button class="btn btn-secondary" data-bs-dismiss="modal" (click)="resetDropdown()">
+                Cancel
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog ">
+    <div class="modal-content">
+      <div class="modal-header" style="border:none;">
+        <h5 class="modal-title" id="exampleModalLabel">Reason for Rejection</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body pt-0">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="local-forms form-group">
+              <label>Reason</label>              
+              <textarea [(ngModel)]="userinput" class="form-control" rows="4"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div  class="col-md-12 text-end mb-2">
+          <div  class="student-submit text-end"><button 
+              id="submit-btn" type="submit" class="btn btn-primary me-2">Submit</button><button
+               type="button" class="btn btn-secondary">Cancel</button></div>
+        </div>
+      </div> -->
+
+<!-- </div>
+  </div>
+</div> -->

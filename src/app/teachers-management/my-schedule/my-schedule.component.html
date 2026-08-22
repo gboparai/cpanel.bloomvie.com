@@ -1,0 +1,134 @@
+<app-breadcrumb></app-breadcrumb>
+
+<section class="my-schdule">
+  <div class="row">
+    <div class="container mt-4">
+      <div class="card">
+        <div class="card-body">
+          <div class="card-header heading-new">
+            <h5>My Schedule</h5>
+          </div>
+          <div class="row">
+            <div class="col-md-8">
+
+              <div class="form-group local-forms my-routine mb-3">
+                <label for="classroomSelect" class="form-label">
+                  Working Days <span class="login-danger">*</span>
+                </label>
+
+                <ng-select [items]="daysList" bindLabel="label" bindValue="label" placeholder="-Select-"
+                  class="form-control days-selector my-roster" [multiple]="true" [(ngModel)]="selectedDaysModel"
+                  (change)="getNumberOfDays($event)">
+                </ng-select>
+
+              </div>
+
+            </div>
+
+
+
+            <div class="col-md-4 mt-lg-4  mr-top">
+              <button type="button" class="btn btn-primary me-2  mt-2" (click)="onSearch()">
+
+                Search
+
+
+              </button>
+              <button type="button" class="btn btn-secondary  mt-2" (click)="clearSelectedDays()">Cancel</button>
+
+            </div>
+          </div>
+
+          <div class="card-header heading-new mt-4">
+            <h5>Class Roaster</h5>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table table-hover mb-0">
+              <thead class="student-thread">
+                <tr>
+                  <th>#</th>
+                  <th>Days</th>
+                  <th>Class Name</th>
+                  <th>Class Timing</th>
+                </tr>
+              </thead>
+              <tbody>
+
+                @if (skeletonShow === "Skelton") {
+
+
+
+
+                <tr>
+                  <td colspan="100%">
+                    <app-skeleton-loader skeletonShow="Skelton" viewType="table" [tableRows]="5" [tableCols]="4">
+                    </app-skeleton-loader>
+                  </td>
+                </tr>
+
+                }
+                @else if (TeacherSectionRecord.length > 0) {
+                <tr *ngFor="
+                            let item of TeacherSectionRecord 
+                            | paginate: {
+                                itemsPerPage: ContentsizeAcceptedList,
+                                currentPage: ContentAcceptedList,
+                                id: 'dayCareAppointmentAcceptedList'
+                              };
+                            let i = index
+                          ">
+                  <td>
+                    {{
+                    i +
+                    1 +
+                    (ContentAcceptedList - 1) * ContentsizeAcceptedList
+                    }}
+                  </td>
+                  <td>{{ dayNames[item.dayID - 1] }}</td>
+                  <td>{{ item.className }}</td>
+                  <td class="text-center">{{ item.startTime | TimeFormatAmPm }} - {{ item.endTime | TimeFormatAmPm }}
+                  </td>
+                </tr>
+                } @else {
+
+                <tr>
+                  <td colspan="100%">
+                    <app-skeleton-loader skeletonShow="NoRecord">
+                    </app-skeleton-loader>
+                  </td>
+
+                </tr>
+                }
+
+              </tbody>
+
+
+            </table>
+          </div>
+
+
+
+
+
+
+          <div class="col pagination-style mt-4 no-flex">
+            <div class="datatable-pager datatable-paging-loaded">
+              @if(TeacherSectionRecord.length > 0) {
+              <pagination-controls previousLabel="prev" nextLabel="next" [maxSize]="5"
+                class="datatable-pager-nav my-2 mb-sm-0" id="dayCareAppointmentAcceptedList"
+                (pageChange)="onPageChangeToc($event)">
+              </pagination-controls>
+              }
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+
+</section>

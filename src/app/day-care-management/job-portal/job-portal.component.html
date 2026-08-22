@@ -1,0 +1,427 @@
+<app-breadcrumb></app-breadcrumb>
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="heading-new d-flex justify-content-between align-items-center">
+          <!-- <div class="db-icon">
+            <img
+              src="assets/img/job.png"
+              alt="Dashboard Icon"
+            />
+          </div> -->
+          <h5 class="mb-0">New Job Opportunities</h5>
+          <span class=" ">
+            <!-- <span class="thcolor" >Available Jobs: <span class="thcolor">4</span> </span> -->
+          </span>
+        </div>
+
+        <div class="toggle-container d-flex justify-content-between align-items-center mb-3">
+          <div class="left-f">
+            <input type="checkbox" id="toggle" class="toggleCheckbox" #jobType />
+            <label for="toggle" class="toggleContainer">
+              <div [class.active]="selectedType === 'TOC'" (click)="setType('TOC')">
+                TOC
+              </div>
+              <div [class.active]="selectedType === 'Full Time'" (click)="setType('Full Time')">
+                Full Time
+              </div>
+            </label>
+          </div>
+
+          <div class="mb-2">
+            <div class="pay-box-plan justify-content-end text-end mb-2" *ngIf="availableJobPostCount?.count === 0">
+              <!-- <div class="pay-text-plan">
+              <p>Upgrade Your Plan</p>
+            </div>
+
+            <div class="pay-btn-box">
+              <button (click)="OpenPaymentUpgradeModal()" class="" id="blinking-button">Upgrade Now</button>
+            </div> -->
+              <div class="pay-btn-box">
+                <a class="btn btn-primary" [routerLink]="['/all-job-posting-plans']">See Plans</a>
+              </div>
+            </div>
+            <div class="total-entry" *ngIf="
+                availableJobPostCount && jobPostCount && selectedType != 'TOC'
+              ">
+              <span>Available Job Posts:</span><span class="entry-count">
+                {{ availableJobPostCount.count }}/{{ jobPostCount }}
+              </span>
+            </div>
+          </div>
+
+          <!-- <button [class.active]="selectedType === 'TOC'" (click)="setType('TOC')">
+            TOC
+          </button>
+
+          <button [class.active]="selectedType === 'Full Time'" (click)="setType('Full Time')">
+            Full Time
+          </button> -->
+        </div>
+
+        <!-- random toggle -->
+
+        <!-- <div class="mb-3">
+          <h5>Available JobPosts:{{jobPostCount}}</h5>
+        </div> -->
+
+        <form [formGroup]="jobsForm" (ngSubmit)="onSubmit()">
+          <div class="row">
+            <div class="col-md-6 mb-4">
+              <div class="form-group local-forms">
+                <label style="left: 10px !important">Job Title<span class="login-danger">*</span></label>
+                <input type="text" class="form-control" formControlName="jobTitle" placeholder="Enter Title" min="1"
+                  maxlength="50" pattern="^[a-zA-Z_][a-zA-Z0-9_ ]*$" />
+
+                <div *ngIf="jobsForm.get('jobTitle')?.touched && jobsForm.get('jobTitle')?.invalid" class="text-danger">
+                  <div *ngIf="jobsForm.get('jobTitle')?.errors?.['required']">
+                    Job Title is required.
+                  </div>
+                  <div
+                    *ngIf="!jobsForm.get('jobTitle')?.errors?.['required'] && jobsForm.get('jobTitle')?.errors?.['whitespace']">
+                    Job Title cannot be empty or just spaces.
+                  </div>
+                </div>
+
+                <!-- <div *ngIf="jobsForm.get('jobTitle')?.errors?.['whitespace']">Description cannot be empty or just spaces.</div> -->
+              </div>
+            </div>
+
+            <div class="col-md-6 mb-4">
+              <div class="form-group local-forms">
+                <label style="left: 10px !important">Job Location<span class="login-danger">*</span></label>
+                <input type="text" class="form-control" formControlName="jobLocation" placeholder="Enter Location" />
+                <div *ngIf="jobsForm.get('jobLocation')?.touched && jobsForm.get('jobLocation')?.invalid"
+                  class="text-danger">
+                  <div *ngIf="jobsForm.get('jobLocation')?.errors?.['required']">
+                    Job Location is required.
+                  </div>
+                  <div
+                    *ngIf="!jobsForm.get('jobLocation')?.errors?.['required'] && jobsForm.get('jobLocation')?.errors?.['whitespace']">
+                    Job Location cannot be empty or just spaces.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 mb-4" *ngIf="selectedType != 'TOC'">
+              <div class="form-group local-forms">
+                <label class="" style="left: 10px !important">Select Job Type<span
+                    class="login-danger gt">*</span></label>
+                <ng-select formControlName="employmentType" name="jobTypeId" [items]="jobTypeList" bindLabel="jobType"
+                  placeholder="Select Job Type" bindValue="id">
+                  <option value="">-Select-</option>
+                </ng-select>
+                <div *ngIf="
+                    jobsForm.get('employmentType')?.invalid &&
+                    jobsForm.get('employmentType')?.touched
+                  ">
+                  <span class="text-danger">This field is required.</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- <div class="col-md-6 mb-4">
+              <div class="form-group local-forms">
+                <label style="left: 10px !important">Job Requirement<span class="login-danger">*</span></label>
+                <input type="text" class="form-control" formControlName="jobRequirements" />
+                <div *ngIf="
+                    jobsForm.get('jobRequirements')?.invalid &&
+                    jobsForm.get('jobRequirements')?.touched
+                  ">
+                  <span class="text-danger">This field is required.</span>
+                </div>
+              </div>
+            </div> -->
+            <div class="col-md-6 mb-4">
+              <div class="form-group local-forms">
+                <label style="left: 10px !important">Wages (Per Hour)</label>
+                <div class="input-group">
+                  <span class="input-group-text">$</span>
+                  <input type="number" class="form-control" formControlName="wages" placeholder="Enter Wage" min="1" />
+                  <span class="input-group-text">hr</span>
+                </div>
+                <div *ngIf="
+                    jobsForm.get('wages')?.invalid &&
+                    jobsForm.get('wages')?.touched
+                  ">
+                  <!-- <span
+                    class="text-danger"
+                    *ngIf="jobsForm.get('salary')?.errors?.['required']"
+                    >This field is required.</span
+                  > -->
+                  <span class="text-danger" *ngIf="jobsForm.get('wages')?.errors?.['min']">Salary must be greater than
+                    0.</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 mb-4">
+              <div class="form-group local-forms">
+                <label style="left: 10px !important">Salary</label>
+                <div class="input-group">
+
+                  <!-- Arsh -->
+                  <div class="form-group-job">
+                    <div class="form-check form-check-inline" *ngIf="isTOC">
+                      <input class="form-check-input mt-1" placeholder="Enter Salary" type="radio"
+                        formControlName="salaryUnit" name="salaryUnit" [value]="'Daily'" id="salaryUnitDaily" />
+                      <label class="form-check-label" for="salaryUnitDaily">Daily</label>
+                    </div>
+
+                    <div class="form-check form-check-inline" *ngIf="isTOC">
+                      <input class="form-check-input mt-1" type="radio" name="salaryUnit" formControlName="salaryUnit" [value]="'Weekly'"
+                        id="salaryUnitWeekly" />
+                      <label class="form-check-label" for="salaryUnitWeekly">Weekly</label>
+                    </div>
+
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input mt-1" type="radio" name="salaryUnit" formControlName="salaryUnit" [value]="'Monthly'"
+                        id="salaryUnitMonth" />
+                      <label class="form-check-label" for="salaryUnitMonth">Monthly</label>
+                    </div>
+                 
+                  <div class="form-check form-check-inline" *ngIf="!isTOC">
+                    <input class="form-check-input mt-1" type="radio" name="salaryUnit" formControlName="salaryUnit" [value]="'Yearly'"
+                      id="salaryUnitYear" />
+                    <label class="form-check-label" for="salaryUnitYear">Yearly</label>
+                  </div>
+                   </div>
+                  <!-- End -->
+                  <span class="input-group-text">$</span>
+                  <input type="number" class="form-control" formControlName="salary" min="1" placeholder="Enter Wage" />
+                  <span class="input-group-text">Wages</span>
+                </div>
+                <div *ngIf="
+                    jobsForm.get('salary')?.invalid &&
+                    jobsForm.get('salary')?.touched
+                  ">
+                  <!-- <span class="text-danger"  *ngIf="jobsForm.get('salary')?.errors?.['required']">This field is required.</span> -->
+                  <span class="text-danger" *ngIf="jobsForm.get('salary')?.errors?.['min']">Salary must be greater than
+                    0.</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4 mb-4">
+              <div class="form-group local-forms">
+                <label style="left: 10px !important">Application Deadline<span class="login-danger">*</span></label>
+                <input type="text" class="form-control" formControlName="applicationDeadline" placeholder="Enter Date"
+                  id="dateRangePicker" [attr.disabled]="isEditMode ? true : null" (change)="traceChangeDate($event)" />
+                <div *ngIf="
+                    jobsForm.get('applicationDeadline')?.invalid &&
+                    jobsForm.get('applicationDeadline')?.touched
+                  ">
+                  <span class="text-danger">This field is required.</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4 mb-4">
+              <div class="form-group local-forms">
+                <label style="left: 10px !important">No. of vacancy<span class="login-danger">*</span></label>
+                <input min="1" type="number" class="form-control" formControlName="vacancyCount"
+                  placeholder="Enter Number" (keydown)="blockMinusKey($event)" />
+                <div *ngIf="jobsForm.get('vacancyCount')?.invalid && jobsForm.get('vacancyCount')?.touched">
+                  <span class="text-danger">This field is required.</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4 mb-4">
+              <div class="form-group local-forms">
+                <label style="left: 10px !important">No. of working hours<span class="login-danger">*</span></label>
+                <input min="1" type="number" class="form-control" formControlName="workingHours"
+                  placeholder="Enter Number" (keydown)="blockMinusKey($event)" />
+                <div *ngIf="jobsForm.get('workingHours')?.invalid && jobsForm.get('workingHours')?.touched">
+                  <span class="text-danger">This field is required.</span>
+                </div>
+                <div *ngIf="jobsForm.get('workingHours')?.invalid && jobsForm.get('workingHours')?.touched">
+                  <span class="text-danger" *ngIf="jobsForm.get('workingHours')?.errors?.['min']">working hours must be
+                    greater than 0.</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-12 mb-4">
+              <div class="form-group local-forms">
+                <label style="left: 10px !important">Job Description<span class="login-danger">*</span></label>
+                <!-- <input type="text" class="form-control" formControlName="jobDescription"> -->
+                <textarea class="form-control" formControlName="jobDescription" placeholder="Enter Description"
+                  (input)="onInputValidation($event, 'description')" rows="4"></textarea>
+                <small class="text-muted">
+                  {{ jobsForm.get('jobDescription')?.value?.length || 0 }}/500 characters
+                </small>
+
+
+                <div *ngIf="jobsForm.get('jobDescription')?.touched && jobsForm.get('jobDescription')?.invalid"
+                  class="text-danger">
+                  <div *ngIf="jobsForm.get('jobDescription')?.errors?.['required']">
+                    Job Description is required.
+                  </div>
+                  <div
+                    *ngIf="!jobsForm.get('jobDescription')?.errors?.['required'] && jobsForm.get('jobDescription')?.errors?.['whitespace']">
+                    Job Description cannot be empty or just spaces.
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12 mb-2">
+              <div class="student-submit text-end">
+                <button type="submit" class="btn btn-primary me-2" [disabled]="
+                    selectedType != 'TOC' &&
+                    (!jobsForm.valid ||
+                      (availableJobPostCount.count == 0 && !isEditMode))
+                  ">
+                  <!-- [disabled]="
+                    !jobsForm.valid ||
+                    (availableJobPostCount.count == 0 && !isEditMode)
+                  " -->
+                  {{ isEditMode ? "Update" : "Submit" }}
+                </button>
+
+                <button type="reset" class="btn btn-secondary" (click)="cancel()">
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!--payment moadl to update plan-->
+    <!-- [formGroup]="UpgradeJobPostingsPaymentForm" -->
+    <!-- <form [formGroup]="UpgradeJobPostingsPaymentForm" (ngSubmit)="CalculateJobPostingAmount()">
+       Modal 
+      <div class="modal fade" id="paymentForJobPostingModal" tabindex="-1" aria-labelledby="paymentForJobPostingModal"
+        aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+             Modal Header 
+            <div class="modal-header">
+              <h5 class="modal-title">
+                Upgrade Job Postings
+              </h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+             Modal Body 
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-md-12 mb-4">
+                  <div class="form-group local-forms">
+                    <label for="field-title">Job Postings</label>
+                    <input type="number" id="Section" (input)="onTypingJobPostingCount($event)" id="jobPostingCountInput"
+                      formControlName="jobPostingCount" class="form-control" />
+                    <div *ngIf="
+                          UpgradeJobPostingsPaymentForm.get('jobPostingCount')?.invalid &&
+                          (UpgradeJobPostingsPaymentForm.get('jobPostingCount')?.touched ||
+                          UpgradeJobPostingsPaymentForm.get('jobPostingCount')?.dirty)
+                        ">
+                      <div class="text-danger"
+                        *ngIf="UpgradeJobPostingsPaymentForm.get('jobPostingCount')?.errors?.['required'] && !InvalidJobPostingNumber">
+                        Field Section is required.
+                      </div>
+                    </div>
+
+
+                    <div class="text-danger" *ngIf="limitCrossOfJobPostingCount">
+                      Your Limit is crossed
+                    </div>
+
+                    <div class="text-danger" *ngIf="InvalidJobPostingNumber">
+                      Please enter valid number
+                    </div>
+                  </div>
+
+                </div>
+                <div class="col-md-12"  *ngIf="TotalAmountToShow > 0">
+                  <div *ngIf="ShowAmountField" class="form-group  mt-2">
+                    <label for="field-title">Amount To Pay $</label>
+                    <input type="hidden" formControlName="AmountToPay" class="form-control" />
+                    <div class="">
+                      {{TotalAmountToShow}}
+                    </div>
+
+                     <div *ngIf="
+                          UpgradeJobPostingsPaymentForm.get('AmountToPay')?.invalid &&
+                          (UpgradeJobPostingsPaymentForm.get('AmountToPay')?.touched ||
+                          UpgradeJobPostingsPaymentForm.get('AmountToPay')?.dirty)
+                        ">
+                        <div class="text-danger" *ngIf="UpgradeJobPostingsPaymentForm.get('AmountToPay')?.errors?.['required']">
+                          Field Section is required.
+                        </div>
+                      </div> 
+                  </div>
+                </div>
+              </div>
+            </div>
+             Modal Footer 
+            <div class="modal-footer">
+              <button id="jobPostingUpgradeSubmitButton" type="submit" class="btn btn-primary">
+                Pay Now
+              </button>
+              <button type="button" (click)="CancelButtonOfUpgradeJobPostingPaymentForm()"
+                class="btn btn-secondary">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form> -->
+
+    <!--Upgrade job post plan modal start-->
+    <form [formGroup]="UpgradeJobPostPlanForm" (ngSubmit)="UpgradeJobPostPlanSubmit()">
+      <!-- Modal  -->
+      <div class="modal fade" id="upgradeJobPostPlanModal" tabindex="-1" aria-labelledby="upgradeJobPostPlanModal"
+        aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <!-- Modal Header  -->
+            <div class="modal-header">
+              <h5 class="modal-title">Upgrade Job Postings</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <!-- Modal Body  -->
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-md-12 mb-4">
+                  <div class="form-group local-forms">
+                    <label for="field-title">Choose Plan</label>
+                    <ng-select placeholder="Plan Options" [items]="JobPostPlansList" bindLabel="planName"
+                      bindValue="planID" formControlName="jobPostPlanID">
+                    </ng-select>
+                    <div *ngIf="
+                        UpgradeJobPostPlanForm.get('jobPostPlanID')?.invalid &&
+                        (UpgradeJobPostPlanForm.get('jobPostPlanID')?.touched ||
+                          UpgradeJobPostPlanForm.get('jobPostPlanID')?.dirty)
+                      ">
+                      <div class="text-danger"
+                        *ngIf="UpgradeJobPostPlanForm.get('jobPostPlanID')?.errors?.['required']">
+                        Field Section is required.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Modal Footer  -->
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-primary">Pay Now</button>
+              <button type="button" class="btn btn-secondary">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <!--Upgrade job post plan modal end-->
+
+    <div class="breadcrum-none">
+      <app-job-portal-details (reUseJob)="reUseJobPost($event)" (editJob)="onEdit($event)"></app-job-portal-details>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,86 @@
+<!-- Counsellor Section -->
+<!-- @* 🟦 Counsellor Loader / No Record / Card *@ -->
+@switch(skeletonShow) {
+  @case('Skelton') {
+    <app-skeleton-loader skeletonShow="Skelton" viewType="card"></app-skeleton-loader>
+  }
+  @default {
+    <div class="card level-1 mb-4" style="background-color: #e3f2fd;">
+      <div class="card-body">
+        <h2 class="mb-3">Counsellor</h2>
+        <div class="d-flex align-items-center gap-3">
+          <img [src]="Counsellor?.profilePhoto || 'assets/img/dummy-avatar.jpg'" class="rounded-circle" alt="Counsellor"
+            style="width: 80px; height: 80px; object-fit: cover;" />
+          <div>
+            <h5 class="mb-0">{{ Counsellor?.fullName }}</h5>
+            <p class="mb-0 text-muted">{{ Counsellor?.counsellorEmail }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+}
+
+<!-- 🔸 Daycare List Container -->
+<div class="card">
+  <div class="card-body">
+
+    <!-- 🔹 Header & Search -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h2 class="mb-0">Daycare List</h2>
+      <div class="input-group w-50">
+        <input type="text" class="form-control" placeholder="Search by DayCare Name or Email" [(ngModel)]="searchText"
+          (ngModelChange)="applyFilter()" />
+        <button class="btn buttonStyle" type="button" (click)="applyFilter()"
+          style="background-color: #a2719e; color: #fff; border: none;">
+          Search
+        </button>
+      </div>
+    </div>
+
+    <!-- 🔹 Daycare Grid with Conditional Loader -->
+    @if (skeletonShow === 'Skelton') {
+      <app-skeleton-loader skeletonShow="Skelton" viewType="card" [cardCount]="6"></app-skeleton-loader>
+    }
+    @else if (skeletonShow === 'NoRecord') {
+      <app-skeleton-loader skeletonShow="NoRecord" viewType="card"></app-skeleton-loader>
+    }
+    @else {
+      <div class="row">
+        <div class="col-md-4 mb-3"
+          *ngFor="let item of displayedDcc | paginate: { itemsPerPage: ContentSize, currentPage: ContentP, id: 'Agentcontrol' }">
+          <div class="card h-100 shadow-sm" style="background-color: #ede7f6;">
+            <div class="card-body d-flex align-items-center gap-3">
+              <img [src]="item?.profilePhoto || 'assets/img/dummy-avatar.jpg'" class="rounded-circle" alt="DCC"
+                style="width: 60px; height: 60px; object-fit: cover;" />
+              <div>
+                <h6 class="mb-0">{{ item?.dcCname }}</h6>
+                <small *ngIf="item?.ownerName" class="text-muted d-block">
+                  <b>Owner Name:</b> {{ item?.ownerName }}
+                </small>
+                <small *ngIf="item?.dccEmail" class="text-muted d-block">
+                  <b>Email:</b> {{ item?.dccEmail }}
+                </small>
+                <small *ngIf="item?.pinCode" class="text-muted d-block">
+                  <b>Pin Code:</b> {{ item?.pinCode }}
+                </small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- 🔹 Pagination (only when data exists) -->
+    @if (skeletonShow === '' && displayedDcc?.length > 6) {
+      <div class="col pagination-style pb-2 mb-4">
+        <div class="datatable-pager datatable-paging-loaded">
+          <pagination-controls previousLabel="« prev" nextLabel="next »" [maxSize]="5"
+            class="datatable-pager-nav my-2 mb-sm-0" id="Agentcontrol" (pageChange)="ContentP = $event">
+          </pagination-controls>
+        </div>
+      </div>
+    }
+
+  </div>
+</div>

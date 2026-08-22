@@ -1,0 +1,67 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      @if(item.length > 0) {
+      <div class="card-body" *ngFor="let sections of item">
+        <div class="heading-new">
+          <h5 class="mb-0">{{ sections.sectionName }}</h5>
+        </div>
+        <dl class="row mb-0" *ngFor="let label of sections.labels">
+          <dt class="col-6 fw-medium mb-3">{{ label.labelName }}</dt>
+          <dd class="col-6 mb-3">
+            <span *ngIf="label.answer == null">-------</span>{{ label.answer }}
+          </dd>
+          <!-- <dt class="col-6 fw-medium  mb-3">Any specific sleep needs</dt> 
+                    <dd class="col-6 mb-3"><span *ngIf="item.pecificSleepNeeds == null">-------</span>{{item.pecificSleepNeeds | timeFormat}}</dd>  -->
+        </dl>
+        <!--  <div  class="heading-new"><h5  class="mb-0">Favorite Foods/Snacks</h5></div>
+                <dl class="row mb-0"> 
+                 
+                    <dt class="col-6 fw-medium  mb-3">Favorite Meals</dt> 
+                    <dd class="col-6 mb-3"><span *ngIf="item.favouriteMeals == null">-------</span>{{item.favouriteMeals}}</dd> 
+                    <dt class="col-6 fw-medium  mb-3">Snacks Preferences</dt> 
+                    <dd class="col-6 mb-3"><span *ngIf="item.snackPreference == null">-------</span>{{item.snackPreference}}</dd> 
+                    <dt class="col-6 fw-medium  mb-3">Any Food Allergies</dt> 
+                    <dd class="col-6 mb-3"><span *ngIf="item.foodAllergy == null">-------</span>{{item.foodAllergy}}</dd> 
+                
+                </dl>
+                <div  class="heading-new"><h5  class="mb-0">Toilet Training Status</h5></div>
+                <dl class="row mb-0"> 
+                 
+                    <dt class="col-6 fw-medium  mb-3">Is your child toilet trained?</dt> 
+                    <dd class="col-6 mb-3"><span *ngIf="item.childPottyTrained == null">-------</span>{{item.childPottyTrained}}</dd> 
+                    <dt class="col-6 fw-medium  mb-3">Assistance needed?</dt> 
+                    <dd class="col-6 mb-3"><span *ngIf="item.assistanceNeeded == null">-------</span>{{item.assistanceNeeded}}</dd> 
+                 
+                
+                </dl>
+                <div  class="heading-new"><h5  class="mb-0">Social Behavior</h5></div>
+                <dl class="row mb-0"> 
+                 
+                    <dt class="col-6 fw-medium  mb-3">Likes</dt> 
+                    <dd class="col-6 mb-3"><span *ngIf="item.likes == null">-------</span>{{item.likes}}</dd> 
+                    <dt class="col-6 fw-medium  mb-3">Dislikes</dt> 
+                    <dd class="col-6 mb-3"><span *ngIf="item.dislikes == null">-------</span>{{item.dislikes}}</dd> 
+                 
+                
+                </dl>
+                <div  class="heading-new"><h5  class="mb-0">Additional Information</h5></div> -->
+        <!-- <dl class="row mb-0">  -->
+
+        <!-- <dt class="col-6 fw-medium  mb-3">Likes</dt> 
+                    <dd class="col-6 mb-3">Peace</dd> 
+                    <dt class="col-6 fw-medium  mb-3">Dislikes</dt> 
+                    <dd class="col-6 mb-3">loudest noise</dd> 
+                  -->
+
+        <!-- </dl> -->
+      </div>
+      } @else {
+      <div class="no-data">
+        <img src="assets/img/no-data-img.png" alt="No Record Found" />
+        <span>No Record Found</span>
+      </div>
+      }
+    </div>
+  </div>
+</div>

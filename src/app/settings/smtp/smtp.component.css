@@ -1,0 +1,15 @@
+.my-ssl-box {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #ababab;
+}
+div#pills-smtp .card-body {
+    padding: 0px !important;
+}
+
+@media(max-width:768px){
+    .student-submit{
+          margin-top: 1.5rem;
+    }
+}

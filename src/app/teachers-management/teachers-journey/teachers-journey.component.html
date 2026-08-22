@@ -1,0 +1,161 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-12">
+            <!-- con -->
+
+
+            <section class="section-timeline">
+              <div class="container">
+                <div class="d-flex flex-column justify-content-start align-items-center">
+
+                  <div class="top-box d-flex justify-content-center align-items-center">
+                    <div class="card crd-bdy">
+                      <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+
+
+                          @if (skeletonShow === 'Skelton') {
+
+                          <app-skeleton-loader skeletonShow="Skelton" viewType="profileImage">
+                          </app-skeleton-loader>
+
+
+                          } @else {
+                          <div class="col-md-4 text-center">
+                            <div class="imagu">
+                              <img [src]="
+                                  profileData?.s3Url
+                                    ? profileData?.s3Url
+                                    : 'assets/img/dummy-avatar.jpg'
+                                " width="100%" height="100%" alt="Profile Photo" class="rounded-circle" />
+                            </div>
+                          </div>
+
+
+                          <div class="teach">
+                            <h5>
+                              {{ profileData?.firstName }}
+                              {{ profileData?.lastName }}
+                            </h5>
+                            <p class="m-0">
+                              <b class="bld=2">Email:-</b>
+                              {{ profileData?.email }}
+                            </p>
+                            <p class="m-0">
+                              <b class="bld=2">Role:-</b>
+                              {{ transferRecordList?.roleSpecialization }}
+                            </p>
+                            <p class="m-0">
+                              {{ transferRecordList?.qualification }}
+                            </p>
+                          </div>
+                          }
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+
+
+                  <ul class="timeline tline p-0" id="tline">
+                    <li class="">
+                      <div class="content">
+                        <h4>Journey Start</h4>
+
+                        @if (skeletonShow === 'Skelton' ) {
+
+                        <app-skeleton-loader skeletonShow="Skelton" viewType="user-info-card">
+                        </app-skeleton-loader>
+
+
+                        } @else {
+                        <p>
+                          <b>{{ profileData?.firstName }}
+                            {{ profileData?.lastName }}
+                          </b>
+                          has joined
+                          <b> {{ transferRecordList?.previousCenterName }} </b>
+                          on
+
+
+                          <b>
+                            <span *ngIf="
+                                transferRecordList?.offerLetterAcceptanceDate
+                              ">{{
+                              transferRecordList?.offerLetterAcceptanceDate
+                              | date : "MM/dd/yyyy"
+                              }}</span>
+
+                            <span *ngIf="
+                                !transferRecordList?.offerLetterAcceptanceDate
+                              ">{{
+                              profileData.createDate | date : "MM/dd/yyyy"
+                              }}</span>
+                          </b>
+                        </p>
+                        }
+                      </div>
+                    </li>
+                    @if(transferRecordList?.transferDate){
+                    <li class="">
+                      <div class="content">
+                        <h4>Milestone</h4>
+
+                        <div class="d-flex flex-column">
+                          <p><b>Employee Transfer Date:-</b></p>
+                          <p>
+                            {{ transferRecordList?.transferDate?.slice(0, -9) }}
+                          </p>
+                          <p>-</p>
+
+                          <p>
+                            <b>{{ transferRecordList?.currentCentreName }}</b>
+                          </p>
+                          <p>
+                            <b>{{ transferRecordList?.currentCentreEmail }}</b>
+                          </p>
+                        </div>
+                      </div>
+                    </li>
+
+                    }
+
+                    <!-- <li class="">
+                        <div class="content">
+                          <h4>Milestone</h4>
+                          <p>Carlos Joined the cat Daycare</p>
+                        </div>
+                      </li>
+                      <li class="">
+                        <div class="content">
+                          <h4>Milestone</h4>
+                          <p>Carlos Joined the Fun Daycare</p>
+                        </div>
+                      </li>
+                      <li class="">
+                        <div class="content">
+                          <h4>Milestone</h4>
+                          <p>Carlos Joined the Rose Daycare</p>
+                        </div>
+                      </li>
+                      <li class="">
+                        <div class="content">
+                          <h4>Milestone</h4>
+                          <p>Carlos Joined the Brancos Daycare</p>
+                        </div>
+                      </li> -->
+                  </ul>
+                </div>
+              </div>
+            </section>
+
+            <!-- con-end -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

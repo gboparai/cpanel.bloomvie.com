@@ -1,0 +1,388 @@
+<div id="preloader" class="preloader-overlay" *ngIf="isLoading">
+  <div class="preloader-wrap">
+    <img src="assets/img/loading-main.svg" alt="Loading" class="preloader-icon">
+  </div>
+</div>
+
+<div class="row" *ngIf="!isLoading">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+
+                <form [formGroup]="studentForm">
+                    <div class="heading-new">
+                        <h5 class="mb-0">Student Details</h5>
+                    </div>
+                    <div class="row">
+
+
+                        <div class="col-md-8">
+                            <div class="row">
+                                <div class="col-12 col-md-6 mb-4">
+                                    <div class="form-group local-forms">
+                                        <label>First Name<span class="login-danger">*</span></label>
+                                        <input class="form-control" type="text" formControlName="firstName" placeholder="Enter First Name">
+                                        <div
+                                            *ngIf="studentForm.get('firstName')?.invalid && studentForm.get('firstName')?.touched">
+                                            <span class="text-danger">This field is required.</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6 mb-4">
+                                    <div class="form-group local-forms">
+                                        <!--commented on 06/11/2024-->
+                                        <!--  <label>Last Name<span class="login-danger">*</span></label>
+                                        <input class="form-control" type="text" formControlName="lastName">
+                                         <div
+                                            *ngIf="studentForm.get('lastName')?.invalid && studentForm.get('lastName')?.touched">
+                                            <span class="text-danger">This field is required.</span>
+                                        </div> -->
+
+                                        <!--added on 06/11/2024-->
+                                        <label>Last Name</label>
+                                        <input class="form-control" type="text" formControlName="lastName" placeholder="Enter Last Name">
+                                        <!---->
+
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6 mb-4">
+                                    <div class="form-group local-forms">
+                                        <label>DOB<span class="login-danger">*</span></label>
+
+
+                                        <!--commented on 06/11/2024-->
+                                        <!-- <input class="form-control" type="date" formControlName="dob"
+                                            (change)="onDobChange($event)">
+                                        <div *ngIf="studentForm.get('dob')?.touched && studentForm.get('dob')?.invalid">
+                                            <span class="text-danger">
+                                                <span *ngIf="studentForm.get('dob')?.errors?.['required']">This
+                                                    field is required.</span>
+                                            </span>
+                                        </div> -->
+
+                                        <!--added on 06/11/2024-->
+                                        <input class="form-control" id="dobDatePicker" formControlName="dob" placeholder="Enter DOB"
+                                            (change)="onDobChange($event)">
+                                        <div *ngIf="studentForm.get('dob')?.touched && studentForm.get('dob')?.invalid">
+                                            <span class="text-danger">
+                                                <span *ngIf="studentForm.get('dob')?.errors?.['required']">This
+                                                    field is required.</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 col-md-6 mb-4">
+                                    <div class="form-group local-forms">
+                                        <label>Age Group<span class="login-danger">*</span></label>
+                                        <!-- [items]="ageGroup" -->
+                                        <ng-select formControlName="ageGroupID" [items]="ageGroup"
+                                            placeholder="-Select Age Of Child-" bindLabel="label" bindValue="value" >
+                                        </ng-select>
+                                        <div
+                                            *ngIf="studentForm.get('ageGroupID')?.touched && studentForm.get('ageGroupID')?.invalid">
+                                            <span class="text-danger">
+                                                <span *ngIf="studentForm.get('ageGroupID')?.errors?.['required']">This
+                                                    field is required.</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4 mb-4">
+                                    <div class="gender-section">
+                                        <label for="gender" class="gender-label">Gender</label>
+                                        <div class="gender-options">
+                                            <label class="gender-option">
+                                                <input type="radio" name="gender" value="male" formControlName="gender">
+                                                Male</label>
+                                            <label class="gender-option">
+                                                <input type="radio" name="gender" value="female"
+                                                    formControlName="gender">Female</label>
+                                            <label class="gender-option">
+                                                <input type="radio" name="gender" value="other"
+                                                    formControlName="gender"> Other</label>
+                                        </div>
+                                        <div
+                                            *ngIf="studentForm.get('gender')?.invalid && studentForm.get('gender')?.touched">
+                                            <span class="text-danger">This field is required.</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <!-- <div class="col-md-4">
+                            <div class="row">
+                                <div class="col-md-12 mb-4">
+                                    <div class="avatar-upload">
+                                        <div class="avatar-preview" title="Upload Profile Image">
+                                            <div id="imagePreview"
+                                                [ngStyle]="{'background-image': 'url(' + imageUrl + ')'}"></div>
+                                            <div class="avatar-edit">
+                                                <input type="file" id="imageUpload" accept=".png, .jpg, .jpeg"
+                                                    (change)="onFileSelected($event)" />
+                                                <label for="imageUpload"></label>
+                                              
+                                            </div>
+                                        </div>
+                                        <div class="text-center"
+                                        *ngIf="parentForm.get('studentForm.profilePhoto')?.invalid && parentForm.get('studentForm.profilePhoto')?.touched">
+                                        <span class="text-danger">This field is required.</span>
+                                    </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> -->
+                        <div class="col-md-4">
+                            <div class="row">
+                                <div class="col-md-12 mb-4">
+                                    <div class="avatar-upload">
+                                        <div class="avatar-preview" title="Upload Profile Image">
+                                            <div id="imagePreview"
+                                                [ngStyle]="{'background-image': 'url(' + (parentChildDetail.studentProfilePhoto ? parentChildDetail.studentProfilePhoto : 'assets/img/image-selector-profile.jpg') + ')'}">
+                                            </div>
+                                            <div class="avatar-edit">
+                                                <input type="file" id="imageUpload" accept=".png, .jpg, .jpeg"
+                                                    (change)="onFileSelected($event)" />
+                                                <label for="imageUpload"></label>
+                                            </div>
+                                        </div>
+                                        <div class="text-center"
+                                            *ngIf="studentForm.get('profilePhoto')?.invalid && studentForm.get('profilePhoto')?.touched">
+                                            <span class="text-danger">This field is required.</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </form>
+                <form [formGroup]="parentForm">
+                    <div class="heading-new">
+                        <h5 class="mb-0">Parent/Guardian Details</h5>
+                    </div>
+                    <div class="row">
+
+                        <div class="col-md-12">
+                            <div class="row">
+
+                                <div class="col-12 col-md-4 mb-4">
+                                    <div class="form-group local-forms">
+                                        <label>First Name<span class="login-danger">*</span></label>
+                                        <input class="form-control" type="text" formControlName="firstName" placeholder="Enter First Name">
+                                        <div
+                                            *ngIf="parentForm.get('firstName')?.invalid && parentForm.get('firstName')?.touched">
+                                            <span class="text-danger">This field is required.</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-4 mb-4">
+                                    <div class="form-group local-forms">
+
+                                        <!--commented on 06/11/2024-->
+                                        <!-- <label>Last Name<span class="login-danger">*</span></label>
+                                        <input class="form-control" type="text" formControlName="lastName">
+                                        <div
+                                            *ngIf="parentForm.get('lastName')?.invalid && parentForm.get('lastName')?.touched">
+                                            <span class="text-danger">This field is required.</span>
+                                        </div> -->
+
+                                        <!--added on 06/11/2024-->
+                                        <label>Last Name</label>
+                                        <input class="form-control" type="text" formControlName="lastName" placeholder="Enter Last Name">
+                                        <!---->
+
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-4 mb-4">
+                                    <div class="form-group local-forms">
+                                        <label>Relationship to student<span class="login-danger">*</span></label>
+                                        <select class="form-select" formControlName="relation" >
+                                            <option value="" disabled selected>-Select-</option>
+                                            <option value="Mother">Mother</option>
+                                            <option value="Father">Father</option>
+                                            <option value="Other">Other</option>
+                                        </select>
+                                        <div
+                                            *ngIf="parentForm.get('relation')?.invalid && parentForm.get('relation')?.touched">
+                                            <span class="text-danger">This field is required.</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            
+                                
+                                <div class="col-12 col-md-4 mb-4 custom-flag">
+                                    <div class="form-group local-forms">
+                                        <label for="contactNumber">Mobile Number <span class="text-danger">*</span></label>
+                                        <div class="">
+                                              <div class="position-absolute flag" style="
+                                                                                            top: 35px;
+                                                                                            left: 0px;
+                                                                                            display: flex;
+                                                                                            align-items: center;
+                                                                                            gap: 4px;
+                                                                                          ">
+                            <div class="country-selector" (click)="toggleDropdown()">
+                                <img [src]="selectedCountry.flag" class="new-flag" alt="Flag">
+                                <span class="me-1">{{ selectedCountry.code }}</span>
+                                <span class="arrow">
+                                    <i [class]="dropdownOpen ? 'fas fa-chevron-up' : 'fas fa-chevron-down'"></i>
+                                </span>
+                        
+                                <!-- Dropdown list -->
+                                <div class="dropdown" *ngIf="dropdownOpen">
+                                    <div class="dropdown-item" *ngFor="let country of countries" (click)="selectCountry(country)">
+                                        <img [src]="country.flag" class="flag" alt="Flag">
+                                        <span class="color-black">({{ country.code }})</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                                            <input id="contactNumber" 
+                                                   class="form-control" 
+                                                   style="padding-left: 90px;"
+                                                   type="text" 
+                                                   formControlName="mobile"  placeholder="Enter Number"
+                                                   maxlength="12" 
+                                                   (input)="formatPhoneNumber($event)" 
+                                                   (blur)="CheckInterestedMobileExist($event)">
+                                        </div>
+                                        <div *ngIf="parentForm.get('mobile')?.invalid && parentForm.get('mobile')?.touched">
+                                            <span class="text-danger">This field is required.</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            
+                                <div class="col-12 col-md-4 mb-4">
+                                    <div class="form-group local-forms">
+                                        <label> Email<span class="login-danger">*</span></label>
+                                        <input class="form-control" placeholder="Enter Email" type="text" formControlName="email" readonly >
+                                        <div
+                                            *ngIf="parentForm.get('email')?.invalid && parentForm.get('email')?.touched">
+                                            <span class="text-danger">This field is required.</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-4">
+                                    <div class="form-group local-forms">
+                                        <label>Zip Code / Postal Code
+<span class="login-danger">*</span></label>
+                                        <!-- (keydown)="onKeyDown($event)"  -->
+                                        <input type="text" formControlName="pinCode" class="form-control" id="pinCode"
+                                            (input)="fetchLocationData(parentForm.get('pinCode')?.value)" (input)="formatPostalCode($event)" maxlength="7"                   placeholder="A1A A1A / 56786"
+>
+
+                                        <div *ngIf="parentForm.get('pinCode')?.touched && parentForm.get('pinCode')?.invalid"
+                                            class="text-danger">
+                                            <div *ngIf="parentForm.get('pinCode')?.errors?.['required']">This field is
+                                                required.</div>
+                                                <small class="text-danger" *ngIf="parentForm.get('pinCode')?.errors?.['pattern']">Please enter a valid pin code.</small>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-md-4 mb-4">
+                                    <div class="form-group local-forms">
+                                        <label>Country</label>
+                                        <!-- <ng-select (change)="onChangeCountry($event.id)" formControlName="countryID"
+                                        [items]="countryList" bindLabel="name" bindValue="id">
+                             </ng-select> -->
+                                        <input id="country" formControlName="country" name="country" type="text" placeholder="Enter Country"
+                                            class="form-control" />
+                                        <!-- <div *ngIf="parentForm.get('country')?.touched && parentForm.get('country')?.invalid"
+                                            class="text-danger">
+                                            This field is required.
+                                        </div> -->
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4 mb-4">
+                                    <div class="form-group local-forms">
+                                        <label>State</label>
+                                        <!-- <ng-select (change)="onChangeState($event.id)" formControlName="stateID"
+                                        [items]="stateList" bindLabel="name" bindValue="id">
+                             </ng-select> -->
+                                        <input id="state" formControlName="state" name="state" type="text"placeholder="Enter State"
+                                            class="form-control" />
+                                        <!-- <div *ngIf="parentForm.get('state')?.touched && parentForm.get('state')?.invalid"
+                                            class="text-danger">
+                                            This field is required.
+                                        </div> -->
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4 mb-4">
+                                    <div class="form-group local-forms">
+                                        <label>City</label>
+                                        <!-- <ng-select  formControlName="cityID"
+                                        [items]="cityList" bindLabel="name" bindValue="id">
+                             </ng-select> -->
+                                        <input id="city" formControlName="city" name="city" type="text"placeholder="Enter City"
+                                            class="form-control" />
+                                        <!-- <div *ngIf="parentForm.get('city')?.touched && parentForm.get('city')?.invalid"
+                                            class="text-danger">
+                                            This field is required.
+                                        </div> -->
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-4 mb-4">
+                                    <div class="form-group local-forms">
+                                        <label> Address<span class="login-danger">*</span></label>
+                                        <textarea rows="4" class="form-control" formControlName="address" placeholder="Enter Address"></textarea>
+                                        <div *ngIf="parentForm.get('address')?.touched && parentForm.get('address')?.invalid"
+                                            class="text-danger">
+                                            <div *ngIf="parentForm.get('address')?.errors?.['required']">This field is
+                                                required.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <div class="col-md-4">
+                            <div class="row">
+                                <div class="col-md-12 mb-4">
+                                    <div class="avatar-upload">
+                                        <div class="avatar-preview">
+                                            <div id="imagePreview"
+                                                style="background-image: url(assets/img/image-selector-profile.jpg );">
+                                            </div>
+                                            <div class="avatar-edit" title="Upload Profile Image here">
+                                                <input type='file' id="imageUpload1" accept=".png, .jpg, .jpeg" />
+                                                <label for="imageUpload1"></label>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> -->
+                    </div>
+                </form>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="student-submit text-end">
+
+                            <!--sahib added on 21-10-2024-->
+                            <!-- <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#Custom-form"> Add
+                                Field</button> -->
+                            <button class="btn btn-primary me-2" (click)="onSubmit()">Save and proceed</button>
+                            <button class="btn btn-secondary " (click)="cancel()">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

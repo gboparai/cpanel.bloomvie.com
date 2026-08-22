@@ -1,0 +1,25 @@
+/* Full white overlay */
+.preloader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: white; /* Solid white background */
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Centered wrap, then shift left slightly */
+.preloader-wrap {
+  transform: translateX(-40px); /* shift spinner 40px to the left */
+  text-align: center;
+}
+
+/* Image size */
+.preloader-icon {
+  width: 100px;
+  height: auto;
+}

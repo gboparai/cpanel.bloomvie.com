@@ -1,0 +1,417 @@
+<app-breadcrumb></app-breadcrumb>
+<div class="row">
+  <div class="col-md-12">
+    <div class="card" #formSection>
+      <div class="card-body">
+        <div class="heading-new">
+          <h5 class="mb-0">Assign Employee Role</h5>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
+            <div class="student-submit text-end">
+              <button
+                data-bs-toggle="modal"
+                data-bs-target="#assEmpRole"
+                id="btnsubmit"
+                (click)="removeValidation()"
+                type="submit"
+                class="btn btn-primary"
+              >
+                <i class="fa fa-plus me-1"></i> Add Employee Role
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="heading-new">
+          <h5 class="mb-0">View Employee Role</h5>
+        </div>
+        <div class="row justify-content-end">
+          <div class="col-md-3 mb-4">
+            <div class="form-group local-forms">
+              <label>Search By Role</label>
+              <ng-select
+                formControlName="UserRoleId"
+                (change)="filterEmployeeRoles($event.id, currentisActive)"
+                placeholder="Select Role"
+                name="UserRoleId"
+                [items]="UserRoleList"
+                bindLabel="userRole"
+                bindValue="id"
+              ></ng-select>
+            </div>
+          </div>
+          <div class="col-md-3 mb-4">
+            <div class="form-group local-forms">
+              <label>Search By Status</label>
+              <ng-select
+                (change)="
+                  filterEmployeeRoles(currentUserRoleId, selectStatusId)
+                "
+                placeholder="Select status"
+                [(ngModel)]="selectStatusId"
+                [items]="statusOptions"
+                bindLabel="label"
+                bindValue="value"
+              >
+              </ng-select>
+            </div>
+          </div>
+        </div>
+        <div class="table-responsive">
+          <!-- <label class="form-label">Search By Role<span class="login-danger">*</span></label>
+
+                    <ng-select formControlName="UserRoleId" name="UserRoleId" [items]="UserRoleList" 
+                                bindLabel="userRole" bindValue="id"></ng-select>
+
+                                <ng-select formControlName="UserRoleId" name="UserRoleId" [items]="UserRoleList" 
+                                bindLabel="userRole" bindValue="id"></ng-select> -->
+          <table class="table table-hover mb-0">
+            <thead class="student-thread">
+              <tr>
+                <th>#</th>
+                <th>First&nbsp;Name</th>
+                <th>Last&nbsp;Name</th>
+                <th>Email</th>
+                <th>Contact&nbsp;Number</th>
+                <th>Role</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody *ngIf="EmployeeRoleList.length > 0; else noRecords">
+              <tr
+                *ngFor="
+                  let employee of EmployeeRoleList
+                    | paginate : { itemsPerPage: 5, currentPage: currentPage };
+                  let i = index
+                "
+              >
+                <td>{{ i + 1 + (currentPage - 1) * itemsPerPage }}</td>
+                <td>{{ employee.firstName }}</td>
+                <td>{{ employee.lastName }}</td>
+                <td>{{ employee.email }}</td>
+                <td>{{ employee.contact }}</td>
+                <td>{{ employee.userRole }}</td>
+
+                <td>
+                  <div class="actions">
+                    <a
+                      class="action-btn me-2"
+                      [ngClass]="{
+                        'bg-success-light': employee.action,
+                        'bg-danger-light': !employee.action
+                      }"
+                      (click)="onEditEmployee(employee, 'true')"
+                    >
+                      <i class="feather-edit"></i>
+                    </a>
+                    <label class="switch mb-0">
+                      <input
+                        type="checkbox"
+                        [(ngModel)]="employee.action"
+                        (change)="
+                          activeInactiveEmployeeStatus(
+                            employee.id,
+                            $event.target
+                          )
+                        "
+                      />
+
+                      <div class="slider">
+                        <div class="circle">
+                          <svg
+                            xml:space="preserve"
+                            viewBox="0 0 365.696 365.696"
+                            y="0"
+                            x="0"
+                            height="6"
+                            width="6"
+                            xmlns:xlink="http://www.w3.org/1999/xlink"
+                            version="1.1"
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="cross"
+                            style="enable-background: new 0 0 512 512"
+                          >
+                            <g>
+                              <path
+                                data-original="#000000"
+                                fill="currentColor"
+                                d="M243.188 182.86 356.32 69.726c12.5-12.5 12.5-32.766 0-45.247L341.238 9.398c-12.504-12.503-32.77-12.503-45.25 0L182.86 122.528 69.727 9.374c-12.5-12.5-32.766-12.5-45.247 0L9.375 24.457c-12.5 12.504-12.5 32.77 0 45.25l113.152 113.152L9.398 295.99c-12.503 12.503-12.503 32.769 0 45.25L24.48 356.32c12.5 12.5 32.766 12.5 45.247 0l113.132-113.132L295.99 356.32c12.503 12.5 32.769 12.5 45.25 0l15.081-15.082c12.5-12.504 12.5-32.77 0-45.25zm0 0"
+                              ></path>
+                            </g></svg
+                          ><svg
+                            xml:space="preserve"
+                            viewBox="0 0 24 24"
+                            y="0"
+                            x="0"
+                            height="10"
+                            width="10"
+                            xmlns:xlink="http://www.w3.org/1999/xlink"
+                            version="1.1"
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="checkmark"
+                            style="enable-background: new 0 0 512 512"
+                          >
+                            <g>
+                              <path
+                                data-original="#000000"
+                                fill="currentColor"
+                                d="M9.707 19.121a.997.997 0 0 1-1.414 0l-5.646-5.647a1.5 1.5 0 0 1 0-2.121l.707-.707a1.5 1.5 0 0 1 2.121 0L9 14.171l9.525-9.525a1.5 1.5 0 0 1 2.121 0l.707.707a1.5 1.5 0 0 1 0 2.121z"
+                              ></path>
+                            </g>
+                          </svg>
+                        </div>
+                      </div>
+                    </label>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <ng-template #noRecords>
+            <tbody>
+              <tr>
+                <td colspan="8">
+                  <div class="no-data">
+                    <img
+                      src="assets/img/no-data-img.png"
+                      alt="No Record Found"
+                    />
+                    <span>No Record Found</span>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </ng-template>
+        </div>
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="total-entry" style="font-size: small">
+            <span>Total Entries:</span
+            ><span class="entry-count"> {{ totalCount }} </span>
+          </div>
+          <pagination-controls
+            (pageChange)="currentPage = $event"
+          ></pagination-controls>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal"
+  id="assEmpRole"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Assign Employee Role</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          (click)="resetAndClose()"
+        ></button>
+      </div>
+
+      <div class="modal-body">
+        <form
+          [formGroup]="assignEmployeeRole"
+          (ngSubmit)="manageEmployeeData()"
+        >
+          <div class="row">
+            <div class="col-md-6 mb-2">
+              <div class="form-group local-forms">
+                <label class="form-label"
+                  >First Name<span class="login-danger">*</span></label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="firstName"
+                />
+                <div
+                  *ngIf="
+                    assignEmployeeRole.get('firstName').invalid &&
+                    assignEmployeeRole.get('firstName').touched
+                  "
+                >
+                  <small
+                    *ngIf="assignEmployeeRole.get('firstName').errors.required"
+                    class="login-danger"
+                    >This field is required.</small
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 mb-2">
+              <div class="form-group local-forms">
+                <label class="form-label"
+                  >Last Name
+                  <!-- <span class="login-danger">*</span> -->
+                </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="lastName"
+                />
+                <!-- <div *ngIf="assignEmployeeRole.get('lastName').invalid && assignEmployeeRole.get('lastName').touched">
+                                  <small *ngIf="assignEmployeeRole.get('lastName').errors.required" class="login-danger">This is required.</small>
+                              </div> -->
+              </div>
+            </div>
+            <div class="col-md-6 mb-2">
+              <div class="form-group local-forms">
+                <label class="form-label"
+                  >Email<span class="login-danger">*</span></label
+                >
+                <input
+                  type="email"
+                  class="form-control"
+                  formControlName="email"
+                />
+                <div
+                  *ngIf="
+                    assignEmployeeRole.get('email').invalid &&
+                    assignEmployeeRole.get('email').touched
+                  "
+                >
+                  <small
+                    *ngIf="assignEmployeeRole.get('email').errors.required"
+                    class="login-danger"
+                    >This field is required.</small
+                  >
+                  <small
+                    *ngIf="assignEmployeeRole.get('email').errors.email"
+                    class="login-danger"
+                    >Enter correct Email.</small
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 mb-2">
+              <div class="form-group local-forms">
+                <label class="form-label"
+                  >Contact Number<span class="login-danger">*</span></label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="contact"
+                  maxlength="10"
+                />
+                <div
+                  *ngIf="
+                    assignEmployeeRole.get('contact').invalid &&
+                    assignEmployeeRole.get('contact').touched
+                  "
+                >
+                  <small
+                    *ngIf="assignEmployeeRole.get('contact').errors.required"
+                    class="login-danger"
+                    >This field is required.</small
+                  >
+                  <small
+                    *ngIf="assignEmployeeRole.get('contact').errors.pattern"
+                    class="login-danger"
+                    >Contact should be 10 digits
+                  </small>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 mb-2">
+              <div class="form-group local-forms">
+                <label class="form-label"
+                  >Assign Role<span class="login-danger">*</span></label
+                >
+
+                <!-- <select class="form-select" formControlName="assignedRole">
+                                  <option *ngFor="let list of UserRoleList" value="list.id">{{ list.userRole}}</option>
+                                  
+                              </select> -->
+                <ng-select
+                  formControlName="UserRoleId"
+                  name="UserRoleId"
+                  [items]="UserRoleList"
+                  bindLabel="userRole"
+                  bindValue="id"
+                  (change)="onRoleChange($event, 'false')"
+                ></ng-select>
+                <div
+                  *ngIf="
+                    assignEmployeeRole.get('UserRoleId').invalid &&
+                    assignEmployeeRole.get('UserRoleId').touched
+                  "
+                >
+                  <small
+                    *ngIf="assignEmployeeRole.get('UserRoleId').errors.required"
+                    class="login-danger"
+                    >This field is required.</small
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 mb-2">
+              <div class="form-group local-forms" *ngIf="isCounsellorSelected">
+                @if(disableMark) {
+                <label class="form-label">Assign Day Care</label>
+                } @else {
+                <label class="form-label"
+                  >Assign Day Care<span class="login-danger">*</span></label
+                >
+                }
+
+                <ng-select
+                  formControlName="CentreID"
+                  name="CentreID"
+                  [items]="DayCareList"
+                  bindLabel="centreName"
+                  bindValue="id"
+                  [multiple]="true"
+                  (change)="onDayCareChange()"
+                ></ng-select>
+                <div
+                  *ngIf="
+                    assignEmployeeRole.get('CentreID').invalid &&
+                    assignEmployeeRole.get('CentreID').touched
+                  "
+                >
+                  <small
+                    *ngIf="assignEmployeeRole.get('CentreID').errors.required"
+                    class="login-danger"
+                    >This field is required.</small
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="student-submit text-end">
+                <button class="btn btn-primary me-2">Submit</button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  (click)="resetForm()"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,557 @@
+<div class="row">
+  <div class="col-md-12">
+    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" (click)="onTabChange('Tab-1')" id="pills-basic-info" data-bs-toggle="pill" data-bs-target="#basic-info">
+          Basic Information
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" [disabled]="CentreID<1" id="pills-document" (click)="onTabChange('Tab-2')" data-bs-toggle="pill" data-bs-target="#banking">
+          Banking Details
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" [disabled]="CentreID<1" id="pills-document1" (click)="onTabChange('Tab-3')" data-bs-toggle="pill" data-bs-target="#document">
+          Supported Documents
+        </button>
+      </li>
+    </ul>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="tab-content pt-0">
+          <div class="tab-pane tab-pane fade show active" id="basic-info" role="tabpanel"
+            aria-labelledby="pills-basic-info" tabindex="0">
+            <div class="heading-new">
+              <h5 class="mb-0">Personal Information</h5>
+            </div>
+            <form [formGroup]="teacherForm">
+              <div class="row">
+                <div class="col-md-8">
+                  <div class="row">
+                    <div class="col-12 col-md-6 mb-4">
+                      <div class="form-group local-forms">
+                        <label>Name<span class="login-danger">*</span></label>
+                        <input class="form-control" formControlName="firstName" type="text" />
+                        @if(adminFormControls.firstName.touched){
+                        <span class="text-danger">
+                          @if(adminFormControls.firstName?.errors?.required){
+                          <span>This fields is required.</span>
+                          }
+                        </span>
+                        }
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-6 mb-4">
+                      <div class="form-group local-forms">
+                        <label>Email<span class="login-danger">*</span></label>
+                        <input type="text" class="form-control" formControlName="email" />
+                        @if(adminFormControls.email.touched){
+                        <span class="text-danger">
+                          @if(adminFormControls.email?.errors?.required){
+                          <span>This fields is required.</span>
+                          }@else if(adminFormControls.email?.errors?.email){
+                          <span>The email format is invalid.</span>
+                          }
+                        </span>
+                        }
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6 mb-4">
+                      <div class="form-group local-forms">
+                        <label> Phone<span class="login-danger">*</span>
+                        </label>
+                        <input type="text" (keypress)="allowOnlyNumericInput($event)" class="form-control"
+                          formControlName="mobile" maxlength="10" />
+                        @if(adminFormControls.mobile.touched){
+                        <span class="text-danger">
+                          @if(adminFormControls.mobile?.errors?.required){
+                          <span>This fields is required.</span>
+                          }@else if(adminFormControls.mobile?.errors?.pattern){
+                          <span>The phone number format is invalid.</span>
+                          }
+                        </span>
+                        }
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6 mb-4">
+                      <div class="form-group local-forms">
+                        <label>Gender<span class="login-danger">*</span></label>
+                        <ng-select 
+                        id="title" 
+                        name="business-type" 
+                        class="ng-select input-group"  
+                        [items]="Gender"
+                        bindLabel="label" 
+                        bindValue="value"
+                        formControlName="gender" 
+                        placeholder="-Select-">
+                      </ng-select>
+               @if(adminFormControls.gender.touched){
+                <span class="text-danger">
+                  @if(adminFormControls.gender?.errors?.required){
+                  <span>This fields is required.</span>
+                  }
+                </span>
+                }
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6 mb-4">
+                      <div class="form-group local-forms">
+                        <label>Country<span class="login-danger">*</span></label>
+                        <ng-select formControlName="countryID" [items]="countryList" bindValue="id" bindLabel="name"
+                          (change)="onChangeCountry($event.id)" placeholder="-Select-" ></ng-select>
+                        @if(adminFormControls.countryID.touched){
+                        <span class="text-danger">
+                          @if(adminFormControls.countryID?.errors?.required){
+                          <span>This fields is required.</span>
+                          }
+                        </span>
+                        }
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6 mb-4">
+                      <div class="form-group local-forms">
+                        <label>State<span class="login-danger">*</span></label>
+                        <ng-select formControlName="stateID" placeholder="-Select-"  [items]="stateList2" bindValue="id" bindLabel="name" (change)="onChangeState($event.id)"></ng-select>
+                        @if(adminFormControls.stateID.touched){
+                            <span class="text-danger">
+                                @if(adminFormControls.stateID?.errors?.required){
+                                    <span>This fields is required.</span>
+                                }
+                            </span>
+                        }
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6 mb-4">
+                      <div class="form-group local-forms">
+                        <label>City<span class="login-danger">*</span></label>
+                        <ng-select formControlName="cityID" [items]="cityList2" placeholder="-Select-"  bindValue="id" bindLabel="name"></ng-select>
+                                        @if(adminFormControls.cityID.touched){
+                                            <span class="text-danger">
+                                                @if(adminFormControls.cityID?.errors?.required){
+                                                    <span>This fields is required.</span>
+                                                }
+                                            </span>
+                                        }
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6 mb-4">
+                      <div class="form-group local-forms">
+                        <label>Pincode<span class="login-danger">*</span></label>
+                        <input class="form-control" type="text" formControlName="pinCode" />
+                        @if(adminFormControls.pinCode.touched){
+                          <span class="text-danger">
+                              @if(adminFormControls.pinCode?.errors?.required){
+                                  <span>This fields is required.</span>
+                              }
+                          </span>
+                      }
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-12 mb-4">
+                      <div class="form-group local-forms">
+                        <label>
+                          Address<span class="login-danger">*</span></label>
+                          <textarea formControlName="address" rows="4" class="form-control"></textarea>
+                                       @if(adminFormControls.address.touched){
+                                        <span class="text-danger">
+                                            @if(adminFormControls.address?.errors?.required){
+                                                <span>This fields is required.</span>
+                                            }
+                                        </span>
+                                    }
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="row">
+                    <div class="col-md-12 mb-4">
+                      <div class="avatar-upload">
+                        <div class="avatar-preview">
+                          <div id="imagePreview" style="
+                            background-image: url({{readFiles.profile}} );
+                          "></div>
+                          <div title="Upload Profile Image here" class="avatar-edit">
+                            <input (change)="onFileChange(false,$event)" type="file" id="imageUpload" accept=".png, .jpg, .jpeg" /><label
+                              for="imageUpload"></label>
+                            </div>
+                            @if(filesErrors.profile){
+                              <span class="text-danger">{{filesErrors.profile}}</span>
+                          }
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-12 mb-4">
+                      <div class="form-group local-forms">
+                        <label>DOB<span class="login-danger">*</span></label>
+                        <input formControlName="dob" id="dob" class="form-control" type="text">
+                        @if(adminFormControls.dob.touched){
+                            <span class="text-danger">
+                                @if(adminFormControls.dob?.errors?.required){
+                                    <span>This fields is required.</span>
+                                }
+                            </span>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+            <div class="heading-new">
+              <h5 class="mb-0">Qualification/Experience Details</h5>
+            </div>
+            <div class="row">
+              <div class="col-md-4 mb-4">
+                <div class="form-group local-forms">
+                  <label>Highest Qualification<span class="login-danger">*</span></label>
+                  <select class="form-select">
+                    <option selected></option>
+                    <option value="1">12th</option>
+                    <option value="2">Graduation</option>
+                    <option value="3">Masters</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-4 mb-4">
+                <div class="form-group local-forms">
+                  <label>Certifications (if any)<span class="login-danger">*</span></label>
+                  <input class="form-control" type="text" />
+                </div>
+              </div>
+              <div class="col-md-4 mb-4">
+                <div class="form-group local-forms">
+                  <label>Experience in Childcare<span class="login-danger">*</span></label>
+                  <input class="form-control" type="number" />
+                </div>
+              </div>
+              <div class="col-md-4 mb-4">
+                <div class="form-group local-forms">
+                  <label>Position Applied For<span class="login-danger">*</span></label>
+                  <input class="form-control" type="text" />
+                </div>
+              </div>
+              <div class="col-md-4 mb-4">
+                <div class="form-group local-forms">
+                  <label>Preferred Age Group to Teach<span class="login-danger">*</span></label>
+                  <select class="form-select">
+                    <option selected></option>
+                    <option value="1">0-3</option>
+                    <option value="2">4-5</option>
+                    <option value="3">5-6</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="student-submit text-end">
+                  <button type="submit" class="btn btn-primary me-2" (click)="registerTeacher()">
+                    Next
+                  </button>
+                  <button type="reset" class="btn btn-secondary">Cancel</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="banking" role="tabpanel" aria-labelledby="pills-document" tabindex="0">
+            <div class="row">
+              <div class="col-md-8">
+                <form [formGroup]="bankingDetailsForm">
+                  <div class="row">
+                      <div class="col-md-6 mb-4">
+                              <div class="form-group local-forms">
+                                      <label>Account Holder Name<span class="login-danger">*</span></label>
+                                      <input readonly formControlName="accountHolderName" class="form-control" type="text">
+                                  </div>
+                      </div>
+                      <div class="col-md-6 mb-4">
+                          <div class="form-group local-forms">
+                                  <label>Bank Name<span class="login-danger">*</span></label>
+                                  <input formControlName="bankName" class="form-control" type="text">
+                                  @if(bankingDetailsFormControls.bankName.touched){
+                                      <span class="text-danger">
+                                          @if(bankingDetailsFormControls.bankName?.errors?.required){
+                                              <span>This fields is required.</span>
+                                          }
+                                      </span>
+                                  }
+                              </div>
+                  </div>
+
+                  <div class="col-md-6 mb-4">
+                      <div class="form-group local-forms">
+                              <label>Institution Number<span class="login-danger">*</span></label>
+                              <input (keypress)="allowOnlyNumericInput($event)" formControlName="institutionNumber" class="form-control" type="text" maxlength="3" >
+                              @if(bankingDetailsFormControls.institutionNumber.touched){
+                                  <span class="text-danger">
+                                      @if(bankingDetailsFormControls.institutionNumber?.errors?.required){
+                                          <span>This fields is required.</span>
+                                      } @else if(bankingDetailsFormControls.institutionNumber?.errors?.pattern){
+                                          <span>Invalid institution number.</span>
+                                      }
+                                  </span>
+
+                              }
+                          </div>
+              </div>
+
+
+              <div class="col-md-6 mb-4">
+                  <div class="form-group local-forms">
+                          <label>Transit Number<span class="login-danger">*</span></label>
+                          <input (keypress)="allowOnlyNumericInput($event)" formControlName="transitNumber" class="form-control" type="text" maxlength="5" >
+                          @if(bankingDetailsFormControls.transitNumber.touched){
+                              <span class="text-danger">
+                                  @if(bankingDetailsFormControls.transitNumber?.errors?.required){
+                                      <span>This fields is required.</span>
+                                  } @else if(bankingDetailsFormControls.transitNumber?.errors?.pattern){
+                                      <span>Invalid transit number.</span>
+                                  }
+                              </span>
+
+                          }
+                      </div>
+          </div>
+
+          <div class="col-md-6 mb-4">
+              <div class="form-group local-forms">
+                      <label>Postal Code<span class="login-danger">*</span></label>
+                      <input (keypress)="allowOnlyNumericInput($event)" formControlName="postalCode" class="form-control" type="text" maxlength="7" >
+                      @if(bankingDetailsFormControls.postalCode.touched){
+                          <span class="text-danger">
+                              @if(bankingDetailsFormControls.postalCode?.errors?.required){
+                                  <span>This fields is required.</span>
+                              } @else if(bankingDetailsFormControls.postalCode?.errors?.pattern){
+                                  <span>Invalid postal code.</span>
+                              }
+                          </span>
+
+                      }
+                  </div>
+      </div>
+
+              <div class="col-md-6 mb-4">
+                  <div class="form-group local-forms">
+                          <label>Account Number<span class="login-danger">*</span></label>
+                          <input (keypress)="allowOnlyNumericInput($event)" formControlName="accountNumber" class="form-control" type="text" maxlength="16" >
+                          @if(bankingDetailsFormControls.accountNumber.touched){
+                              <span class="text-danger">
+                                  @if(bankingDetailsFormControls.accountNumber?.errors?.required){
+                                      <span>This fields is required.</span>
+                                  } @else if(bankingDetailsFormControls.accountNumber?.errors?.pattern){
+                                      <span>Invalid bank account number.</span>
+                                  }
+                              </span>
+
+                          }
+                      </div>
+          </div>
+
+                      <div class="col-md-6 mb-4">
+                          <div class="form-group local-forms">
+                              <label>Bank Address<span class="login-danger">*</span></label>
+                              <input formControlName="bankAddress" class="form-control" type="text">
+                              @if(bankingDetailsFormControls.bankAddress.touched){
+                                  <span class="text-danger">
+                                      @if(bankingDetailsFormControls.bankAddress?.errors?.required){
+                                          <span>This fields is required.</span>
+                                      }
+                                  </span>
+
+                              }
+                          </div>
+                      </div>
+                      
+                      </div>
+
+              </form>
+                <div class="row">
+                  <div class="col-12 col-md-12">
+                    <div class="student-submit text-end">
+                      <button (click)="manageBankingInfo()" type="submit" class="btn btn-primary me-2">Next</button>
+                      <button type="reset" class="btn btn-secondary">Cancel</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="row">
+                  <div class="col-md-12">
+                    <img src="assets/img/banking.svg" alt="banking image">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="tab-pane" id="document" role="tabpanel" aria-labelledby="pills-document1" tabindex="0">
+            <div class="row">
+              <div class="col-md-8">
+                <form [formGroup]="documentForm">
+                  <div class="row">
+                      <div class="col-md-6 mb-4">
+                          <div class="form-group local-forms">
+                          <label>Document Type<span class="login-danger">*</span></label>
+                          <ng-select (change)="onChangeDocumentType($event.documentType)" formControlName="documentTypeID" [items]="documentTypeList" bindValue="id" bindLabel="documentType"></ng-select>
+                          @if(documentFormControls.documentTypeID.touched){
+                              <span class="text-danger">
+                                  @if(documentFormControls.documentTypeID?.errors?.required){
+                                      <span>This fields is required.</span>
+                                  }
+                              </span>
+                          }
+
+                          </div>
+                      </div>
+                      <div class="col-md-6 mb-4">
+                          <div class="form-group local-forms">
+                          <label>Document Number<span class="login-danger">*</span></label>
+                          <input formControlName="documentNumber" class="form-control" type="text" maxlength="16">
+                          @if(documentFormControls.documentNumber.touched){
+                              <span class="text-danger">
+                                  @if(documentFormControls.documentNumber?.errors?.required){
+                                      <span>This fields is required.</span>
+                                  }@else if(documentFormControls.documentNumber?.errors?.pattern){
+                                      <span>Invalid document number.</span>
+                                  }
+                              </span>
+                          }
+                      </div>
+                      </div>
+                      <div class="col-md-6 mb-4">
+                          <div class="form-group local-forms">
+                              <label>Document Description</label>
+                             <textarea formControlName="documentDescription"  rows="4" class="form-control" style="resize:none;     min-height: 130px;"></textarea>
+                          </div>
+                      </div>
+                      <div class="col-md-6 mb-4">
+                         <div class="form-group local-forms">
+                           
+                                <label class="settings-label">Upload Document<span class="star-red">*</span></label>
+                                <div class="settings-btn">
+                                  <input  (change)="onSelectDocument($event)" type="file" accept="image/png, image/gif, image/jpeg" class="hide-input"/>
+          
+                                  <div class="divw">
+                                    <img [src]="readFiles.document ? readFiles.document:'assets/img/image-selector3.jpg'" alt="Document" />
+                                  </div>
+
+                                  @if(filesErrors.document){
+                                      <span class="text-danger">{{filesErrors.document}}</span>
+                                  }
+          
+          
+                                </div>
+                           <div class="editer">
+                                  <i class="far fa-edit"></i>
+                                </div>
+                              
+                              </div>
+                      </div>
+                  </div>
+              </form>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="student-submit text-end">
+                      <button type="submit" (click)="addDocument()" class="btn btn-primary me-2">Add</button>
+                      <button type="reset" class="btn btn-secondary">Cancel</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="docu-imgage">
+
+                      <img src="assets/img/document.svg" alt="document image">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="col-md-12">
+                <div class="table-responsive">
+                  <table class="table table-hover mb-0">
+                    <thead class="student-thread">
+                        <tr>
+                            <th>#</th>
+                            <th>Document&nbsp;Type</th>
+                            <th>Document&nbsp;Image</th>
+                            <th>Document&nbsp;Number</th>
+                            <th>Document&nbsp;Description</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (document of documentList; track document;let index = $index) {
+                            <tr>
+                                <td>{{index+1}}</td>
+                                <td>{{document.documentType}}</td>
+                                <td>
+                                    <div class="doc-img" >
+                                        <div class="doc-back-img" [style]="{'background-image': getBackgroundImageUrl(document)}">
+
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>{{document.documentNumber}}</td>
+                                <td>{{document.documentDescription}}</td>
+                                <td>
+                                    <div class="actions">
+                                        <a (click)="onEditDocument(document,index)"  class="action-btn bg-danger-light me-2">
+                                        <i class="feather-edit"></i>
+                                        </a>
+                                        @if(document.id>0){
+                                            <label class="switch mb-0">
+                                                <input id="check{{document.id}}" (change)="activeInactiveDocument(document.id,document.isActive)" [checked]="document.isActive"  type="checkbox">
+                                                <div class="slider">
+                                                    <div class="circle">
+                                                        <svg class="cross" xml:space="preserve" style="enable-background:new 0 0 512 512" viewBox="0 0 365.696 365.696" y="0" x="0" height="6" width="6" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                                                            <g>
+                                                                <path data-original="#000000" fill="currentColor" d="M243.188 182.86 356.32 69.726c12.5-12.5 12.5-32.766 0-45.247L341.238 9.398c-12.504-12.503-32.77-12.503-45.25 0L182.86 122.528 69.727 9.374c-12.5-12.5-32.766-12.5-45.247 0L9.375 24.457c-12.5 12.504-12.5 32.77 0 45.25l113.152 113.152L9.398 295.99c-12.503 12.503-12.503 32.769 0 45.25L24.48 356.32c12.5 12.5 32.766 12.5 45.247 0l113.132-113.132L295.99 356.32c12.503 12.5 32.769 12.5 45.25 0l15.081-15.082c12.5-12.504 12.5-32.77 0-45.25zm0 0"></path>
+                                                            </g>
+                                                        </svg>
+                                                        <svg class="checkmark" xml:space="preserve" style="enable-background:new 0 0 512 512" viewBox="0 0 24 24" y="0" x="0" height="10" width="10" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                                                            <g>
+                                                                <path class="" data-original="#000000" fill="currentColor" d="M9.707 19.121a.997.997 0 0 1-1.414 0l-5.646-5.647a1.5 1.5 0 0 1 0-2.121l.707-.707a1.5 1.5 0 0 1 2.121 0L9 14.171l9.525-9.525a1.5 1.5 0 0 1 2.121 0l.707.707a1.5 1.5 0 0 1 0 2.121z"></path>
+                                                            </g>
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                            </label>
+
+                                        }
+                                        
+                                        </div>
+                                </td>
+                            </tr>
+                            
+                          }
+                       
+                    </tbody>
+                </table>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="student-submit text-end">
+                  <button type="submit" class="btn btn-primary me-2" (click)="onSubmitDocumentList()">Submit</button>
+                  <button type="reset" class="btn btn-secondary">Cancel</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,400 @@
+<app-breadcrumb></app-breadcrumb>
+<div class="col-lg-12">
+  <div class="settings-menu-links">
+    <ul
+    class="nav nav-pills menu-tabs m-0"
+    id="nav-tab"
+    role="tablist"
+    style="padding: 0px 13px"
+  >
+    <li class="nav-item">
+      <a
+        class="nav-link active"
+        id="nav-home-tab"
+        data-bs-toggle="tab"
+        href="#nav-home"
+        role="tab"
+        aria-controls="nav-home"
+        aria-selected="true"
+        >Configurations</a
+      >
+    </li>
+    <li class="nav-item">
+      <a
+        class="nav-link"
+        id="nav-profile-tab"
+        data-bs-toggle="tab"
+        href="#nav-profile"
+        role="tab"
+        aria-controls="nav-profile"
+        aria-selected="false"
+        >Localization</a
+      >
+    </li>
+    <li class="nav-item">
+      <a
+        class="nav-link"
+        id="nav-contact-tab"
+        data-bs-toggle="tab"
+        href="#nav-contact"
+        role="tab"
+        aria-controls="nav-contact"
+        aria-selected="false"
+        >Social Links</a
+      >
+    </li>
+  </ul>
+  </div>
+  <div class="tab-content" id="nav-tabContent">
+    <div
+      class="tab-pane fade show active"
+      id="nav-home"
+      role="tabpanel"
+      aria-labelledby="nav-home-tab"
+    >
+      <div class="">
+        <div class="card">
+          <div class="card-body">
+            <div  class="heading-new">
+              <h5  class="mb-0">Configurations Details</h5>
+            </div>
+            <form [formGroup]="appSetting">
+              <div class="row ">
+                <!-- <div class="local-forms col-md-6"> -->
+                  <!-- <div class="form-group">
+                    <label>Website Name <span class="star-red">*</span></label>
+                    <input type="text" class="form-control" formControlName="websiteName" />
+                  </div>
+                </div> -->
+
+                <div class="local-forms col-md-6 mb-4">
+                  <div class="form-group">
+                    <label>Business Name <span class="star-red">*</span></label>
+                    <input  type="text" class="form-control" formControlName="businessName" />
+                    @if(input.businessName.touched){
+                      @if(input.businessName?.errors?.required){
+                          <span class="text-danger">This field is required.</span>
+                      }
+                  }
+                    <!-- <div
+                    *ngIf="input.businessName.touched "
+                    class="text-danger"
+                  >
+                    <div *ngIf="input.businessName.errors?.required">This field is required.</div>
+    
+                    </div> -->
+                  </div>
+                </div>
+
+                <div class="local-forms col-md-6 mb-4">
+                  <div class="form-group">
+                    <label>BreadCrumb Text <span class="login-danger">*</span></label>
+                    <input type="text" class="form-control" formControlName="breadcrumbText" />
+                    @if(input.breadcrumbText.touched){
+                      @if(input.breadcrumbText?.errors?.required){
+                          <span class="text-danger">This field is required.</span>
+                      }
+                  }
+                    <!-- <div
+                    *ngIf="input.breadcrumbText.touched "
+                    class="text-danger"
+                  >
+                    <div *ngIf="input.breadcrumbText.errors?.required">This field is required.</div>
+    
+                    </div> -->
+                  </div>
+                </div>
+              </div>
+              <div class="row ">
+                <div class="col-md-4 left-pd local-forms mb-4">
+                  <div class="form-group">
+                    <label class="settings-label">Header Logo <span class="star-red">*</span></label>
+                    <div class="settings-btn">
+                      <input
+                        type="file"
+                        accept="image/png, image/gif, image/jpeg" 
+                        
+                        class="hide-input"
+                        (change)="fileChange($event,'mainLogo')"
+                      />
+
+                      <div class="divw">
+                        <!-- <img src={{imageMain}} alt="Header Logo" /> -->
+                        <img src="assets/img/default-img.png" src={{imageMain}} alt="Header Logo" />
+                     </div>
+
+
+                    </div>
+                    <!-- <div class="upload-images">
+                      <img src={{imageMain}} alt="Header Logo" />
+                      
+                    </div> -->
+
+                    <div class="editer">
+                      <i class="far fa-edit"></i>
+                     </div>
+
+
+                    @if(input.mainLogo.touched){
+                      @if(input.mainLogo?.errors?.required){
+                          <span class="text-danger">This field is required.</span>
+                      }
+                  }
+                    <!-- <div class="text-danger" *ngIf="input.mainLogo.touched">
+                      <div *ngIf="input.mainLogo.errors?.fileTypeError"> Invalid file type. Only PNG and JPEG are allowed.</div>
+          
+                      <div  *ngIf="input.mainLogo.errors?.required">This field is required.</div>
+                    </div> -->
+                  </div>
+                </div>
+
+                <div class="col-md-4 left-pd local-forms mb-4">
+                  <div class="form-group">
+                    <label class="settings-label">Footer Logo <span class="star-red">*</span></label>
+                    <div class="settings-btn">
+                      <input
+                        type="file"
+                        accept="image/png, image/gif, image/jpeg" 
+                  
+                        class="hide-input"
+                        (change)="fileChange($event,'footerLogo')"
+                      />
+
+                      <div class="divw">
+                        <!-- <img src={{imagefoot}} alt="Footer Logo" /> -->
+                        <img src="assets/img/default-img.png" src={{imagefoot}} alt="Footer Logo" />
+                     </div>
+
+
+                    </div>
+                    <!-- <div class="upload-images">
+                      
+                      <a  class="btn-icon logo-hide-btn">
+                        <i class="feather-x-circle"></i>
+                      </a>
+                    </div> -->
+
+                    <div class="editer">
+                      <i class="far fa-edit"></i>
+                     </div>
+
+
+                    @if(input.footerLogo.touched){
+                      @if(input.footerLogo?.errors?.required){
+                          <span class="text-danger">This field is required.</span>
+                      }
+                  }
+                    <!-- <div class="text-danger" *ngIf="input.footerLogo.touched">
+                      <div *ngIf="input.footerLogo.errors?.fileTypeError"> Invalid file type. Only PNG and JPEG are allowed.</div>
+                      <div  *ngIf="input.footerLogo.errors?.required">This field is required.</div>
+                    </div> -->
+                  </div>
+                </div>
+
+                <div class="col-md-4 left-pd local-forms mb-4">
+                  <div class="form-group">
+                    <label class="settings-label">Favicon <span class="star-red">*</span></label>
+                    <div class="settings-btn">
+                      <input
+                        type="file"
+                        accept="image/png, image/gif, image/jpeg" 
+                        name="favicon"
+                        class="hide-input"
+                        (change)="fileChange($event,'favicon')"
+                      />
+
+                      <div class="divw">
+                        <!-- <img src={{imagefav}} alt="favicon" /> -->
+  
+                        <img src="assets/img/default-img.png" src={{imagefav}} alt="favicon Logo" />
+                    </div>
+
+                    
+                      
+                    </div>
+                    <!-- <div class="upload-images upload-size">
+                      <img src={{imagefav}} alt="favicon" />
+                      <a class="btn-icon logo-hide-btn">
+                        <i class="feather-x-circle"></i>
+                      </a>
+                    </div> -->
+
+                    <div class="editer">
+                      <i class="far fa-edit"></i>
+                     </div>
+                    @if(input.favicon.touched){
+                      @if(input.favicon?.errors?.required){
+                          <span class="text-danger">This field is required.</span>
+                      }
+                  }
+                    <!-- <div class="text-danger" *ngIf="input.favicon.touched">
+                      <div *ngIf="input.favicon.errors?.fileTypeError"> Invalid file type. Only PNG and JPEG are allowed.</div>
+                      <div  *ngIf="input.favicon.errors?.required">This field is required.</div>
+                    </div> -->
+                  </div>
+                </div>
+              </div>
+              <div class="row ">
+                <div class="col-md-6 mb-4">
+                  <div class="local-forms col-md-12">
+                    <div class="form-group">
+                      <label style="left:10px !important;">Footer Text <span class="star-red">*</span></label>
+                      <input type="text" class="form-control" formControlName="footerText" />
+                      @if(input.footerText.touched){
+                        @if(input.footerText?.errors?.required){
+                            <span class="text-danger">This field is required.</span>
+                        }
+                    }
+                      <!-- <div
+                      *ngIf="input.footerText.touched "
+                      class="text-danger"
+                    >
+                      <div *ngIf="input.footerText.errors?.required">This field is required.</div>
+      
+                      </div> -->
+                    </div>
+                  </div>
+
+                  <div class="local-forms col-md-12">
+                    <div class="form-group">
+                      <label style="left:10px !important;">Copyright Text <span class="star-red">*</span></label>
+                      <input type="text" class="form-control" formControlName="copyRightText" />
+                      @if(input.copyRightText.touched){
+                        @if(input.copyRightText?.errors?.required){
+                            <span class="text-danger">This field is required.</span>
+                        }
+                    }
+                      <!-- <div
+                      *ngIf="input.copyRightText.touched "
+                      class="text-danger"
+                    >
+                      <div *ngIf="input.copyRightText.errors?.required">This field is required.</div>
+      
+                      </div> -->
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-6 mb-4">
+                  <div class="col-md-12 left-pd">
+                    <div class="local-forms">
+                      <div class="form-group">
+                        <label style="left: 11px !important">Website Description <span class="star-red">*</span></label>
+                        <textarea
+                          class="form-control"
+                          spellcheck="false"
+                          style="resize: none; height: 91px ;min-height:91px !Important;"
+                          formControlName="description"
+                        ></textarea>
+                        @if(input.description.touched){
+                          @if(input.description?.errors?.required){
+                              <span class="text-danger">This field is required.</span>
+                          }
+                      }
+                        <!-- <div
+                        *ngIf="input.description.touched "
+                        class="text-danger"
+                      >
+                        <div *ngIf="input.description.errors?.required">This field is required.</div>
+        
+                        </div> -->
+                      </div>
+                      <div class="form-group mb-0"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+             
+<!--  
+              <div class="row mb-3">
+              
+                <div class="local-forms col-md-6">
+                  <div class="form-group">
+                    <label class="">Primary Color<span class="login-danger">*</span></label>
+                    <select
+                      class="form-control form-select"
+                      formControlName="primaryColor"
+                    >
+                      <option>Select</option>
+                      <option>Red</option>
+                      <option>Green</option>
+                      <option>Blue</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <div class="local-forms col-md-6">
+                  <div class="form-group">
+                    <label class="">Secondary Color<span class="login-danger">*</span></label>
+                    <select
+                      class="form-control form-select"
+                      formControlName="secondaryColor"
+                    >
+                      <option>Select</option>
+                      <option>Red</option>
+                      <option>Green</option>
+                      <option>Blue</option>
+                    </select>
+                  </div>
+                </div>
+                
+              </div> -->
+
+              <div class="col-md-12 button-alignment">
+                <div class="form-buttons">
+                  <button
+                    type="submit"
+                    class="btn btn-primary waves-effect waves-light padd-rt"
+                    (click)="onSubmit('type')"
+                  >
+                    Submit
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-secondary waves-effect waves-light m-0"
+                    (click)="reset()"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="tab-pane fade"
+      id="nav-profile"
+      role="tabpanel"
+      aria-labelledby="nav-profile-tab"
+    >
+    <div class="breadcrum-none">
+
+      <app-localization-details></app-localization-details>
+    </div>
+</div>
+    <div
+      class="tab-pane fade"
+      id="nav-contact"
+      role="tabpanel"
+      aria-labelledby="nav-contact-tab"
+    >
+    <div class="row">
+      <div class="col-md-12">
+   
+         
+            <div class="breadcrum-none">
+
+              <app-social-links></app-social-links>
+            </div>
+      
+       
+      </div>
+    </div>
+   
+    </div>
+  </div>
+</div>

@@ -1,0 +1,233 @@
+<app-breadcrumb></app-breadcrumb>
+<!-- <app-dc-appointments-list></app-dc-appointments-list> -->
+
+<div class="row" *ngIf="RoleID == 1">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="heading-new">
+          <h5 class="mb-0">Create New Slot</h5>
+        </div>
+        <div class="row">
+          <!-- <div class="col-md-6">
+            <div class="calendar-new area-mind">
+                <full-calendar [options]="calendarOptions">
+                  <ng-template #eventContent let-arg>
+                    <b>{{arg.timeText}}</b>
+                    <i>{{arg.event.title}}</i>
+                  </ng-template>
+                </full-calendar>
+              </div>
+        </div> -->
+          <div class="col-md-12">
+            <div class="row">
+              <form [formGroup]="SlotForm">
+                <div class="col-md-12">
+                  <div class="add-newslot">
+                    <ul class="new-slots">
+                      <li>
+                        <div class="form-group local-forms">
+                          <label>Select Date Range <span class="text-danger">* </span></label>
+                          <input
+                            type="text"
+                            formControlName="dateRange"
+                            id="dateRangePicker"
+                            Class="form-control"
+                            placeholder="-Select-"
+                          />
+                        </div>
+
+                        <span
+                          class="text-danger"
+                          *ngIf="SlotFormControls.dateRange.touched"
+                        >
+                          <span
+                            *ngIf="SlotFormControls.dateRange?.errors?.required"
+                            >This field is required.</span
+                          >
+                        </span>
+                      </li>
+
+                      <li>
+                        <div class="form-group local-forms">
+                          <label>Start Time</label>
+                          <input
+                            type="time"
+                            formControlName="startTime"
+                            class="form-control"
+                            placeholder="-Select-"
+                          />
+                        </div>
+                        <span
+                          class="text-danger"
+                          *ngIf="SlotFormControls.startTime.touched"
+                        >
+                          <span
+                            *ngIf="SlotFormControls.startTime?.errors?.required"
+                          >
+                            This field is required.
+                          </span>
+                        </span>
+                      </li>
+
+                      <li>
+                        <div class="form-group local-forms">
+                          <label>End Time</label>
+                          <input
+                            type="time"
+                            formControlName="endTime"
+                            class="form-control"
+                            placeholder="-Select-"
+                          />
+                        </div>
+                        <span
+                          class="text-danger"
+                          *ngIf="SlotForm.errors?.invalidTime"
+                        >
+                          Set a valid End Time.
+                        </span>
+                      </li>
+
+                      <li>
+                        <div class="form-group local-forms">
+                          <label> Duration (in mins)<span class="text-danger">* </span></label
+                          ><select
+                            id="ampm"
+                            class="form-control"
+                            formControlName="duration"
+                          >
+                            <option value="">-Select-</option>
+                            <option value="15">15</option>
+                            <option value="30">30</option>
+                            <option value="45">45</option>
+                            <option value="60">60</option>
+                            <option value="90">90</option>
+                            <option value="120">120</option>
+                          </select>
+                        </div>
+                        <span
+                          class="text-danger"
+                          *ngIf="SlotFormControls.duration.touched"
+                        >
+                          <span
+                            *ngIf="SlotFormControls.duration?.errors?.required"
+                            >This field is required.</span
+                          >
+                        </span>
+                      </li>
+                      <li>
+                        <button
+                          type="button"
+                          class="btn btn-primary"
+                          (click)="SlotSubmit()"
+                        >
+                          Create Slot
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div id="accordion">
+              <div class="time-slots">
+                <div
+                  class="heading-new"
+                  style="width: 100%"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseOne"
+                  (click)="getSlotDate()"
+                >
+                  <h5 class="mb-0">Today's Slots</h5>
+                </div>
+                <div
+                  id="collapseOne"
+                  class="collapse show"
+                  data-parent="#accordion"
+                >
+                  <div class="time-slots margin-top-none">
+                    <h6 class="slot">Available slots</h6>
+
+                    <div
+                      *ngFor="let item of slotDate"
+                      class="time-slot"
+                      [class.line-through-new]="
+                        item.slotStartTime < formattedTime
+                      "
+                    >
+                      {{ formatTime(item.slotStartTime) | TimeFormatAmPm }}-{{
+                        formatTime(item.slotEndTime) | TimeFormatAmPm
+                      }}
+                      ({{ item.counsellorCount }})
+                    </div>
+                  </div>
+                  <!-- <div class="time-slots booked">
+                    <h6 class="slot">Booked slots</h6>
+
+                    <ng-container *ngIf="hasBookedSlots; else noBookedSlots">
+                      <ng-container *ngFor="let item of slotDate">
+                        <div
+                          *ngIf="item.counsellorCount === 0"
+                          class="time-slot"
+                        >
+                          {{ formatTime(item.slotStartTime) }} -
+                          {{ formatTime(item.slotEndTime) }} ({{
+                            item.counsellorCount
+                          }})
+                        </div>
+                      </ng-container>
+                    </ng-container>
+
+                    <ng-template #noBookedSlots>
+                      <div class="no-booked-message">
+                        No booked slots available.
+                      </div>
+                    </ng-template>
+                  </div> -->
+                </div>
+              </div>
+              &nbsp;
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <app-daycare-appointments-slot></app-daycare-appointments-slot>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- The Modal -->
+<div class="modal" id="slot-info">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Modal Heading</h4>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">Modal body..</div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

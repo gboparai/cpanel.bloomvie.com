@@ -1,0 +1,805 @@
+<app-breadcrumb></app-breadcrumb>
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="heading-new">
+          <h5 class="mb-0">Student Fees</h5>
+        </div>
+        <ul class="nav nav-tabs" role="tablist">
+          <li class="nav-item" role="presentation">
+            <a class="nav-link active" href="#basictab2" data-bs-toggle="tab" aria-selected="false" role="tab"
+              tabindex="-1" (click)="getAllStudentFeesDetails('All', true)">All</a>
+          </li>
+          <li class="nav-item" role="presentation">
+            <a class="nav-link" href="#basictab3" data-bs-toggle="tab" aria-selected="false" role="tab" tabindex="-1"
+              (click)="getAllStudentFeesDetails('Past', true)">Past Payment</a>
+          </li>
+          <li class="nav-item" role="presentation">
+            <a class="nav-link" href="#basictab4" data-bs-toggle="tab" aria-selected="false" role="tab" tabindex="-1"
+              (click)="getAllStudentFeesDetails('Upcoming', true)">Upcoming Payment</a>
+          </li>
+          <li class="nav-item" role="presentation">
+            <a class="nav-link" href="#basictab5" data-bs-toggle="tab" aria-selected="false" role="tab" tabindex="-1"
+              (click)="getAllStudentFeesDetails('Outstanding', true)">Outstanding Payment</a>
+          </li>
+        </ul>
+
+        <div class="col-md-12">
+          <div class="row d-flex">
+            <div class="col-md-12 text-end fess-button" *ngIf="isOutStandingTab">
+              <button type="button" class="btn btn-primary"
+                (click)="getAllStudentPendingPaymentRecordByDaycareAdminID()">
+                Add Student Fee
+              </button>
+            </div>
+
+            <!-- From date -->
+            <div class="col-md-4 fiv-days-button">
+              <div class="today-tomrrow">
+                <div class="activity-filter-box local-forms">
+                  <label> From Date</label>
+                  <div class="ng--parent">
+                    <input type="text" id="selectFromDate" placeholder="-Select-" class="form-control w-100"
+                      [(ngModel)]="startDate" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- To Date -->
+            <div class="col-md-4 fiv-days-button">
+              <div class="today-tomrrow">
+                <div class="activity-filter-box local-forms">
+                  <label> To Date</label>
+                  <div class="ng--parent">
+                    <input type="text" id="selectToDate" placeholder="-Select-" class="form-control w-100"
+                      [(ngModel)]="endDate" />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="search">
+                <input placeholder="Type here.." type="text" [(ngModel)]="searchText" (input)="onSearchInput()" />
+                <button type="submit">Search</button>
+              </div>
+            </div>
+            <!-- <div class="col-md-4 mb-4">
+              <div class="row justify-content-end">
+                <div class="col-md-12 mb-4">
+                  <div class="form-group local-forms">
+                    <label for="">Select Purchase Date</label>
+                    <input type="text" id="dateRangePicker" Class="form-control"
+                      (change)="getAllStudentFeesDetails(this.activeTab, false)" />
+                  </div>
+                </div>
+              </div>
+            </div> -->
+          </div>
+        </div>
+
+        <div class="tab-content mt-4" id="expens-tab">
+          @if(activeTab=='All'){
+          <div class="expense-type">
+            <ul>
+              <li>
+                <span class="color past-color"></span>
+                Past Payments
+              </li>
+              <li>
+                <span class="color outstanding-color"></span>
+                Outstanding Payments
+              </li>
+              <li>
+                <span class="color upcoming-color"></span>
+                Upcoming Payments
+              </li>
+            </ul>
+          </div>
+          }
+
+          <!-- All Payments -->
+          <div class="tab-pane active" id="basictab2" role="tabpanel">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="table-responsive">
+                  <table class="table mb-0">
+                    <thead class="student-thread">
+                      <tr>
+                        <th>#</th>
+                        <!-- <th>Parent&nbsp;Name</th> -->
+                        <th>Student&nbsp;Name</th>
+                        <!-- <th>Email</th> -->
+                        <th>Mobile</th>
+                        <th>Plan&nbsp;Name</th>
+                        <th>Plan&nbsp;Purchase&nbsp;date</th>
+                        <th>Plan&nbsp;Expire&nbsp;Date</th>
+                        <th>Plan Amount</th>
+                        <th>Total Paid Amount</th>
+                        <th>Discount %</th>
+                        <!-- <th class="text-center">Attachments</th> -->
+                      </tr>
+                    </thead>
+
+                    @if (skeletonShow === 'Skelton') {
+                    <tbody>
+                      <tr>
+                        <td colspan="100%">
+                          <app-skeleton-loader skeletonShow="Skelton" viewType="table" [tableRows]="5" [tableCols]="11">
+                          </app-skeleton-loader>
+                        </td>
+                      </tr>
+                    </tbody>
+                    } @else if (studentFeeRecords.length > 0) {
+
+                    <tbody *ngFor="
+                        let past of studentFeeRecords
+                          | paginate
+                            : {
+                                itemsPerPage: pastContentPerPage,
+                                currentPage: pastContentCurrentPage,
+                                id: 'allContent'
+                              };
+                        let i = index
+                      ">
+                      <tr [class]="{
+                          'past-color': past.status == 'past',
+                          'upcoming-color': past.status == 'upcoming',
+                          'outstanding-color': past.status == 'outstanding'
+                        }">
+                        <td>{{ i + 1 }}</td>
+
+                        <!-- <td>
+                          {{ past.parentName == null ? "--" : past.parentName }}
+                        </td> -->
+                        <!-- <td>
+                          {{
+                          past.studentName == null ? "--" : past.studentName
+                          }} -->
+                        <!-- </td>
+                        <td>{{ past.email == null ? "--" : past.email }}</td>
+                        <td> -->
+
+                        <td>
+                          <!-- tooltip  added here  -->
+                          <div class="tooltip-wrapper" style="position: relative" (mouseenter)="hoveredRow = past"
+                            (mouseleave)="hoveredRow = null">
+                            <span class="hover-anchor">{{ past.studentName}}</span>
+                            <!-- call here   and remove below div if able to call -->
+                            <app-tooltip *ngIf="hoveredRow === past" [employee]="{
+                      fullName: past.parentName,
+                      email: past.email,
+                      profile:past.staffProfile
+                    }"></app-tooltip>
+                          </div>
+                        </td>
+
+                        <td>
+                          {{
+                          past.contact == null ? "--" : "+1 " + past.contact
+                          }}
+                        </td>
+
+                        <td>
+                          {{ past.planName == null ? "--" : past.planName }}
+                        </td>
+                        <td>{{ past.paymentDate | date : "MM/dd/yyyy" }}</td>
+                        <td>{{ past.expiryDate | date : "MM/dd/yyyy" }}</td>
+
+                        <td>
+                          {{
+                          past.planAmount === 0 || past.planAmount == null
+                          ? "--"
+                          : "$" + past.planAmount
+                          }}
+                        </td>
+                        <td>
+                          {{
+                          past.totalPaidAmount === 0 ||
+                          past.totalPaidAmount == null
+                          ? "--"
+                          : "$" + past.totalPaidAmount
+                          }}
+                        </td>
+                        <td>
+                          {{
+                          past.discount === 0 || past.discount == null
+                          ? "--"
+                          : past.discount + "%"
+                          }}
+                        </td>
+                      </tr>
+                    </tbody>
+                    } @else {
+                    <tr>
+                      <td colspan="100%">
+                        <app-skeleton-loader skeletonShow="NoRecord">
+                        </app-skeleton-loader>
+                      </td>
+                    </tr>
+
+                    }
+                  </table>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mt-4 no-flex">
+                  <div class="total-entry mt-4" style="font-size: small">
+                    <span>Total Entries:{{ studentFeeRecords.length }}</span><span class="entry-count"> </span>
+                  </div>
+                  <div class="col pagination-style">
+                    <div class="datatable-pager datatable-paging-loaded">
+                      @if( studentFeeRecords.length >5 ) {
+                      <pagination-controls previousLabel="prev" nextLabel="next" [maxSize]="5"
+                        class="datatable-pager-nav my-2 mb-sm-0" id="allContent"
+                        (pageChange)="pastContentCurrentPage = $event">
+                      </pagination-controls>
+                      }
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Past payments -->
+          <div class="tab-pane" id="basictab3" role="tabpanel">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="table-responsive coloful-tabel">
+                  <table class="table table-hover mb-0">
+                    <thead class="student-thread">
+                      <tr>
+                        <th>#</th>
+                        <!-- <th>Parent&nbsp;Name</th> -->
+                        <th>Student&nbsp;Name</th>
+                        <!-- <th>Email</th> -->
+                        <th>Mobile</th>
+                        <th>Plan&nbsp;Name</th>
+                        <th>Plan&nbsp;Purchase&nbsp;date</th>
+                        <th>Plan&nbsp;Expire&nbsp;Date</th>
+                        <th>Plan Amount</th>
+                        <th>Total Paid Amount</th>
+                        <th>Discount %</th>
+                        <th class="text-center">Attachments</th>
+                      </tr>
+                    </thead>
+
+                    @if (skeletonShow === 'Skelton') {
+                    <tbody>
+                      <tr>
+                        <td colspan="100%">
+                          <app-skeleton-loader skeletonShow="Skelton" viewType="table" [tableRows]="5" [tableCols]="11">
+                          </app-skeleton-loader>
+                        </td>
+                      </tr>
+                    </tbody>
+                    } @else if (studentFeeRecords.length > 0) {
+                    <tbody *ngFor="
+                        let past of studentFeeRecords
+                          | paginate
+                            : {
+                                itemsPerPage: pastContentPerPage,
+                                currentPage: pastContentCurrentPage,
+                                id: 'pastContent'
+                              };
+                        let i = index
+                      ">
+                      <tr>
+                        <td>{{ i + 1 }}</td>
+                        <!-- <td>
+                          {{ past.parentName == null ? "--" : past.parentName }}
+                        </td> -->
+                        <!-- <td>
+                          {{
+                          past.studentName == null ? "--" : past.studentName
+                          }}
+                        </td> -->
+                        <td>
+                          <!-- tooltip  added here  -->
+                          <div class="tooltip-wrapper" style="position: relative" (mouseenter)="hoveredRow = past"
+                            (mouseleave)="hoveredRow = null">
+                            <span class="hover-anchor">{{ past.studentName}}</span>
+                            <!-- call here   and remove below div if able to call -->
+                            <app-tooltip *ngIf="hoveredRow === past" [employee]="{
+                      fullName: past.parentName,
+                      email: past.email,
+                      profile:past.staffProfile
+                    }"></app-tooltip>
+                          </div>
+                        </td>
+
+                        <!-- <td>{{ past.email == null ? "--" : past.email }}</td> -->
+                        <td>
+                          {{
+                          past.contact == null ? "--" : "+1 " + past.contact
+                          }}
+                        </td>
+                        <td>
+                          {{ past.planName == null ? "--" : past.planName }}
+                        </td>
+                        <td>{{ past.paymentDate | date : "MM/dd/yyyy" }}</td>
+                        <td>{{ past.expiryDate | date : "MM/dd/yyyy" }}</td>
+
+                        <td>
+                          {{
+                          past.planAmount === 0 || past.planAmount == null
+                          ? "--"
+                          : "$" + past.planAmount
+                          }}
+                        </td>
+                        <td>
+                          {{
+                          past.totalPaidAmount === 0 ||
+                          past.totalPaidAmount == null
+                          ? "--"
+                          : "$" + past.totalPaidAmount
+                          }}
+                        </td>
+                        <td>
+                          {{
+                          past.discount === 0 || past.discount == null
+                          ? "--"
+                          : past.discount + "%"
+                          }}
+                        </td>
+                        <td>
+                          <div class="actions">
+                            <a class="action-btn bg-danger-light" title="View Attachments" download>
+                              <i class="feather-download"></i>
+                            </a>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                    } @else {
+                    <tr>
+                      <td colspan="100%">
+                        <app-skeleton-loader skeletonShow="NoRecord">
+                        </app-skeleton-loader>
+                      </td>
+                    </tr>
+
+                    }
+                  </table>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mt-4 no-flex">
+                  <div class="total-entry mt-4" style="font-size: small">
+                    <span>Total Entries:{{ studentFeeRecords.length }}</span><span class="entry-count"> </span>
+                  </div>
+                  <div class="col pagination-style">
+                    <div class="datatable-pager datatable-paging-loaded">
+                      @if( studentFeeRecords.length >5 ) {
+                      <pagination-controls previousLabel="prev" nextLabel="next" [maxSize]="5"
+                        class="datatable-pager-nav my-2 mb-sm-0" id="pastContent"
+                        (pageChange)="pastContentCurrentPage = $event">
+                      </pagination-controls>
+                      }
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- upcoming payments -->
+          <div class="tab-pane" id="basictab4" role="tabpanel">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="table-responsive coloful-tabel">
+                  <table class="table table-hover mb-0">
+                    <thead class="student-thread">
+                      <tr>
+                        <th>#</th>
+                        <!-- <th>Parent&nbsp;Name</th> -->
+                        <th>Student&nbsp;Name</th>
+                        <!-- <th>Email</th> -->
+                        <th>Mobile</th>
+                        <th>Plan&nbsp;Name</th>
+                        <th>Plan&nbsp;Purchase&nbsp;date</th>
+                        <th>Plan&nbsp;Expire&nbsp;Date</th>
+                        <th>Plan&nbsp;Amount</th>
+                        <th>Discount</th>
+                        <th>Paid&nbsp;Amount</th>
+                        <th class="text-center">Attachments</th>
+                        <!-- <th class="text-center">Actions</th> -->
+                      </tr>
+                    </thead>
+                    @if (skeletonShow === 'Skelton') {
+                    <tbody>
+                      <tr>
+                        <td colspan="100%">
+                          <app-skeleton-loader skeletonShow="Skelton" viewType="table" [tableRows]="5" [tableCols]="11">
+                          </app-skeleton-loader>
+                        </td>
+                      </tr>
+                    </tbody>
+                    } @else if (studentFeeRecords.length > 0) {
+                    <tbody *ngFor="
+                        let upcoming of studentFeeRecords
+                          | paginate
+                            : {
+                                itemsPerPage: upcomingContentPerPage,
+                                currentPage: upcomingContentCurrentPage,
+                                id: 'upcomingContent'
+                              };
+                        let i = index
+                      ">
+                      <tr>
+                        <td>{{ i + 1 }}</td>
+
+                        <!-- <td>
+                          {{
+                          upcoming.parentName == null
+                          ? "--"
+                          : upcoming.parentName
+                          }}
+                        </td> -->
+                        <!-- <td>
+                          {{
+                          upcoming.studentName == null
+                          ? "--"
+                          : upcoming.studentName
+                          }}
+                        </td> -->
+                        <!-- <td>
+                          {{ upcoming.email == null ? "--" : upcoming.email }}
+                        </td> -->
+
+                        <td>
+                          <!-- tooltip  added here  -->
+                          <div class="tooltip-wrapper" style="position: relative" (mouseenter)="hoveredRow = upcoming"
+                            (mouseleave)="hoveredRow = null">
+                            <span class="hover-anchor">{{ upcoming.studentName}}</span>
+                            <!-- call here   and remove below div if able to call -->
+                            <app-tooltip *ngIf="hoveredRow === upcoming" [employee]="{
+                      fullName: upcoming.parentName,
+                      email: upcoming.email,
+                      profile:upcoming.staffProfile
+                    }"></app-tooltip>
+                          </div>
+                        </td>
+
+                        <td>
+                          {{
+                          upcoming.contact == null
+                          ? "--"
+                          : "+1 " + upcoming.contact
+                          }}
+                        </td>
+                        <td>
+                          {{
+                          upcoming.planName == null ? "--" : upcoming.planName
+                          }}
+                        </td>
+                        <td>
+                          {{ upcoming.paymentDate | date : "MM/dd/yyyy" }}
+                        </td>
+                        <td>{{ upcoming.expiryDate | date : "MM/dd/yyyy" }}</td>
+
+                        <td>
+                          {{
+                          upcoming.planAmount === 0 ||
+                          upcoming.planAmount == null
+                          ? "--"
+                          : "$" + upcoming.planAmount
+                          }}
+                        </td>
+
+                        <td>
+                          {{
+                          upcoming.discount === 0 || upcoming.discount == null
+                          ? "--"
+                          : "$" + upcoming.discount + "%"
+                          }}
+                        </td>
+                        <td>
+                          {{
+                          upcoming.totalPaidAmount === 0 ||
+                          upcoming.totalPaidAmount == null
+                          ? "--"
+                          : "$" + upcoming.totalPaidAmount
+                          }}
+                        </td>
+
+                        <td>
+                          <div class="actions">
+                            <a class="action-btn bg-danger-light" title="View Attachments"
+                              (click)="downloadInvoice(upcoming.paymentID)" download>
+                              <i class="feather-download"></i>
+                            </a>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                    } @else {
+                    <tr>
+                      <td colspan="100%">
+                        <app-skeleton-loader skeletonShow="NoRecord">
+                        </app-skeleton-loader>
+                      </td>
+                    </tr>
+
+                    }
+                  </table>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mt-4 no-flex">
+                  <div class="total-entry mt-4" style="font-size: small">
+                    <span>Total Entries:{{ studentFeeRecords.length }}</span><span class="entry-count"> </span>
+                  </div>
+                  <div class="col pagination-style">
+                    <div class="datatable-pager datatable-paging-loaded">
+                      @if( studentFeeRecords.length >5 ) {
+                      <pagination-controls previousLabel="prev" nextLabel="next" [maxSize]="5"
+                        class="datatable-pager-nav my-2 mb-sm-0" id="upcomingContent"
+                        (pageChange)="upcomingContentCurrentPage = $event">
+                      </pagination-controls>
+                      }
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- outstanding payments -->
+          <div class="tab-pane" id="basictab5" role="tabpanel">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="table-responsive coloful-tabel">
+                  <table class="table table-hover mb-0">
+                    <thead class="student-thread">
+                      <tr>
+                        <th>#</th>
+                        <!-- <th>Parent&nbsp;Name</th> -->
+                        <th>Student&nbsp;Name</th>
+                        <!-- <th>Email</th> -->
+                        <th>Mobile</th>
+                        <th>Plan&nbsp;Name</th>
+                        <th>Plan&nbsp;Purchase&nbsp;date</th>
+                        <th>Plan&nbsp;Expire&nbsp;Date</th>
+                        <th>Plan&nbsp;Amount</th>
+                        <th>Discount</th>
+                        <th>Paid&nbsp;Amount</th>
+                        <th class="text-center">Attachments</th>
+                        <th class="text-center">Actions</th>
+                      </tr>
+                    </thead>
+
+                    @if (skeletonShow === 'Skelton') {
+                    <tbody>
+                      <tr>
+                        <td colspan="100%">
+                          <app-skeleton-loader skeletonShow="Skelton" viewType="table" [tableRows]="5" [tableCols]="11">
+                          </app-skeleton-loader>
+                        </td>
+                      </tr>
+                    </tbody>
+                    } @else if (studentFeeRecords.length > 0) {
+                    <tbody *ngFor="
+                        let due of studentFeeRecords
+                          | paginate
+                            : {
+                                itemsPerPage: outstandingContentPerPage,
+                                currentPage: outstandingContentCurrentPage,
+                                id: 'outstandingContent'
+                              };
+                        let i = index
+                      ">
+                      <tr>
+                        <td>{{ i + 1 }}</td>
+                        <!-- <td>
+                          {{ due.parentName == null ? "--" : due.parentName }}
+                        </td> -->
+                        <!-- <td>
+                          {{ due.studentName == null ? "--" : due.studentName }}
+                        </td> -->
+                        <!-- <td>{{ due.email == null ? "--" : due.email }}</td> -->
+                        <td>
+                          <!-- tooltip  added here  -->
+                          <div class="tooltip-wrapper" style="position: relative" (mouseenter)="hoveredRow = due"
+                            (mouseleave)="hoveredRow = null">
+                            <span class="hover-anchor">{{ due.studentName}}</span>
+                            <!-- call here   and remove below div if able to call -->
+                            <app-tooltip *ngIf="hoveredRow === due" [employee]="{
+                      fullName: due.parentName,
+                      email: due.email,
+                      profile:due.staffProfile
+                    }"></app-tooltip>
+                          </div>
+                        </td>
+
+                        <td>
+                          {{ due.contact == null ? "--" : "+1 " + due.contact }}
+                        </td>
+                        <td>
+                          {{ due.planName == null ? "--" : due.planName }}
+                        </td>
+                        <td>{{ due.paymentDate | date : "MM/dd/yyyy" }}</td>
+                        <td>{{ due.expiryDate | date : "MM/dd/yyyy" }}</td>
+
+                        <td>
+                          {{
+                          due.planAmount === 0 || due.planAmount == null
+                          ? "--"
+                          : "$" + due.planAmount
+                          }}
+                        </td>
+                        <td>
+                          {{
+                          due.discount === 0 || due.discount == null
+                          ? "--"
+                          : "$" + due.discount + "%"
+                          }}
+                        </td>
+                        <td>
+                          {{
+                          due.totalPaidAmount === 0 ||
+                          due.totalPaidAmount == null
+                          ? "--"
+                          : "$" + due.totalPaidAmount
+                          }}
+                        </td>
+
+                        <td>
+                          <div class="actions">
+                            <a class="action-btn bg-danger-light" title="View Attachments"
+                              (click)="downloadInvoice(due.paymentID)" download>
+                              <i class="feather-download"></i>
+                            </a>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="actions">
+                            <a class="action-btn bg-danger-light me-2" title="Send Invoice"
+                              (click)="sendActions('mail', due)" download>
+                              <i class="fa-solid fa-envelope"></i>
+                            </a>
+                            <a class="action-btn bg-danger-light me-2" title="Send Notification"
+                              (click)="sendActions('notification', due)" download>
+                              <i class="fa-solid fa-bell"></i>
+                            </a>
+                            <a class="action-btn bg-danger-light" title="View Chat"
+                              (click)="sendActions('chat', due)" download>
+                              <i class="fas fa-comment"></i>
+                            </a>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                    } @else {
+                    <tr>
+                      <td colspan="100%">
+                        <app-skeleton-loader skeletonShow="NoRecord">
+                        </app-skeleton-loader>
+                      </td>
+                    </tr>
+
+                    }
+                  </table>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mt-4 no-flex">
+                  <div class="total-entry mt-4" style="font-size: small">
+                    <span>Total Entries:{{ studentFeeRecords.length }}</span><span class="entry-count"> </span>
+                  </div>
+                  <div class="col pagination-style">
+                    <div class="datatable-pager datatable-paging-loaded">
+                      @if( studentFeeRecords.length >5) {
+                      <pagination-controls previousLabel="prev" nextLabel="next" [maxSize]="5"
+                        class="datatable-pager-nav my-2 mb-sm-0" id="outstandingContent"
+                        (pageChange)="outstandingContentCurrentPage = $event">
+                      </pagination-controls>
+                      }
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="feeModal" tabindex="-1" aria-labelledby="feeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="feeModalLabel">Add Student Fee</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="selectStudentForm">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="studentSelect" class="form-label">Select Student</label>
+                <ng-select [items]="pendingPaymentStudentList" bindLabel="studentName" bindValue="studentID"
+                  placeholder="Select-Student" formControlName="studentID" (change)="getStudentPendingPayment($event)">
+                </ng-select>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="feeAmount" class="form-label">Fee Amount in Cash</label>
+                <div class="input-group">
+                  <span class="input-group-text">$</span>
+                  <input readonly #totalPaidAmount type="number" class="form-control" id="feeAmount"
+                    placeholder="Enter amount" />
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12 mt-2 mb-2">
+              <div class="butons-fee">
+                <button type="button" class="btn btn-primary me-2" (click)="proceedToPay()">
+                  Submit
+                </button>
+                <!-- <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Cancel
+                </button> -->
+              </div>
+            </div>
+          </div>
+        </form>
+        <!-- Table -->
+        <div class="responsive-table mt-4 mb-4">
+          <table class="table table-hover mb-0">
+            <thead class="student-thread">
+              <tr>
+                <th style="width: 13%" *ngIf="StudentPendingPaymentRecord.length > 0">
+                  <div class="d-flex gp-5 justify-content-start align-items-center">
+                    <input type="checkbox" (change)="getAllPendingPayment($event)" />
+                    <span>Select All</span>
+                  </div>
+                </th>
+                <th>Plan Name</th>
+                <th>Plan Amount</th>
+                <th>Plan Due Date</th>
+                <th>Discount</th>
+                <th>Total Paid Amount</th>
+              </tr>
+            </thead>
+            @if (skeletonShow === 'Skelton') {
+            <tbody>
+              <tr>
+                <td colspan="100%">
+                  <app-skeleton-loader skeletonShow="Skelton" viewType="table" [tableRows]="5" [tableCols]="11">
+                  </app-skeleton-loader>
+                </td>
+              </tr>
+            </tbody>
+
+            } @else if (StudentPendingPaymentRecord.length > 0) {
+            <tbody *ngFor="let pending of StudentPendingPaymentRecord; let i = index">
+              <tr>
+                <td *ngIf="StudentPendingPaymentRecord.length > 0">
+                  <input type="checkbox" [checked]="pending.check" (change)="selectSpecificRecord($event, pending)" />
+                </td>
+                <td>{{ pending.planName }}</td>
+                <td>${{ pending.planAmount }}</td>
+                <td>{{ pending.monthDueDate | date : "MM/dd/yyyy" }}</td>
+                <td>{{ pending.discount }}%</td>
+                <td>${{ pending.totalPaidAmount }}</td>
+              </tr>
+            </tbody>
+            } @else {
+            <tr>
+              <td colspan="100%">
+                <app-skeleton-loader skeletonShow="NoRecord">
+                </app-skeleton-loader>
+              </td>
+            </tr>
+
+            }
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

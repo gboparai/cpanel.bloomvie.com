@@ -1,0 +1,441 @@
+<!-- <app-breadcrumb></app-breadcrumb> -->
+<div class="row">
+  <div class="col-md-12">
+    <div class="card no-pad-no-shadow">
+      <div class="card-body no-pad-no-shadow">
+        @if(activeRoute=='/view-supply-request'){
+        <div class="heading-new">
+          <h5 class="mb-0">Supply List</h5>
+        </div>
+        }
+
+        <!-- new tabs -->
+        <div class="row">
+          <!-- <div class="col-md-12">
+            <ul class="nav nav-tabs" role="tablist">
+              <li class="nav-item" role="presentation">
+              <a class="nav-link active" data-bs-toggle="tab" aria-selected="false" role="tab" href="#basictab2"
+                  (click)="getSupplyList('pending')">Requested Items
+                </a> 
+              </li>
+              <li class="nav-item" role="presentation">
+                <a class="nav-link" data-bs-toggle="tab" (click)="getSupplyList('accepted')" aria-selected="false"
+                  (click)="getSupplyList('purchased')" role="tab" href="#basictab3">Purchased Items
+                </a>
+              </li> 
+            </ul>
+          </div>-->
+        </div>
+
+        <!-- new list -->
+
+        <div class="row">
+          <div class="col-md-12">
+            <div class="table-responsive">
+              <div class="col-md-12">
+                <div class="row mb-4">
+                  <div class="col-md-4">
+                    <div class="search" style="margin-bottom: 0px">
+                      <input type="text" class="form-control" placeholder="Search by item name or teacher"
+                        [(ngModel)]="searchText" (ngModelChange)="applyFilter()" />
+                      <button type="submit">Search</button>
+                    </div>
+                  </div>
+                  <div class="col-md-8 float-end add-item-button">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addItemModal">
+                      Add Item
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Table with Search + Pagination -->
+
+              <div class="tab-content" id="expens-tab">
+                <div class="tab-pane active" id="basictab2" role="tabpanel">
+                  <div class="row"></div>
+                  <table class="table table-hover mb-0">
+                    <thead class="supply-thread student-thread">
+                      <tr>
+                        <th *ngIf="HideActionButton != true">Action</th>
+                        <th>Requested By</th>
+                        <th>Item Name</th>
+                        <th>Item Quantity</th>
+                        <th>Referral Link</th>
+                        <th>Description</th>
+                        <th>Date</th>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      @if (skeletonShow === 'Skelton') {
+                      <tr>
+                        <td colspan="100%">
+                          <app-skeleton-loader skeletonShow="Skelton" viewType="table" [tableRows]="5" [tableCols]="7">
+                          </app-skeleton-loader>
+                        </td>
+                      </tr>
+
+                      } @else if (displayedSupplyList.length > 0) {
+                      <tr *ngFor="
+                          let item of displayedSupplyList
+                            | paginate
+                              : {
+                                  itemsPerPage: Contentsize,
+                                  currentPage: ContentP,
+                                  id: 'supplyList'
+                                };
+                          let i = index
+                        ">
+                        @if(HideActionButton != true && item.userRoleID!==3){
+                        <td>
+                          <button class="action-btn approve" (click)="onAccept(item)">
+                            ✔
+                          </button>
+                          <button class="action-btn reject" (click)="onReject(item)">
+                            ✖
+                          </button>
+                        </td>
+                        } @else if(item.userRoleID===3 &&
+                        HideActionButton!=true){
+                        <td>
+                          <button (click)="onAccept(item)" class="upload-receipt">
+                            Upload Receipt
+                          </button>
+                        </td>
+                        }
+                        <td>{{ item.teacherName }}</td>
+                        <td>{{ item.itemName }}</td>
+                        <td>{{ item.itemQuantity }}</td>
+                        <td *ngIf="item.referralLink; else noLink">
+                          <span *ngFor="let link of item.referralLink.split(',')">
+                            <a [href]="link.trim()" target="_blank" class="me-2">
+                              <i class="fa fa-paperclip"></i>
+                            </a>
+                          </span>
+                        </td>
+                        <td
+              style="width: 300px; word-break: break-word; white-space: normal"
+            >
+              <div
+                class="deatil-subscription"
+                style="word-break: break-word; white-space: normal"
+              >
+                <p *ngIf="expandedDescriptionIndex !== i">
+                  {{
+                    item.itemDescription.length > 50
+                      ? (item.itemDescription | slice : 0 : 50) + "..."
+                      : item.itemDescription
+                  }}
+                  <a
+                    *ngIf="item.itemDescription.length > 50"
+                    href="javascript:void(0)"
+                    class="text-primary ms-1"
+                    (click)="expandedDescriptionIndex = i"
+                  >
+                    Read more
+                  </a>
+                </p>
+
+                <p *ngIf="expandedDescriptionIndex === i">
+                  {{ item.itemDescription }}
+                  <a
+                    href="javascript:void(0)"
+                    class="text-primary ms-1"
+                    (click)="expandedDescriptionIndex = null"
+                  >
+                    Show less
+                  </a>
+                </p>
+              </div>
+            </td>
+                        <td>{{ item.appliedOn | date : "MM-dd-yyyy" }}</td>
+                      </tr>
+                      } @else {
+                      <tr>
+                        <td colspan="100%">
+                          <app-skeleton-loader skeletonShow="NoRecord">
+                          </app-skeleton-loader>
+                        </td>
+                      </tr>
+
+                      }
+                    </tbody>
+                  </table>
+                </div>
+
+                <!-- <div class="tab-pane" id="basictab3" role="tabpanel">
+                  <table class="table table-hover mb-0">
+                    <thead class="supply-thread student-thread">
+                      <tr>
+                        <th>Requested By</th>
+                        <th>Item Name</th>
+                        <th>Requested Qty</th>
+                        <th>Referral Link</th>
+                        <th>Description</th>
+                        <th>Date</th>
+                        <th>Purchased Qty</th>
+                        <th>Expense Type</th>
+                        <th>Cost</th>
+                        <th>Receipt/Payment Proof</th>
+                      </tr>
+                    </thead>
+
+                    <tbody *ngFor="let item of displayedSupplyList ">
+                      <tr>
+                        <td>{{item.teacherName}}</td>
+                        <td>{{item.itemName}}</td>
+                        <td>{{item. quantityRequested}}</td>
+                        <td *ngIf="item.referralLink;else noLink">
+                          <span *ngFor="let link of item.referralLink.split(',')">
+                            <a [href]="link.trim()" target="_blank" class="me-2">
+                              <i class="fa fa-paperclip"></i>
+                            </a>
+                          </span>
+                        </td>
+                        <td>{{item.description}}</td>
+                        <td>{{item. createdDate | date : "dd-MM-yyyy"}}</td>
+                        <td>{{item. quantityPurchased}}</td>
+                        <td><span class="expense-label expense-payroll">{{item.expenseType}}</span></td>
+                        <td>{{item.cost}}</td>
+                        <td><i class="fa fa-download"></i></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div> -->
+              </div>
+            </div>
+            <div class="col pagination-style mt-4 no-flex">
+              <div class="datatable-pager datatable-paging-loaded">
+                @if( displayedSupplyList.length >5 ) {
+                <pagination-controls previousLabel="prev" nextLabel="next" [maxSize]="5"
+                  class="datatable-pager-nav my-2 mb-sm-0" id="supplyList" (pageChange)="ContentP = $event">
+                </pagination-controls>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Modal -->
+        <form [formGroup]="SupplyForm">
+          <div class="modal fade" id="addItemModal" tabindex="-1" aria-labelledby="addItemModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="addItemModalLabel">
+                    Add New Item
+                  </h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="">
+                        <label for="itemName" class="form-label">Item Name</label>
+                        <input type="text" class="form-control mb-3" formControlName="itemName" name="itemName"
+                          placeholder=" Enter Item" />
+
+                        <div *ngIf="SupplyForm.get('itemName')?.touched" class="text-danger">
+                          <small *ngIf="SupplyForm.get('itemName')?.errors?.['required']">This field is
+                            required.</small>
+                        </div>
+                      </div>
+
+                      <div class="">
+                        <label for="itemQty" class="form-label">Quantity</label>
+                        <input type="number" class="form-control" id="itemQty" formControlName="quantity"
+                          placeholder=" Enter Quantity" name="quantity" min="0" />
+                        <div *ngIf="SupplyForm.get('quantity')?.invalid" class="text-danger">
+                          <small *ngIf="SupplyForm.get('quantity')?.errors?.['min']">Quantity cannot be negative</small>
+                        </div>
+                      </div>
+
+                      <!-- <div class="">
+                        <label for="itemLink" class="form-label">Add Link</label>
+                        <input type="url" class="form-control" id="itemLink" name="referralLinks"
+                          formControlName="referralLinks">
+                      </div> -->
+                    </div>
+                    <div class="col-md-6">
+                      <div class="">
+                        <label for="itemDesc" class="form-label">Description</label>
+                        <textarea class="form-control" formControlName="itemDescription" name="itemDescription"
+                          placeholder=" Enter Description" id="itemDesc" rows="5" cols="50"></textarea>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-primary" (click)="onSubmit()">
+                    Submit
+                  </button>
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="onCancel()">
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+
+        <div class="modal fade" id="purchased" tabindex="-1" aria-labelledby="addItemModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="addItemModalLabel">
+                  Purchased Items
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+
+              <div class="modal-body">
+                <form [formGroup]="purchasedForm">
+
+                  <div class="mb-3">
+                    <label for="expenseType" class="form-label">Expense Type *</label>
+                    <ng-select formControlName="expenseType" name="expenseType" [items]="expenseType"
+                      placeholder=" Enter Expense Type" bindLabel="expenseType" bindValue="id">
+                    </ng-select>
+                    <div *ngIf="purchasedForm.get('expenseType')?.touched && purchasedForm.get('expenseType')?.invalid"
+                      class="text-danger">
+                      Expense Type is required.
+                    </div>
+                  </div>
+
+                  <div class="row mb-3">
+                    <div class="col">
+                      <label for="itemCost" class="form-label">Item Cost *</label>
+                      <input type="number" class="form-control" id="itemCost" required="" name="cost"
+                        placeholder=" Enter Cost" formControlName="cost" min="0" />
+                    </div>
+                    <div *ngIf="purchasedForm.get('cost')?.touched && purchasedForm.get('cost')?.invalid"
+                      class="text-danger">
+                      Cost is required and must be ≥ 0.
+                    </div>
+
+                    <div class="col">
+                      <label for="quantityPurchased" class="form-label">Quantity Purchased</label>
+                      <input type="number" class="form-control" id="quantityPurchased" name="quantity"
+                        placeholder=" Enter Quantity" formControlName="quantity" min="0" />
+                    </div>
+                    <div *ngIf="purchasedForm.get('quantity')?.touched && purchasedForm.get('quantity')?.invalid"
+                      class="text-danger">
+                      Quantity is required and must be ≥ 1.
+                    </div>
+                  </div>
+
+                  <div class="cash-or-card">
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input mt-1" type="radio" formControlName="paymentType" name="paymentType"
+                        id="cash" value="cash" />
+                      <label class="form-check-label" for="">Cash</label>
+                    </div>
+
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input mt-1" type="radio" formControlName="paymentType" name="paymentType"
+                        id="bank" value="bank" />
+                      <label class="form-check-label" for="">Bank Payment</label>
+                    </div>
+                  </div>
+                  <div *ngIf="purchasedForm.get('paymentType')?.touched && purchasedForm.get('paymentType')?.invalid"
+                    class="text-danger">
+                    Please select a payment type.
+                  </div>
+
+                  <div class="">
+                    <label for="receiptPhoto" class="form-label">Upload Receipt Photo</label>
+                    <input #receiptPhoto type="file" class="form-control" id="receiptPhoto" accept="image/*"
+                      (change)="FileSelectionBeforeCrop($event)" />
+                  </div>
+                </form>
+              </div>
+
+              <div class="modal-footer">
+                <button [disabled]="isSubmitDisabled" type="button" class="btn btn-primary"
+                  (click)="purchaseItemSubmit()">
+                  Submit
+                </button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="onCancel()">
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Approve model -->
+  <div class="modal fade" id="Approve-model" tabindex="-1" id="modalOpen" aria-labelledby="exampleModalLabel46"
+    aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="TimeSlotModalLabel">Supply Request</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="ma">
+                <p>Do you Want to Accept Supply Request?</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <div class="student-submit">
+            <button type="button" class="btn btn-primary apoint-button mr-2" (click)="approveSupply(1, selectedItemId)">
+              Accept
+            </button>
+
+            <button type="button" class="btn btn-secondary apoint-button" (click)="approveSupply(2, selectedItemId)">
+              Reject
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #noLink>
+    <td>Link not Provided</td>
+  </ng-template>
+</div>
+
+
+
+
+<!-- Cropper Pop up -->
+
+
+<div class="modal fade" id="cropperModal" tabindex="-1" aria-labelledby="cropperModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="cropperModalLabel">Crop Image</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="resetImage()"></button>
+      </div>
+      <div class="modal-body">
+        <image-cropper [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="true" [aspectRatio]="4 / 3"
+          format="png" (imageCropped)="storeTempCrop($event)"></image-cropper>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="resetImage()">
+          Cancel
+        </button>
+
+
+        <button type="button" class="btn btn-primary" (click)="fileChangeHandler('CapitolExpenses')">
+          Upload
+        </button>
+      </div>
+    </div>
+  </div> 
+</div>

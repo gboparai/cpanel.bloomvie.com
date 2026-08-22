@@ -1,0 +1,30 @@
+.meeting-style{
+    margin-top: 1px;
+    padding-top: 23px;
+    border-top: 1px solid #d3d3d3;
+}.actions button {
+    padding: 2px 10px !important;
+    /* background: transparent !important; */
+    color: #ffffff;
+    border: none !important;
+    font-size: 12px;
+   
+}.actions .apoint-button {
+  
+    margin-right: 4px;
+}
+.appoit-link{
+    overflow-wrap: anywhere;
+}
+
+.act-btn{
+    justify-content: start !important;
+}
+
+#act-btn{
+    justify-content: start !important;
+}
+
+#act-btn1{
+    justify-content: start !important;
+}

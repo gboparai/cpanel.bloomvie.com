@@ -1,0 +1,114 @@
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-inner slimscroll">
+    <div id="sidebar-menu" class="sidebar-menu">
+      <ul>
+        <!-- UserRoleId !== 8 && -->
+        <!-- <li class="submenu" *ngIf="UserRoleId != null"> -->
+        <li
+          class="submenu"
+          *ngIf="
+            (isSlotAccepted == 'true' && UserRoleId != null) ||
+            (UserRoleId !== 8 && UserRoleId != null)
+          "
+        >
+          <a
+            class="nav-link"
+            [ngClass]="{ subdrop: dashboardMenu?.isOpen }"
+            [routerLink]="dashboardMenu?.menuUrl"
+            [attr.data-id]="dashboardMenu?.id"
+            (click)="showChildList(dashboardMenu)"
+            ><i class="feather-grid"></i> <span> Dashboard</span></a
+          >
+        </li>
+
+        <li
+          class="submenu"
+          *ngFor="let item of menus"
+          [attr.data-id]="item.id"
+          [ngClass]="{ subdrop: item.isOpen }"
+        >
+          <a
+            class="nav-link"
+            [routerLink]="item.menuUrl"
+            (click)="showChildList(item)"
+            [ngClass]="{ subdrop: item.isOpen }"
+          >
+            <i class="{{ item.icon }}"></i>
+            <span>{{ item.value }}</span>
+            <span
+              class="menu-arrow"
+              *ngIf="item.childList && item.childList.length"
+            ></span>
+          </a>
+
+          <!-- Conditionally show childList -->
+          <ul
+            *ngIf="item.childList && item.childList.length"
+            [hidden]="!item.isOpen"
+          >
+            <li
+              class="submenu"
+              *ngFor="let childItem of item.childList"
+              [attr.data-id]="childItem.id"
+              [ngClass]="{ subdrop: childItem.isOpen }"
+            >
+              <a
+                (click)="showChildList(childItem)"
+                class="nav-link"
+                [ngClass]="{ subdrop: childItem.isOpen }"
+                [routerLink]="childItem.menuUrl"
+              >
+                <span>{{ childItem.value }}</span>
+                <span
+                  class="menu-arrow"
+                  *ngIf="
+                    childItem.nestedchildList &&
+                    childItem.nestedchildList.length > 0
+                  "
+                ></span>
+              </a>
+
+              <!-- Conditionally show nestedchildList -->
+              <ul
+                *ngIf="
+                  childItem.nestedchildList && childItem.nestedchildList.length
+                "
+                [hidden]="!childItem.isOpen"
+              >
+                <li
+                  *ngFor="let nestchildItem of childItem.nestedchildList"
+                  [attr.data-id]="nestchildItem.id"
+                >
+                  <a
+                    (click)="showChildList(nestchildItem)"
+                    class="nav-link"
+                    [ngClass]="{ subdrop: nestchildItem.isOpen }"
+                    [routerLink]="nestchildItem.menuUrl"
+                  >
+                    {{ nestchildItem.value }}
+                  </a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <div *ngIf="UserRoleId != '1'" class="contact-admin">
+      <i class="fa fa-envelope"></i>
+      <div>
+        Facing an issue? <br />
+        <a
+          [href]="
+            'mailto:' +
+            bloomvieSettings?.email +
+            '?subject=Facing%20a%20problem%2C%20need%20help'
+          "
+        >
+          Contact the Admin
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

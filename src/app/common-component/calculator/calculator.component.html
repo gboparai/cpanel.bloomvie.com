@@ -1,0 +1,375 @@
+<app-breadcrumb></app-breadcrumb>
+
+
+<form [formGroup]="dayCareCalculatorForm">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="heading-new">
+                        <h5 class="mb-0">Bloomvie Savings Calculator</h5>
+                    </div>
+
+                    <div class="row">
+                        <!-- Daycare Type Select -->
+                        <div class="col-md-3 mb-2">
+                            <div class="form-group local-forms">
+                                <label>Select DayCare Type<span class="login-danger">*</span></label>
+                                <ng-select id="dayCareTypeID" [items]="centerTypes" bindLabel="label" bindValue="value" placeholder="--Select--"
+                                    formControlName="dayCareTypeID" (change)="onSelectDayCareType($event)"></ng-select>
+                                <div *ngIf="dayCareCalculatorForm.get('dayCareTypeID')?.invalid && dayCareCalculatorForm.get('dayCareTypeID')?.touched"
+                                    class="text-danger">
+                                    <small *ngIf="dayCareCalculatorForm.get('dayCareTypeID')">Daycare Type is
+                                        required.</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Activity Name -->
+                        <div class="col-md-3 mb-2">
+                            <div class="form-group local-forms">
+                                <label>Select Activity Name<span class="login-danger">*</span></label>
+                                <ng-select id="activityName" [items]="DCCactivityName" bindLabel="activityName"placeholder="--Select--"
+                                    bindValue="activityName" formControlName="activityName"
+                                    (change)="onSelectActivityName($event)">
+                                </ng-select>
+
+                                <div *ngIf="dayCareCalculatorForm.get('activityName')?.invalid && dayCareCalculatorForm.get('activityName')?.touched"
+                                    class="text-danger">
+                                    <small *ngIf="dayCareCalculatorForm.get('activityName')">Activity Name is
+                                        required.</small>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!-- Activity Duration Type -->
+                 
+                        <div class="col-md-3 mb-2">
+                            <div class="form-group local-forms">
+                                <label>Select Activity Duration Type<span class="login-danger">*</span></label>
+                                <ng-select id="activityDurationType" [items]="calculatordurationType" bindLabel="activityDurationType"placeholder="--Select--"
+                                    bindValue="activityDurationType" formControlName="activityDurationType"
+                                    (change)="onSelectActivityDurationType($event)">
+                                </ng-select>
+
+                                <div *ngIf="dayCareCalculatorForm.get('activityDurationType')?.invalid && dayCareCalculatorForm.get('activityDurationType')?.touched"
+                                    class="text-danger">
+                                    <small *ngIf="dayCareCalculatorForm.get('activityDurationType')">Activity Duration Type
+                                        required.</small>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!-- Type of logic -->
+                        <div class="col-md-3 mb-2">
+                            <div class="form-group local-forms">
+                                <label>Select Type Of Logic Type<span class="login-danger">*</span></label>
+                                <ng-select id="typeofLogic" [items]="DCCtypeofLogic" bindLabel="typeofLogic" placeholder="--Select--"
+                                    bindValue="typeofLogic" formControlName="typeofLogic"
+                                    (change)="onSelectLogicType($event)"></ng-select>
+                                <div *ngIf="dayCareCalculatorForm.get('typeofLogic')?.invalid && dayCareCalculatorForm.get('typeofLogic')?.touched"
+                                    class="text-danger">
+                                    <small *ngIf="dayCareCalculatorForm.get('typeofLogic')">Logic Type is
+                                        required.</small>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+<div class="main-area-row" >
+
+                    <!-- Manual Time -->
+
+                    <div class="row">
+                        @if (this.typeofLogic === 'student' || this.typeofLogic === 'staff' || this.typeofLogic ===
+                        'finance' || this.typeofLogic === 'teacher') {
+
+                        <div class="col-md-4 mb-5">
+
+
+                            <div class="form-group local-forms">
+                                <label>Manual Activity Time<span class="login-danger">*</span></label>
+                                <input formControlName="manualActivityTime" type="number" class="form-control" placeholder="Enter Time">
+                            </div>
+
+                            <div *ngIf="dayCareCalculatorForm.get('manualActivityTime')?.invalid && dayCareCalculatorForm.get('manualActivityTime')?.touched"
+                                class="text-danger">
+                                <small
+                                    *ngIf="dayCareCalculatorForm.get('manualActivityTime')?.hasError('required') && dayCareCalculatorForm.get('manualActivityTime')?.touched"
+                                    class="text-danger">
+                                    This field is required.
+                                </small>
+
+                            </div>
+                        </div>
+                        }
+
+
+
+                        <div *ngIf="this.typeofLogic === 'student' || this.typeofLogic === 'staff' || this.typeofLogic === 'finance'"
+                            class="col-md-4 mb-5">
+                            <div class="form-group local-forms">
+                                <label>Student Manual Increment Time<span class="login-danger">*</span></label>
+                                <input formControlName="studentManualIncrementTime" type="number" class="form-control" placeholder="Enter Time">
+                            </div>
+
+                            <div *ngIf="dayCareCalculatorForm.get('studentManualIncrementTime')?.invalid && dayCareCalculatorForm.get('studentManualIncrementTime')?.touched"
+                                class="text-danger">
+                                <small
+                                    *ngIf="dayCareCalculatorForm.get('studentManualIncrementTime')?.hasError('required') && dayCareCalculatorForm.get('studentManualIncrementTime')?.touched"
+                                    class="text-danger">
+                                    This field is required.
+                                </small>
+
+                            </div>
+                        </div>
+
+                        <div *ngIf="this.typeofLogic === 'teacher' || this.typeofLogic === 'staff' || this.typeofLogic === 'finance'"
+                            class="col-md-4 mb-5">
+                            <div class="form-group local-forms">
+                                <label>Teacher Manual Increment Time<span class="login-danger">*</span></label>
+                                <input formControlName="teacherManualIncrementTime" type="number" class="form-control" placeholder="Enter Time">
+                            </div>
+
+                            <div *ngIf="dayCareCalculatorForm.get('teacherManualIncrementTime')?.invalid && dayCareCalculatorForm.get('teacherManualIncrementTime')?.touched"
+                                class="text-danger">
+                                <small
+                                    *ngIf="dayCareCalculatorForm.get('teacherManualIncrementTime')?.hasError('required') && dayCareCalculatorForm.get('teacherManualIncrementTime')?.touched"
+                                    class="text-danger">
+                                    This field is required.
+                                </small>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+                    <!--  Manual   Cost-->
+
+
+                    <div class="row">
+                        @if (this.typeofLogic === 'student' || this.typeofLogic === 'staff' || this.typeofLogic ===
+                        'finance' || this.typeofLogic === 'teacher') {
+
+                        <div class="col-md-4 mb-5">
+                            <div class="form-group local-forms">
+                                <label>Manual Activity Cost<span class="login-danger">*</span></label>
+                                <input formControlName="manualActivityCost" type="number" class="form-control" placeholder="Enter Cost">
+                            </div>
+
+                            <div *ngIf="dayCareCalculatorForm.get('manualActivityCost')?.invalid && dayCareCalculatorForm.get('manualActivityCost')?.touched"
+                                class="text-danger">
+                                <small
+                                    *ngIf="dayCareCalculatorForm.get('manualActivityCost')?.hasError('required') && dayCareCalculatorForm.get('manualActivityCost')?.touched"
+                                    class="text-danger">
+                                    This field is required.
+                                </small>
+
+                            </div>
+                        </div>
+
+                        }
+                        <div *ngIf="this.typeofLogic === 'student' || this.typeofLogic === 'staff' || this.typeofLogic === 'finance'"
+                            class="col-md-4 mb-5">
+                            <div class="form-group local-forms">
+                                <label>Student Manual Increment Cost<span class="login-danger">*</span></label>
+                                <input formControlName="studentManualIncrementCost" type="number" class="form-control" placeholder="Enter Cost">
+                            </div>
+                            <div *ngIf="dayCareCalculatorForm.get('studentManualIncrementCost')?.invalid && dayCareCalculatorForm.get('studentManualIncrementCost')?.touched"
+                                class="text-danger">
+                                <small
+                                    *ngIf="dayCareCalculatorForm.get('studentManualIncrementCost')?.hasError('required') && dayCareCalculatorForm.get('studentManualIncrementCost')?.touched"
+                                    class="text-danger">
+                                    This field is required.
+                                </small>
+
+                            </div>
+                        </div>
+
+                        <div *ngIf="this.typeofLogic === 'teacher' || this.typeofLogic === 'staff' || this.typeofLogic === 'finance'"
+                            class="col-md-4 mb-5">
+                            <div class="form-group local-forms">
+                                <label>Teacher Manual Increment Time<span class="login-danger">*</span></label>
+                                <input formControlName="teacherManualIncrementCost" type="number" class="form-control" placeholder="Enter Time">
+                            </div>
+
+                            <div *ngIf="dayCareCalculatorForm.get('teacherManualIncrementCost')?.invalid && dayCareCalculatorForm.get('teacherManualIncrementCost')?.touched"
+                                class="text-danger">
+                                <small
+                                    *ngIf="dayCareCalculatorForm.get('teacherManualIncrementCost')?.hasError('required') && dayCareCalculatorForm.get('teacherManualIncrementCost')?.touched"
+                                    class="text-danger">
+                                    This field is required.
+                                </small>
+
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+                    <!--  Bloomvie Time-->
+
+                    <div class="row">
+                        @if (this.typeofLogic === 'student' || this.typeofLogic === 'staff' || this.typeofLogic ===
+                        'finance' || this.typeofLogic === 'teacher') {
+
+                        <div class="col-md-4 mb-5">
+                            <div class="form-group local-forms">
+                                <label>Bloomvie Activity Time<span class="login-danger">*</span></label>
+                                <input formControlName="bloomvieActivityTime" type="number" class="form-control" placeholder="Enter Time">
+                                <div *ngIf="dayCareCalculatorForm.get('bloomvieActivityTime')?.invalid && dayCareCalculatorForm.get('bloomvieActivityTime')?.touched"
+                                    class="text-danger">
+                                    <small
+                                        *ngIf="dayCareCalculatorForm.get('bloomvieActivityTime')?.hasError('required') && dayCareCalculatorForm.get('bloomvieActivityTime')?.touched"
+                                        class="text-danger">
+                                        This field is required.
+                                    </small>
+
+                                </div>
+                            </div>
+                        </div>
+                        }
+
+                        <!-- Student Increment Time -->
+                        <div *ngIf="this.typeofLogic === 'student' || this.typeofLogic === 'staff' || this.typeofLogic === 'finance'"
+                            class="col-md-4 mb-5">
+                            <div class="form-group local-forms">
+                                <label>Student Increment Time<span class="login-danger">*</span></label>
+                                <input formControlName="studentIncrementTime" type="number" class="form-control" placeholder="Enter-time">
+                                <div *ngIf="dayCareCalculatorForm.get('studentIncrementTime')?.invalid && dayCareCalculatorForm.get('studentIncrementTime')?.touched"
+                                    class="text-danger">
+                                    <small
+                                        *ngIf="dayCareCalculatorForm.get('studentIncrementTime')?.hasError('required') && dayCareCalculatorForm.get('studentIncrementTime')?.touched"
+                                        class="text-danger">
+                                        This field is required.
+                                    </small>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Teacher Increment Time -->
+                        <div *ngIf="this.typeofLogic === 'teacher' || this.typeofLogic === 'staff' || this.typeofLogic === 'finance'"
+                            class="col-md-4 mb-5">
+                            <div class="form-group local-forms">
+                                <label>Teacher Increment Time<span class="login-danger">*</span></label>
+                                <input formControlName="teacherIncrementTime" type="number" class="form-control" placeholder="Enter Time">
+                                <div *ngIf="dayCareCalculatorForm.get('teacherIncrementTime')?.invalid && dayCareCalculatorForm.get('teacherIncrementTime')?.touched"
+                                    class="text-danger">
+                                    <small
+                                        *ngIf="dayCareCalculatorForm.get('teacherIncrementTime')?.hasError('required') && dayCareCalculatorForm.get('teacherIncrementTime')?.touched"
+                                        class="text-danger">
+                                        This field is required.
+                                    </small>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+
+                    <!-- Bloomvie Cost -->
+
+                    <div class="row">
+
+                        @if (this.typeofLogic === 'student' || this.typeofLogic === 'staff' || this.typeofLogic ===
+                        'finance' || this.typeofLogic === 'teacher') {
+
+                        <div class="col-md-4 mb-5">
+                            <div class="form-group local-forms">
+                                <label>Bloomvie Activity Cost<span class="login-danger">*</span></label>
+                                <input formControlName="bloomvieActivityCost" type="number" class="form-control" placeholder="Enter Cost">
+                            </div>
+
+                            <div *ngIf="dayCareCalculatorForm.get('bloomvieActivityCost')?.invalid && dayCareCalculatorForm.get('bloomvieActivityCost')?.touched"
+                                class="text-danger">
+                                <small
+                                    *ngIf="dayCareCalculatorForm.get('bloomvieActivityCost')?.hasError('required') && dayCareCalculatorForm.get('bloomvieActivityCost')?.touched"
+                                    class="text-danger">
+                                    This field is required.
+                                </small>
+
+                            </div>
+                        </div>
+
+                        }
+
+                        <div *ngIf="this.typeofLogic === 'student' || this.typeofLogic === 'staff' || this.typeofLogic === 'finance'"
+                            class="col-md-4 mb-5">
+                            <div class="form-group local-forms">
+                                <label>Student Increment Cost<span class="login-danger">*</span></label>
+                                <input formControlName="studentIncrementCost" type="number" class="form-control" placeholder="Enter Cost">
+                            </div>
+
+                            <div *ngIf="dayCareCalculatorForm.get('studentIncrementCost')?.invalid && dayCareCalculatorForm.get('studentIncrementCost')?.touched"
+                                class="text-danger">
+                                <small
+                                    *ngIf="dayCareCalculatorForm.get('studentIncrementCost')?.hasError('required') && dayCareCalculatorForm.get('studentIncrementCost')?.touched"
+                                    class="text-danger">
+                                    This field is required.
+                                </small>
+
+                            </div>
+                        </div>
+
+                        <div *ngIf="this.typeofLogic === 'teacher' || this.typeofLogic === 'staff' || this.typeofLogic === 'finance'"
+                            class="col-md-4 mb-5">
+                            <div class="form-group local-forms">
+                                <label>Teacher Increment Cost<span class="login-danger">*</span></label>
+                                <input formControlName="teacherIncrementCost" type="number" class="form-control" placeholder="Enter Cost">
+                            </div>
+
+
+                            <div *ngIf="dayCareCalculatorForm.get('teacherIncrementCost')?.invalid && dayCareCalculatorForm.get('teacherIncrementCost')?.touched"
+                                class="text-danger">
+                                <small
+                                    *ngIf="dayCareCalculatorForm.get('teacherIncrementCost')?.hasError('required') && dayCareCalculatorForm.get('teacherIncrementCost')?.touched"
+                                    class="text-danger">
+                                    This field is required.
+                                </small>
+
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+</div>
+                </div>
+
+
+
+                <div class="row ">
+
+                    <div class="row">
+                        <div class="col-md-12 mb-4 button-alignment">
+                            <div class="form-buttons text-end">
+                                <button type="submit" class="btn btn-primary waves-effect waves-light padd-rt me-2"
+                                    (click)="dayCareCentreCalculator()">
+                                    Update </button>
+                                <button type="button" class="btn btn-secondary waves-effect waves-light m-0"> Cancel
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</form>

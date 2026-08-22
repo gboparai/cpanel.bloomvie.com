@@ -1,0 +1,189 @@
+<app-breadcrumb></app-breadcrumb>
+
+<section>
+  <div class="col-sm-12">
+    <div class="card">
+      <div class="card-body">
+        <div  class="heading-new">
+          <h5  class="mb-0">Add Role Based Permission</h5>
+        </div>
+        <form [formGroup]="RolePermissionForm" >
+          <div class="row mb-3">
+            <!-- <div class="col-12">
+              <h5 class="form-title"><span>Role Based Permission</span></h5>
+            </div> -->
+            <div class="col-12 col-sm-4">
+              <div class="form-group local-forms">
+                <label class="">Select Role<span class="login-danger gt">*</span>
+                    <!-- <a routerLink="../user-role" tooltip="Add User Roles" 
+                     title="Add User Roles"  class=" add_btn top90"
+                      ><i class="fa-solid fa-circle-plus"></i></a> -->
+                    </label>
+               
+                <ng-select [items]="userRoleList" bindLabel="userRole" bindValue="id" placeholder="-Select-" 
+                formControlName="UserRoleID" name="UserRoleID" class="ng-select"    id="BindUserTypePermission"  (change)="BindUserTypePermission($event)">
+              </ng-select>
+                
+              @if(input.UserRoleID.touched){
+                @if(input.UserRoleID?.errors?.required){
+                    <span class="text-danger">This field is required.</span>
+                }
+            }
+                <span  role="presentation" class="select2-selection__arrow"><b role="presentation"></b></span>
+
+
+              </div>
+            </div>
+
+            <div class="col-12 col-sm-4 mt-4">
+              <div class="student-submit d-flex align-items-center mt-1">
+           
+                <button type="submit" id="submitMenuPermissionToRoleButton" class="btn btn-primary me-2" (click)="AssignConfirmation()" [disabled]="RolePermissionForm.invalid">
+                  Submit
+                </button>
+                <button type="reset" class="btn btn-secondary me-2" (click)="Reset()">Cancel</button>
+                <a routerLink="../user-role" 
+                title="Add User Roles"  class=" btn btn-primary "
+                 >Add User Role</a> 
+              </div>
+            </div>
+          </div>
+
+          <div class="row user-permision" *ngIf="data && (isManuPresent != false)">
+            <a
+             
+              class="text-uppercase fw-bold user-selection"
+              ><i class="mdi mdi-adjust me-1"></i>Select Permission</a
+            >
+
+            <!-- in -->
+
+
+            <div class=" d-flex align-items-center" style="gap:4px;">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                name="list_name"
+                value=""
+                (change)="toggleSelectAll($event)"
+                [checked]="isAllSelected"
+              />
+
+              <span class="mt-2">Select All</span>
+
+            </div>
+
+          
+
+
+
+
+
+            <div class="col-lg-6 list-items">
+              <ul class="sitemap">
+                <li class="first-childh">
+                  <ul>
+                    @for(item of data.ParentChildchecklist;track item){
+                    <li
+                    class="second-childh"
+                  >
+                    <a class="d-flex">
+                      <div class="form-check form-check-success">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          [disabled]="item.IsActive"
+                          [ngModelOptions]="{ standalone: true }"
+                          [(ngModel)]="item.isSelected"
+                          name="list_name"
+                          value="{{ item.id }}"
+                          (ngModelChange)="parentCheck(item)"
+                          checked="item.isSelected==true?'checked':''"
+                        />
+                      </div>
+                      <span>{{ item.value }}</span>
+                    </a>
+                    <ul>
+                      <div [hidden]="item.isClosed">
+                        @for(itemChild of item.childList ;track itemChild){
+                        <li class="third-list">
+                          <a href="javascript: void(0);" class="d-flex">
+                            <div class="form-check form-check-success">
+                              <input
+                                class="form-check-input"
+                                type="checkbox"
+                                [disabled]="itemChild.IsActive"
+                                [ngModelOptions]="{ standalone: true }"
+                                [(ngModel)]="itemChild.isSelected"
+                                name="list_name_child"
+                                value="{{ itemChild.id }}"
+                                (ngModelChange)="
+                                  childCheck(
+                                    item,
+                                    item.childList,
+                                    itemChild.id
+                                  )
+                                "
+                                checked="itemChild.isSelected==true?'checked':''"
+                              />
+                            </div>
+                            <span>{{ itemChild.value }}</span>
+                          </a>
+                          <ul>
+                            <div [hidden]="item.isClosed">
+                              @for(nestedChild of itemChild.nestedchildList;track nestedChild){
+                              <li>                           
+                              
+                                <a
+                                  href="javascript: void(0);"
+                                  class="d-flex"
+                                >
+                                  <div
+                                    class="form-check form-check-success"
+                                  >
+                                  <input
+                                  class="form-check-input"
+                                  type="checkbox"
+                                  [disabled]="nestedChild.IsActive"
+                                  [ngModelOptions]="{
+                                    standalone: true
+                                  }"
+                                  [(ngModel)]="nestedChild.isSelected"
+                                  name="list_name_child"
+                                  value="{{ nestedChild.id }}"
+                                  (ngModelChange)="
+                                    nestedchildCheck(
+                                      itemChild,
+                                      itemChild.nestedchildList,
+                                      nestedChild.id
+                                    )
+                                  "
+                                  checked="{{
+                                    nestedChild.isSelected
+                                      ? true
+                                      : null
+                                  }}"
+                                />
+                              </div>
+                              <span>{{ nestedChild.value }}</span>
+                            </a>
+                          </li>}
+                        </div>
+                      </ul>
+                    </li>}
+                  </div>
+                </ul>
+              </li>}
+
+              <hr />
+            </ul>
+          </li>
+        </ul>
+      </div>
+           
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>

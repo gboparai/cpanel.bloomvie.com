@@ -1,0 +1,81 @@
+<div class="row">
+    <div class="col-md-12">
+        <div *ngIf="data" class="card">
+
+            <div class="card-header">
+                <div class="d-flex align-items-center flex-wrap row-gap-3">
+                    <div
+                        class="d-flex align-items-center justify-content-center avatar avatar-xxl border border-dashed me-2 flex-shrink-0  frames">
+                        <!-- <img src="../../../../assets/img/kid.PNG" class="img-fluid" alt="student img"> -->
+                        <img class="img-fluid" alt="student img"
+                            [src]="data?.studentProfilePhoto ? data?.studentProfilePhoto : 'assets/img/dummy-avatar.jpg'"
+                        >
+
+
+
+                    </div>
+                    <div>
+
+                        <h5 class="mb-1 text-truncate">{{data?.studentFirstName}} {{data?.studentLastName}}</h5>
+                        <p>{{ data?.studentDob | date: 'MM-dd-yyyy' }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="heading-new">
+                    <h5 class="mb-0">Basic Information</h5>
+                </div>
+                <dl class="row mb-0">
+                    <dt class="col-6 fw-medium mb-3">Gender</dt>
+                    <dd class="col-6 mb-3">{{ data?.studentGender || '--' }}</dd>
+
+                    <dt class="col-6 fw-medium mb-3">Age Group</dt>
+                    <dd *ngIf="data.studentAgeGroup" class="col-6 mb-3">
+                        {{ data.studentAgeGroup || '--' }} Year
+                    </dd>
+                </dl>
+
+                <div class="heading-new">
+                    <h5 class="mb-0">Parents Information</h5>
+                </div>
+                <dl class="row mb-0">
+                    <dt class="col-6 fw-medium mb-3">First Name</dt>
+                    <dd class="col-6 mb-3">{{ data?.parentFirstName || '--' }}</dd>
+
+                    <dt class="col-6 fw-medium mb-3">Last Name</dt>
+                    <dd class="col-6 mb-3">{{ data?.parentLastName || '--' }}</dd>
+
+                    <dt class="col-6 fw-medium mb-3">Relationship to student</dt>
+                    <dd class="col-6 mb-3">{{ data?.relationToChild || '--' }}</dd>
+
+                    <dt class="col-6 fw-medium mb-3">Mobile Number</dt>
+                    <dd class="col-6 mb-3">{{ '+1 ' + data?.contact || '--' }}</dd>
+
+                    <dt class="col-6 fw-medium mb-3">Email</dt>
+                    <dd class="col-6 mb-3">{{ data?.email || '--' }}</dd>
+
+                    <dt class="col-6 fw-medium mb-3">Zip Code</dt>
+                    <dd class="col-6 mb-3">{{ data?.pinCode || '--' }}</dd>
+
+                    <dt class="col-6 fw-medium mb-3">Country</dt>
+                    <dd class="col-6 mb-3">{{ data?.country || '--' }}</dd>
+
+                    <dt class="col-6 fw-medium mb-3">State</dt>
+                    <dd class="col-6 mb-3">{{ data?.state || '--' }}</dd>
+
+                    <dt class="col-6 fw-medium mb-3">City</dt>
+                    <dd class="col-6 mb-3">{{ data?.city || '--' }}</dd>
+
+                    <dt class="col-6 fw-medium mb-3">Address</dt>
+                    <dd class="col-6 mb-3">{{ data?.address || '--' }}</dd>
+                </dl>
+            </div>
+
+
+
+
+        </div>
+    </div>
+</div>
+

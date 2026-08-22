@@ -1,0 +1,16 @@
+<div class="main-wrapper" id="main-box">
+  <app-header (headerLoad)="isComponentLoadinHeader($event)"></app-header>
+  <app-sidebar (sideBarLoad)="isComponentLoadinSideBar($event)"></app-sidebar>
+  <div class="page-wrapper">
+    <div class="content container-fluid">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>
+<div id="preloader" class="bg-light-subtle" *ngIf="isLoading">
+  <div class="preloader-wrap">
+
+    <img src="assets/img/loading-main.svg" alt="logo" class="img-fluid preloader-icon2">
+
+  </div>
+</div>

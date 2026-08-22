@@ -1,0 +1,105 @@
+<section class="upload">
+  <div class="card">
+    <div class="card-body">
+      <!-- Header Section -->
+      <div class="row mb-3">
+        <div class="col-12">
+          <div class="heading-new">
+            <h5 class="mb-0">Bloomvie Plans</h5>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="row">
+        <div class="col-md-4 mb-4">
+          <div class="form-group local-forms">
+            <label>Bloomvie Plans </label>
+            <select  class="form-control ng-pristine ng-valid ng-touched">
+                <option value="" disabled selected>Select a Plan</option>
+                <option value="basic">Basic Plan</option>
+                <option value="standard">Standard Plan</option>
+                <option value="premium">Premium Plan</option>
+            </select>
+      </div>
+      </div>
+      <div  class="col-md-4"><div  class="bloomvie-palns">
+        <button class="btn btn-primary me-2"> Show Plan Detials </button></div></div>
+     </div> -->
+      <div class="row">
+
+        @if (skeletonShow === 'Skelton') {
+
+          <app-skeleton-loader
+            skeletonShow="Skelton"
+            viewType="plan-feature-list"
+          >
+          </app-skeleton-loader>
+
+          } @else if (planFeatureList.length > 0) {
+
+        <div *ngFor="let item of planFeatureList | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage }" class="col-md-4">
+          <div class="plan-container" [ngClass]="{'highlight-plan': item.planeId === currentPlanId}">
+            <div class="plan-title">{{item.planName}}</div>
+            <button *ngIf="currentPlanId!==item.planeId" (click)="onBuyPlan(item.planId)"  class="btn btn-primary me-2 buy-plan">Buy Plan</button>
+            <div class="plan-price">${{item.price | number : "1.2-2"}} <span
+                style="font-size: 16px;">{{item.monthly?'Monthly':'Yearly'}}</span></div>
+            <div class="plan-features">
+
+              <div class="feature-category">Job Post Features</div>
+              <ul>
+                <li *ngFor="let jobPostFeature of jobPostTypeFeatureList"><i
+                    [ngClass]=" item.featureIds.includes(jobPostFeature.id)?'fas fa-check-circle':'fas fa-times-circle color-red'"></i>
+                  <span>{{jobPostFeature.featureName}}</span>
+                  <span *ngIf="jobPostFeature.unit && jobPostFeature.capacity">
+                    {{' (' + jobPostFeature.capacity + ' ' + jobPostFeature.unit + ')' }}
+                  </span>
+                </li>
+              </ul>
+
+              <div class="feature-category">Storage Features</div>
+              <ul>
+                <li *ngFor="let storageFeature of storageTypeFeatureList"><i
+                    [ngClass]=" item.featureIds.includes(storageFeature.id)?'fas fa-check-circle':'fas fa-times-circle color-red'"></i>
+                  <span>{{storageFeature.featureName}}</span>
+                  <span *ngIf="storageFeature.unit && storageFeature.capacity">
+                    {{ ' (' + storageFeature.capacity + ' ' + storageFeature.unit + ')' }}
+                  </span>
+                </li>
+              </ul>
+
+              <div class="feature-category">Enrollment Features</div>
+              <ul>
+                <li *ngFor="let enrollmentFeature of enrollmentTypeFeatureList"><i
+                    [ngClass]=" item.featureIds.includes(enrollmentFeature.id)?'fas fa-check-circle':'fas fa-times-circle color-red'"></i>
+                  <span>{{enrollmentFeature.featureName}}</span>
+                  <span *ngIf="enrollmentFeature.unit && enrollmentFeature">
+                    {{' (' + enrollmentFeature.capacity + ' ' + enrollmentFeature.unit + ')' }}
+                  </span>
+                </li>
+              </ul>
+
+              <div class="feature-category">Other Features</div>
+              <ul>
+                <li *ngFor="let otherFeature of otherFeatureList"><i
+                    [ngClass]=" item.featureIds.includes(otherFeature.id)?'fas fa-check-circle':'fas fa-times-circle color-red'"></i>
+                  <span>{{otherFeature.featureName}}</span>
+                  <span *ngIf="otherFeature.unit && otherFeature.capacity">
+                    {{ ' (' + otherFeature.capacity + ' ' + otherFeature.unit + ')' }}
+                  </span>
+
+                </li>
+              </ul>
+
+            </div>
+          </div>
+
+        </div>
+      }  @else {
+
+          <app-skeleton-loader skeletonShow="NoRecord"> </app-skeleton-loader>
+          }
+      </div>
+
+      <pagination-controls (pageChange)="currentPage = $event"></pagination-controls>
+    </div>
+  </div>
+</section>

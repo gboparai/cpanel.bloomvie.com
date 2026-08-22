@@ -1,0 +1,285 @@
+.table {
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.table th, .table td {
+    vertical-align: middle;
+   
+}
+
+/* Collapsible Table Section */
+
+/* Button Styling */
+.btn-toggle {
+  
+    color: white;
+    border: none;
+    padding: 0px 8px;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: background-color 0.3s;
+    cursor: pointer;
+}
+
+
+
+/* Custom Collapse Row Styling */
+.collapse {
+    padding: 13px 45px;
+}
+
+/* Subtable Styling */
+.sub-table {
+    background-color: #e3e3e3;
+    border: 1px solid #444444;
+    border-radius: 5px;
+}
+
+.sub-table th, .sub-table td {
+    padding: 8px;
+}
+
+.toogle-classroom {
+    display: flex;
+    gap: 7px;
+    align-items: center;
+}
+ .btn-toggle i{
+    font-size: 12px;
+}
+
+/*--------plus minus icon change on toggle----------*/
+.btn-toggle i:before {
+    content: "\f0d7"; /* mdi-plus */
+  }
+  
+  .btn-toggle[aria-expanded="true"] i:before {
+    content: "\f0d8";  /* mdi-minus */ 
+  
+   
+  }
+  
+  .btn-toggle[aria-expanded="false"] i:before {
+    content:"\f0d7";  /* mdi-plus */
+   
+  }.table {
+    border: 1px solid #d6e4ea !important;
+    border-radius: 5px;
+    overflow: auto!important;
+  }
+
+
+  .collapse{
+    padding: 17px 79px;
+
+}
+
+.toogle-classroom .fa-plus{
+    color: #fff  !important
+}
+.toggle-classroom button {
+    border: none !important;
+}
+
+.btn-toggle{
+
+    color: white;
+    border: none;
+    padding: 0px 8px;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: background-color 0.3s;
+    cursor: pointer;
+}
+
+.btn-toggle   i {
+    font-size: 10px;
+}
+.collapse-table{
+
+    background-color: #f9f9f9;
+}
+
+.sub-table{
+
+    background-color: #e3e3e3;
+    /* border: 4px solid #444444; */
+    border-radius: 5px;
+
+}table tr:nth-child(2n) {
+    background-color: rgb(245, 240, 245);
+}
+
+.tblack{
+    border: 4px solid #e3e3e3;
+}
+  th {
+    text-align: left;
+    padding: 10px;
+
+  }.col-md-8.float-end.add-item-button {
+    text-align: right;
+    /* margin-top: 5px; */
+}.tab-content {
+    padding-top: 8px;
+}button.upload-receipt {
+    background: #a2719e;
+    color: #fff;
+    border: navajowhite;
+    font-size: 12px;
+    border-radius: 2px;
+}
+i.fa.fa-paperclip {
+    margin-right: 0px;
+    padding: 7px 10px;
+    background: #e9ecef;
+    border-radius: 2px;
+    color: #a2719e;
+}
+
+  .approve {
+    color: green;
+  }
+  .reject {
+    color: red;
+  }.search button[type=submit] {
+
+    top: 0px !important;
+  
+} .expense-label {
+    padding: 1px 10px;
+    border-radius: 2px;
+    font-size: 12px;
+    color: #fff;
+    text-align: center;
+    display: block;
+    width: 80px;
+    margin: auto;
+  }
+
+  .expense-payroll {
+    background-color: #154d0d;
+  }
+
+  .expense-capital {
+    background-color: #a2719e;
+  }
+
+  .expense-operating {
+    background-color: #034785;
+  }
+
+  .fa-paperclip, .fa-download {
+    cursor: pointer;
+  }.my-card-pad .no-pad-no-shadow {
+    padding: 0px;
+    box-shadow: none !important;
+    border: 0px !important;
+}.cash-or-card {
+    background: #dfeaee;
+    padding: 7px 10px;
+    border-radius: 2px;
+    color: #000000;
+    margin-bottom: 10px;
+}
+
+
+/* Hide day grid in flatpickr popup */
+.flatpickr-days,
+.flatpickr-weekdays {
+  display: none !important;
+}
+
+/* Optional: reduce popup height */
+.flatpickr-calendar {
+  height: auto !important;
+}
+.bg-danger-light {
+   
+    height: 26px;
+    width: 26px;
+    font-size: 12px;
+}
+button.btn.btn-sm.btn-light {
+    color: white;
+    border: none;
+    padding: 2px 8px !important;
+    border-radius: 5px;
+    font-size: 12px;
+    transition: background-color 0.3s;
+    cursor: pointer;
+    background: var(--main-color) !important;
+
+}.btn-toggle[aria-expanded=true] i:before {
+    content: "\f0d8";
+}
+
+
+.pointer-hover {
+  cursor: pointer;
+}
+
+
+
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1050;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.modal-backdrop.closing {
+  animation: fadeOut 0.3s ease-in-out forwards;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 1rem;
+  max-width: fit-content;
+  max-height: 90%;
+  border-radius: 10px;
+  position: relative;
+  animation: scaleIn 0.3s ease-in-out;
+}
+
+.modal-backdrop.closing .modal-content {
+  animation: scaleOut 0.3s ease-in-out forwards;
+}
+
+.close-button {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    /* background: #282828; */
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #333;
+    border-radius: 36%;
+}
+.preview-image,
+.preview-pdf {
+  max-width: 100%;
+  max-height: 80vh;
+  width: auto;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  border-radius: 8px;
+  object-fit: contain;
+}
+
+.flatpickr-disabled-tooltip {
+  background-color: #f8d7da !important;
+  color: #721c24 !important;
+  cursor: not-allowed !important;
+}

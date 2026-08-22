@@ -1,0 +1,242 @@
+<app-breadcrumb></app-breadcrumb>
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="heading-new">
+          <h5 class="mb-0">View Classroom</h5>
+        </div>
+
+        <div class="col-md-12">
+          <div class="row mb-4">
+            <div class="col-md-4">
+              <div class="search" style="margin-bottom: 0px">
+                <input type="text" class="form-control" placeholder="Search Classroom" [(ngModel)]="searchText" />
+                <button type="submit">Search</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion" id="accordionExample">
+          <div class="table-responsive">
+            <table class="table table-hover mb-0">
+              <thead class="student-thread">
+                <tr>
+                  <th>#</th>
+                  <th>Class Name</th>
+                  <th>Age Group</th>
+                  <th>Capacity</th>
+                  <th>Staff In</th>
+                  <th>Student's In</th>
+                  <th>Overall Ratio</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              @if (skeletonShow === 'Skelton') {
+              <tbody>
+                <tr>
+                  <td colspan="100%">
+                    <app-skeleton-loader skeletonShow="Skelton" viewType="table" [tableRows]="5" [tableCols]="7">
+                    </app-skeleton-loader>
+                  </td>
+                </tr>
+              </tbody>
+
+              }
+              @else if (filteredClssList.length > 0) {
+              <tbody *ngFor="
+                    let item of filteredClssList | paginate : paginationConfig;
+                    let i = index
+                  ">
+                <tr>
+
+                  <td>{{ i + 1 }}</td>
+
+                  <td>
+                    <div class="toogle-classroom">
+                      <button class="btn-toggle" data-bs-toggle="collapse" [attr.data-bs-target]="'#collapseTable' + i"
+                        [attr.aria-controls]="'collapseTable' + i" (click)="onClassNameClick(item.id)">
+                        <i class="fa"></i>
+                      </button>
+                      <span>{{ item.className }}</span>
+                    </div>
+                  </td>
+                  <td>{{ item.ageGroup }}</td>
+                  <td>
+                    <span class="rounded-pill badge bg-dany">{{
+                      item.capacity || "--"
+                      }}</span>
+                  </td>
+                  <td>
+                    <span class="rounded-pill badge bg-dany">{{ item.staff }} Staff In</span>
+                  </td>
+                  <td>
+                    <span class="rounded-pill badge bg-dany">{{ item.studentRatio }} Student In</span>
+                  </td>
+                  <!-- <td>{{ item.staff }} : {{ item.studentRatio }}</td> -->
+                  <td>
+                    <span class="rounded-pill badge bg-dany">
+                      {{ item.staff }} : {{ item.studentRatio }}
+                    </span>
+                    </td>
+                  <td>
+                    <div class="actions">
+                      <a class="action-btn bg-danger-light me-2" (click)="onEdit(item)">
+                        <i class="feather-edit"></i>
+                      </a>
+                      <label class="switch mb-0">
+                        <input type="checkbox" name="isActive" [checked]="item.isActive" />
+                      </label>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td colspan="8" class="p-0">
+                    <div class="collapse collapse-table" [attr.id]="'collapseTable' + i"
+                      data-bs-parent="#accordionExample">
+                      <table class="table sub-table mb-0">
+                        <thead class="student-thread">
+                          <tr>
+                            <th>#</th>
+                            <th>Start Time</th>
+                            <th>End Time</th>
+                            <th>Days</th>
+                          </tr>
+                        </thead>
+
+
+
+                        <tbody>
+                          @if (skeletonShow2 === 'Skelton2') {
+                          <tr>
+                            <td colspan="100%">
+                              <app-skeleton-loader skeletonShow2="Skelton2" viewType="table" [tableRows]="5"
+                                [tableCols]="4">
+                              </app-skeleton-loader>
+                            </td>
+                          </tr>
+
+                          }
+                          @else if (sectionlist.length > 0) {
+                          <tr *ngFor="let sec of sectionlist; let j = index">
+                            <td>{{ j + 1 }}</td>
+                            <td>{{ sec.startTime | TimeFormatAmPm }}</td>
+                            <td>{{ sec.endTime | TimeFormatAmPm }}</td>
+                            <td class="text-center">
+                              <span *ngFor="let day of sec.days">
+                                {{ day.dayName }}&nbsp;
+                              </span>
+                            </td>
+                          </tr>
+                          } @else {
+                          <tr>
+                            <td colspan="100%">
+                              <app-skeleton-loader skeletonShow="NoRecord">
+                              </app-skeleton-loader>
+                            </td>
+
+                          </tr>
+
+                          }
+                        </tbody>
+
+                      </table>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+              } @else {
+              <tbody>
+                <tr>
+                  <td colspan="100%">
+                    <app-skeleton-loader skeletonShow="NoRecord">
+                    </app-skeleton-loader>
+                  </td>
+
+                </tr>
+              </tbody>
+
+              }
+
+              <!-- <ng-template #no_record>
+                <tbody>
+                  <tr>
+                    <td colspan="9" style="text-align: center">
+                      <div class="no-data">
+                        <img src="assets/img/no-data-img.png" alt="No Record Found" />
+                        <span>No Record Found</span>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </ng-template>
+
+              <ng-template #noRecordsFound>
+                <tr>
+                  <td colspan="9">
+                    <div class="no-data">
+                      <img src="assets/img/no-data-img.png" alt="No Record Found" />
+                      <span>No Record Found</span>
+                    </div>
+                  </td>
+                </tr>
+              </ng-template> -->
+            </table>
+          </div>
+        </div>
+
+        <ng-container *ngIf="paginationConfig.itemsPerPage < classList.length">
+          <div class="d-flex justify-content-between align-items-center mt-4 no-flex">
+            <div class="total-entry" style="font-size: small">
+              <span>Total Entries:</span><span class="entry-count"> {{ filteredClssList.length }} </span>
+            </div>
+
+            <div class="datatable-pager datatable-paging-loaded">
+              <pagination-controls previousLabel="prev" nextLabel="next" [maxSize]="5"
+                class="datatable-pager-nav my-2 mb-sm-0" [id]="paginationConfig.id"
+                (pageChange)="paginationConfig.currentPage = $event">
+              </pagination-controls>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Approve model -->
+<div class="modal fade" id="Approve-model" tabindex="-1" id="modalOpen" aria-labelledby="exampleModalLabel46"
+  aria-hidden="true" data-bs-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="TimeSlotModalLabel">Supply Request</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="ma">
+              <p>Do you Want to Accept Supply Request?</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <div class="student-submit">
+          <button type="button" class="btn btn-primary apoint-button mr-2">
+            Pay Now
+          </button>
+
+          <button type="button" class="btn btn-secondary apoint-button">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

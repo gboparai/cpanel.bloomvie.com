@@ -1,0 +1,280 @@
+<app-breadcrumb></app-breadcrumb>
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="heading-new">
+          <h5 class="mb-0">Capital Expenses</h5>
+        </div>
+
+        <div class="">
+          <div class="row d-flexer">
+             <div class="col-md-3 mt-4">
+              <div class="search mt-1 me-4">
+                <input
+                  placeholder="Type here.."
+                  type="text"
+                  [(ngModel)]="searchText"
+                  (input)="onSearchInput()"
+                />
+                <button type="submit">Search</button>
+              </div>
+            </div>
+            <div class="col-md-3 mt-1  fiv-days-button">
+              <div class="today-tomrrow">
+                <div class="activity-filter-box">
+                  <div class="local-forms">
+                    <label> From Date</label>
+                  </div>
+                  <div class="ng--parent">
+                    <input
+                      type="text"
+                      id="selectFromDate"
+                      placeholder="-Select-"
+                      class="form-control w-100"
+                      [(ngModel)]="startDate"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- To Date -->
+            <div class="col-md-3  mt-1 fiv-days-button">
+              <div class="today-tomrrow">
+                <div class="activity-filter-box">
+                  <div class="local-forms">
+                    <label> To Date</label>
+                  </div>
+                  <div class="ng--parent">
+                    <input
+                      type="text"
+                      id="selectToDate"
+                      placeholder="-Select-"
+                      class="form-control w-100"
+                      [(ngModel)]="endDate"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-3 pe-0 mt-4 ">
+
+              
+             <div class="d-flex flex-wrap">
+               <button
+                class="btn btn-primary me-2 mt-2"
+                type="button"
+                (click)="PrintPdfView()"
+              >
+                Download&nbsp;Pdf
+              </button>
+              <button class="btn btn-primary me-2 mt-2" type="reset">
+                Cancel
+              </button>
+             </div>
+            </div>
+
+           
+          </div>
+        </div>
+
+        <div class="tab-content" id="expens-tab">
+          <div class="expense-type"></div>
+
+          <div class="tab-pane active" id="basictab2" role="tabpanel">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="table-responsive coloful-tabel">
+                  <table class="table table-hover mb-0">
+                    <thead class="student-thread">
+                      <tr>
+                        <th>#</th>
+                        <th>Requested By</th>
+                        <th>Item Name</th>
+                        <!-- <th>Requested Qty</th> -->
+                        <th>Referral Link</th>
+                        <th>Description</th>
+                        <th>Date</th>
+                        <th>Purchased Qty</th>
+                        <th>Expense Type</th>
+                        <th>Cost</th>
+                        <th>Receipt/Payment Proof</th>
+                      </tr>
+                    </thead>
+
+                    @if (skeletonShow === 'Skelton') {
+                    <tr>
+                      <td colspan="100%">
+                        <app-skeleton-loader
+                          skeletonShow="Skelton"
+                          viewType="table"
+                          [tableRows]="5"
+                          [tableCols]="6"
+                        >
+                        </app-skeleton-loader>
+                      </td>
+                    </tr>
+                    } @else if (capitalExpenseList.length > 0) {
+
+                    <tbody
+                      *ngFor="
+                        let item of capitalExpenseList
+                          | paginate
+                            : {
+                                itemsPerPage: Contentsize,
+                                currentPage: ContentP,
+                                id: 'expenseList'
+                              };
+                        let i = index
+                      "
+                    >
+                      <tr>
+                        <td>{{ i + 1 }}</td>
+                        <td>{{ item.teacherName }}</td>
+                        <td>{{ item.itemName }}</td>
+                        <!-- <td>{{item.quantityRequested}}</td> -->
+                        <td *ngIf="item.referralLink; else noLink">
+                          <span
+                            *ngFor="let link of item.referralLink.split(',')"
+                          >
+                            <a
+                              [href]="link.trim()"
+                              target="_blank"
+                              class="me-2"
+                            >
+                              <i class="fa fa-paperclip"></i>
+                            </a>
+                          </span>
+                        </td>
+                        <td
+                          style="
+                            width: 300px;
+                            word-break: break-word;
+                            white-space: normal;
+                          "
+                        >
+                          <ng-container *ngIf="item?.description">
+                            <p *ngIf="expandedDescriptionIndex !== i">
+                              {{
+                                item.description.length > 50
+                                  ? (item.description | slice : 0 : 50) + "..."
+                                  : item.description
+                              }}
+                              <a
+                                *ngIf="item.description.length > 50"
+                                href="javascript:void(0)"
+                                class="text-primary ms-1"
+                                (click)="expandedDescriptionIndex = i"
+                                >Read more</a
+                              >
+                            </p>
+                            <p *ngIf="expandedDescriptionIndex === i">
+                              {{ item.description }}
+                              <a
+                                href="javascript:void(0)"
+                                class="text-primary ms-1"
+                                (click)="expandedDescriptionIndex = null"
+                                >Show less</a
+                              >
+                            </p>
+                          </ng-container>
+                        </td>
+                        <td>{{ item.createdDate | date : "MM-dd-yyyy" }}</td>
+                        <td>{{ item.quantityPurchased }}</td>
+                        <td>
+                          <span class="expense-label expense-payroll">{{
+                            item.expenseType
+                          }}</span>
+                        </td>
+                        <td>{{ item.cost ? "$ " + item.cost : "--" }}</td>
+                        <td>
+                          <div class="actions">
+                            <div class="action-btn bg-danger-light me-2">
+                              <i
+                                class="fa fa-download mx-2"
+                                (click)="downloadFile(item?.receiptImage)"
+                              ></i>
+                             
+                            </div>
+                            <div class="action-btn bg-danger-light me-2">
+                               <i
+                                class="fa fa-eye"
+                                style="cursor: pointer"
+                                (click)="openPreview(item?.receiptImage)"
+                              ></i>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                    } @else {
+                    <tr>
+                      <td colspan="100%">
+                        <app-skeleton-loader skeletonShow="NoRecord">
+                        </app-skeleton-loader>
+                      </td>
+                    </tr>
+
+                    }
+                  </table>
+                </div>
+                <div
+                  class="d-flex justify-content-between align-items-center mt-4 no-flex"
+                >
+                  <div class="total-entry" style="font-size: small">
+                    <span>Total Entries:{{ capitalExpenseList.length }}</span
+                    ><span class="entry-count"> </span>
+                  </div>
+                  <div class="col pagination-style">
+                    <div class="datatable-pager datatable-paging-loaded">
+                      @if( capitalExpenseList.length >5 ) {
+                      <pagination-controls
+                        previousLabel="prev"
+                        nextLabel="next"
+                        [maxSize]="5"
+                        class="datatable-pager-nav my-2 mb-sm-0"
+                        id="expenseList"
+                        (pageChange)="ContentP = $event"
+                      >
+                      </pagination-controls>
+                      }
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ng-template #noLink>
+    <td>Link not Provided</td>
+  </ng-template>
+</div>
+
+<div
+  *ngIf="previewUrl"
+  [ngClass]="{ 'modal-backdrop': true }"
+  (click)="closePreview()"
+>
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <button class="close-button" (click)="closePreview()">&#10006;</button>
+
+    <!-- Show image -->
+    <img [src]="previewUrl" alt="Preview" class="preview-image" />
+
+    <!-- Show unsupported -->
+    <div
+      *ngIf="
+        previewMime &&
+        !previewMime.startsWith('image/') &&
+        previewMime !== 'application/pdf'
+      "
+    >
+      <p>Preview not available for this file type.</p>
+    </div>
+  </div>
+</div>

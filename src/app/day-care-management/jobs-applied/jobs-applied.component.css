@@ -1,0 +1,243 @@
+.actions {
+    justify-content: start;
+}
+
+  .bg-info {
+    background-color: #f77c5b !important;/* Light blue background */
+        border-radius: 5px;
+  }
+  
+  .bg-info.on-hold {
+    background-color: #f77c5b !important;
+  }
+  
+  .swal2-popup.swal2-modal.swal2-icon-question.swal2-show {
+    display: flex !important;
+}
+
+/* Custom styles for the SweetAlert popup */
+.swal-custom-popup {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  gap: 20px !important;
+  padding: 20px !important;
+}
+
+/* Left section: Icon, Title, and Text */
+.swal-custom-popup .swal-icon {
+  font-size: 3rem !important;
+  color: #3085d6 !important;
+  margin-right: 10px !important;
+}
+
+.swal-custom-popup .swal-title {
+  font-size: 1.5rem !important;
+  font-weight: bold !important;
+  color: #333 !important;
+  margin-bottom: 10px !important;
+}.nav-tabs {
+  margin-bottom: 10px !important;
+}
+.search {
+  position: relative;
+  margin-bottom: 0px !important;
+}
+.swal-custom-popup .swal-text {
+  font-size: 1rem !important;
+  color: #555 !important;
+  margin-bottom: 0 !important;
+}span.tocc {
+  background: #d1e5ee;
+  padding: 2px 1px;
+  border-radius: 3px;
+  display: block;
+      font-size: 12px;
+
+  width: 100px;
+  text-align: center;
+}
+
+/* Right section: Buttons */
+.swal-custom-popup .swal-confirm-btn,
+.swal-custom-popup .swal-deny-btn,
+.swal-custom-popup .swal-cancel-btn {
+  display: block !important;
+  margin: 5px auto !important;
+  width: 80% !important;
+  padding: 10px !important;
+  text-align: center !important;
+  border-radius: 5px !important;
+}
+
+.swal-custom-popup .swal-confirm-btn {
+  background-color: #3085d6 !important;
+  color: white !important;
+  border: none !important;
+}
+
+.swal-custom-popup .swal-deny-btn {
+  background-color: #d33 !important;
+  color: white !important;
+  border: none !important;
+}
+
+.swal-custom-popup .swal-cancel-btn {
+  background-color: #6c757d !important;
+  color: white !important;
+  border: none !important;
+}
+
+.swal-custom-popup  .swal-static-container .swal2-icon {
+  margin: 0.5em 6.7em 1.1em 5.6em !important;
+}
+
+
+
+.pos-rel{
+  position: relative;
+}
+
+.swal-custom-popup.swal2-actions{
+  width: 100% !important;
+
+}/* Target the dropdown options */
+::ng-deep .ng-dropdown-panel .ng-option {
+  padding: 8px 12px;
+}
+
+
+
+/* Color based on item text */
+::ng-deep .ng-dropdown-panel .ng-option .status-pending{
+  background-color: #e1bf5b !important; /* Pending */
+  color: #fff !important;
+  padding: 8px 10px;
+}
+
+::ng-deep .ng-dropdown-panel .ng-option .status-shortlisted {
+  background-color: #77c1cd !important; /* Shortlisted */
+  color: white;
+  padding: 8px 10px;
+}
+
+::ng-deep .ng-dropdown-panel .ng-option .status-approved {
+  background-color: #65ad76 !important; /* Approved */
+  color: white; 
+  padding: 8px 10px;
+}
+
+::ng-deep .ng-dropdown-panel .ng-option .status-rejected {
+  background-color: #af03136e !important; /* Reject */
+  color: white !important;
+  padding: 8px 10px;
+}
+
+::ng-deep .ng-dropdown-panel .ng-option .status-onhold {
+  background-color: #343a40 !important; /* OnHold */
+  color: white !important;
+  padding: 8px 10px;
+} 
+
+.special-padding .ng-dropdown-panel .ng-dropdown-panel-items .ng-option{
+  padding: 0px !important;
+  
+
+}
+
+/* using ng-deep here to override the css of ng-select */
+
+::ng-deep .ng-select.status-pending .ng-select-container {
+  background-color: #e1bf5b !important;
+  color: white !important;
+  border-radius: 4px;
+}
+
+::ng-deep .ng-select.status-shortlisted .ng-select-container {
+  background-color: #77c1cd !important;
+  color: white !important;
+  border-radius: 4px;
+}
+
+::ng-deep .ng-select.status-approved .ng-select-container {
+    background-color: #65ad76 !important;
+    color: white !important;
+    border-radius: 4px;
+}
+
+::ng-deep .ng-select.status-rejected .ng-select-container {
+  background-color: #af03136e !important;
+  color: white !important;
+  border-radius: 4px;
+}
+
+::ng-deep .ng-select.status-onhold .ng-select-container {
+  background-color: #343a40 !important;
+  color: white !important;
+  border-radius: 4px;
+}
+
+
+.wd-80{
+  width: 80%;
+}
+
+@media(max-width:1600px){
+
+
+  .wd-80{
+    width: 100% !important;
+  }
+}.pos-rel  span.ng-arrow-wrapper {
+    border-color: #ffffff transparent transparent!important;
+}
+
+::ng-deep .special-padding .ng-select.ng-select-opened > .ng-select-container .ng-arrow {
+  border-color: transparent transparent #ffffff; /* ▼ when opened */
+}
+
+::ng-deep .special-padding .ng-select .ng-arrow-wrapper .ng-arrow {
+  border-color: #ffffff transparent transparent; /* ▲ default */
+}
+
+
+::ng-deep .ng-select .ng-value .status-approved {
+  background-color: #65ad76 !important;
+  color: white !important;
+  padding: 5px 10px;
+  border-radius: 4px;
+}
+
+::ng-deep .ng-select .ng-value .status-rejected {
+  background-color: #af0313 !important;
+  color: white !important;
+  padding: 5px 10px;
+  border-radius: 4px;
+}
+
+::ng-deep .ng-select.status-approved .ng-select-container{
+  background-color: #4caf50 !important;
+  color: white !important;
+  padding: 5px 10px;
+  border-radius: 4px;
+}
+
+::ng-deep .ng-select.status-approved .ng-select-container {
+  background-color: #65ad76 !important;
+  color: white !important;
+  border-radius: 4px;
+}
+
+::ng-deep .ng-select.status-rejected .ng-select-container {
+  background-color: #af03136e !important;
+  color: white !important;
+  border-radius: 4px;
+}
+
+/* Same for other status classes... */
+
+::ng-deep .ng-select.status-approved-by-teacher .ng-select-container {
+  background-color: #65ad76 !important;
+  color: white !important;
+}

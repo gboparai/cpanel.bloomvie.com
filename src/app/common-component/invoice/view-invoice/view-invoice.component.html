@@ -1,0 +1,148 @@
+<app-breadcrumb></app-breadcrumb>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card invoice-info-card">
+            <div class="card-body">
+                <div class="invoice-item invoice-item-one">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="invoice-logo invoice-head">
+                                <img src="assets/img/logo-new.png" alt="logo">
+                                 <!-- <h2>Bloomvie</h2> -->
+                            </div>
+                            <div class="invoice-head">
+                                <h2>Invoice</h2>
+                                <p>Invoice Number : {{InvoiceDetails.invoiceNumber}}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="invoice-info">
+                                <strong class="customer-text-one">Invoice From</strong>
+                                <h6 class="invoice-name">{{InvoiceDetails.centerName}}</h6>
+                                <p class="invoice-details">
+                                    {{InvoiceDetails.centerAddress}},{{InvoiceDetails.centerCountry}},{{InvoiceDetails.centerState}},{{InvoiceDetails.centerCity}},{{InvoiceDetails.centerPinCode}} </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="invoice-item invoice-item-two">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="invoice-info">
+                                <strong class="customer-text-one">Billed to</strong>
+                                <h6 class="invoice-name">{{InvoiceDetails.userName}}</h6>
+                                <p class="invoice-details invoice-details-two">
+                                    {{InvoiceDetails.userPhone}} <br>
+                                    {{InvoiceDetails.address}},{{InvoiceDetails.masterCitys}},{{InvoiceDetails.masterState}},{{InvoiceDetails.masterCountry}}
+                                
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="invoice-info invoice-info2">
+                                <strong class="customer-text-one">Payment Details</strong>
+                                <p class="invoice-details">
+                                    Debit Card <br>
+                                    XXXXXXXXXXXX-2541 <br>
+                                    HDFC Bank
+                                </p>
+                                <div class="invoice-item-box">
+                                    <p>Recurring : 15 Months</p>
+                                    <p class="mb-0">PO Number : 54515454</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="invoice-issues-box">
+                    <div class="row">
+                        <div class="col-lg-4 col-md-4">
+                            <div class="invoice-issues-date">
+                                <p>Issue Date : 27 Jul 2022</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-4">
+                            <div class="invoice-issues-date">
+                                <p>Due Date : {{InvoiceDetails.dueDate | date:"yyyy-MM-dd"}}</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-4">
+                            <div class="invoice-issues-date">
+                                <p>Due Amount : ₹ 1,54,22 </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="invoice-item invoice-table-wrap">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="table-responsive">
+                                <table class="invoice-table table table-center mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>Description</th>
+                                            <th>Paymnet Date</th>
+                                            <th>Payment Type</th>
+                                            <th>Plan Price</th>
+                                            <!-- <th>Discount (%)</th> -->
+                                            <th class="text-end">Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>{{InvoiceDetails.subscriptionPlan}}</td>
+                                            <td>{{InvoiceDetails.paymentDate | date:"yyyy-MM-dd"}}</td>
+                                            <td>{{InvoiceDetails.paymentMode}}</td>
+                                            <th>{{InvoiceDetails.planPrice}}</th>
+                                            <!-- <th>2%</th> -->
+                                            <td class="text-end">$400</td>
+                                        </tr>
+                                       
+                                      
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row align-items-center justify-content-center">
+                    <div class="col-lg-6 col-md-6">
+                        <div class="invoice-terms">
+                            <h6>Notes:</h6>
+                            <p class="mb-0">Enter customer notes or any other details</p>
+                        </div>
+                        <div class="invoice-terms">
+                            <h6>Terms and Conditions:</h6>
+                            <p class="mb-0">Enter customer notes or any other details</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6">
+                        <div class="invoice-total-card">
+                            <div class="invoice-total-box">
+                                <div class="invoice-total-inner">
+                                    <p>Taxable <span>$6,660.00</span></p>
+                                    <p>Additional Charges <span>$6,660.00</span></p>
+                                    <p>Discount <span>$3,300.00</span></p>
+                                    <p class="mb-0">Sub total <span>$3,300.00</span></p>
+                                </div>
+                                <div class="invoice-total-footer">
+                                    <h4>Total Amount <span>$143,300.00</span></h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="invoice-sign text-end">
+                    <img class="img-fluid d-inline-block" src="assets/img/signature.png" alt="sign">
+                    <span class="d-block">Harristemp</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

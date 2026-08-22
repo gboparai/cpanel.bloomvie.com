@@ -1,0 +1,699 @@
+<app-breadcrumb></app-breadcrumb>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="att-box">
+          <div class="heading-new mb-3">
+            <h5 class="mb-0">
+              {{ userRoleID == 3 ? "Payroll Expense" : "View Payroll Expense" }}
+            </h5>
+          </div>
+          <div class="att-box-head">
+            <div class="box-hed">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="row mb-4">
+                    <!-- From Month -->
+
+                    <div *ngIf="userRoleID == 3" class="col-md-3 pe-0 mt-4">
+                      <div class="search mt-1 me-4" style="margin-bottom: 0px">
+                        <input type="text" class="form-control" placeholder="Search by Name or Email"
+                          [(ngModel)]="searchText" (ngModelChange)="applyFilter()" />
+                        <button type="submit">Search</button>
+                      </div>
+                    </div>
+
+                    <div class="col-md-3 mt-1">
+                      <div class="local-forms">
+                        <label> From Month</label>
+                      </div>
+                      <input type="month" placeholder="-Select-" class="form-control pointer-hover"
+                        [(ngModel)]="selectedStartMonth" (change)="onMonthChange('start')"
+                        max="{{ today | date : 'yyyy-MM' }}" />
+                    </div>
+
+                    <!-- To Month -->
+                    <div class="col-md-3 mt-1">
+                      <div class="local-forms">
+                        <label> To Month</label>
+                      </div>
+                      <input type="month" placeholder="-Select-" class="form-control pointer-hover"
+                        [(ngModel)]="selectedEndMonth" (change)="onMonthChange('end')"
+                        max="{{ today | date : 'yyyy-MM' }}" />
+                    </div>
+
+                    <div class="col-md-3 pe-0 mt-4">
+                      <!-- <button class="btn btn-primary me-2" type="reset" (click)="resetfilter()">Cancel</button> -->
+                      <button *ngIf="displayedpayroll.length > 0" class="btn btn-primary me-2 mt-2"
+                        (click)="PrintPdfView()" type="button">
+                        Download&nbsp;Pdf
+                      </button>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-responsive mt-3">
+            <table class="table table-hover mb-0">
+              <thead class="student-thread" style="
+                  position: sticky;
+                  top: -1px;
+                  background: white;
+                  z-index: 2;
+                ">
+                <tr *ngIf="userRoleID == 3; else adminHeader">
+                  <th style="width: 8%"></th>
+                  <th>#</th>
+                  <th>Name</th>
+                  <th>Mobile</th>
+                  <th>Address</th>
+                  <th>Total Salary</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+
+              <ng-template #adminHeader>
+                <tr>
+                  <th>#</th>
+                  <th>Month</th>
+                  <th>Payroll Frequency</th>
+                  <th>Total Working Days</th>
+                  <th>Total Working Hours</th>
+                  <th>Salary</th>
+                  <th>Deduction Amount</th>
+                  <th>Total Paid Amount</th>
+                  <th>Salary Slip</th>
+                  <th>Description</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </ng-template>
+
+              <tbody>
+                @if (skeletonShow === 'Skelton') {
+                <tr>
+                  <td colspan="100%">
+                    <app-skeleton-loader skeletonShow="Skelton" viewType="table" [tableRows]="5" [tableCols]="6">
+                    </app-skeleton-loader>
+                  </td>
+                </tr>
+                } @else if (displayedpayroll.length > 0) {
+                <ng-container *ngIf="userRoleID == 3; else adminBody">
+                  <ng-container *ngFor="
+                      let item of displayedpayroll
+                        | paginate
+                          : {
+                              itemsPerPage: Contentsize,
+                              currentPage: ContentP,
+                              id: 'toccontrol'
+                            };
+                      let i = index
+                    ">
+                    <tr>
+                      <td>
+                        <button class="btn-toggle" data-bs-toggle="collapse"
+                          [attr.data-bs-target]="'#collapseTable' + i" [attr.aria-controls]="'collapseTable' + i">
+                          <i class="fa"></i>
+                        </button>
+                        <span>{{ item.className }}</span>
+                      </td>
+
+                      <td>{{ (ContentP - 1) * Contentsize + i + 1 }}</td>
+
+
+
+                      <td>
+                        <div class="tooltip-wrapper" style="position: relative" (mouseenter)="hoveredRow = item"
+                          (mouseleave)="hoveredRow = null">
+                          <span class="hover-anchor">{{ item.firstName }}</span>
+                          <app-tooltip *ngIf="hoveredRow === item" [employee]="{
+                      fullName: item.firstName + '' + (item.lastName ? ' ' + item.lastName : ''),
+                      email: item.email,
+                      profile:item.employeeProfileUrl
+                         }"></app-tooltip>
+                        </div>
+                      </td>
+
+
+                      <td>{{ item.mobile ? "+1 " + item.mobile : "--" }}</td>
+                      <td>{{ item.address ?? "--" }}</td>
+                      <td class="text-start">
+
+                        {{
+                        item.totalSalary
+                        ? "$ " +
+                        (item.totalSalary | number : "1.2-2")
+                        : "--"
+                        }}
+                      </td>
+                      <td>
+                        <a (click)="downloadOneEmployeePdf(item.teacherID)" class="action-btn bg-danger-light me-2">
+                          <i class="fa fa-download"></i>
+                        </a>
+                      </td>
+                    </tr>
+
+                    <!-- 🔽 Nested Payroll Details -->
+                    <tr *ngIf="item.monthlyDetails?.length > 0">
+                      <td colspan="100%" class="p-0 border-0">
+                        <div class="collapse p-2" [attr.id]="'collapseTable' + i">
+                          <table class="table sub-table mb-0">
+                            <thead>
+                              <tr>
+                                <th>Month</th>
+                                <th>Payroll Frequency</th>
+                                <th>Total Working Days</th>
+                                <th>Total Working Hours</th>
+                                <th>Salary</th>
+
+                                <th>Deduction Amount</th>
+                                <th>Total Paid Amount</th>
+                                <th>Salary Slip</th>
+                                <th>Description</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr *ngFor="let salary of item.monthlyDetails">
+                                <td class="text-start">
+                                  {{ salary.startDate | date : "dd MMM" }} to
+                                  {{ salary.endDate | date : "dd MMM yyyy" }}
+                                </td>
+                                <td class="text-start">
+                                  {{ salary.payrollFrequency | titlecase }}
+                                </td>
+                                <td class="text-start">
+                                  {{
+                                  salary.totalWorkingDays == 0
+                                  ? "--"
+                                  : salary.totalWorkingDays + " Days"
+                                  }}
+                                </td>
+                                <td class="text-start">
+                                  {{
+                                  salary.allWorkingHours &&
+                                  salary.allWorkingHours !== "0.0"
+                                  ? (salary.allWorkingHours
+                                  | slice : 0 : 5) + " hr"
+                                  : "--"
+                                  }}
+                                </td>
+
+                                <td class="text-start">
+
+                                  {{
+                                  salary.totalSalary
+                                  ? "$ " +
+                                  (salary.totalSalary | number : "1.2-2")
+                                  : "--"
+                                  }}
+                                </td>
+
+                                <td class="text-start">
+                                  <!-- {{
+                                    salary.deductionAmount
+                                      ? "$ -" + salary.deductionAmount
+                                      : "--"
+                                  }} -->
+                                  {{
+                                  salary.deductionAmount
+                                  ? "$ -" +
+                                  (salary.deductionAmount
+                                  | number : "1.2-2")
+                                  : "--"
+                                  }}
+                                </td>
+                                <td class="text-start">
+                                  <!-- {{
+                                    salary.paidAmount
+                                      ? "$ " + salary.paidAmount
+                                      : "--"
+                                  }} -->
+                                  {{
+                                  salary.paidAmount
+                                  ? "$ " +
+                                  (salary.paidAmount | number : "1.2-2")
+                                  : "--"
+                                  }}
+                                </td>
+                                <td class="text-start">
+                                  <ng-container *ngIf="salary?.salarySlipUrl; else noSlip">
+                                    <i class="fa fa-eye me-2" (click)="
+                                        openPreview(
+                                          salary.salarySlipUrl,
+                                          salary.salarySlipType
+                                        )
+                                      " title="View Salary Slip"></i>
+                                    <i class="fa fa-download" (click)="
+                                        commonService.downloadFile(
+                                          salary.salarySlipUrl,
+                                          'SalarySlip',
+                                          salary.salarySlipType
+                                        )
+                                      " title="Download Salary Slip"></i>
+                                  </ng-container>
+                                  <ng-template #noSlip>--</ng-template>
+                                </td>
+                                <td style="
+                                    width: 300px;
+                                    word-break: break-word;
+                                    white-space: normal;
+                                  " class="text-start">
+                                  <ng-container *ngIf="
+                                      salary?.description &&
+                                      salary?.description.trim() !== ''
+                                    ">
+                                    <p *ngIf="expandedReasonIndex !== i">
+                                      {{
+                                      salary.description.length > 50
+                                      ? (salary.description
+                                      | slice : 0 : 50) + "..."
+                                      : salary.description
+                                      }}
+                                      <a *ngIf="salary.description.length > 50" href="javascript:void(0)"
+                                        class="text-primary ms-1" (click)="expandedReasonIndex = i">Read more</a>
+                                    </p>
+                                    <p *ngIf="expandedReasonIndex === i">
+                                      {{ salary.description }}
+                                      <a href="javascript:void(0)" class="text-primary ms-1"
+                                        (click)="expandedReasonIndex = null">Show less</a>
+                                    </p>
+                                  </ng-container>
+                                  <ng-container *ngIf="
+                                      !salary?.description ||
+                                      salary?.description.trim() === ''
+                                    ">--</ng-container>
+                                </td>
+                                <td class="text-center">
+                                  <span class="badge" [ngClass]="{
+                                      'bg-danger': salary?.status === 'Unpaid',
+                                      'bg-success': salary?.status === 'Paid',
+                                      'bg-warning text-dark':
+                                        salary?.status === 'Upcoming',
+                                      'bg-secondary': salary?.status === 'N/A'
+                                    }">{{ salary?.status }}</span>
+                                </td>
+                                <!-- <td>
+                                  <button
+                                    (click)="onSelectSalaryDate(salary, item)"
+                                    class="upload-receipt me-2"
+                                  >
+                                    Pay Now
+                                  </button>
+                                  <a
+                                    *ngIf="salary.totalWorkingDays"
+                                    (click)="
+                                      downloadOneEmployeePdf(
+                                        item.teacherID,
+                                        salary
+                                      )
+                                    "
+                                    class="action-btn bg-danger-light me-2"
+                                  >
+                                    <i class="fa fa-download"></i>
+                                  </a>
+                                </td> -->
+
+                                <td class="text-center">
+                                  <button *ngIf="salary.totalWorkingDays && salary.status === 'Unpaid'"
+                                    (click)="onSelectSalaryDate(salary, item)" class="upload-receipt me-2">
+                                    Pay Now
+                                  </button>
+                                  <a *ngIf="salary.totalWorkingDays" (click)="
+                                      downloadOneEmployeePdf(
+                                        item.teacherID,
+                                        salary
+                                      )
+                                    " class="action-btn bg-danger-light me-2">
+                                    <i class="fa fa-download"></i>
+                                  </a>
+
+                                  <div *ngIf="!salary.totalWorkingDays && salary.status != 'Unpaid'">--</div>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </td>
+                    </tr>
+                  </ng-container>
+                </ng-container>
+
+                <ng-template #adminBody>
+                  <ng-container *ngFor="let item of displayedpayroll">
+                    <tr *ngFor="let salary of item.monthlyDetails; let i = index">
+                      <td>{{ (ContentP - 1) * Contentsize + i + 1 }}</td>
+                      <td>
+                        {{ salary.startDate | date : "dd MMM" }} to
+                        {{ salary.endDate | date : "dd MMM yyyy" }}
+                      </td>
+                      <td>{{ salary.payrollFrequency | titlecase }}</td>
+                      <td>
+                        {{
+                        salary.totalWorkingDays == 0
+                        ? "--"
+                        : salary.totalWorkingDays + " Days"
+                        }}
+                      </td>
+                      <td>
+                        {{
+                        salary.allWorkingHours &&
+                        salary.allWorkingHours !== "0.0"
+                        ? (salary.allWorkingHours | slice : 0 : 5) + " hr"
+                        : "--"
+                        }}
+                      </td>
+                      <td class="text-start">
+                       
+                        {{
+                        salary.totalSalary
+                        ? "$ " +
+                        (salary.totalSalary | number : "1.2-2")
+                        : "--"
+                        }}
+                      </td>
+
+                      <td>
+                        {{
+                        salary.deductionAmount
+                        ? "$ -" + salary.deductionAmount
+                        : "--"
+                        }}
+                      </td>
+                      <td>
+                        {{
+                        salary.paidAmount ? "$ " + salary.paidAmount : "--"
+                        }}
+                      </td>
+                      <td>
+                        <ng-container *ngIf="salary?.salarySlipUrl; else noSlip">
+                          <i class="fa fa-eye me-2" (click)="
+                              openPreview(
+                                salary.salarySlipUrl,
+                                salary.salarySlipType
+                              )
+                            " title="View Salary Slip"></i>
+                          <i class="fa fa-download" (click)="
+                              commonService.downloadFile(
+                                salary.salarySlipUrl,
+                                'SalarySlip',
+                                salary.salarySlipType
+                              )
+                            " title="Download Salary Slip"></i>
+                        </ng-container>
+                        <ng-template #noSlip>--</ng-template>
+                      </td>
+                      <td style="
+                          width: 300px;
+                          word-break: break-word;
+                          white-space: normal;
+                        ">
+                        <ng-container *ngIf="
+                            salary?.description &&
+                            salary?.description.trim() !== ''
+                          ">
+                          <p *ngIf="expandedReasonIndex !== i">
+                            {{
+                            salary.description.length > 50
+                            ? (salary.description | slice : 0 : 50) + "..."
+                            : salary.description
+                            }}
+                            <a *ngIf="salary.description.length > 50" href="javascript:void(0)"
+                              class="text-primary ms-1" (click)="expandedReasonIndex = i">Read more</a>
+                          </p>
+                          <p *ngIf="expandedReasonIndex === i">
+                            {{ salary.description }}
+                            <a href="javascript:void(0)" class="text-primary ms-1"
+                              (click)="expandedReasonIndex = null">Show less</a>
+                          </p>
+                        </ng-container>
+                        <ng-container *ngIf="
+                            !salary?.description ||
+                            salary?.description.trim() === ''
+                          ">--</ng-container>
+                      </td>
+                      <td>
+                        <span class="badge" [ngClass]="{
+                            'bg-danger': salary?.status === 'Unpaid',
+                            'bg-success': salary?.status === 'Paid',
+                            'bg-warning text-dark':
+                              salary?.status === 'Upcoming',
+                            'bg-secondary': salary?.status === 'N/A'
+                          }">{{ salary?.status }}</span>
+                      </td>
+                      <td>
+                        <a *ngIf="salary.totalWorkingDays" (click)="
+                            downloadOneEmployeePdf(item.teacherID, salary)
+                          " class="action-btn bg-danger-light me-2">
+                          <i class="fa fa-download"></i>
+                        </a>
+                      </td>
+                    </tr>
+                  </ng-container>
+                </ng-template>
+                } @else {
+                <tr>
+                  <td colspan="100%">
+                    <app-skeleton-loader skeletonShow="NoRecord">
+                    </app-skeleton-loader>
+                  </td>
+                </tr>
+
+                }
+              </tbody>
+            </table>
+
+            <!-- No Records Template -->
+            <ng-template #noRecords>
+              <tbody>
+                <tr>
+                  <td colspan="10">
+                    <div class="no-data">
+                      <img src="assets/img/no-data-img.png" alt="No Record Found" />
+                      <span>No Record Found</span>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </ng-template>
+          </div>
+
+          <div class="d-flex justify-content-between align-items-center mt-4 no-flex">
+            <div class="total-entry" style="font-size: small">
+              <span>Total Entries:</span>
+              <span class="entry-count">{{
+                displayedpayroll.length || 0
+                }}</span>
+            </div>
+            <pagination-controls *ngIf="displayedpayroll.length > 5" previousLabel="prev" nextLabel="next" [maxSize]="5"
+              class="datatable-pager-nav my-2 mb-sm-0" id="toccontrol" (pageChange)="onPageChange($event)">
+            </pagination-controls>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="purchased" tabindex="-1" aria-labelledby="addItemModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addItemModalLabel">Salary Pay</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <form [formGroup]="paySalaryForm" novalidate>
+          <div class="cash-or-card">
+            <label class="form-label me-2">Payment Mode:</label>
+
+            <div class="form-check form-check-inline">
+              <input class="form-check-input mt-1" type="radio" formControlName="paymentType" name="paymentType"
+                id="cash" value="cash" />
+              <label class="form-check-label" for="cash">Cash</label>
+            </div>
+
+            <div class="form-check form-check-inline">
+              <input class="form-check-input mt-1" type="radio" formControlName="paymentType" name="paymentType"
+                id="bank" value="bank" />
+              <label class="form-check-label" for="bank">Bank Payment</label>
+            </div>
+
+            <div *ngIf="
+                paySalaryForm.get('paymentType')?.touched &&
+                paySalaryForm.get('paymentType')?.invalid
+              " class="text-danger">
+              Payment type is required
+            </div>
+          </div>
+
+          <div class="form-group mt-2">
+            <label>Enter Amount:</label>
+            <input type="number" class="form-control" [ngClass]="{
+                'is-invalid':
+                  paySalaryForm.get('paidAmount')?.touched &&
+                  paySalaryForm.get('paidAmount')?.invalid
+              }" formControlName="paidAmount" placeholder="Enter paid Amount" />
+            <div *ngIf="
+                paySalaryForm.get('paidAmount')?.touched &&
+                paySalaryForm.get('paidAmount')?.errors
+              " class="text-danger">
+              <span *ngIf="paySalaryForm.controls['paidAmount'].errors?.['required']">Amount is required.</span>
+              <span *ngIf="paySalaryForm.controls['paidAmount'].errors?.['min']">Amount must be greater than 0.</span>
+            </div>
+          </div>
+
+          <div class="form-group mt-2">
+            <label>Description:</label>
+            <input [ngClass]="{
+                'is-invalid':
+                  paySalaryForm.get('description')?.touched &&
+                  paySalaryForm.get('description')?.invalid
+              }" type="text" class="form-control" formControlName="description" placeholder="Enter description" />
+            <div *ngIf="
+                paySalaryForm.get('description')?.touched &&
+                paySalaryForm.get('description')?.invalid
+              " class="text-danger">
+              Description is required.
+            </div>
+          </div>
+
+          <ng-container *ngIf="isPaymentModeOnline" formGroupName="onlinePaymentDetails">
+            <div class="border p-3 rounded mt-3">
+              <div class="form-group mb-2">
+                <label>First Name</label>
+                <input type="text" class="form-control" [ngClass]="{
+                    'is-invalid':
+                      paySalaryForm.get('onlinePaymentDetails.firstName')
+                        ?.touched &&
+                      paySalaryForm.get('onlinePaymentDetails.firstName')
+                        ?.invalid
+                  }" formControlName="firstName" placeholder="Enter first name" />
+                <div *ngIf="
+                    paySalaryForm.get('onlinePaymentDetails.firstName')
+                      ?.touched &&
+                    paySalaryForm.get('onlinePaymentDetails.firstName')?.invalid
+                  " class="text-danger">
+                  First Name is required.
+                </div>
+              </div>
+
+              <div class="form-group mb-2">
+                <label>Last Name</label>
+                <input type="text" class="form-control" [ngClass]="{
+                    'is-invalid':
+                      paySalaryForm.get('onlinePaymentDetails.lastName')
+                        ?.touched &&
+                      paySalaryForm.get('onlinePaymentDetails.lastName')
+                        ?.invalid
+                  }" formControlName="lastName" placeholder="Enter last name" />
+                <div *ngIf="
+                    paySalaryForm.get('onlinePaymentDetails.lastName')
+                      ?.touched &&
+                    paySalaryForm.get('onlinePaymentDetails.lastName')?.invalid
+                  " class="text-danger">
+                  Last Name is required.
+                </div>
+              </div>
+
+              <div class="form-group mb-2">
+                <label>Email</label>
+                <input type="email" class="form-control" [ngClass]="{
+                    'is-invalid':
+                      paySalaryForm.get('onlinePaymentDetails.email')
+                        ?.touched &&
+                      paySalaryForm.get('onlinePaymentDetails.email')?.invalid
+                  }" formControlName="email" placeholder="Enter email" />
+                <div *ngIf="
+                    paySalaryForm.get('onlinePaymentDetails.email')?.touched &&
+                    paySalaryForm.get('onlinePaymentDetails.email')?.errors
+                  " class="text-danger">
+                  <span *ngIf="paySalaryForm.get('onlinePaymentDetails.email')?.errors?.['required']">
+                    Email is required.
+                  </span>
+                  <span *ngIf="paySalaryForm.get('onlinePaymentDetails.email')?.errors?.['email']">
+                    Enter a valid email.
+                  </span>
+                </div>
+              </div>
+
+              <div class="form-group mb-2">
+                <label>Phone Number</label>
+                <input type="tel" maxlength="10" class="form-control" [ngClass]="{
+                    'is-invalid':
+                      paySalaryForm.get('onlinePaymentDetails.phoneNumber')
+                        ?.touched &&
+                      paySalaryForm.get('onlinePaymentDetails.phoneNumber')
+                        ?.invalid
+                  }" formControlName="phoneNumber" placeholder="Enter phone number" />
+                <div *ngIf="
+                    paySalaryForm.get('onlinePaymentDetails.phoneNumber')
+                      ?.touched &&
+                    paySalaryForm.get('onlinePaymentDetails.phoneNumber')
+                      ?.errors
+                  " class="text-danger">
+                  <span *ngIf="paySalaryForm.get('onlinePaymentDetails.phoneNumber')?.errors?.['required']">
+                    Phone number is required.
+                  </span>
+                  <span *ngIf="paySalaryForm.get('onlinePaymentDetails.phoneNumber')?.errors?.['pattern']">
+                    Must be 10 digits.
+                  </span>
+                </div>
+              </div>
+
+              <div class="form-group mb-2">
+                <label>Card Details</label>
+                <ngx-stripe-card #cardElem></ngx-stripe-card>
+              </div>
+            </div>
+          </ng-container>
+
+          <input type="file" class="form-control" accept="image/*,application/pdf" (change)="onFileChange($event)"
+            [ngClass]="{
+              'is-invalid':
+                paySalaryForm.get('receiptFile')?.touched &&
+                paySalaryForm.get('receiptFile')?.invalid
+            }" />
+          <div *ngIf="
+              paySalaryForm.get('receiptFile')?.touched &&
+              paySalaryForm.get('receiptFile')?.invalid
+            " class="text-danger">
+            Receipt photo is required.
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button [disabled]="submitted" type="button" class="btn btn-primary" (click)="submitPayment()">
+          Submit
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="ResetForm()" data-bs-dismiss="modal">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="previewUrl" [ngClass]="{ 'modal-backdrop': true, closing: isClosing }" (click)="closePreview()">
+  <div class="modal-content p-4" (click)="$event.stopPropagation()">
+    <button class="close-button" (click)="closePreview()" style="color: #000">
+      &#10006;
+    </button>
+
+    <ng-container *ngIf="previewType === 'image'">
+      <img [src]="previewUrl" alt="Image Preview" class="preview-image" />
+    </ng-container>
+
+    <ng-container *ngIf="previewType === 'pdf'">
+      <iframe [src]="sanitizer.bypassSecurityTrustResourceUrl(previewUrl)" width="100%" height="600px"></iframe>
+    </ng-container>
+  </div>
+</div>

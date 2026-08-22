@@ -1,0 +1,69 @@
+span.color {
+      height: 20px;
+    width: 20px;
+    display: inline-block;
+    border-radius: 2px;
+    line-height: 21px;
+    margin: 0px 3px 0px 11px;
+    position: relative;
+    top: 5px;
+}.expense-type {
+    text-align: right;
+    vertical-align: middle;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    vertical-align: middle;
+        margin-bottom: 14px;
+}
+
+.d-flexer{
+    display: flex;
+    align-items: center;
+}
+.expense-type ul li {
+    display: inline-block;
+    
+}tr.operations {
+    background: #e4d7f9 !important;
+}tr.capital {
+    background: #d6e5fb !important;
+}tr.payroll {
+    background: #c4f0c5;
+    color: #fff;
+}
+
+
+
+.table-responsive.coloful-tabel tr {
+    border-bottom: 0px dotted #c6c6c6 !important;
+}
+tr.payroll:hover {
+    background: #96c498 !important;
+}tr.capital:hover {
+    background: #c6c6c6 !important;
+}tr.operations:hover {
+    background: #d1c5e4 !important;
+}.tab-content {
+    padding-top: 0px;
+}.row.d-flex .search {
+    margin-bottom: 0px;
+    margin-top: 27px;
+}
+.upcoming-color
+{
+background: #8fd199 !important;
+ border: 1px solid #8fd199 !important
+}
+.outstanding-color
+{
+background: #ec8f8f !important;
+ border: 1px solid #ec8f8f !important;
+}
+.past-color
+{
+background: #d6d6d6 !important; 
+border: 1px solid #d6d6d6 !important;
+}.butons-fee {
+    float: right;
+}

@@ -1,0 +1,90 @@
+.evnt-btn {
+    position: absolute;
+    top: 29px;
+    right: 229px;
+}
+
+
+.card-header.d-flex.align-items-center.dasboard-header {
+    justify-content: space-between;
+}.chart-list-out li {
+ 
+  font-size: 14px;
+}
+a.fc-event.fc-event-start.fc-event-end.fc-event-past.fc-daygrid-event.fc-daygrid-block-event.fc-h-event {
+  text-align: left;
+}
+.color-select {
+ border: 1px solid #e5dddd;
+    padding: 0px;
+    color: #fff;
+    font-family: helvetica;
+    font-size: 13px;
+    border-radius: 4px;
+  }
+  .color-select > span {
+    text-transform: uppercase;
+    padding: 8px 0;
+    display: block;
+    cursor: pointer;
+        height: 35px;
+            position: relative;
+    z-index: 1;
+  }
+  .color-select > span span {
+    width: 25px;
+    height: 25px;
+    display: inline-block;
+    border-radius: 50%;
+    margin-left: 12px;
+    vertical-align: middle;
+  }
+  .color-select ul {
+    width: 100%;
+    overflow: visible;
+    padding: 0;
+    border-top: 1px solid #dee2e6;
+    display: block;
+  }
+  .color-select ul:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+  .color-select ul li {
+    list-style: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #fff;
+    float: left;
+    margin: 25px 12px 0 0;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.3s ease-in-out;
+  }
+  .color-select ul li:hover {
+    transform: scale(1.15);
+  }
+  .color-select ul li span {
+    display: none;
+  }
+  
+  .fc-custom-event {
+    background-color: #d4e8ef !important;
+    color: #040000 !important;
+    text-transform: capitalize;
+  }
+
+
+  span.Click.to.pick.color {
+    position: absolute;
+    color: #919294 !important;
+    font-size: 13px;
+    text-transform: capitalize;
+    padding: 10px;
+      top: -2px;
+    z-index: 0;
+}.color-select {
+    position: relative;
+}

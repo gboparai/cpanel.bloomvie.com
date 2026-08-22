@@ -1,0 +1,212 @@
+<form [formGroup]="myControlForm" (ngSubmit)="onSubmit()">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body">
+
+          <!--main static was here-->
+
+
+
+          <!--to here-->
+
+
+
+          <!-- <div class="heading-new" *ngIf="DynamicFormCount>0">
+                      <h5 class="mb-0">Dynamic Form</h5>
+                  </div>    -->
+          <!-- <div class="" *ngIf="DynamicFormCount>0"> -->
+          <!-- (ngSubmit)="onSubmit()" -->
+
+          <!---->
+
+
+          <div class="row">
+            <!-- Iterate through sections -->
+            <div *ngFor="let sectionGroup of fields" class="section-container col-md-12">
+
+              <!-- Section Header -->
+              <div class="heading-new">
+                <h5 class="mb-0">{{ sectionGroup.section.name }}</h5>
+              </div>
+
+              <!-- Form Fields (Grid System) -->
+              <div class="row">
+                <!-- Iterate through fields and group them by section -->
+                <div *ngFor="let field of sectionGroup.fields"
+                  class="form-group local-forms custom-1 custom-form-new col-md-4">
+
+                  <label
+                    [ngClass]="{ 'absolute-label': field.controlType !== 'checkbox' && field.controlType !== 'radio' }">
+                    {{ field.label }}
+                  </label>
+
+                  <!-- Dynamic Control Type Rendering -->
+                  <ng-container [ngSwitch]="field.controlType">
+
+                    <!-- Textbox -->
+                    <input *ngSwitchCase="'textbox'" class="form-control" [formControlName]="field.name" type="text"
+                      [id]="field.id" />
+                    <!--time-->
+
+                    <input *ngSwitchCase="'time'" class="form-control" [formControlName]="field.name" type="time"
+                      [id]="field.id" />
+
+                    <!-- Number -->
+                    <input *ngSwitchCase="'number'" class="form-control" [formControlName]="field.name" type="number"
+                      [id]="field.id" />
+
+                    <!-- Date -->
+                    <input *ngSwitchCase="'date'" class="form-control" [formControlName]="field.name" type="date"
+                      [id]="field.id" />
+
+                    <!-- DateTime -->
+                    <input *ngSwitchCase="'datetime'" class="form-control" [formControlName]="field.name"
+                      type="datetime-local" [id]="field.id" />
+
+                    <!-- Select Dropdown -->
+                    <select *ngSwitchCase="'select'" class="form-control" [formControlName]="field.name"
+                      [id]="field.id">
+                      <option *ngFor="let option of field.options" [value]="option.value">{{ option.label }}</option>
+                    </select>
+
+                    <!-- Radio Buttons -->
+                    <div *ngSwitchCase="'radio'">
+                      <div *ngFor="let option of field.options">
+                        <input type="radio" [formControlName]="field.name" [value]="option.value" /> {{ option.label }}
+                      </div>
+                    </div>
+
+                    <!-- Checkbox commented code -->
+                    <!-- <div *ngSwitchCase="'checkbox'">
+                                          <div *ngFor="let option of field.options">
+                                            <input
+                                              type="checkbox"
+                                              [value]="option.value"
+                                              (change)="onCheckboxChange($event, option.value, field.name)"
+                                              [checked]="myControlForm.get(field.name)?.value?.includes(option.value)"
+                                            /> {{ option.label }}
+                                          </div>
+                                        </div> -->
+
+                    <!--added by sahib to check or uncheck checkboxes // start-->
+
+                    <div *ngSwitchCase="'checkbox'">
+                      <div *ngFor="let option of field.options">
+                        <input type="checkbox" [value]="option.value"
+                          (change)="onCheckboxChange($event, option.value, field.name)"
+                          [checked]="checkBoxStateManager(option.value,field.name)"
+                          /> {{ option.label }}
+                      </div>
+                    </div>
+                    <!--added by sahib to check or uncheck checkboxes // end-->
+                    <textarea *ngSwitchCase="'textarea'" class="form-control" [formControlName]="field.name"
+                      [id]="field.id"></textarea>
+
+                  </ng-container>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <!-- <button type="submit" [disabled]="!myControlForm.valid">Submit</button> -->
+
+
+
+          <!---->
+
+          <!-- </div> -->
+        </div>
+      </div>
+
+
+      <div class="row">
+        <div class="col-md-12">
+          <div class="student-submit text-end">
+            <!-- <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#Custom-form"> Add
+                          Field</button> -->
+            <!-- <button type="button" class="btn btn-primary me-2" (click)="ResetForm()"> Add
+                              Field</button> -->
+            <button class="btn btn-primary me-2">Submit</button>
+            <button class="btn btn-secondary ">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+<form [formGroup]="AddSectionForm" (ngSubmit)="onSubmitSectionForm()">
+  <!-- Modal -->
+  <div class="modal fade" id="addSectionModal" tabindex="-1" style="z-index: 9999;"
+    aria-labelledby="addSectionModalLabel" aria-hidden="true" #addSectionModal>
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h5 class="modal-title" id="addSectionModalLabel">Add Section Title</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <!-- Modal Body -->
+        <div class="modal-body">
+
+          <div class="form-group">
+            <label for="field-title">Section Title</label>
+            <input type="text" id="Section" formControlName="SectionTitle" placeholder="Enter Section Title"
+              class="form-control">
+            <div
+              *ngIf="AddSectionForm.get('SectionTitle')?.invalid && (AddSectionForm.get('SectionTitle')?.touched || AddSectionForm.get('SectionTitle')?.dirty)">
+              <div class="text-danger" *ngIf="AddSectionForm.get('SectionTitle')?.errors?.['required']">Field Section is
+                required.</div>
+            </div>
+          </div>
+        </div>
+        <!-- Modal Footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</form>
+
+<div class="modal" id="PendingOnboardStudent" data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h5 class="modal-title">Select Student for onboarding</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" ></button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group local-forms">
+              <label class="form-label">Select Student<span class="login-danger">*</span></label>
+              <ng-select [items]="pendingStudentOnboarding" bindLabel="studentName"
+               (change)="selectStudentFromList($event)"
+                bindValue="studentID" ></ng-select>
+            </div>
+          </div>
+
+         
+
+        </div>
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <div class="student-submit">
+          <button type="button" class="btn btn-primary apoint-button" [disabled]="selectStudent == null"
+           (click)="startAnotherKidOnboarding()" >
+            Start Onboarding
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

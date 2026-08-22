@@ -1,0 +1,13 @@
+.sticky-div{
+    position: sticky;
+    top: 82px;
+    height: 100vh;
+}.avatar {
+    position: relative;
+   height: 50px!important;
+    display: inline-flex !important;
+    width: 50px!important;
+}
+h5 {
+    text-transform: capitalize;
+}

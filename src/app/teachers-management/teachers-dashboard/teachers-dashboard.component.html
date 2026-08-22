@@ -1,0 +1,412 @@
+<app-breadcrumb></app-breadcrumb>
+<div class="row">
+  <ng-container *ngIf="!onBoardingService.onboardingState().isOnboardedAccount">
+    <div class="student-banner onboard-payment">
+      <div class="d-flex align-items-center">
+        <div class="icon">
+          <img class="listing" src="assets/img/card.png" />
+        </div>
+        <div>
+          <h5 class="mb-1 fw-semibold">
+            <b> You're Onboarded! Complete Payment Setup. </b>
+          </h5>
+          <p class="mb-0 text-muted">
+            You have successfully completed the onboarding process as a teacher.
+            To start receiving payments through Bloomvie (such as for tutoring,
+            sessions, or classes), you need to finish setting up your Stripe
+            payment account. This is essential for processing payouts and
+            managing your earnings on the platform. Please complete the payment
+            setup to enable payment transactions and avoid any delays.
+          </p>
+          <div class="complete-payment-process">
+            <button (click)="navigateToStripeOnboarding()" class="btn btn-primary me-2">
+              Complete Now
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <div class="col-md-12">
+    <div class="card bg-card">
+      <div class="overlay-img">
+        <img src="assets/img/shape-04.png" alt="img" class="img-fluid shape-01" />
+        <img src="assets/img/shape-01.png" alt="img" class="img-fluid shape-02" />
+        <img src="assets/img/shape-02.png" alt="img" class="img-fluid shape-03" />
+        <img src="assets/img/shape-03.png" alt="img" class="img-fluid shape-04" />
+      </div>
+      <div class="card-body">
+        <div class="d-flex align-items-xl-center justify-content-xl-between flex-xl-row flex-column">
+          <div class="mb-3 mb-xl-0">
+            <div class="d-flex align-items-center flex-wrap mb-2">
+
+              @if (skeletonShowList2 === 'SkeltonList2') {
+              <div class="skeleton-line user-info-card w-50 mb-2"></div>
+              } @else {
+              <h1 class="text-white me-2" style="text-transform: capitalize" *ngIf="dayCareActivity != null">
+                Welcome to {{ dayCareActivity[0]?.centerName }}!!
+              </h1>
+              }
+              <a href="profile.html" class="avatar avatar-sm img-rounded bg-gray-800 dark-hover"><i
+                  class="ti ti-edit text-white"></i></a>
+            </div>
+            <p class="text-white" style="margin-bottom: 0px">
+              Welcome back! Let’s shape some futures today!
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body teacher-card-body">
+        <div class="row">
+
+          <!-- Added on 28/04/25 -->
+          <div class="col-xl-3 col-sm-6 col-12 d-flex">
+            <div class="card bg-comman dashboard-widget1 w-100 hvr-float-shadow mb-2 logo-first-color">
+              <div class="card-body">
+                <div class="db-widgets d-flex justify-content-between align-items-center"
+                  [routerLink]="'/attendance-dashboard'">
+                  <div class="db-info">
+                    <h6>Child Attendance</h6>
+                    @if (skalatonShowCard === 'skalatonShowCard') {
+                    <div class="skeleton-line user-info-card w-50 mb-2"></div>
+                    } @else {
+                    <h3>
+                      {{
+                      dashboardCounts?.totalStudentCount
+                      ? dashboardCounts?.totalStudentCount
+                      : "--"
+                      }}
+                    </h3>
+                    }
+                  </div>
+                  <div class="db-icon">
+                    <img src="https://cdn-icons-png.flaticon.com/128/1436/1436664.png" alt="Dashboard Icon" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-3 col-sm-6 col-12 d-flex">
+            <div class="card bg-comman dashboard-widget2 w-100 hvr-float-shadow mb-2 logo-second-color">
+              <div class="card-body">
+                <div class="db-widgets d-flex justify-content-between align-items-center" [routerLink]="'/my-schedule'">
+                  <div class="db-info">
+                    <h6>My Schedule</h6>
+                    @if (skalatonShowCard === 'skalatonShowCard') {
+                    <div class="skeleton-line user-info-card w-50 mb-2"></div>
+                    } @else {
+                    <h3>
+                      {{
+                      dashboardCounts?.totalStartEndTimeCount
+                      ? dashboardCounts?.totalStartEndTimeCount
+                      : "--"
+                      }}
+                    </h3>
+                    }
+                  </div>
+                  <div class="db-icon">
+                    <img src="assets/img/schedule2.png" alt="Dashboard Icon" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-3 col-sm-6 col-12 d-flex">
+            <div class="card bg-comman dashboard-widget1 w-100 hvr-float-shadow mb-2 logo-third-color">
+              <div class="card-body">
+                <div class="db-widgets d-flex justify-content-between align-items-center">
+                  <div class="db-info">
+                    <h6>Pending Actions</h6>
+                    @if (skalatonShowCard === 'skalatonShowCard') {
+                    <div class="skeleton-line user-info-card w-50 mb-2"></div>
+                    } @else {
+                    <h3>
+                      {{
+                      dashboardCounts?.pendingAttendanceCount +
+                      dashboardCounts?.pendingActivityCount
+                      }}
+                    </h3>
+                    }
+                  </div>
+                  <div class="db-icon">
+                    <img src="assets/img/icons/pending-task.png" alt="Dashboard Icon" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-3 col-sm-6 col-12 d-flex">
+            <div class="card bg-comman dashboard-widget1 w-100 hvr-float-shadow mb-2 logo-four-color">
+              <div class="card-body">
+                <div class="db-widgets d-flex justify-content-between align-items-center" [routerLink]="'/chatbox'">
+                  <div class="db-info">
+                    <h6>Messages</h6>
+                    @if (skalatonShowCard === 'skalatonShowCard') {
+                    <div class="skeleton-line user-info-card w-50 mb-2"></div>
+                    } @else {
+                    <h3>--</h3>
+                    <!-- <h3>{{ countResult?.totalClasses }}</h3> -->
+                    }
+                  </div>
+                  <div class="db-icon">
+                    <img src="assets/img/comments.png" alt="Dashboard Icon" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12 col-lg-6 colum">
+    <div class="card flex-fill comman-shadow dasboard-main-color">
+      <div class="card-header d-flex align-items-center dasboard-header">
+        <h5 class="card-title">Dayacare Activities</h5>
+      </div>
+      <div class="card-body activites-class">
+        <div class="activity-groups">
+
+          @if (skeletonShowList2 === 'SkeltonList2') {
+
+          <app-skeleton-loader skeletonShowList2="SkeltonList2" viewType="activity-list">
+          </app-skeleton-loader>
+
+
+          } @else if (dayCareActivity.length > 0){
+
+          @for(item of dayCareActivity;track item;let i=$index) {
+          <div class="activity-awards hvr-forward">
+            <div class="award-boxs">
+              <img src="assets/img/puzzle.png" alt="Award" />
+            </div>
+            <div class="award-list-outs">
+              <h4>{{ item.activityName }}</h4>
+              <h5>{{ item.activityDescription }}</h5>
+            </div>
+            <div class="award-time-list">
+              <span>1 Day ago</span>
+            </div>
+          </div>
+          }
+          } @else {
+
+          <app-skeleton-loader skeletonShow="NoRecord">
+          </app-skeleton-loader>
+
+
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-xl-6 col-lg-12 colum">
+    <app-events></app-events>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12 col-lg-6 colum">
+    <div class="card flex-fill comman-shadow dasboard-main-color">
+      <div class="card-header d-flex align-items-center dasboard-header">
+        <h5 class="card-title">Pending Student Activities</h5>
+      </div>
+      <div class="card-body activites-class">
+        <div>
+          <div class="activity-groups">
+
+            @if (skeletonShowList3 === 'SkeltonList3') {
+
+            <app-skeleton-loader skeletonShowList3="SkeltonList3" viewType="activity-list">
+            </app-skeleton-loader>
+
+
+            } @else if (pendingActivityDetails.length > 0){
+
+            <div class="activity-awards hvr-forward" *ngFor="let item of pendingActivityDetails">
+              <div class="award-boxs">
+                <img src="assets/img/puzzle.png" alt="Award" />
+              </div>
+              <div class="award-list-outs">
+                <h4>{{ item.className }}</h4>
+                <h5></h5>
+              </div>
+              <div class="award-time-list">
+                <span>{{ item.date | date : "MM/dd/yyyy" }}</span>
+              </div>
+            </div>
+            } @else {
+            <app-skeleton-loader skeletonShow="NoRecord">
+            </app-skeleton-loader>
+            }
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-12 col-lg-6 colum">
+    <div class="card flex-fill comman-shadow dasboard-main-color-two">
+      <div class="card-header d-flex align-items-center dasboard-headertwo">
+        <h5 class="card-title">Pending Student Attendance</h5>
+      </div>
+      <div class="card-body activites-class">
+        <div>
+          <div class="activity-groups">
+            @if (skeletonShowList === 'SkeltonList') {
+
+            <app-skeleton-loader skeletonShowList="SkeltonList" viewType="activity-list">
+            </app-skeleton-loader>
+
+
+            } @else if (pendingAttendanceDetails.length > 0){
+
+            <div class="activity-awards hvr-forward" *ngFor="let item of pendingAttendanceDetails">
+              <div class="award-boxs">
+                <img src="assets/img/expired.png" alt="Award" />
+              </div>
+              <div class="award-list-outs">
+                <h4>{{ item.className }}</h4>
+              </div>
+              <div class="award-time-list">
+                <span>{{ item.date | date : "MM/dd/yyyy" }}</span>
+              </div>
+            </div>
+            } @else {
+            <app-skeleton-loader skeletonShow="NoRecord">
+            </app-skeleton-loader>
+            }
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid p-0" *ngIf="holidayList.length > 0">
+  <div class="card flex-fill comman-shadow">
+    <div class="card-header d-flex align-items-center">
+      <h5 class="card-title">Holidays List</h5>
+    </div>
+    <div class="card-body auto-height">
+      <div class="class-activity">
+        <div class="activity-groups daycare-holiday">
+
+          @if (skeletonShowCalenderCard === 'SkeltonCalenderCard') {
+
+          <app-skeleton-loader skeletonShowCalenderCard="SkeltonCalenderCard" viewType="calendar-cards">
+          </app-skeleton-loader>
+
+
+          } @else if (holidayList.length > 0)
+          {
+          @for(item of holidayList;track item;let i=$index){
+          <div class="activity-awards">
+            <div class="award-boxs">
+              <img src="assets/img/calendar-date.png" alt="Award" />
+            </div>
+            <div class="award-list-outs">
+              <h4>{{ item.holidayName }}</h4>
+              <h5>{{ item.holidayDate | date : "d MMMM" }}</h5>
+            </div>
+          </div>
+          }
+          } @else {
+          <app-skeleton-loader skeletonShow="NoRecord">
+          </app-skeleton-loader>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="AgrrementLetter" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-bs-backdrop="static">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header radius0 bg-light">
+        <h4>Documents</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="hedi">
+              <h4>Please review and download the Offer Letter</h4>
+            </div>
+          </div>
+        </div>
+        <div class="pdf-container">
+          <iframe [src]="teacherid ? filePath : ''" width="100%" height="500px" frameborder="0" type="application/pdf">
+          </iframe>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12 mt-5">
+            <div class="review-head">
+              <!-- <div class="headingbox btn btn-blue">
+                <a>
+                  <i class="mdi mdi-download"></i> Offer Letter
+                </a>
+              </div> -->
+            </div>
+            <h5 class="note-offer" style="font-size: 13px">
+              <strong style="font-size: 15px">Note:</strong> Accept button is at
+              the bottom
+            </h5>
+            <div id="pdfContainer2" class="qwert"></div>
+            <div class="row mt-4">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="exampleCheckbox" [(ngModel)]="letterAccepted" />
+                    <label class="form-check-label" for="exampleCheckbox">
+                      I, hereby, accept this offer letter.
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 mt-4">
+                <label class="form-label">Signature<i>(Type your full name)</i></label>
+                <div class="input-group">
+                  <input type="text" class="form-control" id="signature" placeholder="Signature"
+                    [(ngModel)]="letterSignature" />
+                </div>
+              </div>
+
+              <!-- <div class="col-md-4 mt-4">
+                <label class="form-label">Acceptance Date:</label>
+                <div class="input-group">
+                  <input type="text" mwlFlatpickr class="form-control"id="acceptanceDate" value="" readonly placeholder="Date">
+                </div>
+              </div> -->
+              <div class="col-md-6 mt-4">
+                <div class="d-flex justify-content-end mt-4 align-items-center gap-2">
+                  <button type="button" class="btn btn-primary" (click)="employeeJoiningDocuments('accept')"
+                    [disabled]="!letterAccepted || !letterSignature">
+                    <i class="mdi mdi-check-all me-1"></i> Accept
+                  </button>
+
+                  <button type="button" class="btn btn-sm btn-danger" (click)="employeeJoiningDocuments('reject')">
+                    <i class="mdi mdi-close me-1"></i> Reject
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

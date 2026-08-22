@@ -1,0 +1,1132 @@
+<app-breadcrumb></app-breadcrumb>
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="heading-new d-flex gp-50">
+          <h5 class="mb-0">Discount Details</h5>
+        </div>
+        <ul class="nav nav-tabs" role="tablist">
+          <li class="nav-item" role="presentation">
+            <a
+              class="nav-link active"
+              href="#basictab1"
+              data-bs-toggle="tab"
+              aria-selected="false"
+              role="tab"
+              tabindex="-1"
+              (click)="getDiscountAppliedRequest()"
+              >Request</a
+            >
+          </li>
+          <li class="nav-item" role="presentation">
+            <a
+              class="nav-link"
+              href="#basictab2"
+              data-bs-toggle="tab"
+              aria-selected="false"
+              role="tab"
+              tabindex="-1"
+              (click)="getAllEnrolledParentRecord()"
+              >Enrollment</a
+            >
+          </li>
+          @if(activeTab=="Request"){
+          <div class="special-discount">
+            <button
+              type="button"
+              class="btn-primary"
+              (click)="openDiscountModal()"
+            >
+              Give Discount to Special Parents
+            </button>
+          </div>
+          }
+        </ul>
+
+        <div class="row">
+          <div class="col-md-12">
+            <div class="">
+              <div class="">
+                <div class="tab-content">
+                  <div class="tab-pane active" id="basictab1" role="tabpanel">
+                    <div class="col-md-12" *ngIf="showBanner">
+                      <div class="student-banner">
+                        <div class="d-flex align-items-center">
+                          <div class="icon">
+                            <img
+                              class="listing"
+                              src="assets/img/grouping.png"
+                            />
+                          </div>
+                          <div>
+                            <h5 class="mb-1 fw-semibold">
+                              Welcome to Parent Discount Request
+                            </h5>
+                            <p class="mb-0 text-muted">
+                              This section allows you to review and manage
+                              discount requests submitted by parents. Approve or
+                              decline based on your center's policies.
+                            </p>
+                          </div>
+                        </div>
+                        <div class="close-btn" (click)="closeBanner()">
+                          &times;
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-4 mt-3">
+                      <div class="search mt-1">
+                        <input
+                          placeholder="Type here.."
+                          type="text"
+                          id="searchtext"
+                          (input)="searchParentDetails($event)"
+                        />
+                        <button type="submit">Search</button>
+                      </div>
+                    </div>
+                    <div style="margin-top: 2rem">
+                      <div class="row">
+                        <div class="col-md-12">
+                          <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                              <thead class="student-thread">
+                                <tr>
+                                  <th>#</th>
+                                  <th>Parent&nbsp;Name</th>
+                                  <!-- <th>Email</th> -->
+                                  <th>Mobile Number</th>
+                                  <th>Action</th>
+                                </tr>
+                              </thead>
+                              @if (skeletonShow === 'Skelton') {
+                              <tbody>
+                                <tr>
+                                  <td colspan="100%">
+                                    <app-skeleton-loader
+                                      skeletonShow="Skelton"
+                                      viewType="table"
+                                      [tableRows]="4"
+                                      [tableCols]="5"
+                                    >
+                                    </app-skeleton-loader>
+                                  </td>
+                                </tr>
+                              </tbody>
+
+                              } @else if (parentDiscountList.length > 0) {
+
+                              <tbody
+                                *ngFor="
+                                  let discount of parentDiscountList
+                                    | paginate
+                                      : {
+                                          itemsPerPage: itemPerPage,
+                                          currentPage: currentPageCount,
+                                          id: 'parentDiscount'
+                                        };
+                                  let i = index
+                                "
+                              >
+                                <tr>
+                                  <td>{{ i + 1 }}</td>
+
+                                  <td>
+                                    <div
+                                      class="toogle-classroom tooltip-wrapper"
+                                      style="position: relative"
+                                      (mouseenter)="hoveredRow = discount"
+                                      (mouseleave)="hoveredRow = null"
+                                    >
+                                      <!-- Toggle Button -->
+                                      <button
+                                        class="btn-toggle"
+                                        data-bs-toggle="collapse"
+                                        [attr.data-bs-target]="
+                                          '#collapseTable' + i
+                                        "
+                                        aria-expanded="false"
+                                        [attr.aria-controls]="
+                                          'collapseTable' + i
+                                        "
+                                        (click)="getStudentRecords(discount)"
+                                      >
+                                        <i class="fa fa-solid fa-plus"></i>
+                                      </button>
+
+                                      <!-- Parent Name (hover target) -->
+                                      <span class="hover-anchor">
+                                        {{ discount.parentFirstName }}&nbsp;
+                                        {{
+                                          discount.parentLastName
+                                            ? discount.parentLastName
+                                            : ""
+                                        }}
+                                      </span>
+
+                                      <!-- Tooltip -->
+                                      <app-tooltip
+                                        *ngIf="hoveredRow === discount"
+                                        [employee]="{
+                                          fullName:
+                                            discount.parentFirstName +
+                                            (discount.parentLastName
+                                              ? ' ' + discount.parentLastName
+                                              : ''),
+                                          email: discount.email,
+                                          profile: discount.profilePhoto
+                                        }"
+                                      ></app-tooltip>
+                                    </div>
+                                  </td>
+
+                                  <!-- <td>
+                                    <div class="toogle-classroom">
+                                      <button class="btn-toggle" data-bs-toggle="collapse" [attr.data-bs-target]="
+                                          '#collapseTable' + i
+                                        " aria-expanded="false" [attr.aria-controls]="
+                                          'collapseTable' + i
+                                        " (click)="getStudentRecords(discount)">
+                                        <i class="fa fa-solid fa-plus"></i>
+                                      </button>
+                                      <span>
+                                        {{ discount.parentFirstName }}&nbsp;{{
+                                        discount.parentLastName
+                                        ? discount.parentLastName
+                                        : ""
+                                        }}</span>
+                                    </div>
+                                  </td> -->
+
+                                  <td>
+                                    {{
+                                      discount.mobile
+                                        ? "+1 " + discount.mobile
+                                        : "--"
+                                    }}
+                                  </td>
+                                  <td>
+                                    <div class="actions">
+                                      <a
+                                        href="#"
+                                        (click)="
+                                          getStudentList(discount, 'edit')
+                                        "
+                                        class="action-btn bg-danger-light me-2"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#editModal"
+                                      >
+                                        <i class="feather-edit"></i>
+                                      </a>
+                                    </div>
+                                  </td>
+                                  <!-- <td>
+                                    <div class="actions">
+                                      <a
+                                        data-bs-toggle="modal"
+                                        title="View-Student"
+                                        class="action-btn bg-danger-light me-2"
+                                        (click)="getStudentRecords(discount)"
+                                        ><i class="feather-eye"></i>
+                                      </a>
+                                    </div>
+                                  </td> -->
+                                </tr>
+                                <tr>
+                                  <td colspan="4" class="p-0">
+                                    <div
+                                      class="collapse collapse-table"
+                                      [attr.id]="'collapseTable' + i"
+                                      data-bs-parent="#accordionExample"
+                                    >
+                                      <table class="table sub-table mb-0">
+                                        <thead class="student-thread">
+                                          <tr>
+                                            <th>#</th>
+                                            <th>Student Name</th>
+                                            <th>DOB</th>
+                                            <th>Age Group</th>
+                                          </tr>
+                                        </thead>
+
+                                        @if (skeletonShow === 'Skelton') {
+                                        <tbody>
+                                          <tr>
+                                            <td colspan="100%">
+                                              <app-skeleton-loader
+                                                skeletonShow="Skelton"
+                                                viewType="table"
+                                                [tableRows]="5"
+                                                [tableCols]="5"
+                                              >
+                                              </app-skeleton-loader>
+                                            </td>
+                                          </tr>
+                                        </tbody>
+
+                                        } @else if (studentList.length > 0) {
+                                        <tbody
+                                          *ngFor="let student of studentList"
+                                        >
+                                          <tr>
+                                            <td></td>
+                                            <td>
+                                              {{
+                                                student.studentFirstName
+                                              }}&nbsp;{{
+                                                student.studentLastName
+                                              }}
+                                            </td>
+                                            <td>
+                                              {{
+                                                student.dob
+                                                  | date : "MM/dd/yyyy"
+                                              }}
+                                            </td>
+                                            <td>{{ student.ageGroup }}</td>
+                                          </tr>
+                                        </tbody>
+
+                                        } @else {
+                                        <tbody>
+                                          <tr>
+                                            <td colspan="100%">
+                                              <app-skeleton-loader
+                                                skeletonShow="NoRecord"
+                                              >
+                                              </app-skeleton-loader>
+                                            </td>
+                                          </tr>
+                                        </tbody>
+
+                                        }
+                                      </table>
+                                    </div>
+                                  </td>
+                                </tr>
+                              </tbody>
+
+                              } @else {
+                              <tbody>
+                                <tr>
+                                  <td colspan="100%">
+                                    <app-skeleton-loader
+                                      skeletonShow="NoRecord"
+                                    >
+                                    </app-skeleton-loader>
+                                  </td>
+                                </tr>
+                              </tbody>
+
+                              }
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                      @if( parentDiscountList.length > 5 ) {
+                      <div class="col pagination-style mt-4 no-flex">
+                        <div class="datatable-pager datatable-paging-loaded">
+                          <pagination-controls
+                            previousLabel="prev"
+                            nextLabel="next"
+                            [maxSize]="5"
+                            class="datatable-pager-nav my-2 mb-sm-0"
+                            id="parentDiscount"
+                            (pageChange)="currentPageCount = $event"
+                          >
+                          </pagination-controls>
+                        </div>
+                      </div>
+                      }
+                    </div>
+                  </div>
+
+                  <div class="tab-pane" id="basictab2" role="tabpanel">
+                    <div class="col-md-12" *ngIf="showBanner">
+                      <div class="student-banner">
+                        <div class="d-flex align-items-center">
+                          <div class="icon">
+                            <img
+                              class="listing"
+                              src="assets/img/grouping.png"
+                            />
+                          </div>
+                          <div>
+                            <h5 class="mb-1 fw-semibold">
+                              Welcome to Enrolled Parent Discount List
+                            </h5>
+                            <p class="mb-0 text-muted">
+                              This section allows you to review and manage
+                              discount requests Offered by Daycare. Approve or
+                              decline based on your center's policies.
+                            </p>
+                          </div>
+                        </div>
+                        <div class="close-btn" (click)="closeBanner()">
+                          &times;
+                        </div>
+                      </div>
+                    </div>
+                    <!-- <div class="col-md-4 mt-3">
+                      <div class="search mt-1">
+                        <input
+                          placeholder="Type here.."
+                          type="text"
+                          id="searchtext"
+                          (input)="searchParentDetails($event)"
+                        />
+                        <button type="submit">Search</button>
+                      </div>
+                    </div> -->
+                    <div style="margin-top: 2rem">
+                      <div class="row">
+                        <div class="col-md-12">
+                          <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                              <thead class="student-thread">
+                                <tr>
+                                  <th>#</th>
+                                  <th>Parent&nbsp;Name</th>
+                                  <th>Email</th>
+                                  <th>Mobile Number</th>
+                                  <th>Action</th>
+                                </tr>
+                              </thead>
+                              @if (skeletonShow2 === 'Skelton2') {
+                              <tbody>
+                                <tr>
+                                  <td colspan="100%">
+                                    <app-skeleton-loader
+                                      skeletonShow="Skelton"
+                                      viewType="table"
+                                      [tableRows]="5"
+                                      [tableCols]="5"
+                                    >
+                                    </app-skeleton-loader>
+                                  </td>
+                                </tr>
+                              </tbody>
+
+                              } @else if (EnrolledParentRecord.length > 0) {
+                              <tbody
+                                *ngFor="
+                                  let enrollment of EnrolledParentRecord
+                                    | paginate
+                                      : {
+                                          itemsPerPage: enrolledItemPerPage,
+                                          currentPage: enrolledCurrentPage,
+                                          id: 'EnrolledParent'
+                                        };
+                                  let i = index
+                                "
+                              >
+                                <tr>
+                                  <td>{{ i + 1 }}</td>
+                                  <td>
+                                    <div class="toggle-classroom">
+                                      <button
+                                        class="btn-toggle"
+                                        data-bs-toggle="collapse"
+                                        [attr.data-bs-target]="
+                                          '#collapseTable' + i
+                                        "
+                                        aria-expanded="false"
+                                        [attr.aria-controls]="
+                                          'collapseTable' + i
+                                        "
+                                        (click)="
+                                          getEnrolledStudentRecords(enrollment)
+                                        "
+                                      >
+                                        <i class="fa fa-solid fa-plus"></i>
+                                      </button>
+                                      <span>{{
+                                        enrollment.parentFullName
+                                      }}</span>
+                                    </div>
+                                  </td>
+                                  <!-- <td>
+                                    {{ enrollment.parentFullName }}
+                                  </td> -->
+                                  <td>{{ enrollment.email }}</td>
+                                  <td>
+                                    {{
+                                      enrollment.contact
+                                        ? "+1 " + enrollment.contact
+                                        : "--"
+                                    }}
+                                  </td>
+
+                                  <td>
+                                    <div class="actions">
+                                      <div class="actions">
+                                        <a
+                                          href="#"
+                                          (click)="
+                                            getStudentList(enrollment, 'edit')
+                                          "
+                                          class="action-btn bg-danger-light me-2"
+                                          data-bs-toggle="modal"
+                                          data-bs-target="#editModal"
+                                        >
+                                          <i class="feather-edit"></i>
+                                        </a>
+                                      </div>
+                                    </div>
+                                  </td>
+
+                                  <!-- <td>
+                                    <div class="actions">
+                                      <a
+                                        data-bs-toggle="modal"
+                                        title="View-Student"
+                                        class="action-btn bg-danger-light me-2"
+                                        (click)="
+                                          getEnrolledStudentRecords(enrollment)
+                                        "
+                                        ><i class="feather-eye"></i>
+                                      </a>
+                                    </div>
+                                  </td> -->
+                                </tr>
+                                <tr>
+                                  <td colspan="5" class="p-0">
+                                    <div
+                                      class="collapse collapse-table"
+                                      [attr.id]="'collapseTable' + i"
+                                      data-bs-parent="#accordionExample"
+                                    >
+                                      <table class="table sub-table mb-0">
+                                        <thead class="student-thread">
+                                          <tr>
+                                            <th>#</th>
+                                            <th>Student&nbsp;Name</th>
+                                            <th>Age&nbsp;Group</th>
+                                            <th>DOB</th>
+                                            <th>Plan Amount</th>
+                                            <th>Total Paid Amount</th>
+                                            <th>Discount</th>
+                                            <th>Discount In</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody
+                                          *ngFor="
+                                            let student of enrolledStudentList;
+                                            let i = index
+                                          "
+                                        >
+                                          <tr>
+                                            <td>{{ i + 1 }}</td>
+                                            <td>
+                                              {{ student.studentFullName }}
+                                            </td>
+                                            <td>{{ student.ageGroup }}</td>
+                                            <td>
+                                              {{
+                                                student.dob
+                                                  | date : "MM-dd-yyyy"
+                                              }}
+                                            </td>
+                                            <td>
+                                              {{
+                                                student.paymentRecord.planAmount
+                                                  ? "$ " +
+                                                    student.paymentRecord
+                                                      .planAmount +
+                                                    ".00"
+                                                  : "--"
+                                              }}
+                                            </td>
+                                            <td>
+                                              {{
+                                                student.paymentRecord.paidAmount
+                                                  ? "$ " +
+                                                    student.paymentRecord
+                                                      .planAmount +
+                                                    ".00"
+                                                  : "--"
+                                              }}
+                                            </td>
+                                            <td>
+                                              {{
+                                                student.paymentRecord.discount
+                                                  ? "$ " +
+                                                    student.paymentRecord
+                                                      .discount.discount +
+                                                    ".00"
+                                                  : "--"
+                                              }}
+                                            </td>
+                                            <td>
+                                              {{
+                                                "$ " +
+                                                student.paymentRecord.discount
+                                                  ? student.paymentRecord
+                                                      .discount.discountType
+                                                  : "--"
+                                              }}
+                                            </td>
+                                          </tr>
+                                        </tbody>
+                                      </table>
+                                    </div>
+                                  </td>
+                                </tr>
+                              </tbody>
+                              } @else {
+                              <tbody>
+                                <tr>
+                                  <td colspan="100%">
+                                    <app-skeleton-loader
+                                      skeletonShow="NoRecord"
+                                    >
+                                    </app-skeleton-loader>
+                                  </td>
+                                </tr>
+                              </tbody>
+                              }
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                      @if( EnrolledParentRecord.length > 5 ) {
+
+                      <div class="col pagination-style mt-4 no-flex">
+                        <div class="datatable-pager datatable-paging-loaded">
+                          @if( EnrolledParentRecord.length > 5 ) {
+                          <pagination-controls
+                            previousLabel="prev"
+                            nextLabel="next"
+                            [maxSize]="5"
+                            class="datatable-pager-nav my-2 mb-sm-0"
+                            id="EnrolledParent"
+                            (pageChange)="enrolledCurrentPage = $event"
+                          >
+                          </pagination-controls>
+                          }
+                        </div>
+                      </div>
+                      }
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="viewStudentListModal" data-bs-backdrop="static">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h5 class="modal-title">Student List</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body" id="viewStudentListModal">
+        <div class="add-student-parent">
+          <div class="col-md-12">
+            <div class="table-responsive">
+              <table class="table table-hover mb-0">
+                <thead class="student-thread">
+                  <tr>
+                    <th>#</th>
+                    <th>Student&nbsp;Name</th>
+                    <th>Age&nbsp;Group</th>
+                    <th>DOB</th>
+                  </tr>
+                </thead>
+
+                @if (skeletonShow2 == 'Skelton2') {
+                <tbody>
+                  <tr>
+                    <td colspan="100%">
+                      <app-skeleton-loader
+                        skeletonShow2="Skelton2"
+                        viewType="table"
+                        [tableRows]="5"
+                        [tableCols]="5"
+                      >
+                      </app-skeleton-loader>
+                    </td>
+                  </tr>
+                </tbody>
+
+                } @else if (EnrolledParentRecord.length > 0) {
+                <tbody *ngFor="let student of studentList; let i = index">
+                  <tr>
+                    <td>{{ i + 1 }}</td>
+                    <td>
+                      {{ student.studentFirstName }}&nbsp;{{
+                        student.studentLastName
+                      }}
+                    </td>
+                    <td>{{ student.ageGroup }}</td>
+                    <td>{{ student.dob | date : "MM-dd-yyyy" }}</td>
+                  </tr>
+                </tbody>
+                } @else {
+                <tbody>
+                  <tr>
+                    <td colspan="100%">
+                      <app-skeleton-loader skeletonShow="NoRecord">
+                      </app-skeleton-loader>
+                    </td>
+                  </tr>
+                </tbody>
+
+                }
+              </table>
+            </div>
+          </div>
+          <!-- <div class="col pagination-style">
+            <div class="datatable-pager datatable-paging-loaded">
+              @if( studentList.length > 0 ) {
+              <pagination-controls
+                previousLabel="prev"
+                nextLabel="next"
+                [maxSize]="5"
+                class="datatable-pager-nav my-2 mb-sm-0"
+                id="studentList"
+                (pageChange)="studentListCurrentPage = $event"
+              >
+              </pagination-controls>
+              }
+            </div>
+          </div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="modal"
+  id="giveDiscount"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h5 class="modal-title">Give Discount</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          (click)="resetGiveDiscountForm()"
+        ></button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        <form [formGroup]="giveDiscountForm">
+          <div class="col-md-12 mb-4" style="padding: 0px">
+            <div class="local-forms form-group">
+              <label>Parent Name <span class="text-danger">*</span></label>
+              <input
+                type="email"
+                class="form-control"
+                formControlName="name"
+                placeholder="Enter Parent Name"
+              />
+            </div>
+            @if(giveDiscountForm.controls['name']?.invalid &&
+            giveDiscountForm.controls['name'].touched){
+            <span class="text-danger">This field is required</span>
+            }<br />
+            <div class="local-forms form-group">
+              <label>Email <span class="text-danger">*</span></label>
+              <input
+                type="email"
+                class="form-control"
+                formControlName="email"
+                placeholder="Enter Email"
+              />
+            </div>
+            @if(giveDiscountForm.controls['email']?.invalid &&
+            giveDiscountForm.controls['email'].touched){
+            <span class="text-danger">This field is required</span>
+            }
+          </div>
+          <div class="col-md-12 mb-4" style="padding: 0px">
+            <div class="local-forms form-group">
+              <label> Age Group<span class="text-danger">*</span></label>
+              <ng-select
+                placeholder="-Select-"
+                [items]="ageGroupList"
+                placeholder="-Select-"
+                bindLabel="label"
+                bindValue="value"
+                formControlName="ageGroup"
+                (change)="getPlan($event)"
+              >
+              </ng-select>
+            </div>
+            @if(giveDiscountForm.controls['ageGroup']?.invalid &&
+            giveDiscountForm.controls['ageGroup'].touched){
+            <span class="text-danger">This field is required</span>
+            }
+          </div>
+          <div class="col-md-12" style="padding: 0px">
+            <div class="local-forms form-group">
+              <label>Plan<span class="text-danger">*</span></label>
+              <ng-select
+                placeholder="-Select-"
+                [items]="frontendPlanList"
+                bindLabel="planName"
+                bindValue="id"
+                placeholder="-Select-"
+                formControlName="planID"
+              >
+              </ng-select>
+            </div>
+            @if(giveDiscountForm.controls['planID']?.invalid &&
+            giveDiscountForm.controls['planID'].touched){
+            <span class="text-danger">This field is required</span>
+            }
+          </div>
+        </form>
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="sendDiscountFormToParent()"
+        >
+          Send Discount Form
+        </button>
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="resetGiveDiscountForm()"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- enrollment discount -->
+
+<div class="modal" id="viewEnrolledStudent" data-bs-backdrop="static">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h5 class="modal-title">Student List</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body" id="viewEnrolledStudent">
+        <div class="add-student-parent">
+          <div class="col-md-12">
+            <div class="table-responsive">
+              <table class="table table-hover mb-0">
+                <thead class="student-thread">
+                  <tr>
+                    <th>#</th>
+                    <th>Student&nbsp;Name</th>
+                    <th>Age&nbsp;Group</th>
+                    <th>DOB</th>
+                    <th>Plan Amount</th>
+                    <th>Total Paid Amount</th>
+                    <th>Discount</th>
+                    <th>Discount In</th>
+                  </tr>
+                </thead>
+                <tbody
+                  *ngFor="let student of enrolledStudentList; let i = index"
+                >
+                  <tr>
+                    <td>{{ i + 1 }}</td>
+                    <td>
+                      {{ student.studentFullName }}
+                    </td>
+                    <td>{{ student.ageGroup }}</td>
+                    <td>{{ student.dob | date : "MM-dd-yyyy" }}</td>
+                    <td>
+                      $&nbsp;{{
+                        student.paymentRecord.planAmount
+                          ? "$ " + student.paymentRecord.planAmount + ".00"
+                          : "--"
+                      }}
+                    </td>
+                    <td>
+                      $&nbsp;{{
+                        student.paymentRecord.paidAmount
+                          ? "$ " + student.paymentRecord.planAmount + ".00"
+                          : "--"
+                      }}
+                    </td>
+
+                    <td>
+                      {{
+                        student.paymentRecord.discount
+                          ? "$ " +
+                            student.paymentRecord.discount.discount +
+                            ".00"
+                          : "--"
+                      }}
+                    </td>
+                    <td>
+                      {{
+                        student.paymentRecord.discount
+                          ? "$ " + student.paymentRecord.discount.discountType
+                          : "--"
+                      }}
+                    </td>
+                  </tr>
+
+                  <tr *ngIf="enrolledStudentList.length == 0">
+                    <td colspan="9" style="text-align: center">
+                      <div class="no-data">
+                        <img
+                          src="assets/img/no-data-img.png"
+                          alt="No Record Found"
+                        />
+                        <span>No Record Found</span>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <!-- <div class="col pagination-style">
+            <div class="datatable-pager datatable-paging-loaded">
+              @if( studentList.length > 0 ) {
+              <pagination-controls
+                previousLabel="prev"
+                nextLabel="next"
+                [maxSize]="5"
+                class="datatable-pager-nav my-2 mb-sm-0"
+                id="studentList"
+                (pageChange)="studentListCurrentPage = $event"
+              >
+              </pagination-controls>
+              }
+            </div>
+          </div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="modal fade"
+  id="editModal"
+  tabindex="-1"
+  aria-labelledby="editModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editModalLabel">Edit Details</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="parentDiscountForm">
+          <div class="row">
+            <div class="row">
+              <div class="col-md-12 text-start mb-3 mt-2">
+                <div class="row">
+                  <!-- <div class="col-md-2">
+                    
+                      <div class="toggle-container">
+                        <label>Discount in :</label>
+                        <div class="left-f">
+                          <input
+                            type="checkbox"
+                            id="toggle"
+                            class="toggleCheckbox"
+                            #discountToggle
+                          />
+                          <label for="toggle" class="toggleContainer">
+                            <div (click)="setDiscountType('amount')">$</div>
+                            <div (click)="setDiscountType('percentage')">%</div>
+                          </label>
+                        </div>
+                      </div>
+                    </div> -->
+                  <div class="col-md-4 mb-4">
+                    <div class="form-group local-forms">
+                      <label>
+                        Discount Type<span class="login-danger">*</span>
+                      </label>
+                      <ng-select
+                        [items]="discountTypeList"
+                        bindLabel="label"
+                        bindValue="value"
+                        placeholder="-Select-"
+                        formControlName="discountType"
+                        (change)="onDiscountTypeChange($event)"
+                      >
+                      </ng-select>
+                    </div>
+                  </div>
+
+                  <div class="col-md-4 mb-4">
+                    <div class="form-group local-forms">
+                      <label
+                        >Parent Name<span class="login-danger">*</span></label
+                      >
+                      <ng-select
+                        placeholder="-Select-"
+                        [items]="parentList"
+                        bindLabel="parentFullName"
+                        [(ngModel)]="selectedParent"
+                        bindValue="parentID"
+                        formControlName="parentID"
+                        (change)="getStudentList($event, 'dropdown')"
+                      >
+                      </ng-select>
+                      @if(parentDiscountForm.controls['parentID']?.invalid &&
+                      parentDiscountForm.controls['parentID'].touched){
+                      <span class="text-danger">This field is required</span>
+                      }
+                    </div>
+                  </div>
+                  <div class="col-md-4 mb-4">
+                    <div class="form-group local-forms">
+                      <label
+                        >Student Name<span class="login-danger">*</span></label
+                      >
+                      <ng-select
+                        placeholder="-Select-"
+                        [items]="studentRecord"
+                        bindLabel="studentFullName"
+                        bindValue="studentID"
+                        formControlName="studentID"
+                        (change)="getPlanAccToAgeGroup($event)"
+                      >
+                      </ng-select>
+                      @if(parentDiscountForm.controls['studentID']?.invalid &&
+                      parentDiscountForm.controls['studentID'].touched){
+                      <span class="text-danger">This field is required</span>
+                      }
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4 mb-4">
+                <div class="form-group local-forms">
+                  <label>Email</label>
+                  <input
+                    readonly
+                    formControlName="email"
+                    class="form-control"
+                    type="email"
+                  />
+                  @if(parentDiscountForm.controls['email']?.invalid &&
+                  parentDiscountForm.controls['email'].touched){
+                  <span class="text-danger">This field is required</span>
+                  }
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group local-forms">
+                  <label> Discount<span class="login-danger">*</span> </label>
+                  <input
+                    class="form-control"
+                    type="number"
+                    placeholder="Enter Discount"
+                    formControlName="discount"
+                    (change)="validateDiscount($event)"
+                  />
+                  @if(parentDiscountForm.controls['discount']?.required &&
+                  parentDiscountForm.controls['discount'].touched){
+                  <span class="text-danger">This field is required</span>
+                  } @if(parentDiscountForm.controls['discount']?.invalid &&
+                  parentDiscountForm.controls['discount'].touched){
+                  <span class="text-danger">Invalid Input</span>
+                  }
+                </div>
+              </div>
+              <div class="col-md-4 mb-4">
+                <div class="form-group local-forms">
+                  <label>Select Plan<span class="login-danger">*</span> </label>
+                  <ng-select
+                    placeholder="-Select-"
+                    [items]="planList"
+                    bindLabel="planName"
+                    bindValue="planID"
+                    formControlName="PlanID"
+                  >
+                  </ng-select>
+                  @if(parentDiscountForm.controls['selectPlanID']?.invalid &&
+                  parentDiscountForm.controls['selectPlanID'].touched){
+                  <span class="text-danger">This field is required</span>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+          <p *ngIf="planDetails" class="plan-name">
+            <b>Plan Name :</b> P {{ planDetails.planName }},
+            <b>Plan Price :</b> ${{ planDetails.PlanPrice }}.00
+          </p>
+          <!-- <div class="row"> -->
+          <!-- <div class="col-md-4 mb-4"> -->
+          <!-- <div class="form-group local-forms">
+                  <label
+                    >Select Age Group<span class="login-danger">*</span>
+                  </label>
+                  <ng-select
+                    formControlName="ageGroupID"
+                    placeholder="-Select Age Of Child-"
+                    [items]="ageGroupList"
+                    bindLabel="label"
+                    bindValue="value"
+                    (change)="getAllCustomPlanList($event.value)"
+                  >
+                  </ng-select>
+                  @if(parentDiscountForm.controls['ageGroupID']?.invalid &&
+                  parentDiscountForm.controls['ageGroupID'].touched){
+                  <span class="text-danger">This field is required</span>
+                  }
+                </div>
+              </div> -->
+        </form>
+      </div>
+      <div class="modal-footer">
+        <div class="student-submit text-end">
+          <button
+            class="btn btn-primary me-2"
+            (click)="sendDiscountPlanEmail()"
+          >
+            Submit
+          </button>
+          <button class="btn btn-secondary" (click)="reset()">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

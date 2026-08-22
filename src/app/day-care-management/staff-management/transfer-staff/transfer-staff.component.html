@@ -1,0 +1,625 @@
+<app-breadcrumb></app-breadcrumb>
+<div class="card">
+  <div class="card-body">
+    <div class="heading-new">
+      <div class="inactive-heading-box">
+        <h5 class="mb-0">Transfer-staff</h5>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <ul class="nav nav-tabs" role="tablist">
+          <li class="nav-item" role="presentation">
+            <a class="nav-link active" href="#basictab2" data-bs-toggle="tab" (click)="getStaffList()"
+              aria-selected="false" role="tab">All Staff
+            </a>
+          </li>
+          <li class="nav-item" role="presentation">
+            <a class="nav-link" href="#basictab3" data-bs-toggle="tab" (click)="getStaffTransferedDetailsByCentreID()"
+              aria-selected="false" role="tab">Transfer Staff Status
+            </a>
+          </li>
+          <!-- <li class="nav-item" role="presentation">
+            <a class="nav-link " href="#basictab4" data-bs-toggle="tab"
+            aria-selected="false" role="tab">Recieved Applications
+          </a>
+          </li> -->
+        </ul>
+
+        <div class="tab-content">
+          <!-- 1 -->
+
+          <div class="tab-pane fade active show" id="basictab2" role="tabpanel" aria-labelledby="home-tab">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="row">
+                  <div class="col-md-8 mb-3">
+                    <div class="search">
+                      <input placeholder="Type here.." type="text" [(ngModel)]="StaffNameToSearch"
+                        (input)="onSearchNameAndEmail()" />
+                      <button type="submit">Search</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-12">
+                <div class="table-responsive">
+                  <table class="table table-hover mb-0">
+                    <thead class="student-thread">
+                      <tr>
+                        <th>#</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Role Specialization</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+
+                    <!-- Correct Angular conditional statement -->
+                    <tbody *ngIf="staffList.length > 0; else noData">
+                      <tr *ngFor="let item of staffList | paginate: { 
+                                    itemsPerPage: ContentsizePendingList, 
+                                    currentPage: ContentPendingList 
+                                  }; let i = index">
+
+                        <td>
+                          {{ (ContentPendingList - 1) * ContentsizePendingList + i + 1 }}
+                        </td>
+                        <td>{{ item.firstName }}</td>
+                        <td>{{ item.lastName == null ? "--" : item.lastName }}</td>
+                        <td>{{ item.email }}</td>
+                        <td>{{ item.userRole }}</td>
+                        <td>{{ item.roleSpecialization }}</td>
+
+                        <td>
+                          <div class="actions">
+                            <a (click)="selectItem(item)" class="action-btn bg-danger-light me-2">
+                              <i class="feather-edit"></i>
+                            </a>
+                            <a (click)="onSelectStaff($event, item)" class="action-btn bg-danger-light me-2">
+                              <i class="feather-repeat"></i>
+                            </a>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+
+                  </table>
+
+                  <!-- No Data Template -->
+                  <ng-template #noData>
+                    <tbody>
+                      <tr>
+                        <td colspan="7">
+                          <div class="no-data">
+                            <img src="assets/img/no-data-img.png" alt="No Record Found" />
+                            <span>No Record Found</span>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </ng-template>
+                </div>
+              </div>
+
+              <!-- Pagination Controls -->
+              <div class="col pagination-style">
+                <div class="datatable-pager datatable-paging-loaded">
+                  <pagination-controls *ngIf="staffList.length > ContentsizePendingList" previousLabel="prev"
+                    nextLabel="next" [maxSize]="5" class="datatable-pager-nav my-2 mb-sm-0"
+                    (pageChange)="ContentPendingList = $event">
+                  </pagination-controls>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <!-- 2 -->
+          <div class="tab-pane fade" id="basictab3" role="tabpanel" aria-labelledby="profile-tab">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="row">
+                  <div class="col-md-8 mb-3">
+                    <div class="search">
+                      <input
+                        placeholder="Type here.."
+                        type="text"
+                        [(ngModel)]="StaffNameToSearch"
+                        (input)="onSearchNameAndEmail()"
+                      />
+                      <button type="submit">Search</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          
+              <div class="col-md-12">
+                <div class="table-responsive">
+                  <table class="table table-hover mb-0">
+                    <thead class="student-thread">
+                      <tr>
+                        <th>#</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Role Specialization</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+          
+                    <tbody *ngIf="transferRecordList?.length > 0; else noRecord">
+                      <tr
+                        *ngFor="
+                          let item of transferRecordList | paginate: {
+                            itemsPerPage: ContentsizePendingList,
+                            currentPage: ContentPendingList,
+                            id: 'dayCareAppointmentPendingList'
+                          };
+                          let i = index
+                        "
+                      >
+                        <td>
+                          {{
+                            (ContentPendingList - 1) * ContentsizePendingList + i + 1
+                          }}
+                        </td>
+                        <td>{{ item.firstName }}</td>
+                        <td>{{ item.lastName == null ? '--' : item.lastName }}</td>
+                        <td>{{ item.employeeEmail }}</td>
+                        <td>{{ item.userRole }}</td>
+                        <td>{{ item.roleSpecialization }}</td>
+                        <td class="text-center">
+                          <span
+                            [class.badge]="true"
+                            [class.bg-warning]="item.status === 3"
+                            [class.bg-success]="item.status === 1"
+                            [class.bg-danger]="item.status === 2"
+                          >
+                            {{
+                              item.status === 3
+                                ? 'Pending'
+                                : item.status === 2
+                                ? 'Rejected'
+                                : 'Approved'
+                            }}
+                          </span>
+                        </td>
+                      </tr>
+                    </tbody>
+          
+                    <!-- No Record Found Message -->
+                    <ng-template #noRecord>
+                      <tbody>
+                        <tr>
+                          <td colspan="7">
+                            <div class="no-data">
+                              <img src="assets/img/no-data-img.png" alt="No Record Found" />
+                              <span>No Record Found</span>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </ng-template>
+                  </table>
+                </div>
+              </div>
+          
+              <!-- Pagination -->
+              <div class="col pagination-style" *ngIf="transferRecordList?.length > ContentsizePendingList">
+                <div class="datatable-pager datatable-paging-loaded">
+                  <pagination-controls
+                    previousLabel="prev"
+                    nextLabel="next"
+                    [maxSize]="5"
+                    class="datatable-pager-nav my-2 mb-sm-0"
+                    id="dayCareAppointmentPendingList"
+                    (pageChange)="ContentPendingList = $event"
+                  >
+                  </pagination-controls>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- // mohit -->
+<!-- updated by aadrash 20-2-2025 -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel1" aria-hidden="true"
+  data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header" style="border: none">
+        <h5 class="modal-title" id="exampleModalLabel">
+          <div class="heading-new">
+            <h5 class="mb-0">Employe Transfer</h5>
+          </div>
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="onClose()"></button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="modal-body pt-0">
+        <div class="row">
+          <div class="col-md-12 d-flex justify-content-center align-items-center">
+            <ul role="tablist" class="nav nav-pills menu-tabs m-0">
+              <li role="presentation" class="nav-item me-1">
+                <a #transferTab2 href="#basictab4" data-bs-toggle="tab" aria-selected="true" role="tab"
+                  class="nav-link active">Transfer Class</a>
+              </li>
+              <li class="nav-item">
+                <a #transferTab class="nav-link" [class.disabled]="classAssignment" data-bs-toggle="tab"
+                  href="#basictab5">
+                  Transfer Teacher
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="tab-content">
+          <div id="basictab4" role="tabpanel" aria-labelledby="home-tab" class="tab-pane fade active show">
+            <div class="modal-body">
+              <div class="instr-div p-3">
+                <div class="in-head mb-3">
+                  <h5>Please Read The Following Instructions Carefully</h5>
+                </div>
+                <ul class="list-styled">
+                  <li>
+                    Before Transfering the teacher you should first assign the
+                    classes to other Teacher .
+                  </li>
+                  <li>
+                    To do this select the Teacher that You Should want to
+                    assigned all the classes.
+                  </li>
+                  <li>
+                    After Press Submitt button all the classes has been to other
+                    Teacher .
+                  </li>
+                </ul>
+              </div>
+
+              <div class="teach-sel">
+                <div class="row mb-5">
+                  <div class="col-md-6">
+                    <div class="form-group local-forms" *ngIf="classAssignment">
+                      <label for="classroomSelect" class="form-label">
+                        Select Teacher<span class="login-danger">*</span>
+                      </label>
+
+                      <ng-select 
+                      [items]="teacherNameList" 
+                      bindLabel="teacherName" 
+                      bindValue="teacherID"
+                      [(ngModel)]="selectedTeacher" 
+                      (ngModelChange)="checkClassAssignment()"
+                      (change)="onSelectedTeacher(selectedTeacher)">
+                  </ng-select>
+                  
+                      @if(alreadyAssignedList.length > 0 ) {
+                      <div class="class-assi mt-3 mb-3 pb-3">
+                        <p class="fnt">
+                          Below classes is already assigned to this teacher
+                        </p>
+                        <span class="out-span" *ngFor="let classes of alreadyAssignedList">
+                          <span class="in-span">{{ classes?.className }}</span>
+                        </span>
+                      </div>
+                      }
+
+                      <!-- <span class="text-danger"
+                                   >
+                                    This field is required
+                                </span> -->
+                    </div>
+                    <p *ngIf="!classAssignment">
+                      Transfer Classes to
+                      {{ assignedClassTeacherName[0]?.teacherName }}
+                    </p>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="head-down mb-3">
+                      <h6>The List of classes</h6>
+                    </div>
+                    @if(classList.length > 0) {
+                    <div>
+                      <ul class="tree" *ngFor="let class of classList">
+                        <li>
+                          {{ class?.className }}
+                          <!-- <ul *ngFor="let section of class.sectionList">
+                                    <li>{{section.sectionName}}</li>
+                                  </ul> -->
+                        </li>
+                      </ul>
+                    </div>
+                    } @else {
+                    <div class="no-data">
+                      <img src="assets/img/no-data-img.png" alt="No Record Found" />
+                      <span>No Class Found</span>
+                    </div>
+                    }
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="modal-footer" style="border: none">
+              <div class="student-submit">
+                <button type="submit" class="btn btn-primary me-2" (click)="assignClassToOtherTeacher()">
+                  Next
+                </button>
+                <!-- <button type="reset" class="btn btn-secondary" data-bs-dismiss="modal" (click)="onClose()">Cancel</button> -->
+              </div>
+            </div>
+          </div>
+          <div id="basictab5" role="tabpanel" aria-labelledby="home-tab" class="tab-pane fade">
+            <div class="row">
+              <!-- Left Section: Profile Details -->
+              <div class="col-md-4 text-center">
+                <img [src]="
+                    profileData?.documentImage
+                      ? rootUrl +
+                        profileData?.documentImagePath +
+                        profileData?.documentImage
+                      : 'assets/images/default-profile.png'
+                  " width="100" height="100" alt="Profile Photo" class="rounded-circle" />
+
+                <h5 class="mt-2">{{ this.firstName }} {{ this.lastName }}</h5>
+                <p class="text-muted">{{ this.userRole }}</p>
+
+                <!-- <div class="border p-3 rounded bg-light">
+                      <p><strong>Client:</strong> {{ clientName }}</p>
+                      <p><strong>Vertical:</strong> {{ verticalName }}</p>
+                      <p><strong>User Role:</strong> {{ userRole }}</p>
+                    </div> -->
+              </div>
+
+              <!-- Right Section: Transfer Form -->
+              <div class="col-md-8">
+                <form class="row" [formGroup]="transferForm">
+                  <!-- "To" Dropdown -->
+                  <div class="col-md-6 mb-4">
+                    <div class="form-group local-forms">
+                      <label>To <span class="text-danger">*</span></label>
+                      <ng-select [items]="primaryDayCarelist" bindLabel="centreName" bindValue="id"
+                        placeholder="-Select-" formControlName="replaceCentreID" [clearable]="false"
+                        (change)="onSelectdaycare($event)">
+                      </ng-select>
+                      <span class="text-danger" *ngIf="
+                          transferForm.controls['centreID']?.invalid &&
+                          transferForm.controls['centreID'].touched
+                        ">
+                        This field is required.
+                      </span>
+                    </div>
+                  </div>
+
+                  <!-- "Department" Dropdown -->
+                  <div class="col-md-6 mb-4">
+                    <div class="form-group local-forms">
+                      <label>Department <span class="text-danger">*</span></label>
+                      <ng-select [items]="departmentOptions" bindLabel="name" bindValue="id" placeholder="-Select-"
+                        formControlName="departmentID" [clearable]="false" (change)="onSelectDepartment($event)">
+                      </ng-select>
+                      <span class="text-danger" *ngIf="
+                          transferForm.controls['departmentID']?.invalid &&
+                          transferForm.controls['departmentID'].touched
+                        ">
+                        This field is required.
+                      </span>
+                    </div>
+                  </div>
+
+                  <!-- "Transfer Effective Date" -->
+                  <div class="col-md-6 mb-4">
+                    <div class="form-group local-forms">
+                      <label>Transfer Effective Date
+                        <span class="text-danger">*</span></label>
+                      <input type="text" (change)="onSelectDate($event)" class="form-control" #datePickerInput
+                        formControlName="actionDate" />
+                      <span class="text-danger" *ngIf="
+                          transferForm.controls['actionDate']?.invalid &&
+                          transferForm.controls['actionDate'].touched
+                        ">
+                        This field is required.
+                      </span>
+                    </div>
+                  </div>
+
+                  <!-- Change in Compensation Checkbox -->
+                  <!-- <div class="col-md-12">
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" formControlName="changeInCompensation">
+                          <label class="form-check-label"> Change in Compensation </label>
+                        </div>
+                      </div> -->
+
+                  <div class="col-md-6 mb-4">
+                    <div class="form-group local-forms">
+                      <label>Role Specialization<span class="login-danger">*</span></label>
+                      <ng-select formControlName="roleSpecializationID" [items]="roleSpecializationList"
+                        bindLabel="name" (change)="selectedRole($event)" bindValue="id"></ng-select>
+                      <!-- @if(staffFormControls.roleSpecializationID.touched){
+                          @if(staffFormControls.roleSpecializationID.errors?.required){
+                          <span class="text-danger">This field is required.</span>
+                          } } -->
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12 text-end">
+                <button type="submit" class="btn btn-primary me-2" (click)="previousTab()">
+                  Prev
+                </button>
+                <button type="submit" class="btn btn-primary me-2" [disabled]="transferForm.invalid"
+                  (click)="submitForm()">
+                  Request Transfer
+                </button>
+                <button type="reset" class="btn btn-secondary" data-bs-dismiss="modal" (click)="onClose()">
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="modal-footer" style="border: none"></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="transfer-teacher" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+  data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header" style="border: none">
+        <h5 class="modal-title" id="exampleModalLabel">
+          <div class="heading-new">
+            <h5 class="mb-0">Employe Transfer</h5>
+          </div>
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="onClose()"></button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="modal-body pt-0">
+        <div class="tab-content">
+          <div>
+            <div class="row">
+              <!-- Left Section: Profile Details -->
+              <div class="col-md-4 text-center">
+                <img [src]="
+                    profileData?.documentImage
+                      ? rootUrl +
+                        profileData?.documentImagePath +
+                        profileData?.documentImage
+                      : 'assets/images/default-profile.png'
+                  " width="100" height="100" alt="Profile Photo" class="rounded-circle" />
+
+                <h5 class="mt-2">{{ this.firstName }} {{ this.lastName }}</h5>
+                <p class="text-muted">{{ this.userRole }}</p>
+
+                <!-- <div class="border p-3 rounded bg-light">
+                      <p><strong>Client:</strong> {{ clientName }}</p>
+                      <p><strong>Vertical:</strong> {{ verticalName }}</p>
+                      <p><strong>User Role:</strong> {{ userRole }}</p>
+                    </div> -->
+              </div>
+
+              <!-- Right Section: Transfer Form -->
+              <div class="col-md-8">
+                <form class="row" [formGroup]="transferForm">
+                  <!-- "To" Dropdown -->
+                  <div class="col-md-6 mb-4">
+                    <div class="form-group local-forms">
+                      <label>To <span class="text-danger">*</span></label>
+                      <ng-select [items]="primaryDayCarelist" bindLabel="centreName" bindValue="id"
+                        placeholder="-Select-" formControlName="replaceCentreID" [clearable]="false"
+                        (change)="onSelectdaycare($event)">
+                      </ng-select>
+                      <span class="text-danger" *ngIf="
+                          transferForm.controls['centreID']?.invalid &&
+                          transferForm.controls['centreID'].touched
+                        ">
+                        This field is required.
+                      </span>
+                    </div>
+                  </div>
+
+                  <!-- "Department" Dropdown -->
+                  <div class="col-md-6 mb-4">
+                    <div class="form-group local-forms">
+                      <label>Department <span class="text-danger">*</span></label>
+                      <ng-select [items]="departmentOptions" bindLabel="name" bindValue="id" placeholder="-Select-"
+                        formControlName="departmentID" [clearable]="false" (change)="onSelectDepartment($event)">
+                      </ng-select>
+                      <span class="text-danger" *ngIf="
+                          transferForm.controls['departmentID']?.invalid &&
+                          transferForm.controls['departmentID'].touched
+                        ">
+                        This field is required.
+                      </span>
+                    </div>
+                  </div>
+
+                  <!-- "Transfer Effective Date" -->
+                  <div class="col-md-6 mb-4">
+                    <div class="form-group local-forms">
+                      <label>Transfer Effective Date
+                        <span class="text-danger">*</span></label>
+                      <input type="text" (change)="onSelectDate($event)" class="form-control" #datePickerInput1
+                        formControlName="actionDate" />
+                      <span class="text-danger" *ngIf="
+                          transferForm.controls['actionDate']?.invalid &&
+                          transferForm.controls['actionDate'].touched
+                        ">
+                        This field is required.
+                      </span>
+                    </div>
+                  </div>
+
+                  <!-- Change in Compensation Checkbox -->
+                  <!-- <div class="col-md-12">
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" formControlName="changeInCompensation">
+                          <label class="form-check-label"> Change in Compensation </label>
+                        </div>
+                      </div> -->
+
+                  <div class="col-md-6 mb-4">
+                    <div class="form-group local-forms">
+                      <label>Role Specialization<span class="login-danger">*</span></label>
+                      <ng-select formControlName="roleSpecializationID" [items]="roleSpecializationList"
+                        bindLabel="name" (change)="selectedRole($event)" bindValue="id"></ng-select>
+                      <!-- @if(staffFormControls.roleSpecializationID.touched){
+                          @if(staffFormControls.roleSpecializationID.errors?.required){
+                          <span class="text-danger">This field is required.</span>
+                          } } -->
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12 text-end">
+                <button type="submit" class="btn btn-primary me-2" [disabled]="transferForm.invalid"
+                  (click)="submitForm()">
+                  Request Transfer
+                </button>
+                <button type="reset" class="btn btn-secondary" data-bs-dismiss="modal" (click)="onClose()">
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="modal-footer" style="border: none"></div>
+    </div>
+  </div>
+</div>

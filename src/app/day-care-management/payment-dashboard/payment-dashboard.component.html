@@ -1,0 +1,196 @@
+<app-breadcrumb></app-breadcrumb>
+<div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="row Bloomvie-dashboard1">
+            <div class="col-xl-3 col-sm-6 col-12 d-flex">
+              <div class="card bg-comman w-100 hvr-float-shadow dashboard-widget1 mb-2">
+                <div class="card-body ">
+                  <div class="db-widgets d-flex justify-content-between align-items-center">
+                    <div class="db-info">
+                      <h6>Due Payments </h6>
+                      <h3>2300</h3>
+                    </div>
+                    <div class="db-icon">
+                        <img src="assets/img/icons/dash-icon-04.svg" alt="Dashboard Icon" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-3 col-sm-6 col-12 d-flex">
+              <div class="card bg-comman w-100 hvr-float-shadow dashboard-widget2 mb-2">
+                <div class="card-body">
+                  <div class="db-widgets d-flex justify-content-between align-items-center">
+                    <div class="db-info">
+                      <h6>Upcoming Payments</h6>
+                      <h3>$400</h3>
+                    </div>
+                    <div class="db-icon">
+                        <img src="assets/img/icons/dash-icon-04.svg" alt="Dashboard Icon" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-3 col-sm-6 col-12 d-flex">
+              <div class="card bg-comman w-100 hvr-float-shadow dashboard-widget1 mb-2">
+                <div class="card-body">
+                  <div class="db-widgets d-flex justify-content-between align-items-center">
+                    <div class="db-info">
+                      <h6>Total Expanses</h6>
+                      <h3>$1000</h3>
+                    </div>
+                    <div class="db-icon">
+                      <img src="assets/img/icons/dash-icon-04.svg" alt="Dashboard Icon" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-xl-3 col-sm-6 col-12 d-flex">
+              <div class="card bg-comman w-100 hvr-float-shadow dashboard-widget2 mb-2">
+                <div class="card-body">
+                  <div class="db-widgets d-flex justify-content-between align-items-center">
+                    <div class="db-info">
+                      <h6>Total Revenue</h6>
+                      <h3>$10,000</h3>
+                    </div>
+                    <div class="db-icon">
+                      <img src="assets/img/icons/dash-icon-04.svg" alt="Dashboard Icon" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header d-flex align-items-center">
+          <h5 class="card-title">Subscription Plan Usage</h5>
+        </div>
+        <div class="card-body">
+          <div class="pie-chart-payment">
+          <canvas baseChart [data]="pieChartData" [options]="barChartOptions" [plugins]="barChartPlugins"
+          [legend]="pieChartLegend" [type]="'pie'">
+        </canvas>
+      </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+
+  <div class="row">
+    <div class="col-md-12">
+        <div class="card">
+        <div class="card-body">
+            <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item" role="presentation"><a class="nav-link active" href="#basictab1" data-bs-toggle="tab" aria-selected="true" role="tab">Expenses</a></li>
+            <li class="nav-item" role="presentation"><a class="nav-link" href="#basictab2" data-bs-toggle="tab" aria-selected="false" role="tab" tabindex="-1">Due Payments</a></li>
+            <li class="nav-item" role="presentation"><a class="nav-link" href="#basictab3" data-bs-toggle="tab" aria-selected="false" role="tab" tabindex="-1">Upcoming Monthly Payments</a></li>
+            </ul>
+            <div class="tab-content" id="expens-tab">
+            <div class="tab-pane active show" id="basictab1" role="tabpanel">
+          <app-manage-expense></app-manage-expense>
+            </div>
+            <div class="tab-pane" id="basictab2" role="tabpanel">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="table-responsive">
+                  <table class="table table-hover mb-0">
+                    <thead class="student-thread">
+                      <tr>
+                        <th>#</th>
+                        <th>User&nbsp;Name</th>
+                        <th>Plan&nbsp;Name</th>
+                        <th>Plan&nbsp;Expire&nbsp;Date</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>1</td>
+                        <td>John</td>
+                        <td>Gold (Monthly)</td>
+                        <td>02-10-2024</td>
+                        <td>
+                          <div class="actions">
+                            <a class="action-btn bg-danger-light " title="Send mail">
+                                <i class="fa fa-envelope"></i>
+                            </a>
+                        
+                        </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            </div>
+            <div class="tab-pane" id="basictab3" role="tabpanel">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                      <thead class="student-thread">
+                        <tr>
+                          <th>#</th>
+                          <th>User&nbsp;Name</th>
+                          <th>Plan&nbsp;Name</th>
+                          <th>Plan&nbsp;Expire&nbsp;Date</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>1</td>
+                          <td>Smith</td>
+                          <td>Gold (Monthly)</td>
+                          <td>15-10-2024</td>
+                          <td>
+                            <div class="actions">
+                              <a class="action-btn bg-danger-light " title="Send mail">
+                                  <i class="fa fa-envelope"></i>
+                              </a>
+                          
+                          </div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>2</td>
+                          <td>Marvel</td>
+                          <td>Silver (Monthly)</td>
+                          <td>20-10-2024</td>
+                          <td>
+                            <div class="actions">
+                              <a class="action-btn bg-danger-light " title="Send mail">
+                                  <i class="fa fa-envelope"></i>
+                              </a>
+                          
+                          </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            </div>
+            </div>
+        </div>
+    </div>
+  </div>
+

@@ -1,0 +1,74 @@
+.searcher {
+    display: flex;
+    width: 100%;
+    gap: 40px;
+}.dataTables_length label {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    color: #515B73;
+    font-size: 14px;
+}
+
+.p-25{
+    padding: 25px;
+}
+
+.page-header {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    justify-content: space-between;
+    -webkit-justify-content: space-between;
+    -ms-flex-pack: space-between;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+}
+
+.attendance-types .attendance-type-list {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.attendance-types .attendance-type-list li {
+    border: 1px solid #E9EDF4;
+    border-radius: 5px;
+    background: #FFF;
+    padding: 8px 10px;
+    color: #202C4B;
+    display: flex;
+    align-items: center;
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
+
+.attendance-types .attendance-type-list li .attendance-icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-right: 5px;
+}
+
+.attendance-icon i{
+
+    color:#fff;
+}
+
+.bg-pending {
+    background: #05C3FB;
+}
+
+.p-25{
+    padding: 25px;
+}

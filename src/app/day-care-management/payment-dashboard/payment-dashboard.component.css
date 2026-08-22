@@ -1,0 +1,13 @@
+.searcher {
+    display: flex;
+    width: 100%;
+    gap: 40px;
+}
+.p-25{
+    padding: 25px;
+}
+
+.pie-chart-payment canvas{
+margin: 0 auto;
+}
+

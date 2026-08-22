@@ -1,0 +1,373 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <!-- <div class="tab-content pt-0" id="pills-tabContent"> -->
+        <div class="tab-pane fade show active" id="basic-info" role="tabpanel" aria-labelledby="pills-basic-info"
+          tabindex="0">
+          <div class="heading-new">
+            <h5 class="mb-0">Centre Information</h5>
+          </div>
+          <form [formGroup]="form">
+            <div class="row">
+              <div class="col-md-8">
+                <div class="row">
+                  <div class="col-12 col-md-6 mb-4">
+                    <div class="form-group local-forms">
+                      <label>Centre Name<span class="login-danger">*</span></label>
+                      <input formControlName="centreName" class="form-control" placeholder="Enter Centre Name"
+                        type="text" />
+                      <span class="text-danger" *ngIf="centreFormControls.centreName.touched">
+                        <span *ngIf="
+                            centreFormControls.centreName?.errors?.required
+                          ">This field is required.</span>
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="col-12 col-md-6 mb-4">
+                    <div class="form-group local-forms">
+                      <label>Zip Code / Postal Code<span class="login-danger">*</span></label>
+                      <input #pinCode (change)="fetchLocationData(pinCode.value, false)" (input)="formatPostalCode($event, 'centre')" class="form-control"
+                        placeholder="A1A A1A / 56786" formControlName="pinCode" />
+                      <span class="text-danger" *ngIf="centreFormControls.pinCode.touched">
+                        <span *ngIf="centreFormControls.pinCode?.errors?.required">This field is required.</span>
+                        <span *ngIf="centreFormControls.pinCode?.errors?.pattern">Invalid format.</span>
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="col-12 col-md-4 mb-4">
+                    <div class="form-group local-forms">
+                      <label>Country
+                        <!-- <span class="login-danger">*</span> -->
+                      </label>
+                      <input readonly class="form-control" formControlName="country" />
+                      <!-- <span
+                        class="text-danger"
+                        *ngIf="centreFormControls.country.touched"
+                      >
+                        <span
+                          *ngIf="centreFormControls.country?.errors?.required"
+                          >This field is required.</span
+                        >
+                      </span> -->
+                    </div>
+                  </div>
+                  <div class="col-12 col-md-4 mb-4">
+                    <div class="form-group local-forms">
+                      <label>State
+                        <!-- <span class="login-danger">*</span> -->
+                      </label>
+                      <input readonly class="form-control" formControlName="state" />
+                      <!-- <span
+                        class="text-danger"
+                        *ngIf="centreFormControls.state.touched"
+                      >
+                        <span *ngIf="centreFormControls.state?.errors?.required"
+                          >This field is required.</span
+                        >
+                      </span> -->
+                    </div>
+                  </div>
+                  <div class="col-12 col-md-4 mb-4">
+                    <div class="form-group local-forms">
+                      <label>City
+                        <!-- <span class="login-danger">*</span> -->
+                      </label>
+                      <input readonly class="form-control" formControlName="city" />
+                      <!-- <span
+                        class="text-danger"
+                        *ngIf="centreFormControls.city.touched"
+                      >
+                        <span *ngIf="centreFormControls.city?.errors?.required"
+                          >This field is required.</span
+                        >
+                      </span> -->
+                    </div>
+                  </div>
+                  <div class="col-12 col-md-6 mb-4">
+                    <div class="form-group local-forms">
+                      <label>Centre Address<span class="login-danger">*</span></label>
+                      <!-- <textarea #address (change)="onChangeAddress(address.value)" style="height: 128px;"
+                                                formControlName="address" rows="4" class="form-control"
+                                               ></textarea> -->
+                      <textarea #address style="height: 128px" formControlName="address" rows="4" class="form-control"
+                        placeholder="Enter Address"></textarea>
+                      <span class="text-danger" *ngIf="centreFormControls.address.touched">
+                        <span *ngIf="centreFormControls.address?.errors?.required">This field is required.</span>
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="col-12 col-md-6 mb-4">
+                    <div class="form-group local-forms">
+                      <label>Centre Description<span class="login-danger">*</span></label>
+                      <textarea formControlName="description" rows="4" class="form-control" style="height: 128px"
+                        placeholder="Enter Description"></textarea>
+                      <span class="text-danger" *ngIf="centreFormControls.description.touched">
+                        <span *ngIf="
+                            centreFormControls.description?.errors?.required
+                          ">This field is required.</span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="row">
+                  <div class="col-md-12 mb-2">
+                    <div class="avatar-upload">
+                      <div class="avatar-preview" title="Upload Logo here">
+                        <div id="imagePreview1">
+                          <div class="outer-image">
+                            <img [src]="readFiles.centreLogo" class="screen1" />
+                          </div>
+                        </div>
+                        <!-- <div
+                          id="imagePreview"
+                          style="background-image: url({{
+                            readFiles.centreLogo
+                          }});"
+                        ></div> -->
+                        <div class="avatar-edit">
+                          <input (change)="onFileChange(true, $event)" type="file" id="imageUpload"
+                            accept=".png, .jpg, .jpeg" />
+                          <label for="imageUpload"></label>
+                        </div>
+                        <span *ngIf="filesErrors.centreLogo" class="text-danger">{{ filesErrors.centreLogo }}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-12 left-pd local-forms mb-4">
+                    <div class="form-group local-forms mt-2">
+                      <label class="settings-label">Upload Document </label>
+                      <div class="settings-btn">
+                        <input (change)="onSelectDocument($event)" type="file" class="hide-input"
+                          name="centre_document" />
+
+                        <div class="divw">
+                          <img [src]="readFiles.document" alt="Upload Document" />
+                        </div>
+                      </div>
+                      <span *ngIf="filesErrors.document" class="text-danger">{{
+                        filesErrors.document
+                        }}</span>
+
+                      <div class="editer1">
+                        <i class="far fa-edit"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+
+          <div class="heading-new">
+            <h5 class="mb-0">Owner Information</h5>
+          </div>
+          <form [formGroup]="adminForm">
+            <div class="row">
+              <div class="col-md-8">
+                <div class="row">
+                  <div class="col-12 col-md-6 mb-4">
+                    <div class="form-group local-forms">
+                      <label>Name<span class="login-danger">*</span></label>
+                      <input formControlName="firstName" class="form-control" placeholder="Enter Name" type="text"
+                        [readonly]="adminFormControls.firstName.disabled" />
+                      <span class="text-danger" *ngIf="adminFormControls.firstName.touched">
+                        <span *ngIf="adminFormControls.firstName?.errors?.required">This field is required.</span>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="col-12 col-md-6 mb-4">
+                    <div class="form-group local-forms">
+                      <label> Email<span class="login-danger">*</span></label>
+                      <input formControlName="email" class="form-control" type="text"
+                        [readonly]="adminFormControls.email.disabled" placeholder="Enter Email" />
+                      <span class="text-danger" *ngIf="adminFormControls.email.touched">
+                        <span *ngIf="adminFormControls.email?.errors?.required">This field is required.</span>
+                        <span *ngIf="adminFormControls.email?.errors?.email">The email format is invalid.</span>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="col-12 col-md-4 mb-4">
+                    <div class="form-group local-forms">
+                      <label>DOB<span class="login-danger">*</span></label>
+                      <input formControlName="dob" id="dob" class="form-control" type="text" placeholder="Enter DOB" />
+                      <span class="text-danger" *ngIf="adminFormControls.dob.touched">
+                        <span *ngIf="adminFormControls.dob?.errors?.required">This field is required.</span>
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="col-12 col-md-4 mb-4 custom-flag">
+                    <div class="local-forms position-relative">
+                      <label> Mobile<span class="login-danger">*</span></label>
+                      <!-- Country code and flag --> 
+
+                          <div class="position-absolute flag" style="
+                                                                    top: 35px;
+                                                                    left: 0px;
+                                                                    display: flex;
+                                                                    align-items: center;
+                                                                    gap: 4px;
+                                                                  ">
+                            <div class="country-selector" (click)="toggleDropdown()">
+                              <img [src]="selectedCountry.flag" class="new-flag" alt="Flag">
+                              <span class="me-1">{{ selectedCountry.code }}</span>
+                              <span class="arrow">
+                                <i [class]="dropdownOpen ? 'fas fa-chevron-up' : 'fas fa-chevron-down'"></i>
+                              </span>
+                          
+                              <!-- Dropdown list -->
+                              <div class="dropdown" *ngIf="dropdownOpen">
+                                <div class="dropdown-item" *ngFor="let country of countries" (click)="selectCountry(country)">
+                                  <img [src]="country.flag" class="flag" alt="Flag">
+                                  <span class="color-black">({{ country.code }})</span>
+                                </div>
+                              </div>
+                            </div>
+                          
+                          
+                          
+                          
+                          
+                            <!-- <span>+1</span>
+                                                                  <img
+                                                                    src="https://i.postimg.cc/VLCndSHd/canada.png"
+                                                                    style="width: 18px; height: 18px"
+                                                                  /> -->
+                          </div>
+
+              
+                      <input (keypress)="allowOnlyNumericInput($event)" (input)="formatPhoneNumber($event)"
+                        formControlName="mobile" placeholder="Enter Mobile" class="form-control" type="text"
+                        maxlength="14" style="padding-left: 90px" />
+                      <span class="text-danger" *ngIf="adminFormControls.mobile.touched">
+                        <span *ngIf="adminFormControls.mobile?.errors?.required">This field is required.</span>
+                        <span *ngIf="adminFormControls.mobile?.errors?.minLength">The phone number format is
+                          invalid.</span>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="col-12 col-md-4 mb-4">
+                    <div class="form-group local-forms">
+                      <label>Zip Code / Postal Code
+<span class="login-danger">*</span></label>
+                      <input #pinCode1 (change)="fetchLocationData(pinCode1.value, true)" (input)="formatPostalCode($event, 'owner')" formControlName="pinCode"
+                          placeholder="A1A A1A / 56786" class="form-control" maxlength="7" />
+                      <span class="text-danger" *ngIf="adminFormControls.pinCode.touched">
+                        <span *ngIf="adminFormControls.pinCode?.errors?.required">This field is required.</span>
+                        <span *ngIf="adminFormControls.pinCode?.errors?.pattern">The Zip Code / Postal Code format is invalid.</span>
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="col-12 col-md-4 mb-4">
+                    <div class="form-group local-forms">
+                      <label>Country
+                        <!-- <span class="login-danger">*</span> -->
+                      </label>
+                      <input readonly formControlName="country" class="form-control" />
+                      <!-- <span
+                        class="text-danger"
+                        *ngIf="adminFormControls.country.touched"
+                      >
+                        <span
+                          *ngIf="adminFormControls.country?.errors?.required"
+                          >This field is required.</span
+                        >
+                      </span> -->
+                    </div>
+                  </div>
+                  <div class="col-12 col-md-4 mb-4">
+                    <div class="form-group local-forms">
+                      <label>State
+                        <!-- <span class="login-danger">*</span> -->
+                      </label>
+                      <input readonly formControlName="state" class="form-control" />
+                      <!-- <span
+                        class="text-danger"
+                        *ngIf="adminFormControls.state.touched"
+                      >
+                        <span *ngIf="adminFormControls.state?.errors?.required"
+                          >This field is required.</span
+                        >
+                      </span> -->
+                    </div>
+                  </div>
+                  <div class="col-12 col-md-4 mb-4">
+                    <div class="form-group local-forms">
+                      <label>City
+                        <!-- <span class="login-danger">*</span> -->
+                      </label>
+                      <input readonly formControlName="city" class="form-control" />
+                      <!-- <span
+                        class="text-danger"
+                        *ngIf="adminFormControls.city.touched"
+                      >
+                        <span *ngIf="adminFormControls.city?.erros?.required"
+                          >This field is required.</span
+                        >
+                      </span> -->
+                    </div>
+                  </div>
+                  <div class="col-12 col-md-12 mb-4">
+                    <div class="form-group local-forms">
+                      <label> Address<span class="login-danger">*</span></label>
+                      <textarea formControlName="address" rows="4" placeholder="Enter Address"
+                        class="form-control"></textarea>
+                      <span class="text-danger" *ngIf="adminFormControls.address.touched">
+                        <span *ngIf="adminFormControls.address?.erros?.required">This field is required.</span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4 d-flex justify-content-center center">
+                <div class="row">
+                  <div class="col-md-12 mb-4">
+                    <div class="avatar-upload">
+                      <div class="avatar-preview">
+                        <div>
+                          <div class="outer-image">
+                            <img id="profileImage" src="" class="screen1" [src]="readFiles.profile"
+                              alt="Profile Image" />
+                          </div>
+
+
+
+                        </div>
+                        <div class="avatar-edit" title="Upload Profile Image here">
+                          <input (change)="onFileChange(false, $event)" type="file" id="imageUpload1"
+                            accept=".png, .jpg, .jpeg" />
+                          <label for="imageUpload1"></label>
+                        </div>
+                        <span *ngIf="filesErrors.profile" class="text-danger">{{
+                          filesErrors.profile
+                          }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+
+          <div class="row">
+            <div class="col-12 col-md-12">
+              <div class="student-submit text-end">
+                <button (click)="manageCentre()" type="submit" class="btn btn-primary me-2" [disabled]="!isValidForm"
+                  [innerText]="
+                    onBoardingService.isOnboarding ? 'Save & Proceed' : 'Submit'
+                  "></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

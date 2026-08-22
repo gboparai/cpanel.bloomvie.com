@@ -1,0 +1,91 @@
+.wd-20{
+    width: 20% !important;
+} 
+
+.gp-20{
+    gap: 30px;
+}
+
+.disabled-label {
+    color: gray; 
+    cursor: not-allowed;
+    opacity: 0.6;
+    pointer-events: none; 
+  }
+
+  .section-grid-boxes{
+    padding: 26px 0px 0px 2px;
+    border: 1px solid var(--main-color);
+    border-radius: 7px;
+  }
+
+  .reduce-size{
+    font-size: 12px;
+  }
+.part-full {
+   display: flex
+;
+    background: #d2e6ef !important;
+    padding: 10px 10px 10px 10px;
+    border-radius: 4px;
+    justify-content: start;
+    gap: 50px;
+    flex-wrap: wrap;
+    width: 80%;
+
+}
+.job-type-wages {
+    display: flex
+;
+    background: #d2e6ef !important;
+    float: left;
+    padding: 10px 10px 10px 10px;
+    /* width: 100%; */
+    border-radius: 4px;
+    justify-content: space-around;
+    margin-right: 10px;
+}.job-type-wages label {
+    background: transparent;
+}
+
+.sun{
+  display: flex;
+  align-items: center;
+}
+
+.sun label{
+  margin-bottom: 0px !important;
+}
+
+@media(max-width:1500px){
+  .part-full {
+  
+    gap: 40px;
+  
+}
+}
+@media(max-width:1400px){
+  .part-full {
+  
+    gap: 20px;
+  
+}
+}
+
+@media(max-width:576px){
+  .res-class{
+
+  
+    flex-wrap: wrap;
+    gap: 30px;
+
+  }
+  
+}
+
+@media(max-width:992px){
+
+  .weekend{
+    flex-wrap: wrap;
+  }
+}

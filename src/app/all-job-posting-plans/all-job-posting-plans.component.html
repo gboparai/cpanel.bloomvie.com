@@ -1,0 +1,44 @@
+<app-breadcrumb></app-breadcrumb>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card ">
+            <div class="card-body">
+                <div
+                    class="heading-new d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">See All Job Posting Package</h5>
+                </div>
+                <div class="row">
+                    <div
+                        *ngIf="AllJobPostingPlans.length > 0; else noDataTemplate">
+                        <div class="card all-job-card"
+                            *ngFor="let plan of AllJobPostingPlans">
+                            <div class="card-header">{{ plan.planName }}</div>
+                            <div class="card-body">
+                                <p>Capacity: {{ plan.capacity }}</p>
+                                <p>Price: {{ plan.price }}</p>
+                                <p>Validity: {{ plan.validity }}</p>
+                                <p>Description: {{ plan.description }}</p>
+                            </div>
+                            <button class="btn btn-secondary job-buttons"
+                                [id]="'jobPostPlanBuyButton_' + plan.id"
+                                (click)="JobPostPlanBuy(plan.id, plan.featureID)">
+                                Buy Now
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- No Data Template -->
+                    <ng-template #noDataTemplate>
+                        <div class="no-data"
+                            style="text-align: center; margin-top: 20px;">
+                            <img src="assets/img/no-data-img.png"
+                                alt="No Record Found" />
+                            <span>No Record Found</span>
+                        </div>
+                    </ng-template>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

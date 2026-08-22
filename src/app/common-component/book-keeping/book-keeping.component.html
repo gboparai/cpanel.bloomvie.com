@@ -1,0 +1,323 @@
+<app-breadcrumb></app-breadcrumb>
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <ul class="nav nav-tabs" role="tablist">
+          <li class="nav-item" role="presentation">
+            <a class="nav-link active" href="#basictab2" data-bs-toggle="tab" aria-selected="false" role="tab"
+              tabindex="-1" (click)="
+                SubscriptionDetailsOnLogin(
+                  this.startDate,
+                  this.endDate,
+                  this.Name,
+                  this.userRoleId,
+                  this.userID
+                )
+              ">Payment History</a>
+          </li>
+          <li class="nav-item" role="presentation">
+            <a class="nav-link" href="#basictab3" data-bs-toggle="tab" aria-selected="false" role="tab" tabindex="-1"
+              (click)="
+                getUpcomingPaymentDetails(
+                  this.startDate2,
+                  this.endDate2,
+                  this.Name2,
+                  this.userRoleId,
+                  this.userID
+                )
+              ">Upcoming Payments</a>
+          </li>
+        </ul>
+        <div class="tab-content" id="expens-tab">
+          <div class="tab-pane active" id="basictab2" role="tabpanel">
+            <div class="row">
+              <div class="col-md-6 mt-4">
+                <div class="row">
+                  <div class="col-md-8" *ngIf="userRoleId != 5">
+                    <div class="search">
+                      <input placeholder="Type here.." type="text" [(ngModel)]="Name" (input)="onSearchName()" />
+                      <button type="submit">Search</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="row justify-content-end">
+                  <div class="col-md-4 mb-4">
+                    <div class="form-group local-forms">
+                      <label for="">Select Purchase Date</label>
+                      <input type="text" id="dateRangePicker" Class="form-control" placeholder="select date" (change)="
+                          SubscriptionDetailsOnLogin(
+                            this.startDate,
+                            this.endDate,
+                            this.Name,
+                            this.userRoleId,
+                            this.userID
+                          )
+                        " />
+                    </div>
+                    <!-- <button (click)="filterData()" class="btn btn-primary">Filter</button> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="table-responsive">
+                  <table class="table table-hover mb-0">
+                    <thead class="student-thread">
+                      <tr>
+                        <th>#</th>
+                        <th *ngIf="userRoleId === 1">Daycare&nbsp;Name</th>
+                        <th *ngIf="userRoleId === 3 || userRoleId == 4">
+                          Parent&nbsp;Name
+                        </th>
+                        <th *ngIf="userRoleId === 5">User&nbsp;Name</th>
+                        <!-- <th>Email</th> -->
+                        <th>Mobile</th>
+                        <th>Plan&nbsp;Name</th>
+                        <th>Plan&nbsp;Purchase&nbsp;date</th>
+                        <th>Plan&nbsp;Expire&nbsp;Date</th>
+                        <th>Amount</th>
+                        <th class="text-center">Attachments</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+
+
+                      @if (skeletonShow === 'Skelton') {
+                      <tr>
+                        <td colspan="100%">
+                          <app-skeleton-loader skeletonShow="Skelton" viewType="table" [tableRows]="5" [tableCols]="10">
+                          </app-skeleton-loader>
+                        </td>
+                      </tr>
+                      }
+                      @else if (SubscriptionDetailsList.length > 0) {
+                      <tr *ngFor="
+                          let user of SubscriptionDetailsList
+                            | paginate
+                              : {
+                                  itemsPerPage: 5,
+                                  currentPage: currentPage,
+                                  id: 'getPaymentHistory'
+                                };
+                          let i = index
+                        ">
+                        <td>{{ i + 1 + (currentPage - 1) * itemsPerPage }}</td>
+                        <!-- <td>{{ user.name }}</td> -->
+                        <td>
+                          <div class="tooltip-wrapper" style="position: relative" (mouseenter)="hoveredRow = user"
+                            (mouseleave)="hoveredRow = null">
+                            <span class="hover-anchor">{{ user.name }}</span>
+                            <app-tooltip *ngIf="hoveredRow === user" [employee]="{
+                            fullName: user.name + '' + (user.lastName ? ' ' + user.lastName : ''),
+                            email: user.email,
+                            profile:user.profileImage
+                          }"></app-tooltip>
+                          </div>
+                        </td>
+                        <!-- <td>{{ user.email }}</td> -->
+                        <td>
+                          {{
+                          user.contact == null ? "--" : "+1 " + user.contact
+                          }}
+                        </td>
+                        <td>{{ user.planName }}</td>
+                        <td>{{ user.formattedPurchasedDate }}</td>
+                        <td>{{ user.formattedExpiryDate }}</td>
+                        <td>{{ "$"+user.amount }}</td>
+                        <td>
+                          <div class="actions">
+                            <a class="action-btn bg-danger-light" title="View Attechments" download
+                              (click)="downloadInvoice(user.id)">
+                              <i class="feather-download"></i>
+                            </a>
+                          </div>
+                        </td>
+                      </tr>
+                      } @else {
+                      <tr>
+                        <td colspan="100%">
+                          <app-skeleton-loader skeletonShow="NoRecord">
+                          </app-skeleton-loader>
+                        </td>
+
+                      </tr>
+
+                      }
+                    </tbody>
+                  </table>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mt-4 no-flex"
+                  *ngIf="SubscriptionDetailsList.length > 5">
+                  <div class="total-entry" style="font-size: small">
+                    <span>Total Entries:</span><span class="entry-count"> {{ totalCount }} </span>
+                  </div>
+                  <pagination-controls (pageChange)="currentPage = $event" id="getPaymentHistory"></pagination-controls>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-pane" id="basictab3" role="tabpanel">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="row">
+                  <div class="col-md-8" *ngIf="userRoleId != 5">
+                    <div class="search">
+                      <input placeholder="Type here.." type="text" [(ngModel)]="Name2" (input)="onSearchName2()" />
+                      <button type="submit">Search</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="row justify-content-end">
+                  <div class="col-md-4 mb-4">
+                    <div class="form-group local-forms">
+                      <label for="">Select Expiry Date</label>
+                      <input type="text" id="dateRangePicker2" placeholder="select date" Class="form-control" (change)="
+                          getUpcomingPaymentDetails(
+                            this.startDate2,
+                            this.endDate2,
+                            this.Name2,
+                            this.userRoleId,
+                            this.userID
+                          )
+                        " />
+                    </div>
+                    <!-- <button (click)="filterData()" class="btn btn-primary">Filter</button> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- <div class="row justify-content-end">
+                    <div class="col-md-3 mb-4">
+                        <div class="form-group local-forms">
+                            <label for="">Select Date Range</label>
+                            <input type="text"  id="dateRangePicker" Class="form-control" (change)="getUpcomingPaymentDetails(this.startDate,this.endDate,'',this.userRoleId,this.userID)">
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-4">
+                        <div class="form-group local-forms">
+                            <label for="">Select Daycare/Parent</label>
+                            <select class="form-select">
+                                <option value="1">Select All</option>
+                                <option value="2">Gurunanak Daycare</option>
+                                <option value="3">Sunny Dacare</option>
+                            </select>
+                        </div>
+                    </div>
+                </div> -->
+            <div class="row">
+              <div class="col-md-12">
+                <div class="table-responsive">
+                  <table class="table table-hover mb-0">
+                    <thead class="student-thread">
+                      <tr>
+                        <th>#</th>
+                        <th *ngIf="userRoleId === 1">Daycare&nbsp;Name</th>
+                        <th *ngIf="userRoleId === 3">Parent&nbsp;Name</th>
+                        <th *ngIf="userRoleId === 5">User&nbsp;Name</th>
+                        <!-- <th>Email</th> -->
+                        <th>Mobile</th>
+                        <th>Plan&nbsp;Name</th>
+                        <th>Plan&nbsp;Purchase&nbsp;date</th>
+                        <th>Plan&nbsp;Expire&nbsp;Date</th>
+                        <th>Amount</th>
+                        <!-- <th>Action</th> -->
+                      </tr>
+                    </thead>
+                    <tbody>
+                      @if (skeletonShow === 'Skelton') {
+                      <tr>
+                        <td colspan="100%">
+                          <app-skeleton-loader skeletonShow="Skelton" viewType="table" [tableRows]="5" [tableCols]="10">
+                          </app-skeleton-loader>
+                        </td>
+                      </tr>
+                      }
+                      @else if (UpcomingPaymentsList.length > 0) {
+
+                      <tr *ngFor="
+                          let user of UpcomingPaymentsList
+                            | paginate
+                              : {
+                                  itemsPerPage: 5,
+                                  currentPage: currentPageSecond,
+                                  id: 'getUpcomingPaymentDetails'
+                                };
+                          let i = index
+                        ">
+                        <td>
+                          {{ i + 1 + (currentPageSecond - 1) * itemsPerPage }}
+                        </td>
+                        <!-- <td>{{ user.name }}</td> -->
+
+                        <td>
+                          <div class="tooltip-wrapper" style="position: relative" (mouseenter)="hoveredRow = user"
+                            (mouseleave)="hoveredRow = null">
+                            <span class="hover-anchor">{{ user.name }}</span>
+                            <app-tooltip *ngIf="hoveredRow === user" [employee]="{
+                            fullName: user.name + '' + (user.lastName ? ' ' + user.lastName : ''),
+                            email: user.email,
+                            profile:user.profileImage
+                          }"></app-tooltip>
+                          </div>
+                        </td>
+
+                        <!-- <td>{{ user.email }}</td> -->
+                        <td>
+                          {{
+                          user.contact == null ? "--" : "+1 " + user.contact
+                          }}
+                        </td>
+                        <td>{{ user.planName }}</td>
+                        <td>{{ user.formattedPurchaseDate }}</td>
+                        <td>{{ user.formattedExpiryDate }}</td>
+                        <td>{{ "$"+user.amount }}</td>
+                        <!-- <td>
+                            <div class="actions">
+                              <a class="action-btn bg-danger-light " title="Send mail">
+                                  <i class="fa fa-envelope"></i>
+                              </a>
+                          
+                          </div>
+                          </td> -->
+                      </tr>
+                      } @else {
+                      <tr>
+                        <td colspan="100%">
+                          <app-skeleton-loader skeletonShow="NoRecord">
+                          </app-skeleton-loader>
+                        </td>
+
+                      </tr>
+
+                      }
+                    </tbody>
+                  </table>
+                  <!-- <div class="text-left" style="font-size: small;">
+                        Total Entries: {{ TotalCount }}
+                      </div>
+                      <pagination-controls (pageChange)="currentPageSecond = $event" id="getUpcomingPaymentDetails"></pagination-controls> -->
+                </div>
+                <div class="d-flex justify-content-between align-items-center mt-4 no-flex"
+                  *ngIf="UpcomingPaymentsList.length > 5">
+                  <div class="total-entry" style="font-size: small">
+                    <span>Total Entries:</span><span class="entry-count"> {{ TotalCount }} </span>
+                  </div>
+                  <pagination-controls (pageChange)="currentPageSecond = $event"
+                    id="getUpcomingPaymentDetails"></pagination-controls>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

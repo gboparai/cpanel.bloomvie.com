@@ -1,0 +1,772 @@
+<app-breadcrumb></app-breadcrumb>
+<section class="top">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card bg-card">
+        <div class="overlay-img">
+          <img
+            src="assets/img/shape-04.png"
+            alt="img"
+            class="img-fluid shape-01" />
+          <img
+            src="assets/img/shape-01.png"
+            alt="img"
+            class="img-fluid shape-02" />
+          <img
+            src="assets/img/shape-02.png"
+            alt="img"
+            class="img-fluid shape-03" />
+          <img
+            src="assets/img/shape-03.png"
+            alt="img"
+            class="img-fluid shape-04" />
+        </div>
+        <div class="card-body">
+          <div
+            class="d-flex align-items-xl-center justify-content-xl-between flex-xl-row flex-column">
+            <div class="mb-3 mb-xl-0">
+              <div class="d-flex align-items-center flex-wrap mb-2">
+                <h1 class="text-white me-2" style="text-transform: capitalize">
+                  Welcome {{ parentName }}
+                </h1>
+                <span class="text-white me-2"
+                  style="text-transform: capitalize">
+                  {{(daycarecentreDetails?.centreName)}}
+                </span>
+                <!-- <h2>
+                  Email {{daycarecentreDetails.centreEmail}}
+                </h2> -->
+
+                <a
+                  href="profile.html"
+                  class="avatar avatar-sm img-rounded bg-gray-800 dark-hover"><i
+                    class="ti ti-edit text-white"></i></a>
+              </div>
+              <p class="text-white" style="margin-bottom: 0px">
+                Here’s what’s happening in your child’s world today!
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="parent-dashboard">
+  <div class="row">
+    <div class="Card">
+      <div class="card-body parent-body">
+        <div class="row">
+          <div class="col-xl-3 col-sm-6 col-12 d-flex">
+            <!-- <a routerLink="../view-teacher" class="col-xl-3 col-sm-6 col-12 d-flex">   -->
+            <div class="card bg-comman w-100 parents-mine hvr-float-shadow">
+              <div
+                class="db-widgets d-flex justify-content-between align-items-center logo-first-color">
+                <div class="card-body">
+                  <div class="db-info">
+                    <h6>Subscription Due</h6>
+                    @if (planName === 'planName') {
+                    <div class="skeleton-line user-info-card w-50 mb-2"></div>
+                    } @else {
+                    <h3>
+                      {{
+                      paymentDetail?.planName ? paymentDetail?.planName : "--"
+                      }}
+                    </h3>
+
+                    <h6>
+                      {{ paymentDetail?.dueDate | date : "dd/MM/yyyy" }}
+                    </h6>
+                    }
+                  </div>
+                  <div class="db-icon">
+                    <img
+                      src="../../assets/img/absent-day.png"
+                      alt="Dashboard Icon"
+                      style="width: 43px !important" />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- </a> -->
+          </div>
+
+          <a
+            routerLink="../view-teacher"
+            class="col-xl-3 col-sm-6 col-12 d-flex">
+            <div class="card bg-comman w-100 hvr-float-shadow">
+              <div
+                class="db-widgets d-flex justify-content-between align-items-center logo-second-color">
+                <div class="card-body">
+                  <div class="db-info">
+                    <h6>Attending teachers</h6>
+                    @if (teacherCountShow === 'teacherCount') {
+                    <div class="skeleton-line user-info-card w-50 mb-2"></div>
+                    } @else {
+                    <h3>{{ teacherCount ? teacherCount : "--" }}</h3>
+                    }
+                  </div>
+                  <div class="db-icon">
+                    <img
+                      src="../../assets/img/icons/teacher-svgrepo-com.svg"
+                      alt="Dashboard Icon"
+                      style="width: 43px !important" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+
+          <div
+            class="col-xl-3 col-sm-6 col-12 d-flex"
+            routerLink="../my-attendance">
+            <div class="card bg-comman w-100 hvr-float-shadow">
+              <div
+                class="db-widgets d-flex justify-content-between align-items-center logo-third-color">
+                <div class="card-body">
+                  <div class="db-info">
+                    <h6>Present This Month</h6>
+                    @if (presentCount === 'presentCount') {
+                    <div class="skeleton-line user-info-card w-50 mb-2"></div>
+                    } @else if(attendanceCount?.presentCount) {
+                    <h3>{{ attendanceCount?.presentCount ?? 0 }}</h3>
+                    }@else {
+                    <h3>0</h3>
+                    }
+                  </div>
+                  <div class="db-icon">
+                    <img
+                      src="assets/img/present-day.png"
+                      alt="Dashboard Icon" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- <div class="col-xl-3 col-sm-6 col-12 d-flex">
+            <div class="card bg-comman w-100">
+              <div
+                class="db-widgets d-flex justify-content-between align-items-center logo-four-color"
+              >
+                <div class="card-body">
+                  <div class="db-info">
+                    <h6>Taken leaves</h6>
+                    <h3>2</h3>
+                  </div>
+                  <div class="db-icon">
+                    <img
+                      src="assets/img/icons/calendar-svgrepo-com.svg"
+                      alt="Dashboard Icon"
+                      style="width: 35px !important"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div> -->
+
+          <div
+            class="col-xl-3 col-sm-6 col-12 d-flex"
+            routerLink="../my-attendance">
+            <div class="card bg-comman w-100 hvr-float-shadow">
+              <div
+                class="db-widgets d-flex justify-content-between align-items-center logo-four-color">
+                <div class="card-body">
+                  <!-- <h4>Hi {{ fullName }}</h4> -->
+
+                  <h6>
+                    {{ today | date : "MMMM d, y" }}
+                  </h6>
+                  @if (AttendanceStatusShow === 'show') {
+                  <div class="skeleton-line user-info-card w-50 mb-2"></div>
+                  } @else {
+                  <!-- <span class="presend" *ngIf="TodayAttendanceStatus"> Present</span>
+                    <span class="absend" *ngIf="!TodayAttendanceStatus"> Absent</span> -->
+
+                  @if(TodayAttendanceStatus) {
+                  <span class="presend"> <h5>Present</h5></span>
+
+                  } @else {
+                  <span class="absend"><h5>Absent</h5></span>
+                  } }
+                  <div class="db-icon">
+                    <img
+                      src="assets/img/icons/calendar-svgrepo-com.svg"
+                      alt="Dashboard Icon"
+                      style="width: 35px !important" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- <div class="card bg-comman w-100">
+        <div class="card-body">
+          <div
+            class="db-widgets d-flex justify-content-between align-items-center"
+          >
+            <div class="db-info">
+              <h6>Pending actions</h6>
+              <h3>3</h3>
+            </div>
+            <div class="db-icon">
+              <img
+                src="assets/img/icons/teacher-icon-03.svg"
+                alt="Dashboard Icon"
+              />
+            </div>
+          </div>
+        </div>
+      </div> -->
+
+  <div class="row">
+    <div class="col-md-12 col-lg-6 colum">
+      <div class="card flex-fill comman-shadow">
+        <div class="card-header d-flex align-items-center">
+          <h5 class="card-title">Recent Activity</h5>
+        </div>
+
+        <div class="card-body">
+          @if (skeletonShowList === 'SkeltonList') {
+
+          <app-skeleton-loader
+            skeletonShowList="SkeltonList"
+            viewType="activity-list">
+          </app-skeleton-loader>
+
+          } @else if (flattenedActivitiesByDay.length > 0){
+          <div *ngFor="let day of flattenedActivitiesByDay">
+            <h5 class="text-primary mb-3">
+              {{ day.fullDate | date : "fullDate" }}
+            </h5>
+
+            <div
+              [ngClass]="{
+                'scroll-container': day.studentData.length > 3
+              }">
+              <div
+                class="activity-awards"
+                *ngFor="let activity of day.studentData">
+                <div class="award-boxs">
+                  <img
+                    [src]="
+                      ImageRootURL +
+                      activity.activityPath +
+                      activity.activityImage
+                    "
+                    alt="Activity"
+                    width="50" />
+                </div>
+                <div class="award-list-outs">
+                  <h4>{{ activity.studentName }}</h4>
+                  <h5>
+                    By {{ activity.staffName }}<br />
+                    <span *ngIf="activity.activityNote">
+                      Note: {{ activity.activityNote }}
+                    </span>
+                  </h5>
+                </div>
+                <div class="award-time-list">
+                  <span>
+                    {{ activity.activityStartTime?.slice(0, 5) }}
+                    <ng-container *ngIf="activity.activityEndTime">
+                      - {{ activity.activityEndTime?.slice(0, 5) }}
+                    </ng-container>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          } @else {
+          <app-skeleton-loader skeletonShow="NoRecord"> </app-skeleton-loader>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-12 col-lg-6 colum">
+      <app-events></app-events>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="row">
+    <div class="card">
+      <div class="card-body">
+        <div class="row mb-3">
+          <div class="col-12">
+            <div class="heading-new">
+              <h5 class="mb-0">Pending Payments</h5>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
+            <div class="table-responsive">
+              <table id="example1" class="table table-hover mb-0 random-table">
+                <thead class="student-thread">
+                  <tr>
+                    <th style="width: 13%" *ngIf="pendingPaymentRecord.length">
+                      <div
+                        class="d-flex gp-5 justify-content-start align-items-center">
+                        <input
+                          type="checkbox"
+                          (change)="selectAllPendingPayment($event)" />
+                        <span>Select All</span>
+                      </div>
+                    </th>
+                    <th>Plan Name</th>
+                    <th>Plan Amount</th>
+                    <th>Plan Due Date</th>
+                    <th>Discount</th>
+                    <th>Total Paid Amount</th>
+                  </tr>
+                </thead>
+
+                @if (skeletonShow === 'Skelton') {
+                <tbody>
+                  <tr>
+                    <td colspan="100%">
+                      <app-skeleton-loader
+                        skeletonShow="Skelton"
+                        viewType="table"
+                        [tableRows]="5"
+                        [tableCols]="5">
+                      </app-skeleton-loader>
+                    </td>
+                  </tr>
+                </tbody>
+
+                } @else if (pendingPaymentRecord.length > 0) {
+
+                <tbody
+                  *ngFor="
+                    let pendingRecord of pendingPaymentRecord
+                      | paginate
+                        : {
+                            itemsPerPage: itemPerPage,
+                            currentPage: currentPage,
+                            id: 'pendingPayment'
+                          };
+                    let i = index
+                  ">
+                  <td>
+                    <input
+                      type="checkbox"
+                      [checked]="pendingRecord.check"
+                      (change)="selectSpecificRecord($event, pendingRecord)" />
+                  </td>
+                  <td>{{ pendingRecord.planName }}</td>
+                  <td>${{ pendingRecord.planAmount }}</td>
+                  <td>
+                    {{ pendingRecord.monthDueDate | date : "MM/dd/yyyy" }}
+                  </td>
+                  <td>{{ pendingRecord.discount }}%</td>
+                  <td>${{ pendingRecord.totalPaidAmount }}</td>
+                </tbody>
+                } @else {
+                <tbody>
+                  <tr>
+                    <td colspan="100%">
+                      <app-skeleton-loader skeletonShow="NoRecord">
+                      </app-skeleton-loader>
+                    </td>
+                  </tr>
+                </tbody>
+
+                }
+              </table>
+            </div>
+            <div class="col pagination-style mt-4 no-flex">
+              <div class="datatable-pager datatable-paging-loaded">
+                @if( pendingPaymentRecord.length >5 ) {
+                <pagination-controls
+                  previousLabel="prev"
+                  nextLabel="next"
+                  [maxSize]="5"
+                  class="datatable-pager-nav my-2 mb-sm-0"
+                  id="pendingPayment"
+                  (pageChange)="currentPage = $event">
+                </pagination-controls>
+                }
+              </div>
+            </div>
+            <div class="row" *ngIf="pendingPaymentRecord.length > 0">
+              <div class="col-md-12 mt-3 mb-3 text-end">
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  (click)="payNow()">
+                  Pay Now
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- paymenty modal -->
+
+<!-- Button trigger modal -->
+
+<!-- Modal -->
+
+<div
+  class="modal fade"
+  id="staticBackdrop"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="staticBackdropLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header" style="border: none">
+        <h5 class="modal-title" id="staticBackdropLabel">Payment Details</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"></button>
+      </div>
+
+      <form [formGroup]="paymentForm" (ngSubmit)="onSubmitPayment()">
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="table-responsive">
+                <table
+                  id="example1"
+                  class="table table-hover mb-0 random-table">
+                  <thead class="student-thread">
+                    <tr>
+                      <th>Plan Name</th>
+                      <th>Expired On</th>
+                      <th>Plan Amount</th>
+                      <th>Discount</th>
+                      <th>Total Paid Amount</th>
+                    </tr>
+                  </thead>
+
+                  @if (skeletonShow === 'Skelton') {
+                  <tbody>
+                    <tr>
+                      <td colspan="100%">
+                        <app-skeleton-loader
+                          skeletonShow="Skelton"
+                          viewType="table"
+                          [tableRows]="5"
+                          [tableCols]="11">
+                        </app-skeleton-loader>
+                      </td>
+                    </tr>
+                  </tbody>
+
+                  } @else if (selectedPendingPayments.length > 0) {
+                  <tbody>
+                    <tr
+                      *ngFor="
+                        let pending of selectedPendingPayments;
+                        let i = index
+                      ">
+                      <td>{{ pending.planName }}</td>
+                      <td>{{ pending.monthDueDate | date : "MM/dd/yyyy" }}</td>
+                      <td>${{ pending.planAmount }}</td>
+                      <td>{{ pending.discount }}%</td>
+                      <td>${{ pending.totalPaidAmount }}</td>
+                    </tr>
+                    <tr>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td>total Amount: ${{ totalAmount }}</td>
+                    </tr>
+                  </tbody>
+                  } @else {
+                  <tr>
+                    <td colspan="100%">
+                      <app-skeleton-loader skeletonShow="NoRecord">
+                      </app-skeleton-loader>
+                    </td>
+                  </tr>
+
+                  }
+                </table>
+              </div>
+            </div>
+
+            <div class="col-md-12">
+              <div class="part1">
+                <div class="row">
+                  <div class="col-md-6">
+                    <label class="mb-1">First Name <span
+                        class="text-danger">*</span></label>
+                    <div class="input-group mb-3">
+                      <input
+                        type="text"
+                        class="form-control"
+                        formControlName="firstName"
+                        placeholder="First Name" />
+                    </div>
+                    <div
+                      *ngIf="
+                        paymentForm.controls['firstName'].invalid &&
+                        paymentForm.controls['firstName'].touched
+                      "
+                      class="text-danger">
+                      First Name is required.
+                    </div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label class="mb-1">Last Name <span
+                        class="text-danger">*</span></label>
+                    <div class="input-group mb-3">
+                      <input
+                        type="text"
+                        class="form-control"
+                        formControlName="lastName"
+                        placeholder="Last Name" />
+                    </div>
+                    <div
+                      *ngIf="
+                        paymentForm.controls['lastName'].invalid &&
+                        paymentForm.controls['lastName'].touched
+                      "
+                      class="text-danger">
+                      Last Name is required.
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <label class="mb-1">Email <span
+                        class="text-danger">*</span></label>
+                    <div class="input-group mb-3">
+                      <input
+                        type="email"
+                        class="form-control"
+                        formControlName="email"
+                        placeholder="Email" />
+                    </div>
+                    <div
+                      *ngIf="
+                        paymentForm.controls['email'].invalid &&
+                        paymentForm.controls['email'].touched
+                      "
+                      class="text-danger">
+                      <span
+                        *ngIf="paymentForm.controls['email'].errors?.['required']">Email
+                        is required.</span>
+                      <span
+                        *ngIf="paymentForm.controls['email'].errors?.['email']">Enter
+                        a valid email address.</span>
+                    </div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label class="mb-1">Phone Number <span
+                        class="text-danger">*</span></label>
+                    <div class="input-group mb-3">
+                      <input
+                        maxlength="10"
+                        type="text"
+                        class="form-control"
+                        formControlName="phoneNumber"
+                        placeholder="Phone Number" />
+                    </div>
+                    <div
+                      *ngIf="
+                        paymentForm.controls['phoneNumber'].invalid &&
+                        paymentForm.controls['phoneNumber'].touched
+                      "
+                      class="text-danger">
+                      <span
+                        *ngIf="paymentForm.controls['phoneNumber'].errors?.['required']">Phone
+                        number is required.</span>
+                      <span
+                        *ngIf="paymentForm.controls['phoneNumber'].errors?.['pattern']">Enter
+                        a valid phone number.</span>
+                    </div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <ngx-stripe-card
+                      #cardElem
+                      [options]="cardOptions"></ngx-stripe-card>
+                  </div>
+                </div>
+
+                <!-- <div class="row">
+                  <div class="col-md-12 mb-4">
+                    <div class="box">
+                      <input type="checkbox" id="saveCard" formControlName="saveCard" />
+                      <label for="saveCard">I agree to have my card information securely stored for
+                        future transactions.</label>
+                    </div>
+                  </div>
+                </div> -->
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button [disabled]="submitted" type="submit" class="btn btn-primary">
+            Proceed To Pay
+          </button>
+          <button
+            type="reset"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div
+  id="termsCondition"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+  data-bs-backdrop="static">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header radius0 bg-light">
+        <h4>Documents</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="hedi">
+              <h4>Please review the terms and condition</h4>
+            </div>
+            <div>
+              <h2>1. Enrollment & Attendance</h2>
+              <ul>
+                <li>
+                  All children must be registered with complete and accurate
+                  information.
+                </li>
+                <li>
+                  Parents must inform the daycare of any changes in contact or
+                  emergency information.
+                </li>
+                <li>
+                  Regular attendance is expected. Please notify the center in
+                  case of absence.
+                </li>
+              </ul>
+
+              <h2>2. Drop-off and Pick-up</h2>
+              <ul>
+                <li>
+                  Children must be dropped off and picked up within the center's
+                  working hours.
+                </li>
+                <li>
+                  Only authorized persons may pick up a child. ID verification
+                  may be required.
+                </li>
+                <li>
+                  Late pick-up will result in additional charges as per the
+                  daycare policy.
+                </li>
+              </ul>
+
+              <h2>3. Health and Safety</h2>
+              <ul>
+                <li>
+                  Sick children should not be sent to daycare. Parents will be
+                  notified to pick up if a child falls ill during the day.
+                </li>
+                <li>
+                  Allergies and medical conditions must be disclosed during
+                  enrollment.
+                </li>
+                <li>
+                  Emergency medical care will be sought if necessary. Parents
+                  will be informed immediately.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12 mt-5">
+            <div class="review-head">
+              <!-- <div class="headingbox btn btn-blue">
+                <a>
+                  <i class="mdi mdi-download"></i> Offer Letter
+                </a>
+              </div> -->
+            </div>
+            <h5 class="note-offer" style="font-size: 13px">
+              <strong style="font-size: 15px">Note:</strong> Accept button is at
+              the bottom.
+            </h5>
+            <div id="pdfContainer2" class="qwert"></div>
+            <div class="row mt-4">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-check">
+                    <input
+                      class=""
+                      type="checkbox"
+                      id="exampleCheckbox"
+                      (change)="AcceptTermsAndConditions($event)" />
+                    <label class="form-check-label" for="exampleCheckbox">
+                      I, hereby, accept this offer letter.
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- <div class="col-md-4 mt-4">
+                <label class="form-label">Acceptance Date:</label>
+                <div class="input-group">
+                  <input type="text" mwlFlatpickr class="form-control"id="acceptanceDate" value="" readonly placeholder="Date">
+                </div>
+              </div> -->
+              <div class="col-md-6 mt-4">
+                <div
+                  class="d-flex justify-content-end mt-4 align-items-center gap-2">
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                    [disabled]="isDisabledCondition"
+                    (click)="TermsAndConditionAction(6)">
+                    <i class="mdi mdi-check-all me-1"></i> Accept
+                  </button>
+
+                  <!-- <button
+                    type="button"
+                    class="btn btn-sm btn-danger"
+                    [disabled]="!isDisabledCondition"
+                    (click)="TermsAndConditionAction(2)">
+                    <i class="mdi mdi-close me-1"></i> Reject
+                  </button> -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

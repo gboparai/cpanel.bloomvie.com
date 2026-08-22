@@ -1,0 +1,610 @@
+<app-breadcrumb></app-breadcrumb>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <!-- <div class="card-header" style="color: blueviolet;">
+        DayCare Questionnaires
+      </div> -->
+      <!-- <div class="heading-new">
+        <div class="inactive-heading-box">
+          
+          <h5 class="mb-0">   DayCare Questionnaires</h5>
+        </div>
+      </div> -->
+      <div class="card-body">
+        <div class="heading-new d-flex gp-50"><h5  class="mb-0">Daycare Questionnaires</h5></div>
+    
+       
+    
+        <div class="col-md-12 float-end d-flex justify-content-end mb-4"> <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Custom-form">
+          <i class="fa fa-plus me-1"></i> Add Field
+        </button></div>
+        
+
+
+
+        <form [formGroup]="myControlForm">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="row">
+
+                @if (skeletonShow === 'Skelton') {
+
+                  <app-skeleton-loader skeletonShow="Skelton" viewType="section-form" >
+                  </app-skeleton-loader>
+
+                  }
+                  @else {
+
+                <div *ngFor="let sectionGroup of fields" class="section-container col-md-12">
+                  <div class="heading-new" [ngClass]="sectionGroup.section.isActive? 'color-green-to-fields':'heading-new'">
+                    <div class="inactive-heading-box">
+                      <!-- <input type="checkbox" [checked]="sectionGroup.section.isActive" class="form-check-input inactive-fieldsbox"
+                        [id]="'checkbox-' + sectionGroup.section.id" (change)="
+                          ActiveInActiveSections(
+                            sectionGroup.section.id,
+                            $event
+                          )
+                        " /> -->
+                        <!-- [class]="sectionGroup.section.isActive ? 'eye-icon-open' : 'eye-icon-closed'" -->
+                        <span  class="my-eye" (click)="ActiveInActiveSections(sectionGroup.section.id,$event)">
+                          <i class="fa" [ngClass]="sectionGroup.section.isActive ? 'fa-eye' : 'fa-eye-slash'"></i>
+                        </span>
+                      <!-- <h5 class="mb-0">{{ sectionGroup.section.name }}</h5> -->
+
+
+                      <!-- [ngClass]="sectionGroup.section.isActive? 'color-green-to-fields':''" -->
+                      <h5 class="mb-0">{{ sectionGroup.section.name }}</h5>
+                    </div>
+
+                    <a class="editSectionButton" (click)="
+                        GetSectionByIDAndCentreID(sectionGroup.section.id)
+                      "><i class="feather-edit me-1"></i> Edit</a>
+                  </div>
+                  <!-- 'color-green-to-fields':'sectionGroup.section.isActive' -->
+                  <div class="row">
+                    <div class="col-md-4" *ngFor="let field of sectionGroup.fields">
+                      <div class="form-group local-forms custom-1 custom-form-new">
+                        <label [ngClass]="{
+                            '':
+                              field.controlType !== 'checkbox' &&
+                              field.controlType !== 'radio'
+                              
+                          }">
+                          {{ field.label }}
+                        </label>
+
+                        <!-- Dynamic Control Type Rendering -->
+                        <ng-container [ngSwitch]="field.controlType">
+                          <input *ngSwitchCase="'textbox'" class="form-control" [formControlName]="field.name" 
+                            type="text" [id]="field.id" />
+
+                          <input *ngSwitchCase="'time'" class="form-control" [formControlName]="field.name" type="time"
+                            [id]="field.id" />
+
+                          <input *ngSwitchCase="'number'" class="form-control" [formControlName]="field.name"
+                            type="number" [id]="field.id" />
+
+                          <input *ngSwitchCase="'date'" class="form-control" [formControlName]="field.name" type="date"
+                            [id]="field.id" />
+
+                          <input *ngSwitchCase="'datetime'" class="form-control" [formControlName]="field.name"
+                            type="datetime-local" [id]="field.id" />
+
+                          <select *ngSwitchCase="'select'" class="form-control" [formControlName]="field.name"
+                            [id]="field.id">
+                            <option *ngFor="let option of field.options" [value]="option.value">
+                              {{ option.label }}
+                            </option>
+                          </select>
+
+                          <div *ngSwitchCase="'radio'">
+                            <div *ngFor="let option of field.options">
+                              <input type="radio" [formControlName]="field.name" [value]="option.value" />
+                              {{ option.label }}
+                            </div>
+                          </div>
+
+                          <div *ngSwitchCase="'checkbox'">
+                            <div *ngFor="let option of field.options">
+                              <input type="checkbox" [value]="option.value" (change)="
+                                  onCheckboxChange(
+                                    $event,
+                                    option.value,
+                                    field.name
+                                  )
+                                " [checked]="
+                                  myControlForm
+                                    .get(field.name)
+                                    ?.value?.includes(option.value)
+                                " />
+                              {{ option.label }}
+                            </div>
+                          </div>
+
+                          <textarea *ngSwitchCase="'textarea'" class="form-control" [formControlName]="field.name"
+                          type="text" [id]="field.id"></textarea>
+
+                        </ng-container>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              }
+              </div>
+
+              <!-- Submit Button -->
+              <!-- <button type="submit" [disabled]="!myControlForm.valid">Submit</button> -->
+
+              <!---->
+
+              <!-- </div> -->
+
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="student-submit text-end">
+                    <!-- <button class="btn btn-primary me-2">Submit</button>
+                                <button class="btn btn-secondary ">Cancel</button> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+
+        <!--modal to submit the control-->
+
+        <form [formGroup]="AddSectionForm" (ngSubmit)="onSubmitSectionForm()">
+          <!-- Modal -->
+          <div class="modal fade" id="addSectionModal" tabindex="-1" style="z-index: 9999"
+            aria-labelledby="addSectionModalLabel" aria-hidden="true" #addSectionModal>
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                  <h5 class="modal-title" id="addSectionModalLabel">
+                    Add Section Title
+                  </h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <!-- Modal Body -->
+                <div class="modal-body">
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="form-group local-forms">
+                        <label for="field-title">Section Title</label>
+                        <input type="text" id="Section" formControlName="SectionTitle" placeholder="Enter Section Title"
+                          class="form-control" />
+                        <div *ngIf="
+                            AddSectionForm.get('SectionTitle')?.invalid &&
+                            (AddSectionForm.get('SectionTitle')?.touched ||
+                            AddSectionForm.get('SectionTitle')?.dirty)
+                          ">
+                          <div class="text-danger" *ngIf="AddSectionForm.get('SectionTitle')?.errors?.['required']">
+                            Field Section is required.
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Modal Footer -->
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">
+                    Submit
+                  </button>
+                  <button type="reset" class="btn btn-secondary">Cancel</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+
+        <div class="modal fade" id="Custom-form" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true"
+          #customFormModal>
+          <div class="modal-dialog modal-md">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">
+                  Create Your Question Fields
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form [formGroup]="LabelAndControlForm" (ngSubmit)="onLabelAndControlSubmit()">
+                  <div class="row">
+                    <!---->
+                    <div class="col-md-12 mb-4">
+                      <div class="d-flex justify-content-between align-items-center gp-5">
+                        <div class="form-group local-forms w-75">
+                          <label for="field-title">Sections <span class="login-danger">*</span></label>
+                          <select class="form-control" formControlName="SectionID">
+                            <option value="" disabled selected>
+                              Select Section
+                            </option>
+                            <option *ngFor="let section of SectionList" [value]="section.id">
+                              {{ section.name }}
+                            </option>
+                          </select>
+                          <div *ngIf="
+                              LabelAndControlForm.get('SectionID')?.invalid &&
+                              (LabelAndControlForm.get('SectionID')?.touched ||
+                                LabelAndControlForm.get('SectionID')?.dirty)
+                            ">
+                            <div class="text-danger" *ngIf="LabelAndControlForm.get('SectionID')?.errors?.['required']">
+                              Field Section is required.
+                            </div>
+                          </div>
+                        </div>
+                        <button type="button" class=" mt-4 btn btn-primary" (click)="OpenSectionModal()">
+                          Add&nbsp;Section
+                        </button>
+                      </div>
+                    </div>
+                    <div class="col-md-12 mb-4">
+                      <div class="form-group local-forms">
+                        <label for="field-title">Field Title
+                          <span class="login-danger">*</span></label>
+                        <input type="text" id="labelName" formControlName="LabelName" placeholder="Enter field title"
+                          class="form-control" />
+                        <div *ngIf="
+                            LabelAndControlForm.get('LabelName')?.invalid &&
+                            (LabelAndControlForm.get('LabelName')?.touched ||
+                              LabelAndControlForm.get('LabelName')?.dirty)
+                          ">
+                          <div class="text-danger" *ngIf="LabelAndControlForm.get('LabelName')?.errors?.['required']">
+                            Field Title is required.
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-12 mb-4">
+                      <div class="form-group local-forms">
+                        <label for="field-type">Field Type <span class="login-danger">*</span></label>
+                        <select (change)="showSelectiveValueInput($event)" id="field-type" class="form-control" formControlName="ControlType">
+                          <option value="" disabled selected>
+                            Please select
+                          </option>
+                          <option value="text">Text</option>
+                          <option value="number">Number</option>
+                          <option value="email">Email</option>
+                          <option value="date">Date</option>
+                          <option value="datetime">DateTime</option>
+                          <option value="select">Select</option>
+                          <option value="radio">Radio</option>
+                          <option value="checkbox">Checkbox</option>
+                        </select>
+                        <div *ngIf="
+                            LabelAndControlForm.get('ControlType')?.invalid &&
+                            (LabelAndControlForm.get('ControlType')?.touched ||
+                              LabelAndControlForm.get('ControlType')?.dirty)
+                          ">
+                          <div class="text-danger" *ngIf="LabelAndControlForm.get('ControlType')?.errors?.['required']">
+                            Field Type is required.
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-12 mb-4" id="options-input" style="display: none">
+                      <div class="form-group local-forms">
+                        <label for="options">Options (Comma Separated)</label>
+                        <input type="text" id="options" formControlName="Values"
+                          placeholder="Option1, Option2, Option3, ..." class="form-control" />
+                        <div *ngIf="
+                            LabelAndControlForm.get('Values')?.invalid &&
+                            (LabelAndControlForm.get('Values')?.touched ||
+                              LabelAndControlForm.get('Values')?.dirty)
+                          ">
+                          <div class="text-danger" *ngIf="LabelAndControlForm.get('Values')?.errors?.['invalidFormat']">
+                            Invalid format. Use word1, word2, word3
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-12 mb-4">
+                      <div class="form-group local-forms">
+                        <label for="field-title">Position <span class="login-danger">*</span></label>
+                        <input type="number" id="Position" formControlName="Position"
+                          placeholder="Enter Position Number" class="form-control" />
+                        <div *ngIf="
+                            LabelAndControlForm.get('Position')?.invalid &&
+                            (LabelAndControlForm.get('Position')?.touched ||
+                              LabelAndControlForm.get('Position')?.dirty)
+                          ">
+                          <div class="text-danger" *ngIf="LabelAndControlForm.get('Position')?.errors?.['required']">
+                            Field Position is required.
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- <div class="col-md-12 mb-4" id="input-field-container">
+                    <div class="form-group local-forms" >
+                    </div>
+                   </div> -->
+                    <div class="col-md-12 text-end">
+                      <div class="student-submit text-end">
+                        <button type="submit" class="btn btn-primary me-2" data-bs-dismiss="modal" id="addFieldButton">
+                          Submit
+                        </button>
+                        <!-- <button type="submit" class="btn btn-primary me-2" data-bs-dismiss="modal">Submit</button> -->
+                        <button type="reset" class="btn btn-secondary">
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                    <!-- <div class="right">
+                     
+                      <button type="submit" class="btn btn-primary btns" data-bs-dismiss="modal" id="addFieldButton">Add Field</button>
+                    </div> -->
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!--section edit modal-->
+
+        <div class="modal fade" id="edit-section-modal" tabindex="-1" aria-labelledby="modalSection" aria-hidden="true"
+          #editSectionModal>
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">Edit Section Field</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form [formGroup]="EditSectionForm" (ngSubmit)="onEditSubmitSection()">
+                  <div class="row">
+                    <div class="col-md-6 mb-4">
+                      <input type="hidden" formControlName="id" />
+                      <div class="form-group local-forms">
+                        <label for="field-title">Section Name</label>
+                        <input type="text" id="SectionNameE" formControlName="SectionNameE" class="form-control" />
+                        <div *ngIf="
+                            EditSectionForm.get('SectionNameE')?.invalid &&
+                            (EditSectionForm.get('SectionNameE')?.touched ||
+                              EditSectionForm.get('SectionNameE')?.dirty)
+                          ">
+                          <div class="text-danger" *ngIf="EditSectionForm.get('SectionNameE')?.errors?.['required']">
+                            section is required.
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="table-responsive">
+                      <table class="table table-hover mb-0">
+                        <thead class="student-thread">
+                          <tr>
+                            <th>Label&nbsp;Name</th>
+                            <th>Control</th>
+                            <th>Position</th>
+                            <th>Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <!-- <tr *ngIf="ParticularSectionRecord.fields.length === 0">
+                  <td style="text-align: center;">
+                    <div class="no-data">
+                    <img
+                      src="assets/img/no-data-img.png"
+                      alt="No Record Found"
+                    />
+                    <span>No Record Found</span>
+                    </div>
+                  </td>
+                </tr>  -->
+                          <!-- <tr *ngFor="let user of ParticularSectionRecord.fields| paginate:{itemsPerPage:5 ,currentPage: currentPage}; -->
+                          <tr *ngFor="
+                              let sectionFields of ParticularSectionFields;
+                              let i = index
+                            ">
+                            <!-- <td>{{i+1 + (currentPage-1)*itemsPerPage}}</td> -->
+                            <td>{{ sectionFields.labelName }}</td>
+                            <td>{{ sectionFields.controlType }}</td>
+                            <td>{{ sectionFields.positionIndex }}</td>
+                            <td>
+                              <div class="actions">
+                                <a class="action-btn bg-danger-light me-2" title="Edit section">
+                                  <i class="feather-edit" (click)="
+                                      GetControlFieldById(
+                                        sectionFields.controlID
+                                      )
+                                    "></i>
+                                </a>
+                                <input type="checkbox" [checked]="sectionFields.isActive" (change)="
+                                    ActiveOrInActiveControlField(
+                                      sectionFields.controlID,
+                                      $event
+                                    )
+                                  " />
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+
+                    <!-- <div class="right">
+                      <button type="submit" class="btn btn-primary btns" data-bs-dismiss="modal">Submit</button>
+                    </div> -->
+
+                    <div class="col-md-12 text-end mt-4">
+                      <div class="student-submit text-end">
+                        <button type="submit" class="btn btn-primary me-2" data-bs-dismiss="modal">
+                          Submit
+                        </button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!--particular field edit modal-->
+        <div class="modal fade" id="edit-control-field" tabindex="-1" style="z-index: 9999" aria-labelledby="modalLabel"
+          aria-hidden="true" #fieldcontrolModal>
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">Edit Field</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form [formGroup]="controlFieldForm" (ngSubmit)="SubmitEditedControlField()">
+                  <div class="row">
+                    <input type="hidden" formControlName="id" />
+                    <input type="hidden" formControlName="SectionID" />
+                    <div class="col-md-12 mb-4">
+                      <div class="form-group local-forms">
+                        <label for="field-title">label Name</label>
+                        <input type="text" id="labelName" formControlName="labelName" class="form-control" />
+                        <div *ngIf="
+                            controlFieldForm.get('labelName')?.invalid &&
+                            (controlFieldForm.get('labelName')?.touched ||
+                              controlFieldForm.get('labelName')?.dirty)
+                          ">
+                          <div class="text-danger" *ngIf="controlFieldForm.get('labelName')?.errors?.['required']">
+                            field is required.
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-12 mb-4">
+                      <div class="form-group local-forms">
+                        <label for="field-title">Control Type</label>
+                        <!-- <input type="text" id="controlType" formControlName="controlType"
+                        class="form-control"> -->
+                        <select class="form-control" name="controlType" formControlName="controlType" (change)="
+                            OnselectedOption(
+                              controlFieldForm.get('controlType')?.value
+                            )
+                          ">
+                          <option *ngFor="let controlOption of ControlOptions">
+                            {{ controlOption.name }}
+                          </option>
+                        </select>
+                        <div *ngIf="
+                            controlFieldForm.get('controlType')?.invalid &&
+                            (controlFieldForm.get('controlType')?.touched ||
+                              controlFieldForm.get('controlType')?.dirty)
+                          ">
+                          <div class="text-danger" *ngIf="controlFieldForm.get('controlType')?.errors?.['required']">
+                            field is required.
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- <div *ngIf="isOptionInputVisibleToAddValues" class="form-group">
+                    <label for="field-title">Options(comma seperated (a,b,c))</label>
+                    <input type="text" id="selectiveOptions"
+                      class="form-control">
+                     <div *ngIf="!IsSelectiveOptionInputValid" class="text-danger">field is required</div>
+                  </div> -->
+                    <div class="col-md-12 mb-4">
+                      <div class="form-group local-forms">
+                        <label for="field-title">Position</label>
+                        <input type="text" id="position" formControlName="position" class="form-control" />
+                        <div *ngIf="
+                            controlFieldForm.get('position')?.invalid &&
+                            (controlFieldForm.get('position')?.touched ||
+                              controlFieldForm.get('position')?.dirty)
+                          ">
+                          <div class="text-danger" *ngIf="controlFieldForm.get('position')?.errors?.['required']">
+                            field is required.
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div *ngIf="selectiveValuesArray?.length > 0" class="table-responsive">
+                      <table class="table table-hover mb-0">
+                        <thead class="">
+                          <tr>
+                            <th>Selective Values</th>
+                            <th>Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let value of selectiveValuesArray">
+                            <td>
+                              <ng-container *ngIf="
+                                  EditingSelectiveValueID !== value.id;
+                                  else editModeValue
+                                ">
+                                {{ value.values }}
+                              </ng-container>
+
+                              <ng-template #editModeValue>
+                                <input *ngIf="
+                                    isEditing &&
+                                    EditingSelectiveValueID === value.id
+                                  " type="text" [value]="value.values" class="form-control"
+                                  formControlName="SelectiveValue" (blur)="
+                                    SaveEditedSelectiveValue(
+                                      value.id,
+                                      controlFieldForm.get('SelectiveValue')
+                                        ?.value
+                                    )
+                                  " />
+                              </ng-template>
+                            </td>
+                            <td>
+                              <a class="action-btn bg-danger-light mr-3" title="Edit field" (click)="
+                                  EditParticularSelectiveValue(
+                                    value.id,
+                                    value.values
+                                  )
+                                ">
+                                <i class="fas fa-pencil"></i>
+                              </a>
+                              <input type="checkbox" [checked]="value.isActive" (change)="
+                                  ActiveOrInActiveSelectiveValue(
+                                    value.id,
+                                    $event
+                                  )
+                                " />
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+
+                    <!-- <div class="right">
+                      <button type="submit" class="btn btn-primary btns" data-bs-dismiss="modal">
+                        Submit
+                      </button>
+                    </div> -->
+                    <div class="col-md-12">
+                      <div  class="student-submit text-end">
+                        <button  type="submit" data-bs-dismiss="modal"
+                          class="btn btn-primary me-2">
+                          Submit</button>
+                          <button  type="reset"
+                          class="btn btn-secondary">
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

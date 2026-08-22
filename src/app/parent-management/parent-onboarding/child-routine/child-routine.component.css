@@ -1,0 +1,13 @@
+.form-group.local-forms.custom-1.custom-form-new {
+    margin-bottom: 20px;
+}/* Default styling for all labels */
+.custom-form-new label {
+    position: relative; /* Keeps default positioning */
+  }
+  
+  /* Absolute positioning for specific fields */
+
+  .custom-form-new  .ng-star-inserted {
+    display: inline;
+ 
+}

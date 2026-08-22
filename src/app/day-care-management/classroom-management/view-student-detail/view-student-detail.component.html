@@ -1,0 +1,40 @@
+<app-breadcrumb></app-breadcrumb>
+
+<div class="row">
+    <div class=" col-xl-4 col-lg-5 sticky-div">
+        <app-student-profile></app-student-profile>
+    </div>
+    <div class=" col-xl-8 col-lg-7">
+        <section>
+
+            <div class="row" >
+                <div class="col-md-12">
+                    <div class="nav nav-pills menu-tabs m-0" id="nav-tab" role="tablist" >
+        
+                        <li class="nav-item">
+                            <a class="nav-link " id="nav-home-tab" data-bs-toggle="tab" href="#nav-home" role="tab"
+                                aria-controls="nav-home" aria-selected="true">Additional Details</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active"  id="nav-profile-tab" data-bs-toggle="tab" href="#nav-profile" role="tab"
+                                aria-controls="nav-profile" aria-selected="false">Activity</a>
+                        </li>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <div class="tab-content " id="nav-tabContent">
+            <div class="tab-pane fade " id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                <div class="breadcrum-none">
+                    <app-student-additional-information></app-student-additional-information>
+                </div>
+            </div>
+            <div class="tab-pane fade show active" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+               <app-child-report></app-child-report>
+            </div>
+        
+        </div>
+    </div>
+</div>
+

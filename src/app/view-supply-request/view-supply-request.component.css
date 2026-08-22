@@ -1,0 +1,120 @@
+.collapse{
+    padding: 17px 79px;
+
+}
+
+.toogle-classroom .fa-plus{
+    color: #fff  !important
+}
+.toggle-classroom button {
+    border: none !important;
+}
+
+.btn-toggle{
+
+    color: white;
+    border: none;
+    padding: 0px 8px;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: background-color 0.3s;
+    cursor: pointer;
+}
+
+.btn-toggle   i {
+    font-size: 10px;
+}
+.collapse-table{
+
+    background-color: #f9f9f9;
+}
+
+.sub-table{
+
+    background-color: #e3e3e3;
+    /* border: 4px solid #444444; */
+    border-radius: 5px;
+
+}table tr:nth-child(2n) {
+    background-color: rgb(245, 240, 245);
+}
+
+.tblack{
+    border: 4px solid #e3e3e3;
+}
+  th {
+    text-align: left;
+    padding: 10px;
+
+  }.col-md-8.float-end.add-item-button {
+    text-align: right;
+    /* margin-top: 5px; */
+}.tab-content {
+    padding-top: 8px;
+}button.upload-receipt {
+    background: #a2719e;
+    color: #fff;
+    border: navajowhite;
+    font-size: 12px;
+    border-radius: 2px;
+}
+i.fa.fa-paperclip {
+    margin-right: 0px;
+    padding: 7px 10px;
+    background: #e9ecef;
+    border-radius: 2px;
+    color: #a2719e;
+}
+  .action-btn {
+    padding: 3px 14px;
+    border-radius: 8px;
+    border: 2px solid #a2719e1f;
+    margin-right: 5px;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .approve {
+    color: green;
+  }
+  .reject {
+    color: red;
+  }.search button[type=submit] {
+
+    top: 0px !important;
+  
+} .expense-label {
+    padding: 1px 10px;
+    border-radius: 2px;
+    font-size: 12px;
+    color: #fff;
+    text-align: center;
+    display: block;
+    width: 80px;
+    margin: auto;
+  }
+
+  .expense-payroll {
+    background-color: #154d0d;
+  }
+
+  .expense-capital {
+    background-color: #a2719e;
+  }
+
+  .expense-operating {
+    background-color: #034785;
+  }
+
+  .fa-paperclip, .fa-download {
+    cursor: pointer;
+  }.my-card-pad .no-pad-no-shadow {
+    padding: 0px;
+    box-shadow: none !important;
+    border: 0px !important;
+}.cash-or-card {
+    background: #dfeaee;
+    padding: 7px 10px;
+    border-radius: 2px;
+    color: #000000;
+    margin-bottom: 10px;
+}

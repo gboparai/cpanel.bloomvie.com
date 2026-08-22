@@ -1,0 +1,430 @@
+<app-breadcrumb></app-breadcrumb>
+<div class="row">
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-body">
+        <div class="my-area">
+          <div class="caleder-img">
+            <!-- <img src="assets/img/upcoming.gif"> -->
+            <img src="assets/img/schedule.png" />
+          </div>
+          <div class="name-mine">
+            <h5>
+              Hi <span>{{ fullName }}</span>
+            </h5>
+            <h6>Welcome to Attendance Dashboard!</h6>
+            <p>
+              Keep track of your
+              {{
+              userRoleID !== "4" && userRoleID !== "8"
+              ? "staff's"
+              : "students'"
+              }}
+              daily attendance, manage records, and ensure everything runs
+              smoothly.
+            </p>
+          </div>
+          <span class="leave-text btn btn-success mb-3" *ngIf="userRoleID == '3'" (click)="goToApplyLeave()">
+            Applied Leave This Month:
+            <span class="num-leave">{{ leaveList?.length>0 ? leaveList : 0 }}</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-body">
+        <div class="today-record">
+          <p class="fc-title">Today's Attendance Record</p>
+          <span class="boxed boxed3">
+            <span class="img-box1 mb-1"><img src="assets/img/total.png" width="100%" height="100%" /></span>
+            <!-- <span class="def">Total Staff</span><span class="num-def">{{attendanceCount?.totalStaff}}</span> -->
+            <ng-container *ngIf="userRoleID">
+              <ng-container *ngIf="userRoleID !== '4' && userRoleID !== '8'">
+                <span class="def">Total Staff</span>
+                <span class="num-def">{{ attendanceCount?.totalStaff }}</span>
+              </ng-container>
+
+              <ng-container *ngIf="userRoleID === '4' || userRoleID == '8'">
+                <span class="def">Total Student</span>
+                <span class="num-def">{{ attendanceCount?.totalStaff }}</span>
+              </ng-container>
+            </ng-container>
+          </span>
+
+          <span class="boxed boxed1 me-2">
+            <span class="img-box"><img src="assets/img/present.png" width="100%" height="100%" /></span>
+            <!-- <span class="def">Present Staff</span><span class="num-def">{{attendanceCount?.presentCount}}</span></span> -->
+            <ng-container *ngIf="userRoleID">
+              <ng-container *ngIf="userRoleID !== '4' && userRoleID !== '8'">
+                <span class="def">Present Staff</span>
+                <span class="num-def">{{ attendanceCount?.presentCount }}</span>
+              </ng-container>
+
+              <ng-container *ngIf="userRoleID === '4' || userRoleID == '8'">
+                <span class="def">Present Student</span>
+                <span class="num-def">{{ attendanceCount?.presentCount }}</span>
+              </ng-container>
+            </ng-container>
+          </span>
+
+          <!-- <span class="boxed  boxed2 me-2  ">
+            <span class="img-box"><img src="assets/img/absent.png" width="100%" height="100%"></span>
+            <span class="def">Staff On Leave </span><span class="num-def">{{attendanceCount?.leaveCount}}</span></span> -->
+
+          <span class="boxed boxed2 me-2">
+            <span class="img-box"><img src="assets/img/absent.png" width="100%" height="100%" /></span>
+            <!-- <span class="def">Absent Staff</span><span class="num-def">{{attendanceCount?.absentCount}}</span></span> -->
+            <ng-container *ngIf="userRoleID">
+              <ng-container *ngIf="userRoleID !== '4' && userRoleID !== '8'">
+                <span class="def">Absent Staff</span>
+                <span class="num-def">{{ attendanceCount?.absentCount }}</span>
+              </ng-container>
+              <ng-container *ngIf="userRoleID === '4' || userRoleID == '8'">
+                <span class="def">Absent Student</span>
+                <span class="num-def">{{ attendanceCount?.absentCount }}</span>
+              </ng-container>
+            </ng-container>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="chart-box">
+      <div class="card">
+        <div class="card-body">
+          <div class="box-img">
+            <div class="row">
+              <div class="col-md-12 text-start">
+                <div class="text-start">
+                  <p class="fc-title">Today's Graphical Representation</p>
+                </div>
+              </div>
+              <div class="col-md-12 mb-3">
+                <div class="custom-legend">
+                  <div class="legend-item">
+                    <span class="legend-color" style="background-color: #008ffb"></span>
+                    <span>Total Staff</span>
+                  </div>
+                  <div class="legend-item">
+                    <span class="legend-color" style="background-color: #00e396"></span>
+                    <span>Present</span>
+                  </div>
+                  <div class="legend-item">
+                    <span class="legend-color" style="background-color: #feb019"></span>
+                    <span>Absent</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="img-box-inner">
+              <div id="chart" *ngIf="isChartVisible; else noData">
+                <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart" [labels]="chartOptions.labels"
+                  [responsive]="chartOptions.responsive">
+                </apx-chart>
+              </div>
+              <ng-template #noData>
+                <div class="no-data">
+                  <img src="assets/img/no-data-img.png" alt="No Record Found" />
+                  <span>No Record Found</span>
+                </div>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="att-box">
+          <div class="heading-new mb-3">
+            <h5 class="mb-0">Attendance Records</h5>
+          </div>
+          <div class="att-box-head">
+            <div class="box-hed">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="row">
+                    <div class="col-md-3 text-start mb-1" *ngIf="userRoleID !== '3'">
+                      <div class="form-group local-forms select-class-room">
+                        <label for="classroomSelect" class="form-label">Classroom</label>
+                        <ng-select id="classroomSelect" [multiple]="false" aria-placeholder="-Select-"
+                          [items]="AllClassList" bindLabel="className" [(ngModel)]="selectedClassID" bindValue="classID"
+                          (change)="selectedClass($event)">
+                        </ng-select>
+                      </div>
+                    </div>
+
+                    <!-- <div class="col-md-4 text-start mb-1">
+                      <div class="form-group local-forms">
+                        <label>Select Date</label>
+                        <input type="text" id="dateRangePicker" Class="form-control" placeholder="Select date" />
+                      </div>
+                    </div> -->
+
+                    <div class="col-md-2 mb-3">
+                      <div class="form-group local-forms mb-4" style="position: relative">
+                        <label>Start Date</label>
+                        <input type="text" id="startdatePicker" class="form-control" placeholder="-Select-" />
+                      </div>
+                    </div>
+
+                    <div class="col-md-2 mb-3">
+                      <div class="form-group local-forms mb-4" style="position: relative">
+                        <label>End Date</label>
+                        <input type="text" id="enddatePicker" class="form-control" placeholder="-Select-" />
+                      </div>
+                    </div>
+
+                    <div class="col-md-4 pe-0 mt-4">
+                      <button class="btn btn-primary me-2 mt-1" type="button" (click)="Onsearchclick()">
+                        Search
+                      </button>
+                      <button class="btn btn-primary me-2 mt-1" type="reset" (click)="resetfilter()">
+                        Cancel
+                      </button>
+                      <button *ngIf="attendanceList?.length > 0" class="btn btn-primary me-2 mt-1" type="button"
+                        (click)="PrintPdfView()">
+                        Download Pdf
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="table-responsive mt-3">
+            <table class="table table-hover mb-0">
+              <thead class="student-thread" style="
+                  position: sticky;
+                  top: -1px;
+                  background: white;
+                  z-index: 2;
+                ">
+                <ng-container *ngIf="userRoleID">
+                  <tr>
+                    <th style="width: 8%">#</th>
+                    <th>Name</th>
+                    <th>Date</th>
+                    <!-- <th>Attendance End Date</th> -->
+                    <th *ngIf="userRoleID !== '4' && userRoleID !== '8'">
+                      In Time
+                    </th>
+                    <th *ngIf="userRoleID !== '4' && userRoleID !== '8'">
+                      Out Time
+                    </th>
+                    <th *ngIf="userRoleID !== '4' && userRoleID !== '8'" class>
+                      Working Hours
+                    </th>
+                    <th *ngIf="userRoleID !== '4' && userRoleID !== '8'" class>
+                      Overtime
+                    </th>
+                    <th *ngIf="userRoleID !== '4' && userRoleID !== '8'" class>
+                      Total Working Hours
+                    </th>
+
+                    <th *ngIf="userRoleID == '4' || userRoleID == '8'">
+                      Mark By
+                    </th>
+                    <th class>Status</th>
+                    <th *ngIf="userRoleID !== '4' && userRoleID !== '8'" class>
+                      View Details
+                    </th>
+                  </tr>
+                </ng-container>
+              </thead>
+              <tbody>
+                @if (skeletonShow === 'Skelton') {
+                <tr>
+                  <td colspan="100%">
+                    <app-skeleton-loader skeletonShow="Skelton" viewType="table" [tableRows]="5" [tableCols]="5">
+                    </app-skeleton-loader>
+                  </td>
+                </tr>
+                } @else if (attendanceList.length > 0) {
+                <tr class *ngFor="
+                    let item of attendanceList
+                      | paginate
+                        : {
+                            itemsPerPage: Contentsize,
+                            currentPage: ContentP,
+                            id: 'toccontrol'
+                          };
+                    let Index = index
+                  ">
+                  <td>{{ (ContentP - 1) * Contentsize + Index + 1 }}</td>
+                  <td>{{ item.firstName }}</td>
+                  <td>{{ item.attendanceDate | date : "MM/dd/yyyy" }}</td>
+                  <!-- <td>{{item.endAttendanceDate | date: 'MM/dd/yyyy'}}</td> -->
+                  <!-- <td *ngIf="userRoleID!='4' && userRoleID !== '8'">{{ item.inTime?.slice(0, 5)}}</td>
+                  <td *ngIf="userRoleID!='4' && userRoleID !== '8'">{{ item.outTime?.slice(0, 5)}}</td> -->
+
+                  <td *ngIf="userRoleID != '4' && userRoleID !== '8'">
+                    {{ item.inTime ? (item.inTime | TimeFormatAmPm) : "--" }}
+                  </td>
+                  <td *ngIf="userRoleID != '4' && userRoleID !== '8'">
+                    {{ item.outTime ? (item.outTime | TimeFormatAmPm) : "--" }}
+                  </td>
+
+                  <td *ngIf="userRoleID !== '4' && userRoleID !== '8'">
+                    {{
+                    item.workingHours ? item.workingHours.slice(0, 5) : "--"
+                    }}
+                  </td>
+                  <td *ngIf="userRoleID !== '4' && userRoleID !== '8'">
+                    {{
+                    item.overTime &&
+                    item.overTime !== "00:00:00" &&
+                    item.overTime !== "00:00"
+                    ? item.overTime.slice(0, 5)
+                    : "--"
+                    }}
+                  </td>
+                  <td *ngIf="userRoleID !== '4' && userRoleID !== '8'">
+                    {{
+                    item.totalWorkingHours
+                    ? item.totalWorkingHours.slice(0, 5)
+                    : "--"
+                    }}
+                  </td>
+
+                  <td *ngIf="userRoleID == '4' || userRoleID == '8'">
+                    <span *ngIf="item.type == 'Attendance'" class="badge badge-success text-center">{{ item.markBy
+                      }}</span>
+                  </td>
+                  <td>
+                    <span *ngIf="item.type == 'Attendance'" class="badge badge-success text-center">Present</span>
+                    <!-- <span *ngIf="item.type === 'Leave'" class="badge badge-warning text-center">Leave</span>
+                    <span *ngIf="item.type === 'Absent'" class="badge badge-danger text-center">Absent</span> -->
+
+                    <span *ngIf="item.type === 'Absent'" class="badge badge-warning text-center">Absent</span>
+                  </td>
+                  <td *ngIf="userRoleID != '4'">
+                    <div class="actions">
+                      <a class="action-btn bg-danger-light me-2" data-bs-toggle="modal" data-bs-target="#view-del"
+                        (click)="
+                          viewDetail(
+                            item.inDocumentImage,
+                            item.outDocumentImage
+                          )
+                        " title="view image">
+                        <i class="fa fa-image" aria-hidden="true"></i> </a>&nbsp;
+
+                      <a class="action-btn bg-danger-light me-2 on-hover" data-bs-toggle="modal" (click)="
+                          openMapPopup(item.inlatitude, item.inlongitude)
+                        " title="view check-in map">
+                        <i class="fas fa-sign-in-alt on-hover" style="transform: scaleX(-1)"></i></a>&nbsp;
+
+                      <a class="aaction-btn bg-danger-light me-2 on-hover" data-bs-toggle="modal" (click)="
+                          openMapPopup(item.outlatitude, item.outlongitude)
+                        " title="view check-out map">
+                        <i class="fas fa-sign-out-alt on-hover"></i> </a>&nbsp;
+
+                      <a class="action-btn bg-danger-light me-2" data-bs-toggle="modal" (click)="downloadPdf(item)">
+                        <i class="fa fa-download" aria-hidden="true"></i>
+                      </a>
+                    </div>
+                  </td>
+                </tr>
+                } @else {
+                <tr>
+                  <td colspan="100%">
+                    <app-skeleton-loader skeletonShow="NoRecord">
+                    </app-skeleton-loader>
+                  </td>
+                </tr>
+
+                }
+              </tbody>
+            </table>
+          </div>
+
+          <ng-template #noRecords>
+            <tbody>
+              <tr>
+                <td colspan="8">
+                  <div class="no-data">
+                    <img src="assets/img/no-data-img.png" alt="No Record Found" />
+                    <span>No Record Found</span>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </ng-template>
+          <div class="d-flex justify-content-between align-items-center mt-4 no-flex">
+            <span class="total-entry" style="font-size: small">
+              <span>Total Entries:</span><span class="entry-count"> {{ attendanceList?.length }} </span>
+            </span>
+            @if(attendanceList?.length > 5) {
+            <pagination-controls previousLabel="prev" nextLabel="next" [maxSize]="5"
+              class="datatable-pager-nav my-2 mb-sm-0" id="toccontrol" (pageChange)="onPageChange($event)">
+            </pagination-controls>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- The Modal -->
+<div class="modal" id="view-del">
+  <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">View Image</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="imagu imagu row pb-3 bdr-btm">
+          <div class="col-md-7">
+            <h6>In Image</h6>
+          </div>
+          <div class="col-md-5">
+            <div class="img-diver">
+              <img [src]="inFullPath ? inFullPath : 'assets/img/no-data-img.png'" style="width: 100%" alt
+                alt="Profile Photo" class="cstm-avatar-lg img-thumbnail" />
+            </div>
+          </div>
+        </div>
+        <div class="row imagu pt-3">
+          <div class="col-md-7">
+            <h6>Out Image</h6>
+          </div>
+
+          <div class="col-md-5">
+            <div class="img-diver">
+              <img [src]="outFullPath ? outFullPath : 'assets/img/no-data-img.png'" style="width: 100%" alt
+                alt="Profile Photo" class="cstm-avatar-lg img-thumbnail" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="mapPopup">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Map</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div *ngIf="!IsnotLatandLong" id="map"></div>
+        <div *ngIf="IsnotLatandLong" id="map" class="no-data text-center">
+          <img src="assets/img/no-data-img.png" alt="No Record Found" />
+          <span>No Record Found</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

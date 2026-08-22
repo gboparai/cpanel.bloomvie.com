@@ -1,0 +1,703 @@
+<!-- <div class="page-header">
+  <div class="row">
+      <div class="col-sm-12">
+          <div class="page-sub-header">
+              <h3 class="page-title" id="breadcrumb1">    {{menuType}}</h3>
+              <ul class="breadcrumb">
+                  <li class="breadcrumb-item" id="breadcrumb">Dashboard</li>
+                  <li class="breadcrumb-item active">    {{menuType}}</li>
+              </ul>
+          </div>
+      </div>
+  </div>
+</div> -->
+
+<app-breadcrumb></app-breadcrumb>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="heading-new">
+          <h5 class="mb-0">Add {{ menuType }} Page</h5>
+        </div>
+        <form [formGroup]="form" (ngSubmit)="this.menuType === 'DayCareWelcome' ? onDayCareContent() : onSubmit()">
+
+          @if(this.menuType != "DayCareWelcome"){
+          <div class="row">
+            <div class="col-md-4 mb-4">
+              <div class="form-group local-forms">
+                <label for="Title1">Title1<span class="login-danger">*</span></label>
+                <input formControlName="Title1" id="Title1" type="text" class="form-control" placeholder="Enter Here" />
+                @if(this.menuType != "DayCareWelcome"){
+                @if(CMSFormControls.Title1.touched){
+                <span class="text-danger">
+                  @if(CMSFormControls.Title1?.errors?.required){
+                  <span>This field is required.</span>
+                  }
+                </span>
+                }}
+              </div>
+            </div>
+            <div class="col-md-4 mb-4">
+              <div class="form-group local-forms">
+                <label for="Title2">Title2</label>
+                <input formControlName="Title2" id="Title2" type="text" class="form-control" placeholder="Enter Here" />
+              </div>
+            </div>
+            <div class="col-md-4 mb-4">
+              <div class="form-group local-forms">
+                <label for="Title3">Title3</label>
+                <input formControlName="Title3" id="Title3" type="text" class="form-control" placeholder="Enter Here" />
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4 mb-4">
+              <div class="form-group local-forms">
+                <label>Section <span class="login-danger">*</span></label>
+                @if(this.menuType == "DayCareWelcome" || this.UserRoleId ==3){
+                <select class="form-control form-select form-select-solid fw-bolder" formControlName="Section"
+                  id="Section">
+                  <option value="Section 1">Section 1</option>
+                </select>
+                }@else{
+                <select class="form-control form-select form-select-solid fw-bolder" formControlName="Section"
+                  id="Section">
+                  <option value="" disabled>Select Section</option>
+                  <option *ngFor="let section of sections" [value]="section" [disabled]="isSectionDisabled(section)">
+                    {{ section }}
+                  </option>
+                </select>
+                } @if(CMSFormControls.Section.touched){
+                <span class="text-danger">
+                  @if(CMSFormControls.Section?.errors?.required){
+                  <span>This field is required.</span>
+                  }
+                </span>
+                }
+              </div>
+            </div>
+
+            <!-- <div class="col-xl-3 col-lg-6 mt-4">
+
+
+              <div class="form-group local-forms" style="position: relative;">
+                  <label>Image & Video</label>
+                  <input type="file" class="form-control" accept="image/*,video/*" />
+
+                  <div class="file-label">
+                      {{ fileCount || 'Choose Files' }}
+                  </div>
+                  <input accept="image/*,video/*" type="file" class="form-control updated"
+                      formControlName="bulkFile" [accept]="fileAcceptType" id="file-upload" #FileInput
+                      (change)="FileChange($event, 'bulkUpload')" multiple />
+              </div>
+          </div> -->
+
+            <div class="col-md-4 mb-4">
+              <div class="form-group local-forms">
+                <label for="CMSImage">Image</label>
+                <!-- <input type="file" accept="image/*" id="CMSImage" #CMSImageinput class="form-control" multiple
+                  (change)="FileSelectionBeforeCrop($event)" /> -->
+
+                <input type="file" accept="image/*" id="CMSImage" class="form-control" multiple
+                  (change)="onFileSelection($event)" />
+
+
+
+
+
+                <!-- <div class="file-label">
+                  {{ fileCount || 'Choose Files' }}
+              </div> -->
+
+                <!-- <input id="CMSImage" accept="image/*" type="file" class="form-control updated"
+                   id="file-upload" #FileInput
+                  (change)="fileChange($event, 'ContentManagement')" multiple /> -->
+
+
+                <!-- For Bloomvie CMS -->
+                <div class="col-md-12">
+                  <div class="grid" *ngIf="imagePreviews && imagePreviews.length > 0">
+                    <div class="cell-width" *ngFor="let image of imagePreviews; let i = index">
+                      @if(image?.s3Url){
+                      <div class="cell-height">
+                        <div class="item">
+                          <i (click)="DeleteImage(i)" id="CMSImage" class="fa fa-xmark delete-icon"
+                            aria-hidden="true"></i>
+                          <img [src]="image.s3Url" style="width: 100%; height: auto" />
+                        </div>
+                      </div>
+                      }
+                    </div>
+                  </div>
+                </div>
+
+                <!-- For Daycare CMS -->
+                <!-- <div *ngIf="id != null" class="grid">
+                    <div
+                      class="cell-width"
+                      *ngFor="
+                        let file of daycare.images?.includes(',')
+                          ? daycare.images.split(',')
+                          : [daycare.images]
+                      "
+                    >
+                      <div *ngIf="file" class="cell-height">
+                        <div class="item">
+                          <i
+                            (click)="deleteFile(daycare.id, file)"
+                            class="fa fa-xmark delete-icon"
+                            aria-hidden="true"
+                          >
+                          </i>
+
+                          <div class="image">
+                            <img [src]="ImageRootURL + file" alt="Image" />
+                            
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div> -->
+
+
+                <!-- <small  class="text-muted">Selected files: {{ fileNamesDisplay }}</small> -->
+              </div>
+            </div>
+            <div class="col-md-4 mb-4">
+              <div class="form-group local-forms">
+                <label for="Author">Author</label>
+                <input formControlName="Author" id="Author" type="text" class="form-control"
+                  placeholder="Enter Author" />
+              </div>
+            </div>
+            <div class="col-md-12 mb-4">
+              <div class="form-group local-forms">
+                <label for="Description">Description <span class="login-danger">*</span></label>
+                <!-- <angular-editor [placeholder]="'Description'" [(ngModel)]="htmlContent" formControlName="Description"></angular-editor> -->
+                <angular-editor [placeholder]="'Description'" [config]="editorConfig" type="text" id="Description"
+                  formControlName="Description">
+                </angular-editor>
+                @if(CMSFormControls.Description.touched){
+                <span class="text-danger">
+                  @if(CMSFormControls.Description?.errors?.required){
+                  <span>This field is required.</span>
+                  }
+                </span>
+                }
+              </div>
+            </div>
+          </div>
+          }
+          @else {
+          <div class="row">
+            <!-- @if(this.menuType != "DayCareWelcome"){
+              } -->
+
+            <!-- @else { -->
+            <div class="col-md-4 mb-4">
+              <div class="form-group local-forms">
+                <label for="Testimonails">Testimonails<span class="login-danger">*</span></label>
+                <input formControlName="Testimonails" name="Testimonails" id="Testimonails" type="text"
+                  placeholder="Enter Here" class="form-control" />
+
+                @if(this.menuType != "DayCareWelcome"){
+                @if(CMSFormControls.Testimonails.touched){
+                <span class="text-danger">
+                  @if(CMSFormControls.Testimonails?.errors?.required){
+                  <span>This field is required.</span>
+                  }
+                </span>
+                } }
+              </div>
+            </div>
+
+
+            <div class="col-md-4 mb-4">
+              <div class="form-group local-forms">
+                <label>Section <span class="login-danger">*</span></label>
+                @if(this.menuType == "DayCareWelcome" || this.UserRoleId ==3){
+                <select class="form-control form-select form-select-solid fw-bolder" formControlName="Section"
+                  id="Section">
+                  <option value="Section 1">Section 1</option>
+                </select>
+                }@else{
+                <select class="form-control form-select form-select-solid fw-bolder" formControlName="Section"
+                  id="Section">
+                  <option value="" disabled>Select Section</option>
+                  <option *ngFor="let section of sections" [value]="section" [disabled]="isSectionDisabled(section)">
+                    {{ section }}
+                  </option>
+                </select>
+                } @if(CMSFormControls.Section.touched){
+                <span class="text-danger">
+                  @if(CMSFormControls.Section?.errors?.required){
+                  <span>This field is required.</span>
+                  }
+                </span>
+                }
+              </div>
+            </div>
+
+            <!-- <div class="col-xl-3 col-lg-6 mt-4">
+
+
+              <div class="form-group local-forms" style="position: relative;">
+                  <label>Image & Video</label>
+                  <input type="file" class="form-control" accept="image/*,video/*" />
+
+                  <div class="file-label">
+                      {{ fileCount || 'Choose Files' }}
+                  </div>
+                  <input accept="image/*,video/*" type="file" class="form-control updated"
+                      formControlName="bulkFile" [accept]="fileAcceptType" id="file-upload" #FileInput
+                      (change)="FileChange($event, 'bulkUpload')" multiple />
+              </div>
+          </div> -->
+
+            <div class="col-md-4 mb-4">
+              <div class="form-group local-forms">
+                <label for="CMSImage">Image</label>
+                <!-- <input type="file" accept="image/*" id="CMSImage" #CMSImageinput class="form-control" multiple
+                  (change)="FileSelectionBeforeCrop($event)" /> -->
+
+                <input type="file" accept="image/*" id="CMSImage" class="form-control" multiple
+                  (change)="onFileSelection($event)" />
+
+
+
+
+
+                <!-- <div class="file-label">
+                  {{ fileCount || 'Choose Files' }}
+              </div> -->
+
+                <!-- <input id="CMSImage" accept="image/*" type="file" class="form-control updated"
+                   id="file-upload" #FileInput
+                  (change)="fileChange($event, 'ContentManagement')" multiple /> -->
+
+
+                <!-- For Bloomvie CMS -->
+                <div class="col-md-12">
+                  <div class="grid" *ngIf="imagePreviews && imagePreviews.length > 0">
+                    <div class="cell-width" *ngFor="let image of imagePreviews; let i = index">
+                      @if(image?.s3Url){
+                      <div class="cell-height">
+                        <div class="item">
+                          <i (click)="DeleteImage(i)" id="CMSImage" class="fa fa-xmark delete-icon"
+                            aria-hidden="true"></i>
+                          <img [src]="image.s3Url" style="width: 100%; height: auto" />
+                        </div>
+                      </div>
+                      }
+                    </div>
+                  </div>
+                </div>
+
+                <!-- For Daycare CMS -->
+                <!-- <div *ngIf="id != null" class="grid">
+                    <div
+                      class="cell-width"
+                      *ngFor="
+                        let file of daycare.images?.includes(',')
+                          ? daycare.images.split(',')
+                          : [daycare.images]
+                      "
+                    >
+                      <div *ngIf="file" class="cell-height">
+                        <div class="item">
+                          <i
+                            (click)="deleteFile(daycare.id, file)"
+                            class="fa fa-xmark delete-icon"
+                            aria-hidden="true"
+                          >
+                          </i>
+
+                          <div class="image">
+                            <img [src]="ImageRootURL + file" alt="Image" />
+                            
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div> -->
+
+
+                <!-- <small  class="text-muted">Selected files: {{ fileNamesDisplay }}</small> -->
+              </div>
+            </div>
+            <div class="col-md-4 mb-4">
+              <div class="form-group local-forms">
+                <label for="Author">Author</label>
+                <input formControlName="Author" id="Author" type="text" class="form-control"
+                  placeholder="Enter Author" />
+              </div>
+            </div>
+            <div class="col-md-12 mb-4">
+              <div class="form-group local-forms">
+                <label for="Description">Description <span class="login-danger">*</span></label>
+                <!-- <angular-editor [placeholder]="'Description'" [(ngModel)]="htmlContent" formControlName="Description"></angular-editor> -->
+                <angular-editor [placeholder]="'Description'" [config]="editorConfig" type="text" id="Description"
+                  formControlName="Description">
+                </angular-editor>
+                @if(CMSFormControls.Description.touched){
+                <span class="text-danger">
+                  @if(CMSFormControls.Description?.errors?.required){
+                  <span>This field is required.</span>
+                  }
+                </span>
+                }
+              </div>
+            </div>
+          </div>}
+          <div class="row">
+            <div class="col-12 col-md-12">
+              <div class="student-submit text-end">
+                <button id="btnsubmit" type="submit" class="btn btn-primary me-2">
+                  {{ submitButtonText }}
+                </button>
+                <button type="button" class="btn btn-secondary" (click)="CancelClick()">
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="heading-new">
+          <h5 class="mb-0">View List</h5>
+        </div>
+
+        @if(menuType === 'DayCareWelcome' || UserRoleId ==3){
+        <div class="row justify-content-end">
+          <div class="col-md-3 mb-4">
+            <div class="form-group local-forms">
+              <label>Select Section</label>
+              <ng-select [items]="listHomePageSection" bindValue="section" bindLabel="section" id="SectionDDL"
+                placeholder="-Select-" [(ngModel)]="selectedSectionId"
+                (change)="getDayCareCentreContentMaster()"></ng-select>
+            </div>
+          </div>
+
+          <div class="col-md-3 mb-4">
+            <div class="form-group local-forms">
+              <label>Select Status</label>
+              <ng-select [items]="statusOptions" bindValue="value" bindLabel="label" [(ngModel)]="selectedStatusId"
+                placeholder="-Select-" (change)="Filter($event.value, 'ACTIVE-INACTIVE')" id="period">
+              </ng-select>
+            </div>
+          </div>
+        </div>
+        } @else {
+        <div class="row justify-content-end">
+          <div class="col-md-3 mb-4">
+            <div class="form-group local-forms">
+              <label>Select Section</label>
+              <ng-select [items]="listHomePageSection" bindValue="section" bindLabel="section" id="SectionDDL"
+                placeholder="-Select-" [(ngModel)]="selectedSectionId"
+                (change)="getSectionListBySectionAndType()"></ng-select>
+            </div>
+          </div>
+
+          <div class="col-md-3 mb-4">
+            <div class="form-group local-forms">
+              <label>Select Status</label>
+              <ng-select [items]="statusOptions" bindValue="value" bindLabel="label" [(ngModel)]="selectedStatusId"
+                placeholder="-Select-" (change)="Filter($event.value, 'ACTIVE-INACTIVE')" id="period">
+              </ng-select>
+            </div>
+          </div>
+        </div>
+        }
+
+
+        <!-- DAYCARE CMS TABLE -->
+
+        @if(menuType === 'DayCareWelcome' ||UserRoleId ==3)
+        {
+
+        <div class="row mt-3">
+          <div class="col-md-12">
+            <div class="table-responsive">
+              <table id="example1" class="table table-hover mb-0">
+                <thead class="student-thread">
+                  <tr>
+                    <th>#</th>
+                    <th>Image</th>
+
+                    <!-- @if(this.menuType == 'DayCareWelcome' || this.UserRoleId
+                    ==3){ -->
+                    <th style="min-width: 149px">Testimonails</th>
+                    <th style="min-width: 149px">Description</th>
+                    <th>Author</th>
+                    <th>Action</th>
+                    <!-- } @else{
+                    <th style="min-width: 149px">Title1</th>
+                    <th style="min-width: 149px">Title2</th>
+                    <th style="min-width: 149px">Title3</th>
+                    <th style="min-width: 149px">Description</th>
+                    <th>Author</th>
+                    <th>Action</th>
+                    } -->
+                  </tr>
+                </thead>
+
+                <tbody>
+                  @if (skeletonShow === 'Skelton') {
+                  <tr>
+                    <td colspan="100%">
+                      <app-skeleton-loader skeletonShow="Skelton" viewType="table" [tableRows]="5" [tableCols]="6">
+                      </app-skeleton-loader>
+                    </td>
+                  </tr>
+
+                  } @else if (DayCareCentreContent.length > 0) {
+                  <tr *ngFor="
+                      let Content of DayCareCentreContent
+                        | paginate
+                          : {
+                              itemsPerPage: Contentsize,
+                              currentPage: ContentP,
+                              id: 'Cmscontrol'
+                            };
+                      let Index = index
+                    ">
+                    <td>{{ (ContentP - 1) * Contentsize + Index + 1 }}</td>
+                    <td>
+                      <div class="image-content" *ngIf="Content.s3Urls.length>0">
+                        <img [src]="Content.s3Urls[0]" alt="Content Image" />
+                      </div>
+
+                      <div class="image-content" *ngIf="Content.s3Urls.length===0">
+                        <img src="../../assets/img/no-image.png" alt="No Image Available" />
+                      </div>
+
+                    </td>
+                    <td>
+                      <div class="cont1">{{ Content.testimonails }}</div>
+                    </td>
+
+                    <td>
+                      <div class="description" [innerHtml]="Content.description"></div>
+                    </td>
+                    <td>{{ Content.author ? Content.author : "--" }}</td>
+                    <td>
+                      <div class="actions">
+                        <a (click)="onEdit(Content)" class="action-btn bg-danger-light me-2">
+                          <i class="feather-edit"></i>
+                        </a>
+                        <label class="switch mb-0">
+                          <input id="checkBoxAinA{{ Content.id }}" (change)="
+                              ActiveInactive(
+                                Content.id,
+                                Content.isActive,
+                                $event,
+                                this.menuType
+                              )
+                            " [checked]="Content.isActive" type="checkbox" />
+                          <div class="slider">
+                            <span class="status-text"></span>
+                            <div class="circle"></div>
+                          </div>
+                        </label>
+                      </div>
+                    </td>
+                    }@else {
+                  <tr>
+                    <td colspan="100%">
+                      <app-skeleton-loader skeletonShow="NoRecord">
+                      </app-skeleton-loader>
+                    </td>
+                  </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Pagination Controls -->
+            <div class="pagination-style" *ngIf="DayCareCentreContent?.length > 5">
+              <pagination-controls previousLabel="prev" nextLabel="next" [maxSize]="5"
+                class="datatable-pager-nav my-2 mb-sm-0" id="Cmscontrol" (pageChange)="onPageChange($event)">
+              </pagination-controls>
+            </div>
+          </div>
+        </div>
+        }@else{
+
+        <div class="row mt-3">
+          <div class="col-md-12">
+            <div class="table-responsive">
+              <table id="example1" class="table table-hover mb-0">
+                <thead class="student-thread">
+                  <tr>
+                    <th>#</th>
+                    <th>Image</th>
+                    <th style="min-width: 149px">Title1</th>
+                    <th style="min-width: 149px">Title2</th>
+                    <th style="min-width: 149px">Title3</th>
+                    <th style="min-width: 149px">Description</th>
+                    <th>Author</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @if (skeletonShow === 'Skelton') {
+                  <tr>
+                    <td colspan="100%">
+                      <app-skeleton-loader skeletonShow="Skelton" viewType="table" [tableRows]="5" [tableCols]="8">
+                      </app-skeleton-loader>
+                    </td>
+                  </tr>
+
+                  } @else if (listHomePageSectionandType.length > 0) {
+                  <tr *ngFor="
+                      let Content of listHomePageSectionandType
+                        | paginate
+                          : {
+                              itemsPerPage: Contentsize,
+                              currentPage: ContentP,
+                              id: 'Cmscontrol'
+                            };
+                      let Index = index
+                    ">
+                    <td>{{ (ContentP - 1) * Contentsize + Index + 1 }}</td>
+                    <td>
+                      <div class="image-content" *ngIf="Content.s3Urls.length>0">
+                        <img [src]="Content.s3Urls[0]" alt="Content Image" />
+                      </div>
+                      <div class="image-content" *ngIf="Content.s3Urls.length==0">
+                        <img src="../../assets/img/no-image.png" alt="No Image Available" />
+                      </div>
+                    </td>
+                    <td>
+                      <div class="cont1">{{ Content.title1 }}</div>
+                    </td>
+                    <td>
+                      <div class="cont1">{{ Content.title2 }}</div>
+                    </td>
+                    <td>
+                      <div class="cont1">{{ Content.title3 }}</div>
+                    </td>
+                    <td>
+                      <div class="description" [innerHtml]="Content.description"></div>
+                    </td>
+                    <td>{{ Content.author ? Content.author : "--"}}</td>
+                    <td>
+                      <div class="actions">
+                        <a (click)="onEdit(Content)" class="action-btn bg-danger-light me-2">
+                          <i class="feather-edit"></i>
+                        </a>
+                        <label class="switch mb-0">
+                          <input id="checkBoxAinA{{ Content.id }}" (change)="
+                              ActiveInactive(
+                                Content.id,
+                                Content.isActive,
+                                $event,
+                                this.menuType
+                              )
+                            " [checked]="Content.isActive" type="checkbox" />
+                          <div class="slider">
+                            <span class="status-text"></span>
+                            <div class="circle"></div>
+                          </div>
+                        </label>
+                      </div>
+                    </td>
+                  </tr>
+                  } @else {
+                  <tr>
+                    <td colspan="100%">
+                      <app-skeleton-loader skeletonShow="NoRecord">
+                      </app-skeleton-loader>
+                    </td>
+                  </tr>
+
+                  }
+                </tbody>
+              </table>
+            </div>
+            <!-- Pagination Controls -->
+
+            <div class="pagination-style" *ngIf="listHomePageSectionandType.length > 5">
+              <pagination-controls previousLabel="prev" nextLabel="next" [maxSize]="5"
+                class="datatable-pager-nav my-2 mb-sm-0" id="Cmscontrol" (pageChange)="onPageChange($event)">
+              </pagination-controls>
+            </div>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- CROPPER POP UP FOR MULTIPLE IMAGE SELECTION -->
+
+<div class="modal fade" id="cropperModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
+  aria-labelledby="cropperModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="cropperModalLabel">Crop Image</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <image-cropper [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="false" [aspectRatio]="4 / 3"
+          [format]="croppedImageType" (imageCropped)="storeTempCrop($event)"></image-cropper>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cancel
+        </button>
+
+        <button *ngIf="!showUploadBtnToUploadCroppedImages" type="button" class="btn btn-primary"
+          (click)="processCroppedImage()">
+          Next
+        </button>
+        <button *ngIf="showUploadBtnToUploadCroppedImages" type="button" class="btn btn-primary"
+          (click)="fileChangeHandler()">
+          Upload
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CROPPER IMAGE HANDLER IF SINGLE IMAGE IS SELECTED -->
+
+<div class="modal fade" id="cropperModalForSingleImage" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="cropperModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="cropperModalLabel">Crop Image</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <image-cropper [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="false" [aspectRatio]="4 / 3"
+          [format]="croppedImageType" (imageCropped)="storeTempCrop($event)"></image-cropper>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cancel
+        </button>
+
+        <button type="button" class="btn btn-primary" (click)="processCroppedImageForSingle()">
+          Upload
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

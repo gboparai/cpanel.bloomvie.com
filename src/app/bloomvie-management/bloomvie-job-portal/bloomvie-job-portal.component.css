@@ -1,0 +1,16 @@
+
+
+.local-forms label {
+   
+    left: 21px !important;
+  
+}
+
+.row.shinzo {
+    margin-bottom: 2.25rem;
+}
+
+.check-grid {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+}

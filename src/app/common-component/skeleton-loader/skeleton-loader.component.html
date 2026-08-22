@@ -1,0 +1,450 @@
+@switch (true) { @case (skeletonShow === 'NoRecord') {
+<div class="no-data skeleton-transition show">
+  <img src="assets/img/no-data-img.png" alt="No Record Found" />
+  <span>No Record Found</span>
+</div>
+} @case (skeletonShow === 'Skelton' && viewType === 'table') {
+<div
+  [class.show]="skeletonShow === 'Skelton'"
+  class="table-responsive mb-2 skeleton-transition show"
+>
+  <table class="table table-hover mb-0">
+    <tbody>
+      <tr *ngFor="let r of rows">
+        <td *ngFor="let c of cols">
+          <div class="line shimmer-line"></div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+} @case (skeletonShow2 === 'Skelton2' && viewType === 'table') {
+<div class="table-responsive mb-2 skeleton-transition show">
+  <table class="table table-hover mb-0">
+    <tbody>
+      <tr *ngFor="let r of rows">
+        <td *ngFor="let c of cols">
+          <div class="line shimmer-line"></div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+} @case (skeletonShow3 === 'Skelton3' && viewType === 'table') {
+<div
+  [class.show]="skeletonShow === 'Skelton'"
+  class="table-responsive mb-2 skeleton-transition show"
+>
+  <table class="table table-hover mb-0">
+    <tbody>
+      <tr *ngFor="let r of rows">
+        <td *ngFor="let c of cols">
+          <div class="line shimmer-line"></div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+} @case (skeletonShow === 'Skelton' && viewType === 'card') {
+<div class="data-loader-wrapper skeleton-transition show">
+  <div class="loader-card shimmer" *ngFor="let card of cards">
+    <div class="loader-thumbnail"></div>
+    <div class="loader-content">
+      <div class="loader-title"></div>
+      <div class="loader-line"></div>
+      <div class="loader-line short"></div>
+    </div>
+  </div>
+</div>
+} @case (skeletonShow === 'Skelton' && viewType === 'counsellor') {
+<div class="counsellor-skeleton shimmer mb-4 skeleton-transition show">
+  <div class="circle shimmer-bg"></div>
+  <div class="text shimmer-bg"></div>
+  <div class="subtext shimmer-bg"></div>
+</div>
+} @case (skeletonShow === 'Skelton' && viewType === 'StudentActivity') {
+<ul class="student-activity-skeleton skeleton-transition show">
+  <li *ngFor="let i of activity" class="activity-skeleton-item">
+    <div class="timeline-line"></div>
+    <div class="date-circle shimmer"></div>
+    <div class="activity-connector"></div>
+    <div class="activity-box shimmer">
+      <div class="title-line"></div>
+      <div class="desc-line short"></div>
+      <div class="desc-line"></div>
+    </div>
+  </li>
+</ul>
+} @case (skeletonShow === 'Skelton' && viewType === 'chat') {
+<div class="chat-skeleton-wrapper skeleton-transition show">
+  <div class="chat-skeleton-sidebar">
+    <div class="chat-sidebar-item chat" *ngFor="let i of [1, 2, 3, 4, 5]">
+      <div class="avatar"></div>
+      <div class="chat-lines">
+        <div class="line"></div>
+        <div class="line short"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chat-skeleton-main">
+    <div class="chat-header chat">
+      <div class="avatar"></div>
+      <div class="name-status">
+        <div class="line"></div>
+        <div class="line short"></div>
+      </div>
+    </div>
+
+    <div class="chat-body">
+      <div class="chat-bubble chat"></div>
+      <div class="chat-bubble chat short"></div>
+    </div>
+
+    <div class="chat-input chat"></div>
+  </div>
+</div>
+} @case (skeletonShow === 'Skelton' && viewType === 'profile') {
+<div class="profile-skeleton skeleton-transition show">
+  <div class="avatar profile"></div>
+  <div class="details">
+    <div class="name-line profile"></div>
+    <div class="status-line profile"></div>
+  </div>
+</div>
+
+} @case (skeletonShow === 'Skelton' && viewType === 'logo') {
+<div class="logo-skeleton skeleton-transition show">
+  <div class="logo-box logo"></div>
+  <div class="logo-title logo"></div>
+</div>
+} @case (skeletonShow === 'Skelton' && viewType === 'attendance') {
+<div class="attendance-card-wrapper skeleton-transition show">
+  <div class="attendance-card attendance" *ngFor="let i of [1]">
+    <div class="attendance-text">
+      <div class="line title-line"></div>
+      <div class="line value-line"></div>
+    </div>
+    <div class="attendance-icon"></div>
+  </div>
+</div>
+}
+
+<!-- 🔹 Manage Day View (Working Days Skeleton) -->
+@case (skeletonShow === 'Skelton' && viewType === 'manageDay') {
+<div class="col-md-12 mb-4 skeleton-transition show">
+  <div class="top-sel mb-3 d-flex align-items-center">
+    <div class="skeleton-checkbox me-2 days-bg"></div>
+    <div class="skeleton-line w-25 days-bg"></div>
+  </div>
+  <div class="weekend d-flex align-items-center gap-3 flex-wrap">
+    <div
+      class="sun days-bg skeleton-day-box"
+      *ngFor="let i of [1, 2, 3, 4, 5, 6, 7]"
+    >
+      <div class="skeleton-checkbox days-bg mb-1"></div>
+      <div class="skeleton-line days-bg w-75"></div>
+    </div>
+  </div>
+</div>
+} @case (skeletonShow === 'Skelton' && viewType === 'plan-feature-list') {
+<div class="row">
+  <div class="col-md-4" *ngFor="let r of [1, 2, 3]">
+    <div class="skeleton-card p-4 mb-4 rounded shadow-sm">
+      <div class="skeleton-line w-75 mb-2"></div>
+      <div class="skeleton-line w-50 mb-3"></div>
+      <div class="skeleton-line w-100 mb-2"></div>
+      <div class="skeleton-line w-75 mb-2"></div>
+      <div class="skeleton-line w-50 mb-4"></div>
+      <div *ngFor="let f of [1, 2, 3, 4]">
+        <div class="skeleton-line w-100 mb-2"></div>
+      </div>
+      <div class="skeleton-line w-25 mt-3"></div>
+    </div>
+  </div>
+</div>
+} @case (skeletonShow === 'Skelton' && viewType === 'day-toggle') {
+<div class="days--color">
+  <div class="mob-flex">
+    <ng-container *ngFor="let i of [1, 2, 3, 4, 5, 6]">
+      <div class="skeleton-day-toggle section-form"></div>
+    </ng-container>
+  </div>
+</div>
+} @case (skeletonShow === 'Skelton' && viewType === 'section-form') {
+<div class="skeleton-section-wrapper">
+  <div class="skeleton-section" *ngFor="let s of [1, 2, 3, 4, 5]">
+    <div
+      class="skeleton-section-header d-flex justify-content-between align-items-center mb-3"
+    >
+      <div class="d-flex align-items-center">
+        <div class="skeleton-circle section-form me-3"></div>
+        <div class="skeleton-line w-25 section-form"></div>
+      </div>
+      <div class="skeleton-line w-10 section-form"></div>
+    </div>
+    <div class="skeleton-form-fields d-flex flex-wrap gap-3">
+      <div class="skeleton-form-field" *ngFor="let i of [1, 2, 3]">
+        <div class="skeleton-line w-75 mb-2 section-form"></div>
+        <div class="skeleton-box w-100 section-form"></div>
+      </div>
+    </div>
+  </div>
+</div>
+} @case (skeletonShow === 'Skelton' && viewType === 'staff-assignment') {
+<tr>
+  <!-- Avatar and Name Placeholder -->
+  <td style="width: 10%; background: #edf2fa">
+    <div
+      class="d-flex justify-content-start flex-column align-items-center py-2"
+    >
+      <div class="skeleton-avatar staff-assignment mb-1"></div>
+      <div class="skeleton-line w-50 staff-assignment"></div>
+    </div>
+  </td>
+</tr>
+} @case (workTimeskeleton === 'workTimeskeleton' && viewType ===
+'work-days-timing') {
+<div class="row skeleton-transition show">
+  <div class="col-md-6" *ngFor="let i of workDay">
+    <div class="row">
+      <div *ngFor="let i of [1, 2, 3, 4, 5, 6]" class="col-xl-4">
+        <div class="skeleton-day-label desing shimmer w-100 mb-2"></div>
+      </div>
+    </div>
+  </div>
+</div>
+} @case (holidaySkeleton === 'holidays' && viewType === 'month-checkbox-list') {
+<div class="row skeleton-transition show">
+  <div class="col-md-4" *ngFor="let m of [1, 2, 3]">
+    <div class="month-block mb-3">
+      <div class="skeleton-month-title shimmer mb-2"></div>
+      <div *ngFor="let i of [1, 2]">
+        <div class="d-flex align-items-center mb-1">
+          <div class="skeleton-checkbox shimmer me-2"></div>
+          <div class="skeleton-line shimmer w-75"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+} @case(skeletonShow === 'Skelton' && viewType === 'carousel'){
+<div class="testimonial-block">
+  <div class="inner-box shimmer">
+    <div class="image skeleton-avatar"></div>
+    <div class="content">
+      <i class="fas fa-quote-right quote-placeholder"></i>
+      <div class="skeleton-author skeleton-line"></div>
+      <div class="skeleton-subtitle skeleton-line short"></div>
+      <div class="skeleton-text skeleton-line"></div>
+      <div class="skeleton-text skeleton-line"></div>
+    </div>
+  </div>
+</div>
+
+}
+@case (skeletonShow === 'Skelton' && viewType === 'profileImage') {
+  <div class="col-md-4 text-center">
+    <div class="imagu">
+      <div class="skeleton-avatar shimmer"></div>
+    </div>
+  </div>
+
+   <div class="profile-skeleton-text">
+    <div class="skeleton-line user-info-card w-50 mb-2"></div> <!-- Name -->
+    <div class="skeleton-line user-info-card w-75 mb-2"></div> <!-- Email -->
+    <div class="skeleton-line user-info-card w-50"></div>      <!-- Role -->
+  </div>
+  
+}
+@case (skeletonShow === 'Skelton' && viewType === 'user-info-card') {
+  <div class="profile-skeleton-text">
+    <div class="skeleton-line user-info-card w-50 mb-2"></div> <!-- Name -->
+    <div class="skeleton-line user-info-card w-75 mb-2"></div> <!-- Email -->
+    <div class="skeleton-line user-info-card w-50"></div>      <!-- Role -->
+  </div>
+}
+
+
+@case (skeletonShow === 'Skelton' && viewType === 'age-Group') {
+  <div *ngFor="let i of [1,2,3,4,5,6]" class="skeleton-transition show">
+    <div class="mb-3">
+      <div class="d-flex flex-wrap gap-2">
+        <div >
+          <div class="skeleton-box group-checkbox"></div>
+        </div>
+        <div class="skeleton-add group-checkbox"></div>
+      </div>
+    </div>
+
+ 
+  </div>
+}
+@case (skeletonShowList === 'SkeltonList' && viewType === 'activity-list') {
+  <div class="list-group">
+    <div class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let i of [1, 2, 3, 4, 5, 6]">
+      <div class="d-flex align-items-center">
+        <!-- Icon Placeholder -->
+        <div class="skeleton-box rounded me-3" style="width: 40px; height: 40px;"></div>
+
+        <!-- Text Placeholder -->
+        <div>
+          <div class="skeleton-line shimmer mb-1" style="width: 80px; height: 14px;"></div>
+          <div class="skeleton-line shimmer" style="width: 60px; height: 12px;"></div>
+        </div>
+      </div>
+
+      <!-- Time Placeholder -->
+      <div class="skeleton-line shimmer rounded" style="width: 70px; height: 20px;"></div>
+    </div>
+  </div>
+} @case (skeletonShowList2 === 'SkeltonList2' && viewType === 'activity-list') {
+  <div class="list-group">
+    <div class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let i of [1, 2, 3, 4, 5, 6]">
+      <div class="d-flex align-items-center">
+        <!-- Icon Placeholder -->
+        <div class="skeleton-box rounded me-3" style="width: 40px; height: 40px;"></div>
+
+        <!-- Text Placeholder -->
+        <div>
+          <div class="skeleton-line shimmer mb-1" style="width: 80px; height: 14px;"></div>
+          <div class="skeleton-line shimmer" style="width: 60px; height: 12px;"></div>
+        </div>
+      </div>
+
+      <!-- Time Placeholder -->
+      <div class="skeleton-line shimmer rounded" style="width: 70px; height: 20px;"></div>
+    </div>
+  </div>
+} @case (skeletonShowList3 === 'SkeltonList3' && viewType === 'activity-list') {
+  <div class="list-group">
+    <div class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let i of [1, 2, 3, 4, 5, 6]">
+      <div class="d-flex align-items-center">
+        <!-- Icon Placeholder -->
+        <div class="skeleton-box rounded me-3" style="width: 40px; height: 40px;"></div>
+
+        <!-- Text Placeholder -->
+        <div>
+          <div class="skeleton-line shimmer mb-1" style="width: 80px; height: 14px;"></div>
+          <div class="skeleton-line shimmer" style="width: 60px; height: 12px;"></div>
+        </div>
+      </div>
+
+      <!-- Time Placeholder -->
+      <div class="skeleton-line shimmer rounded" style="width: 70px; height: 20px;"></div>
+    </div>
+  </div>
+}
+
+@case (skeletonShowCalenderCard === 'SkeltonCalenderCard' && viewType === 'calendar-cards') {
+  <div class="d-flex flex-wrap gap-3 justify-content-start p-3 rounded border" style="background-color: #e8f0f7;">
+    <div *ngFor="let i of [1, 2, 3, 4, 5, 6, 7]" class="text-center">
+      <div class="skeleton-calendar-box shimmer mb-1"></div>
+      <div class="skeleton-line shimmer mb-1 mx-auto" style="width: 60px; height: 14px;"></div>
+      <div class="skeleton-line shimmer mx-auto" style="width: 50px; height: 12px;"></div>
+    </div>
+  </div>
+}
+
+
+@case (skeletonShow === 'Skelton' && viewType === 'photoRound') {
+  <div class="col-md-4 text-center">
+    <div class="imagu">
+      <div class="skeleton-avatar shimmer"></div>
+    </div>
+  </div>
+
+  
+}
+
+
+@case (skeletonShow === 'Skelton' && viewType === 'toc-schedule') {
+<div class="card mb-3">
+  <!-- Card Header Skeleton -->
+  <div class="card-header bg-light-purple d-flex justify-content-between align-items-center">
+    <div class="skeleton-line w-25 shimmer mb-0"></div>
+    
+  </div>
+
+  <!-- Card Body Skeleton Table Rows -->
+  <div class="card-body p-0">
+    <div *ngFor="let i of [1]" class="p-3 border-bottom">
+      <div class="table-responsive">
+        <table class="table mb-0">
+          <thead>
+            <tr>
+              <th *ngFor="let h of [1,2,3,4,5,6]">
+                <div class="skeleton-line w-50 shimmer mb-1"></div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td *ngFor="let c of [1,2,3,4,5,6]">
+                <div class="skeleton-line w-75 shimmer mb-1"></div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+}
+@case (planInfoskeletonShow === 'PlanInfo' && viewType === 'plan-Information') {
+<div class="card p-3 mb-3 shadow-sm rounded">
+  <div class="d-flex justify-content-between align-items-start">
+    <div class="skeleton-line shimmer w-25 h-4 mb-2"></div>
+    <div class="skeleton-line shimmer w-25 h-4 mb-2 text-end"></div>
+  </div>
+
+  <div class="d-flex align-items-center mb-2">
+    <i class="bi bi-calendar2 me-2"></i>
+    <div class="skeleton-line shimmer w-50 h-3"></div>
+  </div>
+
+  <div class="skeleton-line shimmer w-25 h-3 mb-2"></div>
+
+  <div class="text-end">
+    <div class="skeleton-button shimmer w-25 h-4 rounded"></div>
+  </div>
+</div>
+}
+@case(skeletonShow === 'Skelton' && viewType === 'studentActivityEdit') {
+
+
+ 
+    <div class="card p-3 mb-3 shadow-sm rounded">
+      <div class="row mb-3">
+        <div class="col-md-3">
+          <div class="skeleton-line shimmer w-100 h-4 mb-2"></div>
+        </div>
+        <div class="col-md-3">
+          <div class="skeleton-line shimmer w-100 h-4 mb-2"></div>
+        </div>
+        <div class="col-md-3">
+          <div class="skeleton-line shimmer w-100 h-4 mb-2"></div>
+        </div>
+        <div class="col-md-3">
+          <div class="skeleton-line shimmer w-100 h-4 mb-2"></div>
+        </div>
+      </div>
+      <div class="mb-3">
+        <div class="skeleton-line shimmer w-100 h-6"></div>
+      </div>
+   
+ 
+    </div>
+
+
+
+
+}
+
+
+}
+
+
+
+

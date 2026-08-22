@@ -1,0 +1,43 @@
+.searcher {
+    display: flex;
+    width: 100%;
+    gap: 40px;
+}
+
+
+
+.p-25{
+    padding: 25px;
+}
+
+
+.chat-container {
+    width: 100%;
+    max-width: 500px;
+    margin: auto;
+  }
+  
+  .messages {
+    border: 1px solid #ddd;
+    height: 300px;
+    overflow-y: auto;
+    margin-bottom: 10px;
+  }
+  
+  input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .staff-box {
+  background-color: #e6f4ff;
+  padding: 6px;
+  border-radius: 6px;
+}
+
+.student-box {
+  background-color: #fff7e6;
+  padding: 6px;
+  border-radius: 6px;
+}

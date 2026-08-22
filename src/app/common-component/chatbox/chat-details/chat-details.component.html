@@ -1,0 +1,1014 @@
+<!--cropper functionality pop up-->
+
+<div class="modal fade" id="cropperModal" tabindex="-1"
+  aria-labelledby="cropperModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="cropperModalLabel">Crop Image</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"
+          aria-label="Close"
+          (click)="resetAttachment()"></button>
+      </div>
+      <div class="modal-body">
+        <image-cropper [imageChangedEvent]="imageChangedEvent"
+          [maintainAspectRatio]="true" [aspectRatio]="4 / 3"
+          format="png" (imageCropped)="onImageCropped($event)"></image-cropper>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+          (click)="resetAttachment()">
+          Cancel
+        </button>
+        <button class="btn btn-secondary" (click)="onCropConfirmed()">Confirm
+          Crop</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="chat__container">
+  <div class="chat__wrapper py-2 pt-mb-2 pb-md-3">
+    <div
+      class="chat__messaging messaging-member--online pb-2 pb-md-2 ps-2 ps-md-4 pe-2">
+      <div class="chat__previous d-flex d-md-none">
+        <svg xmlns="http://www.w3.org/2000/svg"
+          class="svg-icon svg-icon--previous" viewBox="0 0 45.5 30.4">
+          <path
+            d="M43.5,13.1H7l9.7-9.6A2.1,2.1,0,1,0,13.8.6L.9,13.5h0L.3,14v.6c0,.1-.1.1-.1.2v.4a2,2,0,0,0,.6,1.5l.3.3L13.8,29.8a2.1,2.1,0,1,0,2.9-2.9L7,17.2H43.5a2,2,0,0,0,2-2A2.1,2.1,0,0,0,43.5,13.1Z"
+            fill="#f68b3c" />
+        </svg>
+      </div>
+      <div class="chat__notification d-flex d-md-none chat__notification--new">
+        <span>1</span>
+      </div>
+      <div class="chat__infos pl-2 pl-md-0">
+        <div class="chat-member__wrapper" data-online>
+          <div class="d-flex align-items-center">
+            <div class="chat-member__avatar">
+              <div class="blk-div">
+                <img
+                  [src]="receiverData.fileUrl ? receiverData.fileUrl : 'assets/img/dummy-group-icon.png' "
+                  [alt]="receiverData.name" loading="lazy" decoding="async"
+                  fetchpriority="low" width="100" height="100"
+                  style="transition: opacity 0.3s ease-in-out;" class="image"
+                  [class.image-loaded]="receiverData.imageLoaded"
+                  (load)="receiverData.imageLoaded = true" />
+
+              </div>
+
+              <div
+                [ngClass]="{'hide':!receiverData.isOnline || receiverData.isGroup}"
+                class="user-status user-status--large"></div>
+            </div>
+            <div class="chat-member__details">
+              <span class="chat-member__name"
+                [innerText]="receiverData.name"></span>
+              <span [ngClass]="{'hide':receiverData.isGroup}"
+                class="chat-member__status"
+                [innerText]="receiverData.isOnline?'Online':'Offline'"></span>
+              <span [ngClass]="{'hide':!receiverData.isGroup}"
+                class="chat-member__status">Total Members:
+                {{groupData.groupMembers.length}}</span>
+            </div>
+          </div>
+          <div [ngClass]="{'hide':!receiverData.isGroup}">
+            <ul class="nav user-menu">
+
+              <li class="nav-item dropdown has-arrow new-user-menus">
+                <a href="#" data-bs-toggle="dropdown"
+                  class="dropdown-toggle nav-link" aria-expanded="false">
+                  <div class="user-img"><img id="header" width="31"
+                      src="assets/img/team-add.svg" alt="Ryan Taylor"
+                      class="rounded-circle">
+
+                  </div>
+                </a>
+                <div class="dropdown-menu">
+                  <a class="dropdown-item" data-bs-toggle="modal"
+                    data-bs-target="#show-group"><i
+                      class="fa fa-eye me-1"></i>View Group</a>
+
+                  <a class="dropdown-item" data-bs-toggle="modal"
+                    data-bs-target="#show-user"><i
+                      class="fa fa-plus me-1"></i>Add People</a>
+                  <a href="#" class="dropdown-item"><i
+                      class="fa fa-right-from-bracket me-1"></i>Exit Group</a>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="chat__content ">
+      <div #scrollContainer class="chat__content-inner pt-4 px-3" infiniteScroll
+        [infiniteScrollDistance]="2"
+        [infiniteScrollThrottle]="500" (scroll)="onScroll()"
+        [infiniteScrollDisabled]="false" [scrollWindow]="false">
+        <ul class="chat__list-messages">
+          <!-- <li *ngFor="let chat of chatList">
+            <div *ngIf="chat.type === 'receiver'; else senderMessage">
+            
+              <div [ngClass]="{'hide':!chat.data.message}" class="chat__time">{{ chat.data.timestamp | date: 'short' }}
+              </div>
+              <div [ngClass]="{'hide':!chat.data.message}" class="chat__bubble chat__bubble--you">{{ chat.data.message
+                }}</div>
+
+           
+
+              <ng-container *ngFor="let file of chat.data.chatFiles">
+                <div class="msg-images" *ngIf="file.fileType.startsWith('image')">
+                  <a [href]="baseUrl+file.filePath+file.fileName" data-fancybox="gallery2" class="fancybox image-boxes">
+                    <img [src]="baseUrl+file.filePath+file.fileName" [alt]="file.fileName"
+                      class="chat__file chat__file--image" data-fancybox="gallery2" class="fancybox ">
+                  </a>
+                  <ul class="dropdown-image">
+                    <li (click)="downloadFileAsBlob(file.filePath+file.fileName)"><a><i class="fa fa-download"></i></a>
+                    </li>
+                  </ul>
+                </div>
+                <div *ngIf="file.fileType.startsWith('video')">
+                  <video controls class="chat__file chat__file--video" width="auto" height="200px">
+                    <source [src]="baseUrl+file.filePath+file.fileName" [type]="file.fileType">
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
+                <div *ngIf="file.fileType.startsWith('document')" class="pdf-show">
+                  <a (click)="downloadFileAsBlob(file.filePath+file.fileName)" class="chat__file chat__file--pdf">
+                    <i class="fa" [ngClass]="getFileIconClass(file.fileType)"
+                      [style]="{'color': getFileIconColor(file.fileType)}"></i>
+                    <span> {{ file.fileName }}</span>
+                  </a>
+                </div>
+
+                
+                <div *ngIf="file.fileType.startsWith('audio')">
+                  <audio controls class="chat__file chat__file--audio">
+                    <source [src]="baseUrl + file.filePath + file.fileName" [type]="file.fileType">
+                    Your browser does not support the audio element.
+                  </audio>
+                </div>
+
+              </ng-container>
+
+            </div>
+            <ng-template #senderMessage>
+            
+              <div class="chat__time">{{ chat.data.timestamp | date: 'short' }}</div>
+
+              <div [ngClass]="{'hide':!chat.data.message}" class="chat__bubble chat__bubble--me"><span>{{
+                  chat.data.message }}</span>
+
+              </div>
+
+              
+              <div class="sender-box" *ngIf="chat.data.chatFiles.length">
+                <div class="send-file-box">
+                  <ng-container *ngFor="let file of chat.data.chatFiles">
+                    <div class="msg-images" *ngIf="file.fileType.startsWith('image')">
+                      <a data-fancybox="gallery2" class="fancybox image-boxes">
+                        <img [src]="baseUrl+file.filePath+file.fileName" [alt]="file.fileName"
+                          class="chat__file chat__file--image" data-fancybox="gallery2" class="fancybox ">
+
+                      </a>
+                      <ul class="dropdown-image">
+                        <li><a (click)="downloadFileAsBlob(file.filePath+file.fileName)"><i
+                              class="fa fa-download"></i></a></li>
+
+                      </ul>
+                  
+                    </div>
+                    <div *ngIf="file.fileType.startsWith('video')">
+                      <video controls class="chat__file chat__file--video" width="auto" height="200px">
+                        <source [src]="baseUrl+file.filePath+file.fileName" [type]="file.fileType">
+                        Your browser does not support the video tag.
+                      </video>
+                    </div>
+                    <div *ngIf="file.fileType.startsWith('document')" class="pdf-show">
+                      <a (click)="downloadFileAsBlob(file.filePath+file.fileName)" class="chat__file chat__file--pdf">
+                        <i class="fa" [ngClass]="getFileIconClass(file.fileType)"
+                          [style]="{'color': getFileIconColor(file.fileType)}"></i>
+                        <span> {{ file.fileName }}</span>
+                      </a>
+                    </div>
+
+                 
+                    <div *ngIf="file.fileType.startsWith('audio')">
+                      <audio controls class="chat__file chat__file--audio">
+                        <source [src]="baseUrl + file.filePath + file.fileName" [type]="file.fileType">
+                        Your browser does not support the audio element.
+                      </audio>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+              <div class="check-msg-seen " *ngIf="!chat.data.isRead && !receiverData.isGroup">
+                <img src="assets/img/double-check.png" alt="Deliverd"
+                  style="filter: brightness(0) invert(0);"><span>Deliverd</span>
+              </div>
+              <div class="check-msg-seen " *ngIf="chat.data.isRead && !receiverData.isGroup">
+                <img src="assets/img/double-check.png" alt="Seen"><span>Seen</span>
+              </div>
+            </ng-template>
+          </li> -->
+
+          <!-- Added on 12/08/25 -->
+          <li *ngFor="let chat of chatList">
+            <div *ngIf="chat.type === 'receiver'; else senderMessage">
+              <!-- Receiver timestamp -->
+              <div [ngClass]="{'hide': !chat.data.message}" class="chat__time">
+                {{ chat.data.timestamp | date: 'short' }}
+              </div>
+              <!-- Receiver text -->
+              <div [ngClass]="{'hide': !chat.data.message}"
+                class="chat__bubble chat__bubble--you">
+                {{ chat.data.message }}
+              </div>
+              <!-- Receiver attachments -->
+              <ng-container *ngFor="let file of chat.data.chatFiles">
+                <ng-container
+                  [ngSwitch]="getMimeTypeFromExtension(file.fileType)">
+                  <!-- Images -->
+                  <ng-container *ngSwitchCase="'image/jpeg'">
+                    <div class="msg-images">
+                      <a [href]="file.fileUrl" target="_blank"
+                        class="fancybox image-boxes" data-fancybox="gallery2">
+                        <img *ngIf="file.fileContentBase64"
+                          [src]="'data:' + getMimeTypeFromExtension(file.fileType) + ';base64,' + file.fileContentBase64"
+                          [alt]="file.displayName || file.fileName"
+                          class="chat__file chat__file--image">
+                      </a>
+                      <!-- <span class="image-name">{{ file.displayName || file.fileName }}</span> -->
+                      <ul class="dropdown-image">
+                        <li (click)="downloadFile(file)">
+                          <a><i class="fa fa-download"></i></a>
+                        </li>
+                      </ul>
+                    </div>
+                  </ng-container>
+
+                  <ng-container *ngSwitchCase="'image/png'">
+                    <div class="msg-images">
+                      <a [href]="file.fileUrl" target="_blank"
+                        class="fancybox image-boxes" data-fancybox="gallery2">
+                        <img *ngIf="file.fileContentBase64"
+                          [src]="'data:' + getMimeTypeFromExtension(file.fileType) + ';base64,' + file.fileContentBase64"
+                          [alt]="file.displayName || file.fileName"
+                          class="chat__file chat__file--image">
+                      </a>
+                      <!-- <span class="image-name">{{ file.displayName || file.fileName }}</span> -->
+                      <ul class="dropdown-image">
+                        <li (click)="downloadFile(file)">
+                          <a><i class="fa fa-download"></i></a>
+                        </li>
+                      </ul>
+                    </div>
+                  </ng-container>
+
+                  <ng-container *ngSwitchCase="'image/gif'">
+                    <div class="msg-images">
+                      <a [href]="file.fileUrl" target="_blank"
+                        class="fancybox image-boxes" data-fancybox="gallery2">
+                        <img *ngIf="file.fileContentBase64"
+                          [src]="'data:' + getMimeTypeFromExtension(file.fileType) + ';base64,' + file.fileContentBase64"
+                          [alt]="file.displayName || file.fileName"
+                          class="chat__file chat__file--image">
+                      </a>
+                      <!-- <span class="image-name">{{ file.displayName || file.fileName }}</span> -->
+                      <ul class="dropdown-image">
+                        <li (click)="downloadFile(file)">
+                          <a><i class="fa fa-download"></i></a>
+                        </li>
+                      </ul>
+                    </div>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'image/bmp'">
+                    <div class="msg-images">
+                      <a [href]="file.fileUrl" target="_blank"
+                        class="fancybox image-boxes" data-fancybox="gallery2">
+                        <img *ngIf="file.fileContentBase64"
+                          [src]="'data:' + getMimeTypeFromExtension(file.fileType) + ';base64,' + file.fileContentBase64"
+                          [alt]="file.displayName || file.fileName"
+                          class="chat__file chat__file--image">
+                      </a>
+                      <!-- <span class="image-name">{{ file.displayName || file.fileName }}</span> -->
+                      <ul class="dropdown-image">
+                        <li (click)="downloadFile(file)">
+                          <a><i class="fa fa-download"></i></a>
+                        </li>
+                      </ul>
+                    </div>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'image/webp'">
+                    <div class="msg-images">
+                      <a [href]="file.fileUrl" target="_blank"
+                        class="fancybox image-boxes" data-fancybox="gallery2">
+                        <img *ngIf="file.fileContentBase64"
+                          [src]="'data:' + getMimeTypeFromExtension(file.fileType) + ';base64,' + file.fileContentBase64"
+                          [alt]="file.displayName || file.fileName"
+                          class="chat__file chat__file--image">
+                      </a>
+                      <!-- <span class="image-name">{{ file.displayName || file.fileName }}</span> -->
+                      <ul class="dropdown-image">
+                        <li (click)="downloadFile(file)">
+                          <a><i class="fa fa-download"></i></a>
+                        </li>
+                      </ul>
+                    </div>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'image/svg+xml'">
+                    <div class="msg-images">
+                      <a [href]="file.fileUrl" target="_blank"
+                        class="fancybox image-boxes" data-fancybox="gallery2">
+                        <img *ngIf="file.fileContentBase64"
+                          [src]="'data:' + getMimeTypeFromExtension(file.fileType) + ';base64,' + file.fileContentBase64"
+                          [alt]="file.displayName || file.fileName"
+                          class="chat__file chat__file--image">
+                      </a>
+                      <!-- <span class="image-name">{{ file.displayName || file.fileName }}</span> -->
+                      <ul class="dropdown-image">
+                        <li (click)="downloadFile(file)">
+                          <a><i class="fa fa-download"></i></a>
+                        </li>
+                      </ul>
+                    </div>
+                  </ng-container>
+
+                  <!-- Video -->
+                  <!-- <ng-container *ngSwitchCase="'video/mp4'">
+                    <ng-container *ngSwitchCase="'video/quicktime'">
+                      <ng-container *ngSwitchCase="'video/x-msvideo'">
+                        <ng-container *ngSwitchCase="'video/x-matroska'">
+                          <ng-container *ngSwitchCase="'video/webm'">
+                            <video controls class="chat__file chat__file--video" width="auto" height="200px">
+                              <source [src]="file.fileUrl" [type]="getMimeTypeFromExtension(file.fileType)">
+                            </video>
+                          </ng-container></ng-container></ng-container></ng-container></ng-container> -->
+
+                  <ng-container *ngSwitchCase="'video/mp4'">
+                    <video controls class="chat__file chat__file--video"
+                      width="auto" height="200px">
+                      <source [src]="file.fileUrl"
+                        [type]="getMimeTypeFromExtension(file.fileType)">
+                    </video>
+                  </ng-container>
+
+                  <ng-container *ngSwitchCase="'video/quicktime'">
+                    <video controls class="chat__file chat__file--video"
+                      width="auto" height="200px">
+                      <source [src]="file.fileUrl"
+                        [type]="getMimeTypeFromExtension(file.fileType)">
+                    </video>
+                  </ng-container>
+
+                  <ng-container *ngSwitchCase="'video/x-msvideo'">
+                    <video controls class="chat__file chat__file--video"
+                      width="auto" height="200px">
+                      <source [src]="file.fileUrl"
+                        [type]="getMimeTypeFromExtension(file.fileType)">
+                    </video>
+                  </ng-container>
+
+                  <ng-container *ngSwitchCase="'video/x-matroska'">
+                    <video controls class="chat__file chat__file--video"
+                      width="auto" height="200px">
+                      <source [src]="file.fileUrl"
+                        [type]="getMimeTypeFromExtension(file.fileType)">
+                    </video>
+                  </ng-container>
+
+                  <ng-container *ngSwitchCase="'video/webm'">
+                    <video controls class="chat__file chat__file--video"
+                      width="auto" height="200px">
+                      <source [src]="file.fileUrl"
+                        [type]="getMimeTypeFromExtension(file.fileType)">
+                    </video>
+                  </ng-container>
+
+                  <!-- Audio -->
+                  <ng-container *ngSwitchCase="'audio/mpeg'">
+                    <audio *ngIf="file.fileContentBase64" controls
+                      class="chat__file chat__file--audio">
+                      <source
+                        [src]="'data:' + getMimeTypeFromExtension(file.fileType) + ';base64,' + file.fileContentBase64"
+                        [type]="getMimeTypeFromExtension(file.fileType)">
+                    </audio>
+                  </ng-container>
+                  <!-- Audio: WAV -->
+                  <ng-container *ngSwitchCase="'audio/wav'">
+                    <audio controls class="chat__file chat__file--audio">
+                      <source *ngIf="file.fileContentBase64"
+                        [src]="'data:' + getMimeTypeFromExtension(file.fileType) + ';base64,' + file.fileContentBase64"
+                        [type]="getMimeTypeFromExtension(file.fileType)">
+                    </audio>
+                  </ng-container>
+
+                  <!-- Audio: OGG -->
+                  <ng-container *ngSwitchCase="'audio/ogg'">
+                    <audio controls class="chat__file chat__file--audio">
+                      <source *ngIf="file.fileContentBase64"
+                        [src]="'data:' + getMimeTypeFromExtension(file.fileType) + ';base64,' + file.fileContentBase64"
+                        [type]="getMimeTypeFromExtension(file.fileType)">
+                    </audio>
+                  </ng-container>
+
+                  <!-- Audio: M4A -->
+                  <ng-container *ngSwitchCase="'audio/mp4'">
+                    <audio controls class="chat__file chat__file--audio">
+                      <source *ngIf="file.fileContentBase64"
+                        [src]="'data:' + getMimeTypeFromExtension(file.fileType) + ';base64,' + file.fileContentBase64"
+                        [type]="getMimeTypeFromExtension(file.fileType)">
+                    </audio>
+                  </ng-container>
+
+                  <!-- PDF -->
+                  <ng-container *ngSwitchCase="'application/pdf'">
+                    <div class="pdf-show">
+                      <a (click)="downloadAndOpenFile(file)"
+                        class="chat__file chat__file--pdf">
+                        <i class="fa fa-file-pdf" style="color:red"></i>
+                        <span>{{ getCleanFileName(file.fileName) }}</span>
+                      </a>
+                    </div>
+                  </ng-container>
+
+                  <!-- Other Docs -->
+                  <ng-container *ngSwitchDefault>
+                    <div class="pdf-show">
+                      <a (click)="downloadAndOpenFile(file)"
+                        class="chat__file chat__file--pdf">
+                        <i class="fa"
+                          [ngClass]="getFileIconClass(file.fileType)"
+                          [style]="{'color': getFileIconColor(file.fileType)}"></i>
+                        <span>{{ getCleanFileName(file.fileName) }}</span>
+                      </a>
+                    </div>
+                  </ng-container>
+
+                </ng-container>
+              </ng-container>
+            </div>
+
+            <!-- Sender -->
+            <ng-template #senderMessage>
+              <!-- Sender timestamp -->
+              <div *ngIf="chat.data.timestamp"
+                [ngClass]="{'hide': !chat.data.message}" class="chat__time">
+                {{ chat.data.timestamp | date: 'short' }}
+              </div>
+
+              <!-- Sender text -->
+              <div [ngClass]="{'hide': !chat.data.message}"
+                class="chat__bubble chat__bubble--me">
+                {{ chat.data.message }}
+              </div>
+
+              <!-- Sender attachments -->
+              <div class="sender-box" *ngIf="chat.data.chatFiles.length">
+                <div class="send-file-box">
+                  <ng-container *ngFor="let file of chat.data.chatFiles">
+                    <ng-container
+                      [ngSwitch]="getMimeTypeFromExtension(file.fileType)">
+                      <!-- Images (same as receiver but right aligned) -->
+                      <ng-container *ngSwitchCase="'image/jpeg'">
+                        <div class="msg-images">
+                          <a [href]="file.fileUrl" target="_blank"
+                            class="fancybox image-boxes"
+                            data-fancybox="gallery2">
+                            <img *ngIf="file.fileContentBase64"
+                              [src]="'data:' + getMimeTypeFromExtension(file.fileType) + ';base64,' + file.fileContentBase64"
+                              [alt]="file.displayName || file.fileName"
+                              class="chat__file chat__file--image">
+                          </a>
+                          <!-- <span class="image-name">{{ file.displayName || file.fileName }}</span> -->
+                          <ul class="dropdown-image">
+                            <li (click)="downloadFile(file)">
+                              <a><i class="fa fa-download"></i></a>
+                            </li>
+                          </ul>
+                        </div>
+                      </ng-container>
+                      <ng-container *ngSwitchCase="'image/png'">
+                        <div class="msg-images">
+                          <a [href]="file.fileUrl" target="_blank"
+                            class="fancybox image-boxes"
+                            data-fancybox="gallery2">
+                            <img *ngIf="file.fileContentBase64"
+                              [src]="'data:' + getMimeTypeFromExtension(file.fileType) + ';base64,' + file.fileContentBase64"
+                              [alt]="file.displayName || file.fileName"
+                              class="chat__file chat__file--image">
+                          </a>
+                          <!-- <span class="image-name">{{ file.displayName || file.fileName }}</span> -->
+                          <ul class="dropdown-image">
+                            <li (click)="downloadFile(file)">
+                              <a><i class="fa fa-download"></i></a>
+                            </li>
+                          </ul>
+                        </div>
+                      </ng-container>
+                      <ng-container *ngSwitchCase="'image/gif'">
+                        <div class="msg-images">
+                          <a [href]="file.fileUrl" target="_blank"
+                            class="fancybox image-boxes"
+                            data-fancybox="gallery2">
+                            <img *ngIf="file.fileContentBase64"
+                              [src]="'data:' + getMimeTypeFromExtension(file.fileType) + ';base64,' + file.fileContentBase64"
+                              [alt]="file.displayName || file.fileName"
+                              class="chat__file chat__file--image">
+                          </a>
+                          <!-- <span class="image-name">{{ file.displayName || file.fileName }}</span> -->
+                          <ul class="dropdown-image">
+                            <li (click)="downloadFile(file)">
+                              <a><i class="fa fa-download"></i></a>
+                            </li>
+                          </ul>
+                        </div>
+                      </ng-container>
+                      <ng-container *ngSwitchCase="'image/bmp'">
+                        <div class="msg-images">
+                          <a [href]="file.fileUrl" target="_blank"
+                            class="fancybox image-boxes"
+                            data-fancybox="gallery2">
+                            <img *ngIf="file.fileContentBase64"
+                              [src]="'data:' + getMimeTypeFromExtension(file.fileType) + ';base64,' + file.fileContentBase64"
+                              [alt]="file.displayName || file.fileName"
+                              class="chat__file chat__file--image">
+                          </a>
+                          <!-- <span class="image-name">{{ file.displayName || file.fileName }}</span> -->
+                          <ul class="dropdown-image">
+                            <li (click)="downloadFile(file)">
+                              <a><i class="fa fa-download"></i></a>
+                            </li>
+                          </ul>
+                        </div>
+                      </ng-container>
+                      <ng-container *ngSwitchCase="'image/webp'">
+                        <div class="msg-images">
+                          <a [href]="file.fileUrl" target="_blank"
+                            class="fancybox image-boxes"
+                            data-fancybox="gallery2">
+                            <img *ngIf="file.fileContentBase64"
+                              [src]="'data:' + getMimeTypeFromExtension(file.fileType) + ';base64,' + file.fileContentBase64"
+                              [alt]="file.displayName || file.fileName"
+                              class="chat__file chat__file--image">
+                          </a>
+                          <!-- <span class="image-name">{{ file.displayName || file.fileName }}</span> -->
+                          <ul class="dropdown-image">
+                            <li (click)="downloadFile(file)">
+                              <a><i class="fa fa-download"></i></a>
+                            </li>
+                          </ul>
+                        </div>
+                      </ng-container>
+                      <ng-container *ngSwitchCase="'image/svg+xml'">
+                        <div class="msg-images">
+                          <a [href]="file.fileUrl" target="_blank"
+                            class="fancybox image-boxes"
+                            data-fancybox="gallery2">
+                            <img *ngIf="file.fileContentBase64"
+                              [src]="'data:' + getMimeTypeFromExtension(file.fileType) + ';base64,' + file.fileContentBase64"
+                              [alt]="file.displayName || file.fileName"
+                              class="chat__file chat__file--image">
+                          </a>
+                          <!-- <span class="image-name">{{ file.displayName || file.fileName }}</span> -->
+                          <ul class="dropdown-image">
+                            <li (click)="downloadFile(file)">
+                              <a><i class="fa fa-download"></i></a>
+                            </li>
+                          </ul>
+                        </div>
+                      </ng-container>
+
+                      <!-- Video -->
+                      <ng-container *ngSwitchCase="'video/mp4'">
+                        <video controls class="chat__file chat__file--video"
+                          width="auto" height="200px">
+                          <source [src]="file.fileUrl"
+                            [type]="getMimeTypeFromExtension(file.fileType)">
+                        </video>
+                      </ng-container>
+
+                      <ng-container *ngSwitchCase="'video/quicktime'">
+                        <video controls class="chat__file chat__file--video"
+                          width="auto" height="200px">
+                          <source [src]="file.fileUrl"
+                            [type]="getMimeTypeFromExtension(file.fileType)">
+                        </video>
+                      </ng-container>
+
+                      <ng-container *ngSwitchCase="'video/x-msvideo'">
+                        <video controls class="chat__file chat__file--video"
+                          width="auto" height="200px">
+                          <source [src]="file.fileUrl"
+                            [type]="getMimeTypeFromExtension(file.fileType)">
+                        </video>
+                      </ng-container>
+
+                      <ng-container *ngSwitchCase="'video/x-matroska'">
+                        <video controls class="chat__file chat__file--video"
+                          width="auto" height="200px">
+                          <source [src]="file.fileUrl"
+                            [type]="getMimeTypeFromExtension(file.fileType)">
+                        </video>
+                      </ng-container>
+
+                      <ng-container *ngSwitchCase="'video/webm'">
+                        <video controls class="chat__file chat__file--video"
+                          width="auto" height="200px">
+                          <source [src]="file.fileUrl"
+                            [type]="getMimeTypeFromExtension(file.fileType)">
+                        </video>
+                      </ng-container>
+
+                      <!-- Audio -->
+                      <ng-container *ngSwitchCase="'audio/mpeg'">
+                        <!-- <audio *ngIf="file.fileContentBase64" controls class="chat__file chat__file--audio">
+                          <source
+                            [src]="'data:' + getMimeTypeFromExtension(file.fileType) + ';base64,' + file.fileContentBase64"
+                            [type]="getMimeTypeFromExtension(file.fileType)">
+                        </audio> -->
+                        <audio controls [src]="file.fileUrl"></audio>
+
+                      </ng-container>
+                      <!-- Audio: WAV -->
+                      <ng-container *ngSwitchCase="'audio/wav'">
+                        <audio controls class="chat__file chat__file--audio">
+                          <source *ngIf="file.fileContentBase64"
+                            [src]="'data:' + getMimeTypeFromExtension(file.fileType) + ';base64,' + file.fileContentBase64"
+                            [type]="getMimeTypeFromExtension(file.fileType)">
+                        </audio>
+                      </ng-container>
+
+                      <!-- Audio: OGG -->
+                      <ng-container *ngSwitchCase="'audio/ogg'">
+                        <audio controls class="chat__file chat__file--audio">
+                          <source *ngIf="file.fileContentBase64"
+                            [src]="'data:' + getMimeTypeFromExtension(file.fileType) + ';base64,' + file.fileContentBase64"
+                            [type]="getMimeTypeFromExtension(file.fileType)">
+                        </audio>
+                      </ng-container>
+
+                      <!-- Audio: M4A -->
+                      <ng-container *ngSwitchCase="'audio/mp4'">
+                        <audio controls class="chat__file chat__file--audio">
+                          <source *ngIf="file.fileContentBase64"
+                            [src]="'data:' + getMimeTypeFromExtension(file.fileType) + ';base64,' + file.fileContentBase64"
+                            [type]="getMimeTypeFromExtension(file.fileType)">
+                        </audio>
+                      </ng-container>
+
+                      <!-- PDF -->
+                      <ng-container *ngSwitchCase="'application/pdf'">
+                        <div class="pdf-show">
+                          <a (click)="downloadAndOpenFile(file)"
+                            class="chat__file chat__file--pdf sender-pdf-file">
+                            <i class="fa fa-file-pdf" style="color:red"></i>
+                            <span>{{ getCleanFileName(file.fileName) }}</span>
+                          </a>
+                        </div>
+                      </ng-container>
+
+                      <!-- Other Docs -->
+                      <ng-container *ngSwitchDefault>
+                        <div class="pdf-show">
+                          <a (click)="downloadAndOpenFile(file)"
+                            class="chat__file chat__file--pdf sender-pdf-file">
+                            <i class="fa"
+                              [ngClass]="getFileIconClass(file.fileType)"
+                              [style]="{'color': getFileIconColor(file.fileType)}"></i>
+                            <span>{{ getCleanFileName(file.fileName) }}</span>
+                          </a>
+                        </div>
+                      </ng-container>
+
+                    </ng-container>
+                  </ng-container>
+                </div>
+              </div>
+
+              <!-- Status -->
+              <div class="check-msg-seen"
+                *ngIf="!chat.data.isRead && !receiverData.isGroup">
+                <img src="assets/img/double-check.png" alt="Delivered"
+                  style="filter: brightness(0) invert(0);">
+                <span>Delivered</span>
+              </div>
+              <div class="check-msg-seen"
+                *ngIf="chat.data.isRead && !receiverData.isGroup">
+                <img src="assets/img/double-check.png" alt="Seen">
+                <span>Seen</span>
+              </div>
+            </ng-template>
+
+          </li>
+        </ul>
+        <div *ngIf="isLoading" class="loder-chat">
+          <div class="loading-container">
+            <div class="spinner"></div>
+            <p>Loading...</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="chat__send-container px-2 px-md-3 pt-1 pt-md-3">
+      <div class="custom-form__send-wrapper">
+        <div class="message-container">
+          <input [(ngModel)]="messageToSend" (keyup.enter)="sendMessage()"
+            type="text" class="form-control custom-form"
+            placeholder="Type your message here..." autocomplete="off" />
+
+        </div>
+
+        <!-- Emoji Picker Toggle Icon -->
+        <div
+          class="custom-form__send-img d-flex justify-content-between align-items-center"
+          (click)="toggleEmojiPicker()" style="gap: 3px;">
+          <div class="ffg">
+            <svg [ngClass]="{ 'hide': showEmojiPicker }"
+              xmlns="http://www.w3.org/2000/svg"
+              class="svg-icon svg-icon--send-img" viewBox="0 0 45.7 45.7"
+              style="width: 93% !important;">
+              <path
+                d="M23.1,0A23.1,23.1,0,1,0,46.2,23.1,23.1,23.1,0,0,0,23.1,0Zm0,41.6A18.5,18.5,0,1,1,41.6,23.1,18.5,18.5,0,0,1,23.1,41.6Zm8.1-20.8a3.5,3.5,0,0,0,3.5-3.5,3.5,3.5,0,0,0-7,0,3.5,3.5,0,0,0,3.5,3.5ZM15,20.8a3.5,3.5,0,0,0,3.5-3.5A3.5,3.5,0,0,0,15,13.9a3.4,3.4,0,0,0-3.4,3.4A3.5,3.5,0,0,0,15,20.8Zm8.1,15a12.6,12.6,0,0,0,10.5-5.5,1.7,1.7,0,0,0-1.3-2.6H14a1.7,1.7,0,0,0-1.4,2.6A12.9,12.9,0,0,0,23.1,35.8Z"
+                fill="#f68b3c" />
+            </svg>
+            <div [ngClass]="{ 'hide': !showEmojiPicker }" class="close-emoji">
+              <svg class="file-remove-icon" xmlns="http://www.w3.org/2000/svg"
+                class="svg-icon svg-icon--send-img"
+                viewBox="0 0 45.7 45.7" style="width: 93% !important;">
+                <path
+                  d="M23.1,0A23.1,23.1,0,1,0,46.2,23.1,23.1,23.1,0,0,0,23.1,0Zm0,41.6A18.5,18.5,0,1,1,41.6,23.1,18.5,18.5,0,0,1,23.1,41.6Zm8.1-20.8a3.5,3.5,0,0,0,3.5-3.5,3.5,3.5,0,0,0-7,0,3.5,3.5,0,0,0,3.5,3.5ZM15,20.8a3.5,3.5,0,0,0,3.5-3.5A3.5,3.5,0,0,0,15,13.9a3.4,3.4,0,0,0-3.4,3.4A3.5,3.5,0,0,0,15,20.8Zm8.1,15a12.6,12.6,0,0,0,10.5-5.5,1.7,1.7,0,0,0-1.3-2.6H14a1.7,1.7,0,0,0-1.4,2.6A12.9,12.9,0,0,0,23.1,35.8Z"
+                  fill="#f68b3c" />
+              </svg>
+
+            </div>
+          </div>
+          <div class=" ">
+            <label class="m-0 attacj-label" for="attachment">
+              <i class="fa fa-paperclip"
+                style="font-size: 16px; color: #b3b3b3; cursor: pointer;"></i>
+            </label>
+            <input (change)="onFileSelected($event)" type="file" id="attachment"
+              accept="image/*,video/*,.pdf,.doc,.docx" style="display: none;"
+              multiple />
+          </div>
+        </div>
+
+        <!-- Emoji Picker -->
+
+        <!-- Send Button -->
+        <button (click)="sendMessage()" type="submit"
+          class="custom-form__send-submit">
+          <svg xmlns="http://www.w3.org/2000/svg"
+            class="svg-icon svg-icon--send" viewBox="0 0 45.6 45.6">
+            <g>
+              <path
+                d="M20.7,26.7a1.4,1.4,0,0,1-1.2-.6,1.6,1.6,0,0,1,0-2.4L42.6.5a1.8,1.8,0,0,1,2.5,0,1.8,1.8,0,0,1,0,2.5L21.9,26.1A1.6,1.6,0,0,1,20.7,26.7Z"
+                fill="#d87232" />
+              <path
+                d="M29.1,45.6a1.8,1.8,0,0,1-1.6-1L19.4,26.2,1,18.1a1.9,1.9,0,0,1-1-1.7,1.8,1.8,0,0,1,1.2-1.6L43.3.1a1.7,1.7,0,0,1,1.8.4,1.7,1.7,0,0,1,.4,1.8L30.8,44.4a1.8,1.8,0,0,1-1.6,1.2ZM6.5,16.7l14.9,6.6a2,2,0,0,1,.9.9l6.6,14.9L41,4.6Z"
+                fill="#d87232" />
+            </g>
+          </svg>
+        </button>
+      </div>
+      <div *ngIf="showEmojiPicker" class="emoji-picker">
+        <emoji-mart (emojiSelect)="addEmoji($event)"></emoji-mart>
+
+      </div>
+      <div *ngIf="filesToUpload.length > 0" class="file-list">
+        <div *ngFor="let file of filesToUpload; let i = index"
+          class="file-item">
+          <i class="fa" [ngClass]="getFileIconClass(file.type)"
+            [style]="{'color': getFileIconColor(file.type)}"></i>
+          <span class="file-name">{{ file.name }}</span>
+          <span class="file-size">({{ formatFileSize(file.size) }})</span>
+          <span *ngIf="file.progress >= 0 && file.progress < 100"
+            class="upload-progress">
+            {{ file.progress }}%
+          </span>
+          <span class="upload-complete">{{file.status}}</span>
+          <i class="fa fa-times file-remove-icon" (click)="removeFile(i)"></i>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="modal fade" id="show-user" tabindex="-1"
+  aria-labelledby="upgradeJobPostPlanModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <!-- Modal Header  -->
+      <div class="modal-header">
+
+        <button type="button" class="btn-close" data-bs-dismiss="modal"
+          aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="panel notifications">
+          <div class="panel-body">
+            <ul>
+              <li (click)="onSelectGroupMember(client.id)"
+                *ngFor="let client of tempNewClientList" class="wow flipInX"
+                data-wow-duration="1s" data-wow-delay="0s">
+                <div class="notoficationpane">
+                  <div class="profileimg">
+                    <img
+                      [src]="client.fileUrl ? client.fileUrl :  'assets/img/dummy-group-icon.png'"
+                      [alt]="client.name" loading="lazy" decoding="async"
+                      fetchpriority="low" width="100" height="100"
+                      style="transition: opacity 0.3s ease-in-out;"
+                      class="image"
+                      [class.image-loaded]="client.imageLoaded"
+                      (load)="client.imageLoaded = true" />
+
+                    <span class="indicator available"></span>
+                  </div>
+                  <div class="profileInfo">
+                    <h5>{{client.name}}</h5>
+
+                  </div>
+                </div>
+
+                <div class="actionbutton">
+                  <div class="delete ">
+                    <label class="new-checking check-people-group">
+                      <input
+                        [checked]="selectedGroupMembers.includes(client.id)"
+                        type="checkbox">
+                      <svg viewBox="0 0 64 64" height="20px" width="20px">
+                        <path
+                          d="M 0 16 V 56 A 8 8 90 0 0 8 64 H 56 A 8 8 90 0 0 64 56 V 8 A 8 8 90 0 0 56 0 H 8 A 8 8 90 0 0 0 8 V 16 L 32 48 L 64 16 V 8 A 8 8 90 0 0 56 0 H 8 A 8 8 90 0 0 0 8 V 56 A 8 8 90 0 0 8 64 H 56 A 8 8 90 0 0 64 56 V 16"
+                          pathLength="575.0541381835938" class="path"></path>
+                      </svg>
+                    </label>
+                  </div>
+
+                </div>
+              </li>
+
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button (click)="onAddGroupMember()"
+          [ngClass]="{'hide':!selectedGroupMembers.length}"
+          class="btn btn-primary">Save Changes</button>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" data-bs-backdrop='static' id="show-group" tabindex="-1"
+  aria-labelledby="upgradeJobPostPlanModal" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+
+        <button type="button" class="btn-close" data-bs-dismiss="modal"
+          aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="row mb-5" id="crop1">
+          <div class="col-md-6" style="border-right: 1px solid #cdcecf;">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="user">
+                  <div class="user-media">
+                    <div class="avatar-upload">
+                      <div *ngIf="profileImage" title="Upload Logo here"
+                        class="avatar-preview">
+                        <img [src]="profileImage" class="avatar avatar-xxl"
+                          alt="Profile Image" />
+                      </div>
+                    </div>
+
+                    <div
+                      class="form-group students-up-files profile-edit-icon1 mb-0"
+                      style="top:8px !Important">
+                      <div class="upload d-flex">
+                        <label>
+                          <i class="feather-edit"></i>
+                          <input type="file"
+                            class="file-upload profile-upbtn mb-0"
+                            accept=".png, .jpg, .jpeg"
+                            (change)="fileChangeEvent($event)" id="imageUpload">
+                        </label>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-12 text-center mt-3">
+                <span class="messages-page__title "
+                  [innerText]="receiverData.name"></span>
+
+              </div>
+              <div class="col-md-12 text-center mt-3">
+
+                <span class="amnt-person">Total Members:
+                  {{groupData.groupMembers.length}}</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+
+            <div class="messages-page__search mb-0 px-3 pb-3 ps-0">
+              <div class="custom-form__search-wrapper"><input #searchGroupMember
+                  (keyup)="filterGroupMember(searchGroupMember.value)"
+                  type="text" id="search" placeholder="Search.."
+                  autocomplete="off"
+                  class="form-control custom-form ng-untouched ng-pristine ng-valid"
+                  ng-reflect-model value><button type="submit"
+                  class="custom-form__search-submit"><svg
+                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 46.6 46.6"
+                    class="svg-icon svg-icon--search">
+                    <path
+                      d="M46.1,43.2l-9-8.9a20.9,20.9,0,1,0-2.8,2.8l8.9,9a1.9,1.9,0,0,0,1.4.5,2,2,0,0,0,1.5-.5A2.3,2.3,0,0,0,46.1,43.2ZM4,21a17,17,0,1,1,33.9,0A17.1,17.1,0,0,1,33,32.9h-.1A17,17,0,0,1,4,21Z"
+                      fill="#f68b3c"></path>
+                  </svg></button></div>
+            </div>
+
+            <div class="user-heght">
+              <ul class="messages-page__list pb-2 px-1 ps-0">
+                <li *ngFor="let member of tempGroupMembers"
+                  class="messaging-member messaging-member--new messaging-member--online ng-star-inserted"
+                  [ngClass]="{'admin-member': member.isGroupAdmin, 'regular-member': !member.isGroupAdmin}">
+
+                  <div class="messaging-member__wrapper">
+                    <div class="messaging-member__avatar"
+                      style="overflow: hidden;"
+                      src="assets/img/dummy-avatar.jpg">
+                      <img loading="lazy"
+                        [src]="member.fileUrl ? baseUrl + member.fileUrl : 'assets/img/dummy-avatar.jpg'"
+                        (error)="onImgError($event)"
+                        alt="{{member.groupMemberName}}" />
+                      <div class="user-status"></div>
+                      <input type="checkbox" class="group-checkbox hide">
+                    </div>
+
+                    <span class="messaging-member__name">
+                      {{ member.groupMemberName }}
+                    </span>
+
+                    <!-- Admin badge displayed next to admin -->
+                    <div *ngIf="member.isGroupAdmin" class="admin-badge">
+                      <i class="fa fa-crown"></i> Admin
+                    </div>
+                  </div>
+                  <span class="cross-icon">✖</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Cropper Overlay Modal (on top of another modal) -->
+<div class="modal fade show d-block custom-cropper-modal"
+  *ngIf="isCropperVisible"
+  style="background: rgba(0, 0, 0, 0.6); z-index: 1060;">
+  <div class="modal-dialog modal-md modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Crop Image</h5>
+        <button type="button" class="btn-close"
+          (click)="toggleUpload()"></button>
+      </div>
+
+      <div class="modal-body p-2">
+        <div class="crop-container">
+          <image-cropper [imageChangedEvent]="imageChangedEvent"
+            [maintainAspectRatio]="true" [aspectRatio]="4 / 3"
+            format="png" (imageCropped)="imageCropped($event)">
+          </image-cropper>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-primary"
+          (click)="onUploadProfile()">Save</button>
+        <button class="btn btn-secondary"
+          (click)="toggleUpload()">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
