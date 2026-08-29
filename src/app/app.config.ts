@@ -9,6 +9,7 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { authInterceptor } from './auth/auth.interceptor';
 import { provideNgxStripe } from 'ngx-stripe';
 import { routes } from './app.routes';
+import { environment } from '../environments/environment';
 
 export const appConfig: ApplicationConfig = {
   providers: [provideRouter(routes), provideClientHydration(), provideHttpClient(withInterceptors([authInterceptor])),
@@ -20,6 +21,6 @@ export const appConfig: ApplicationConfig = {
       autoDismiss: true,
       timeOut:3000
     }),
-  provideNgxStripe('pk_test_51REatbADi5PePYyrsmnVeBawb0mtDjznD0DmlvFlejvJ0cZGJjc1CohNZdc3Dw0UovQyD2vMlU8vZ1BtPAsyqEFg00tYNBrGlb')
+  provideNgxStripe(environment.stripePublishableKey)
   ]
 };

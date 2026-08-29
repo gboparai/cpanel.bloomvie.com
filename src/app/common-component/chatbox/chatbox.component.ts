@@ -10,7 +10,7 @@ import { ChatDetailsComponent } from './chat-details/chat-details.component';
 import Swal from 'sweetalert2';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 import * as ExcelJS from 'exceljs';
 import * as FileSaver from 'file-saver';
 import { json } from 'stream/consumers';

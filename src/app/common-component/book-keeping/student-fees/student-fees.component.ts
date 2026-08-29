@@ -10,7 +10,7 @@ import { DatePipe } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ManageStudentService } from '../../../day-care-management/student-management/manage-student/manage-student.service';
 import { BookKeepingService } from '../book-keeping.service';
-import { environment } from '../../../../environments/environment.development';
+import { environment } from '../../../../environments/environment';
 import { ReactiveFormsModule, FormsModule, FormBuilder } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ParentDashboardService } from '../../../parent-management/parent-dashboard/parent-dashboard.service';

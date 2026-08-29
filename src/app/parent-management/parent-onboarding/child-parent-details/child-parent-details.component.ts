@@ -13,7 +13,7 @@ import flatpickr from 'flatpickr';
 import Swal from 'sweetalert2';
 declare var $: any;
 import * as CryptoJS from 'crypto-js';
-import { environment } from '../../../../environments/environment.development';
+import { environment } from '../../../../environments/environment';
 import { HeaderServiceService } from '../../../layout/header/header-service.service';
 
 interface Option {

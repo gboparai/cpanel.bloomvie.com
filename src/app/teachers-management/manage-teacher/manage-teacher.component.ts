@@ -9,7 +9,7 @@ import { ManageTeacherService } from './manage-teacher.service';
 import Swal from 'sweetalert2';
 import { ManageDaycareService } from '../../day-care-management/manage-daycare/manage-daycare.service';
 import { CookieService } from 'ngx-cookie-service';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 declare var flatpickr:any;
 declare var $:any;
 

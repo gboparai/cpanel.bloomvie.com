@@ -12,7 +12,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { FormsModule } from '@angular/forms';
 import mapboxgl from 'mapbox-gl';
 import { point } from '@turf/helpers';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 import { ClassroomDetailsService } from '../../day-care-management/classroom-management/classroom-details/classroom-details.service';
 import { SkeletonLoaderComponent } from '../skeleton-loader/skeleton-loader.component';
 import { BreadcrumbComponent } from '../breadcrumb/breadcrumb.component';

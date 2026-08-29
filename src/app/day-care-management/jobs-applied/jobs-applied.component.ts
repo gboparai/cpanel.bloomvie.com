@@ -2,7 +2,7 @@ import { Component, input, OnInit } from '@angular/core';
 import { BreadcrumbComponent } from '../../common-component/breadcrumb/breadcrumb.component';
 import { JobPortalServiceService } from '../job-portal-details/job-portal-service.service';
 import { CookieService } from 'ngx-cookie-service';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 import { CommonModule, NgFor, NgIf } from '@angular/common';
 import { NgxPaginationModule } from 'ngx-pagination';
 import {

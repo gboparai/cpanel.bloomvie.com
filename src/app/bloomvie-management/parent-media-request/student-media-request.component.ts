@@ -16,7 +16,7 @@ import { error } from 'node:console';
 import { FullCalendarModule } from '@fullcalendar/angular'; 
 import { CookieService } from 'ngx-cookie-service';
 import { userInfo } from 'node:os';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 import { BreadcrumbComponent } from '../../common-component/breadcrumb/breadcrumb.component';
 import { BookKeepingService } from '../../common-component/book-keeping/book-keeping.service';
 import { ClassroomDetailsService } from '../../day-care-management/classroom-management/classroom-details/classroom-details.service';

@@ -1,4 +1,4 @@
-import { environment } from './../environments/environment.development';
+import { environment } from './../environments/environment';
 import { ApplicationsSettingsComponent } from './settings/application-settings/applications-settings/applications-settings.component';
 import { Component, OnDestroy, OnInit, AfterViewInit } from '@angular/core';
 import {

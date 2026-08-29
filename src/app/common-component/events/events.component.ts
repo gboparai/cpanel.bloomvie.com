@@ -6,7 +6,7 @@ import interactionPlugin from '@fullcalendar/interaction';
 import { BreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
 import { DayCareDashboardService } from '../../day-care-management/daycare-dashboard/day-care-dashboard.service';
 import { CommonService } from '../common.service';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 import Swal from 'sweetalert2';
 import { DatePipe, formatDate } from '@angular/common';
 import {

@@ -19,7 +19,7 @@ import { FormBuilder, FormGroup, FormsModule } from '@angular/forms';
 import { DcAppointmentsListService } from '../dc-appointments-list/dc-appointments-list.service';
 import { log } from 'console';
 import { TocViewService } from '../../toc-view/toc-view.service';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 import { TocRegistrationService } from '../../toc-registration/toc-registration.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { CommonService } from '../../common-component/common.service';

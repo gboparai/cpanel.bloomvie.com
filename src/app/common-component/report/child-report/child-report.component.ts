@@ -12,7 +12,7 @@ import { HttpClientModule } from '@angular/common/http';
 import * as CryptoJS from 'crypto-js';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule, DatePipe } from '@angular/common';
-import { environment } from '../../../../environments/environment.development';
+import { environment } from '../../../../environments/environment';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ManageStudentActivitiesComponent } from '../../../day-care-management/classroom-management/manage-student-activities/manage-student-activities.component';
 import flatpickr from 'flatpickr';

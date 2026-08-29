@@ -9,7 +9,7 @@ import {
 } from '@angular/core'; // Import OnInit lifecycle hook
 import { Router, RouterLink } from '@angular/router';
 import { ApplicationsSettingsService } from '../../settings/application-settings/applications-settings/applications-settings.service';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 import { UserRoleService } from '../../settings/Permission/user-role/user-role.service';
 import { ProfileService } from '../../common-component/profile/profile.service';
 import { CommonModule } from '@angular/common';

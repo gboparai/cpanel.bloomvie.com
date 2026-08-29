@@ -30,7 +30,7 @@ import { ClassroomDetailsService } from '../classroom-details/classroom-details.
 import { ToastrService } from 'ngx-toastr';
 import flatpickr from 'flatpickr';
 import { log } from 'console';
-import { environment } from '../../../../environments/environment.development';
+import { environment } from '../../../../environments/environment';
 import * as CryptoJS from 'crypto-js';
 import Swal from 'sweetalert2';
 import { firstValueFrom, startWith } from 'rxjs';

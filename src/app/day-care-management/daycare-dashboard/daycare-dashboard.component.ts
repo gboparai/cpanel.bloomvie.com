@@ -31,7 +31,7 @@ import { LoginService } from '../../login/login.service';
 import * as CryptoJS from 'crypto-js';
 import { DayCareDashboardService } from './day-care-dashboard.service';
 import { CommonModule, DatePipe } from '@angular/common';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 // import { ViewStudentEnrollmentComponent } from '../student-management/view-student-enrollment/view-student-enrollment.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { JobPortalServiceService } from '../job-portal-details/job-portal-service.service';

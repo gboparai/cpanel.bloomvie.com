@@ -10,7 +10,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { BreadcrumbComponent } from '../../../common-component/breadcrumb/breadcrumb.component';
 import { ManageStudentGalleryService } from '../manage-student-gallery.service';
 import { CommonService } from '../../../common-component/common.service';
-import { environment } from '../../../../environments/environment.development';
+import { environment } from '../../../../environments/environment';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { ClassroomDetailsService } from '../../classroom-management/classroom-details/classroom-details.service';
 import { NgSelectModule } from '@ng-select/ng-select';

@@ -24,7 +24,7 @@ import {
 } from 'ckeditor4-angular';
 import { ApplicationsSettingsService } from '../settings/application-settings/applications-settings/applications-settings.service';
 import { CookieService } from 'ngx-cookie-service';
-import { environment } from '../../environments/environment.development';
+import { environment } from '../../environments/environment';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { HttpClientModule } from '@angular/common/http';
 import { AngularEditorModule } from '@wfpena/angular-wysiwyg';

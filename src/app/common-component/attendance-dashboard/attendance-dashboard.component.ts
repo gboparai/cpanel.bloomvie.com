@@ -17,7 +17,7 @@ import {
   ApexChart,
 } from 'ng-apexcharts';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { ManageStaffService } from '../../day-care-management/staff-management/add-staff/manage-staff.service';

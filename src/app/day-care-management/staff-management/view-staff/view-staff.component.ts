@@ -21,7 +21,7 @@ import {
 } from '@angular/forms';
 import { NgFor, NgIf } from '@angular/common';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { environment } from '../../../../environments/environment.development';
+import { environment } from '../../../../environments/environment';
 import {
   debounceTime,
   distinctUntilChanged,

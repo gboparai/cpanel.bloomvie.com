@@ -17,7 +17,7 @@ import { error } from 'node:console';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import { CookieService } from 'ngx-cookie-service';
 import { userInfo } from 'node:os';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 import { SkeletonLoaderComponent } from "../skeleton-loader/skeleton-loader.component";
 import { TooltipComponent } from '../tooltip/tooltip.component';
 

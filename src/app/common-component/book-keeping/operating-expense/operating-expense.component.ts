@@ -3,7 +3,7 @@ import { BreadcrumbComponent } from '../../breadcrumb/breadcrumb.component';
 import { CapitalExpenseService } from '../capital-expense/capital-expense.service';
 import { ToastrService } from 'ngx-toastr';
 import { CookieService } from 'ngx-cookie-service';
-import { environment } from '../../../../environments/environment.development';
+import { environment } from '../../../../environments/environment';
 import { timeStamp } from 'console';
 import {
   CommonModule,

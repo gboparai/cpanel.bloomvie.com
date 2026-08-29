@@ -4,7 +4,7 @@ import { ActivatedRoute, Router, RouterLink, RouterModule } from '@angular/route
 import { PaymnetsService } from './paymnets.service';
 import { CommonModule } from '@angular/common';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 import { CommonService } from '../../common-component/common.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { FlatpickrModule } from 'angularx-flatpickr';

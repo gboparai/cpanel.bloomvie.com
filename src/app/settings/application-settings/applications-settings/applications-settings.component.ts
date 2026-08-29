@@ -8,7 +8,7 @@ import { ApplicationsSettingsService } from './applications-settings.service';
 import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
-import { environment } from '../../../../environments/environment.development';
+import { environment } from '../../../../environments/environment';
 import { AppService } from '../../../app.service';
 import { Title } from '@angular/platform-browser';
 import Swal from 'sweetalert2';

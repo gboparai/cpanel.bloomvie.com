@@ -15,7 +15,7 @@ import { ChatboxComponent } from '../../common-component/chatbox/chatbox.compone
 import { MailboxComponent } from '../../common-component/mailbox/mailbox.component';
 import { TeacherDashboardServiceService } from './teacher-dashboard-service.service';
 import { CookieService } from 'ngx-cookie-service';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 import { NgFor, NgIf } from '@angular/common';
 import {
   FormBuilder,

@@ -10,7 +10,7 @@ import { CommonService } from '../../common-component/common.service';
 import { ManageStudentGalleryService } from '../manage-student-gallery/manage-student-gallery.service';
 import flatpickr from 'flatpickr';
 import { response } from 'express';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 import { CommonModule, DatePipe, NgFor } from '@angular/common';
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
@@ -532,9 +532,7 @@ export class StudentViewGalleryComponent {
 
 
 
-    // const paymentUrl = `http://localhost:4201/payment-details?planPrice=${encryptPlanID}&id=${userEncryptID}&type=${type}&fileSize=${encryptGb}`;
-    // const paymentUrl = `${this.frontEndWebUrl}${encryptPlanID}&id=${userEncryptID}&type=${type}&fileSize=${encryptGb}&SDate=${encryptStartDate}&EDate=${encryptEndDate}&OnSelectStudentID=${encryptedStudentID}`;
-    const paymentUrl = `http://localhost:4201/payment-details?planPrice=${encryptPlanID}&id=${userEncryptID}&type=${type}&fileSize=${encryptGb}&SDate=${this.encryptStartDate}&EDate=${this.encryptEndDate}&OnSelectStudentID=${encryptedStudentID}`;
+    const paymentUrl = `${this.frontEndWebUrl}payment-details?planPrice=${encryptPlanID}&id=${userEncryptID}&type=${type}&fileSize=${encryptGb}&SDate=${this.encryptStartDate}&EDate=${this.encryptEndDate}&OnSelectStudentID=${encryptedStudentID}`;
 
     const requestData = {
       StartDate: this.firstStartDate,

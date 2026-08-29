@@ -9,7 +9,7 @@ import { AssignUserPermissionService } from '../../settings/Permission/assign-us
 import { ToastrService } from 'ngx-toastr';
 import { CommonModule } from '@angular/common';
 import * as CryptoJS from 'crypto-js';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { CommonService } from '../../common-component/common.service';
 import { NgxSpinnerService } from 'ngx-spinner';

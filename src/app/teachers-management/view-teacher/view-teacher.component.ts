@@ -5,7 +5,7 @@ import { ViewTeacherService } from './view-teacher.service';
 import { Router } from '@angular/router';
 import { RouterModule,RouterLink } from '@angular/router';
 import { CommonModule, NgFor,NgIf } from '@angular/common';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NgxPaginationModule } from 'ngx-pagination';
 

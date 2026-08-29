@@ -8,7 +8,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { CommonModule } from '@angular/common';
 import { TimeFormatPipe } from '../../bloomvie-management/dc-appointments-list/time-format.pipe';
 import { TocRegistrationService } from '../../toc-registration/toc-registration.service';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ReactiveFormsModule, Validators, FormBuilder } from '@angular/forms';
 

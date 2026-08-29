@@ -25,7 +25,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import flatpickr from 'flatpickr';
 import Swal from 'sweetalert2';
 import { TocRegistrationService } from './toc-registration.service';
-import { environment } from '../../environments/environment.development';
+import { environment } from '../../environments/environment';
 import * as CryptoJS from 'crypto-js';
 import { BreadcrumbComponent } from '../common-component/breadcrumb/breadcrumb.component';
 import { ProfileComponent } from '../common-component/profile/profile.component';

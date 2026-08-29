@@ -8,7 +8,7 @@ import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
-import { environment } from '../../../../environments/environment.development';
+import { environment } from '../../../../environments/environment';
 import { lastValueFrom } from 'rxjs';
 import Swal from 'sweetalert2';
 import { ImageCroppedEvent, ImageCropperComponent, LoadedImage } from 'ngx-image-cropper';

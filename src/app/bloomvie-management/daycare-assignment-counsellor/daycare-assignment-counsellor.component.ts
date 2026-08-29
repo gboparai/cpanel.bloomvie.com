@@ -4,7 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 import * as CryptoJS from 'crypto-js';
 import { CommonService } from '../../common-component/common.service';
 import { NgxSpinnerService } from 'ngx-spinner';

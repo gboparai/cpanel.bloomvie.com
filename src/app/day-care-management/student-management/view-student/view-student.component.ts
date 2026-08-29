@@ -16,7 +16,7 @@ import { CommonModule, NgIf } from '@angular/common';
 import { ManageStaffService } from '../../staff-management/add-staff/manage-staff.service';
 import { NgSelectModule } from '@ng-select/ng-select';
 import * as CryptoJS from 'crypto-js';
-import { environment } from '../../../../environments/environment.development';
+import { environment } from '../../../../environments/environment';
 import { SkeletonLoaderComponent } from "../../../common-component/skeleton-loader/skeleton-loader.component";
 import { TooltipComponent } from '../../../common-component/tooltip/tooltip.component';
 declare var $: any;
@@ -348,11 +348,7 @@ export class ViewStudentComponent implements OnInit {
     this.studentID = item.id;
     this.parentList.emit(item.parentList);
     this.isModalVisible = true;
-    if (
-      window.location.href === 'http://localhost:4200/view-student' ||
-      window.location.href ===
-      'http://cpanelbeta1.careerassistance.in/view-student'
-    ) {
+    if (window.location.href.includes('/view-student')) {
       this.cookie.set('ShowModel', 'true');
       const jsonValue = JSON.stringify(item.parentList);
       this.cookie.set('parentList', jsonValue);

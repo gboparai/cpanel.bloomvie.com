@@ -5,7 +5,7 @@ import { SplitInterpolation } from '@angular/compiler';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { CommonService } from '../../common-component/common.service';
 import { ToastrService } from 'ngx-toastr';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { CookieService } from 'ngx-cookie-service';
 import { Router } from '@angular/router';

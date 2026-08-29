@@ -4,7 +4,7 @@ import { ClassroomDetailsService } from '../../classroom-management/classroom-de
 import * as CryptoJS from 'crypto-js';
 import { ViewStudentEnrollmentService } from '../view-student-enrollment/view-student-enrollment.service';
 import { CommonModule, DatePipe } from '@angular/common';
-import { environment } from '../../../../environments/environment.development';
+import { environment } from '../../../../environments/environment';
 import { CommonService } from '../../../common-component/common.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 

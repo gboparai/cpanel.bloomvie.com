@@ -6,7 +6,7 @@ import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router'; // Import Router
 import CryptoJS from 'crypto-js';
 import { CommonModule, DatePipe, NgFor, NgIf } from '@angular/common';
-import { environment } from '../../../../environments/environment.development';
+import { environment } from '../../../../environments/environment';
 import { ViewStudentEnrollmentService } from '../../student-management/view-student-enrollment/view-student-enrollment.service';
 import { TimeFormatAmPmPipe } from '../../../bloomvie-management/dc-appointments-list/time-format.pipe';
 declare var $: any;

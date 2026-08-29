@@ -29,7 +29,7 @@ import { BreadcrumbComponent } from '../../../common-component/breadcrumb/breadc
 import flatpickr from 'flatpickr';
 import { ApplicationServiceService } from '../../../application-status/application-service.service';
 import { ProfileService } from '../../../common-component/profile/profile.service';
-import { environment } from '../../../../environments/environment.development';
+import { environment } from '../../../../environments/environment';
 import { Action } from 'rxjs/internal/scheduler/Action';
 import { ManageTeacherService } from '../../../teachers-management/manage-teacher/manage-teacher.service';
 

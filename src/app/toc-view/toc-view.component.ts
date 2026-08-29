@@ -4,7 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { TocViewService } from './toc-view.service';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { TimeFormatAmPmPipe, TimeFormatPipe } from '../bloomvie-management/dc-appointments-list/time-format.pipe';
-import { environment } from '../../environments/environment.development';
+import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { FormsModule } from '@angular/forms';

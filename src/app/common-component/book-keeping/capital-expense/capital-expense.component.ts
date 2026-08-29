@@ -11,7 +11,7 @@ import {
 } from '@angular/common';
 import { CookieService } from 'ngx-cookie-service';
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
-import { environment } from '../../../../environments/environment.development';
+import { environment } from '../../../../environments/environment';
 import { NgxPaginationModule } from 'ngx-pagination';
 import flatpickr from 'flatpickr';
 import { FormsModule } from '@angular/forms';

@@ -7,7 +7,7 @@ import {
   WritableSignal,
 } from '@angular/core';
 import { firstValueFrom, Observable } from 'rxjs';
-import { environment } from '../../environments/environment.development';
+import { environment } from '../../environments/environment';
 import * as CryptoJS from 'crypto-js';
 import Swal from 'sweetalert2';
 import { HttpHeaders } from '@angular/common/http';

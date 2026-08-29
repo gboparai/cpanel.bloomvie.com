@@ -4,7 +4,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { catchError, throwError, switchMap } from 'rxjs';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../environments/environment.development';
+import { environment } from '../../environments/environment';
 
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {

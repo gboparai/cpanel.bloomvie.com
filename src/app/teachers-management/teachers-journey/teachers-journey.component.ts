@@ -1,6 +1,6 @@
 import { Component, ElementRef, Renderer2 } from '@angular/core';
 import { ProfileService } from '../../common-component/profile/profile.service';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 import { ActivatedRoute } from '@angular/router';
 import * as CryptoJS from 'crypto-js';
 import { NgxSpinnerService } from 'ngx-spinner';

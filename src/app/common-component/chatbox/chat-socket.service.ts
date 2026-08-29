@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import { CookieService } from 'ngx-cookie-service';
 import { BehaviorSubject, Observable, Subject, takeUntil } from 'rxjs';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 import { HeaderServiceService } from '../../layout/header/header-service.service';
 
 

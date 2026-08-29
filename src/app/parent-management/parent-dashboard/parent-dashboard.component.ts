@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
 import { HeaderComponent } from '../../layout/header/header.component';
 import { ClassroomDetailsService } from '../../day-care-management/classroom-management/classroom-details/classroom-details.service';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 import { CommonModule, DatePipe } from '@angular/common';
 import { HeaderServiceService } from '../../layout/header/header-service.service';
 import { ViewTeacherService } from '../../teachers-management/view-teacher/view-teacher.service';

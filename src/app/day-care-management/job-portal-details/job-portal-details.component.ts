@@ -13,7 +13,7 @@ import {
   Router,
 } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { SkeletonLoaderComponent } from "../../common-component/skeleton-loader/skeleton-loader.component";
 declare var $: any;

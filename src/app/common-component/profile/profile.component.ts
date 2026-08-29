@@ -12,7 +12,7 @@ import { ProfileService } from './profile.service';
 import { CookieService } from 'ngx-cookie-service';
 import { ChangeDetectorRef } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 import { UserRoleService } from '../../settings/Permission/user-role/user-role.service';
 import {
   FormBuilder,
@@ -1533,11 +1533,10 @@ export class ProfileComponent implements AfterViewInit {
     };
 
     if (this.UserRoleID === 3) {
-      window.location.href = `https://bloomvie.com/daycare?email=${queryParams.email}&password=${queryParams.password}#section1`;
-      // window.location.href = `http://beta1.careerassistance.in/daycare?email=${encodeURIComponent(queryParams.email)}&password=${encodeURIComponent(queryParams.password)}`;
+      window.location.href = `${environment.frontEndWebUrl}daycare?email=${queryParams.email}&password=${queryParams.password}#section1`;
     } else if (this.UserRoleID === 5) {
       // Redirect to ForParent page  
-      window.location.href = `https://cpanel.bloomvie.com/parents?email=${queryParams.email}&password=${queryParams.password}`;
+      window.location.href = `${environment.Cpanel}parents?email=${queryParams.email}&password=${queryParams.password}`;
     }
   }
 

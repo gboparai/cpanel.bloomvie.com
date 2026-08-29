@@ -9,7 +9,7 @@ import { BreadcrumbComponent } from '../common-component/breadcrumb/breadcrumb.c
 import { SubscriptionFeaturesService } from '../day-care-management/subscription-plans/subscription-features/subscription-features.service';
 import { Toast, ToastrService } from 'ngx-toastr';
 import { CommonModule } from '@angular/common';
-import { environment } from '../../environments/environment.development';
+import { environment } from '../../environments/environment';
 import { CommonService } from '../common-component/common.service';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { SkeletonLoaderComponent } from '../common-component/skeleton-loader/skeleton-loader.component';

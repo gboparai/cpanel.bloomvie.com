@@ -19,7 +19,7 @@ import { ProfileService } from '../common-component/profile/profile.service';
 import * as CryptoJS from 'crypto-js';
 import Swal from 'sweetalert2';
 import { promises } from 'node:dns';
-import { environment } from '../../environments/environment.development';
+import { environment } from '../../environments/environment';
 import { ApplicationServiceService } from '../application-status/application-service.service';
 import { AppService } from '../app.service';
 import { CommonService } from '../common-component/common.service';

@@ -39,7 +39,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { environment } from '../../../../environments/environment.development';
+import { environment } from '../../../../environments/environment';
 import { AttendanceDashboardService } from '../../attendance-dashboard/attendance-dashboard.service';
 import { ManageStaffService } from '../../../day-care-management/staff-management/add-staff/manage-staff.service';
 import { BreadcrumbComponent } from '../../breadcrumb/breadcrumb.component';

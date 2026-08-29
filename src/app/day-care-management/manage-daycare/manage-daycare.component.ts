@@ -24,7 +24,7 @@ import Swal from 'sweetalert2';
 import { promises } from 'dns';
 import { ManageDaycareService } from './manage-daycare.service';
 import { CommonModule, DatePipe, JsonPipe } from '@angular/common';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 import { CookieService } from 'ngx-cookie-service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { OnboardingService } from '../../onboarding/onboarding.service';
