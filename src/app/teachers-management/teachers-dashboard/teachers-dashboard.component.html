@@ -147,8 +147,9 @@
                     @if (skalatonShowCard === 'skalatonShowCard') {
                     <div class="skeleton-line user-info-card w-50 mb-2"></div>
                     } @else {
-                    <h3>--</h3>
-                    <!-- <h3>{{ countResult?.totalClasses }}</h3> -->
+                      <h3>
+                        {{ countResult?.messageCount ?? "--" }}
+                      </h3>
                     }
                   </div>
                   <div class="db-icon">
