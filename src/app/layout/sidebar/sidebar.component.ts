@@ -331,6 +331,23 @@ export class SidebarComponent implements OnInit {
           dashboardMenuValues.has(menu.value)
         );
 
+        if (!this.dashboardMenu) {
+          const roleUrls: { [key: number]: string } = {
+            1: 'dashboard',
+            2: 'dashboard',
+            3: 'daycare-dashboard',
+            4: 'teachers-dashboard',
+            5: 'parent-dashboard',
+            8: this.isSlotAccepted == 'true' ? 'teachers-dashboard' : 'profile'
+          };
+          this.dashboardMenu = {
+            id: -1,
+            value: 'Dashboard',
+            menuUrl: roleUrls[this.UserRoleId] || 'dashboard',
+            isOpen: false
+          };
+        }
+
         this.isDataFullyLoaded = true;
         this.sideBarLoaded();
 

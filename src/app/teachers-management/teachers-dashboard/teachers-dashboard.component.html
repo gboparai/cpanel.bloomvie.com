@@ -79,9 +79,7 @@
                     } @else {
                     <h3>
                       {{
-                      dashboardCounts?.totalStudentCount
-                      ? dashboardCounts?.totalStudentCount
-                      : "--"
+                      dashboardCounts?.totalStudentCount ?? "--"
                       }}
                     </h3>
                     }
@@ -104,9 +102,7 @@
                     } @else {
                     <h3>
                       {{
-                      dashboardCounts?.totalStartEndTimeCount
-                      ? dashboardCounts?.totalStartEndTimeCount
-                      : "--"
+                      dashboardCounts?.totalStartEndTimeCount ?? "--"
                       }}
                     </h3>
                     }

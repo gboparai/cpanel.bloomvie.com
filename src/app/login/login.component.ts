@@ -262,6 +262,24 @@ export class LoginComponent implements OnInit {
     });
   }
 
+  setCookie(name: string, value: string) {
+    const domain = environment.cookiesDomain;
+    if (domain) {
+      this.cookie.set(name, value, { path: '/', domain: domain });
+    } else {
+      this.cookie.set(name, value, { path: '/' });
+    }
+  }
+
+  deleteCookie(name: string) {
+    const domain = environment.cookiesDomain;
+    if (domain) {
+      this.cookie.delete(name, '/', domain);
+    } else {
+      this.cookie.delete(name, '/');
+    }
+  }
+
   ngOnInit(): void {
     const rememberMeStorage = this.cookie.get('rememberMe');
     if (rememberMeStorage === 'true') {
@@ -464,25 +482,25 @@ export class LoginComponent implements OnInit {
         //Added on 30/06/25
         if (authResponse.result.userRoleID == 8 && this.isTocUser) {
           this.centreID = this.selectedCentreId;
-          this.cookie.set('CentreID', this.centreID);
+          this.setCookie('CentreID', this.centreID);
           const centreAdminId = this.selectedCentreAdminId;
-          this.cookie.set('CentreAdminID', centreAdminId);
+          this.setCookie('CentreAdminID', centreAdminId);
           const data: any = await this.loginService
             .checkTOCUserAcceptedSlotRequest(this.UserId, this.selectedCentreId)
             .toPromise();
           this.isSlotAccepted = data?.message?.toLowerCase() === 'ok';
-          this.cookie.set('isSlotAccepted', String(this.isSlotAccepted));
+          this.setCookie('isSlotAccepted', String(this.isSlotAccepted));
         } else {
           if (!this.cookie.check('CentreID')) {
             this.centreID = authResponse.result.centreID;
-            this.cookie.set('CentreID', this.centreID);
+            this.setCookie('CentreID', this.centreID);
           }
         }
 
-        this.cookie.set('UserId', this.UserId);
-        this.cookie.set('UserInfo', JSON.stringify(authResponse));
-        this.cookie.set('RefreshToken',authResponse.refreshToken);
-        this.cookie.set('UserRoleId', authResponse.result.userRoleID);
+        this.setCookie('UserId', this.UserId);
+        this.setCookie('UserInfo', JSON.stringify(authResponse));
+        this.setCookie('RefreshToken',authResponse.refreshToken);
+        this.setCookie('UserRoleId', authResponse.result.userRoleID);
         this.loginService.loadUserFromStorage();
 
         const UserInfo = this.cookie.get('UserInfo');
@@ -491,9 +509,9 @@ export class LoginComponent implements OnInit {
           const firstName = parsedInfo.result.firstName;
           const lastName = parsedInfo.result.lastName;
           const email = parsedInfo.result.email;
-          this.cookie.set('email', email);
+          this.setCookie('email', email);
           const adminName = `${firstName} ${lastName ?? ''}`;
-          this.cookie.set('AdminName', adminName);
+          this.setCookie('AdminName', adminName);
         }
 
         const userRoleId = authResponse.result.userRoleID;
@@ -519,8 +537,8 @@ export class LoginComponent implements OnInit {
         ) {
           const studentID = authResponse.result.studentID[0].id;
           const centreID = authResponse.result.studentID[0].centreID;
-          this.cookie.set('StudentID', studentID);
-          this.cookie.set('CentreID', centreID);
+          this.setCookie('StudentID', studentID);
+          this.setCookie('CentreID', centreID);
 
           if (!authResponse.result.isOnBoarded) {
             // this.spinner.hide();
@@ -643,13 +661,13 @@ export class LoginComponent implements OnInit {
     } finally {
       this.spinner.hide();
       if (this.loginForm.value.rememberMe) {
-        this.cookie.set('rememberMe', 'true');
-        this.cookie.set('Email', this.loginForm.get('email')?.value);
-        this.cookie.set('Password', this.loginForm.get('password')?.value);
+        this.setCookie('rememberMe', 'true');
+        this.setCookie('Email', this.loginForm.get('email')?.value);
+        this.setCookie('Password', this.loginForm.get('password')?.value);
       } else {
-        this.cookie.delete('rememberMe');
-        this.cookie.delete('Email');
-        this.cookie.delete('Password');
+        this.deleteCookie('rememberMe');
+        this.deleteCookie('Email');
+        this.deleteCookie('Password');
       }
     }
   }
@@ -665,12 +683,12 @@ export class LoginComponent implements OnInit {
       .subscribe({
         next: (data) => {
           this.isSlotAccepted = data?.message?.toLowerCase() === 'ok';
-          this.cookie.set('isSlotAccepted', String(this.isSlotAccepted));
+          this.setCookie('isSlotAccepted', String(this.isSlotAccepted));
         },
         error: (err) => {
           console.error('Error checking slot request:', err);
           this.isSlotAccepted = false;
-          this.cookie.set('isSlotAccepted', 'false');
+          this.setCookie('isSlotAccepted', 'false');
         },
       });
   }
@@ -777,7 +795,7 @@ export class LoginComponent implements OnInit {
   //       plan.featureList.forEach((val: any) => {
   //         if (val.featureName.includes("Job Posting")) {
   //           const countFeature = val.featureName.split(" ");
-  //           this.cookie.set("jobPostCount", countFeature[0]);
+  //           this.setCookie("jobPostCount", countFeature[0]);
   //         }
   //       })
 
@@ -794,14 +812,14 @@ export class LoginComponent implements OnInit {
   //         // plan[0].featureList.forEach((val: any) => {
   //         //   if (val.planOwnerID === 3 || (val.jobPostType == true && val.planOwnerID == 1)) {
   //         //     const jobPostingCounts = val.capacity;
-  //         //     this.cookie.set("jobPostCount", jobPostingCounts);
+  //         //     this.setCookie("jobPostCount", jobPostingCounts);
   //         //   }
   //         // })
 
   //         plan.featureList.forEach((val: any) => {
   //                   if (val.featureName.includes("Job Posting")) {
   //                     const countFeature = val.featureName.split(" ");
-  //                     this.cookie.set("jobPostCount", countFeature[0]);
+  //                     this.setCookie("jobPostCount", countFeature[0]);
   //                   }
   //                 })
 
@@ -809,7 +827,7 @@ export class LoginComponent implements OnInit {
   //       //   plan.featureList.forEach((val: any) => {
   //       //     if (val?.planOwnerID === 3 || (val?.jobPostType === true && val?.planOwnerID === 1)) {
   //       //       const jobPostingCounts = val.capacity ?? 0; // Ensure a valid number
-  //       //       this.cookie.set("jobPostCount", jobPostingCounts.toString());
+  //       //       this.setCookie("jobPostCount", jobPostingCounts.toString());
   //       //     }
   //       //   });
   //       // }
@@ -843,7 +861,7 @@ export class LoginComponent implements OnInit {
                 val.featureName.includes('Job Posting')
               ) {
                 const countFeature = val.featureName.split(' ')[0]; // Extract first part (e.g., '2' from '2 Job Posting')
-                this.cookie.set('jobPostCount', countFeature);
+                this.setCookie('jobPostCount', countFeature);
               }
             });
           }
