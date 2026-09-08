@@ -670,7 +670,7 @@ export class DaycareDashboardComponent {
 
           studentRecord['totalAmount'] = totalAmount.toFixed(2);
 
-          previousTotalAmount = parseFloat(previousTotalAmount) + parseFloat(totalAmount.toFixed(2));
+          previousTotalAmount = Number(previousTotalAmount) + Number(totalAmount.toFixed(2));
           this.paymentDetails['totalDiscountAmount'] = previousTotalAmount.toFixed(2);
 
           this.isDisabled = false;
