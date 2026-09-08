@@ -221,7 +221,7 @@ export class PayrollExpenseComponent implements OnInit, AfterViewInit {
     this.centreID = parseInt(this.cookieService.get('CentreID'));
 
     // setTimeout(() => {
-    this.userRoleID = parseInt(this.cookieService.get('UserRoleId'));
+    this.userRoleID = parseInt(this.cookieService.get('userRoleID') || this.cookieService.get('UserRoleId') || '0', 10);
     // }, 10);
 
     const UserInfo = this.cookieService.get('UserInfo');

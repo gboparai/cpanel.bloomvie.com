@@ -293,6 +293,11 @@ export class ViewSupplyRequestComponent {
   }
 
   onAccept(item: any) {
+    this.purchasedForm.reset();
+    if (this.fileInput && this.fileInput.nativeElement) {
+      this.fileInput.nativeElement.value = '';
+    }
+    
     this.selectedItemId = item.id;
     if (item.userRoleID == 4) {
       Swal.fire({
@@ -327,6 +332,18 @@ export class ViewSupplyRequestComponent {
     });
   }
 
+  resetSupplyForm() {
+    this.SupplyForm.reset({
+      id: 0,
+      itemName: '',
+      quantity: null,
+      itemDescription: '',
+      createdBy: 0,
+      statusID: 3,
+      centreID: 0
+    });
+  }
+
   onSubmit() {
     if (this.SupplyForm.valid) {
       this.spinner.show();
@@ -339,13 +356,13 @@ export class ViewSupplyRequestComponent {
         next: (data: any) => {
           if (data.message === 'Supply Updated Successfully') {
             this.toaster.success('Supply Updated Successfully');
-            this.SupplyForm.reset();
+            this.resetSupplyForm();
             $('#addItemModal').modal('hide');
             this.getSupplyList('pending');
             this.spinner.hide();
           } else if (data.message === 'Supply Added Successfully') {
             this.toaster.success('Supply Added Successfully');
-            this.SupplyForm.reset();
+            this.resetSupplyForm();
             $('#addItemModal').modal('hide');
             this.getSupplyList('pending');
             this.spinner.hide();
@@ -353,8 +370,6 @@ export class ViewSupplyRequestComponent {
             this.toaster.warning('Unexpected response');
             this.spinner.hide();
           }
-          // this.getSupplyList();
-          // this.resetForm();
         },
         error: (err) => {
           this.spinner.hide();
@@ -367,8 +382,9 @@ export class ViewSupplyRequestComponent {
       this.SupplyForm.markAllAsTouched();
     }
   }
+
   onCancel() {
-    this.SupplyForm.reset();
+    this.resetSupplyForm();
     this.purchasedForm.reset();
     this.fileInput.nativeElement.value = '';
   }
@@ -409,7 +425,7 @@ export class ViewSupplyRequestComponent {
               $('#purchased').modal('hide');
             } else {
               this.spinner.hide();
-              
+              this.toaster.error(data.message || 'Unexpected error occurred.');
             }
           },
           error: (err) => {
@@ -420,6 +436,10 @@ export class ViewSupplyRequestComponent {
             console.error(err);
           },
         });
+    } else {
+      this.spinner.hide();
+      this.purchasedForm.markAllAsTouched();
+      this.toaster.error('Please fill in all required fields.');
     }
   }
 

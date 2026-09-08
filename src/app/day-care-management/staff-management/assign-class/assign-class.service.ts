@@ -32,9 +32,13 @@ export class AssignClassService {
   }
 
   BulkClassAssignment(BulkTeacherAssignment: any[]): Observable<any> {
+    const payload = {
+      BulkTeacherAssignment: BulkTeacherAssignment,
+      UserType: 'DayCare'
+    };
     return this.http.post<any>(
       this.rootURL + '/Classroom/BulkClassAssignment',
-      BulkTeacherAssignment
+      payload
     );
   }
 }

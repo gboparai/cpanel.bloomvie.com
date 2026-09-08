@@ -266,6 +266,10 @@ export class AddDiscountComponent {
         tempOrderNumber: this.generateTempOrderNumber(),
       });
 
+      // TODO: (Discount) Currently, this only sends an email. We need to save the generated discount 
+      // invitation (with tempOrderNumber) to the database here, so Daycare Owners can see a 
+      // "Pending Invites" list before the parent actually responds and creates a formal enrollment request.
+
       this.discountService
         .sendDiscountFormMail(this.giveDiscountForm.value)
         .subscribe((response: any) => {
@@ -442,11 +446,13 @@ export class AddDiscountComponent {
               this.spinner.hide();
             }, 100);
 
+            $('#editModal').modal('hide');
             this.toastr.success('Payment Email Send Successfully');
             this.reset();
           } else if (res.message == 'Plan Assignment Succesfull') {
             this.planDetails = null;
             this.spinner.hide();
+            $('#editModal').modal('hide');
             this.toastr.success('Plan Assigned Successfully');
             this.reset();
           } else {

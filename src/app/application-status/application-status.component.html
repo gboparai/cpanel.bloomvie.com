@@ -171,7 +171,7 @@
                             <button
                               type="button"
                               *ngIf="
-                                
+                                userRoleId == 1 ||
                                 isMeetAttempt.counsellorID == UserID
                               "
                               class="btn btn-primary apoint-button"
@@ -183,9 +183,9 @@
                             <button
                               type="button"
                               *ngIf="
-                              
-                                (isMeetAttempt.counsellorID == UserID ||
-                                  isMeetAttempt.counsellorID == null)
+                                userRoleId == 1 ||
+                                isMeetAttempt.counsellorID == UserID ||
+                                isMeetAttempt.counsellorID == null
                               "
                               class="btn btn-primary apoint-button"
                               data-bs-toggle="modal"
@@ -385,15 +385,11 @@
                             <div
                               class="d-inline-block"
                               data-bs-toggle="tooltip"
-                              data-bs-placement="top"
-                              title="Send Plan"
-                            >
-                             <!-- !viewAction && -->
+                              title="Send Plan"> <!-- !viewAction && -->
                               <a
                                 class="anchor btn btn-primary apoint-button"
                                 *ngIf="
-                                 
-                                  completedItem.counsellorID == UserID &&
+                                  (userRoleId == 1 || completedItem.counsellorID == UserID) &&
                                   completedItem.isMailSend == false
                                 "
                                 data-bs-toggle="modal"
@@ -1059,3 +1055,4 @@
       </div> -->
   </div>
 </div>
+

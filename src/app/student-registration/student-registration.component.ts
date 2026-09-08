@@ -51,7 +51,7 @@ export class StudentRegistrationComponent {
       lastName: [''],
       ageGroup: [0],
       gender: ['Male', Validators.required],
-      billingDate: ['', Validators.required],
+      billingDate: [new Date()],
     });
   }
 
@@ -147,18 +147,20 @@ export class StudentRegistrationComponent {
       formObject['billingDate'] = formattedDate;
       formObject['centreID'] = this.centreID;
       formObject['parentID'] = this.UserID;
-      if (this.planInfo != null) {
+                  if (this.planInfo != null) {
         formObject['ageGroup'] = 0;
         formObject['planID'] = this.planInfo.planID;
         formObject['planPrice'] = this.planInfo.planPrice;
         formObject['centreAdminID'] = this.planInfo.centreAdminID;
         formObject['discount'] = this.planInfo.discountValue;
+        formObject['discountType'] = this.planInfo.discountType;
       } else {
         formObject['ageGroup'] = 0;
         formObject['planID'] = this.selectedPlan.id;
         formObject['planPrice'] = this.selectedPlan.price;
         formObject['centreAdminID'] = this.selectedPlan.planAdminID;
         formObject['discount'] = 0;
+        formObject['discountType'] = null;
       }
 
       this.studentRegistrationService
@@ -248,3 +250,6 @@ export class StudentRegistrationComponent {
     this.selectedPlan = event;
   }
 }
+
+
+

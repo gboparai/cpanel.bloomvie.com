@@ -4,6 +4,7 @@ import { DaycareService } from './daycare.service';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 import { BreadcrumbComponent } from '../../common-component/breadcrumb/breadcrumb.component';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-day-care-settings',
@@ -36,7 +37,8 @@ export class DayCareSettingsComponent implements OnInit {
   constructor(
     private dayCareSetting: DaycareService,
     private spinner: NgxSpinnerService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private cookie: CookieService
   ) { }
 
   ngOnInit(): void {
@@ -44,7 +46,7 @@ export class DayCareSettingsComponent implements OnInit {
     this.getAllActivites();
     this.getAllClasses();
     this.getAllFacility();
-    this.editDayCareSettings(2);
+    this.editDayCareSettings(parseInt(this.cookie.get('CentreID')));
   }
 
   getAllActivites() {
@@ -275,8 +277,7 @@ export class DayCareSettingsComponent implements OnInit {
       this.spinner.show();
 
       const activityResponse = await this.dayCareSetting
-        .assignmentActivitesForDayCare(
-          2,
+        .assignmentActivitesForDayCare(parseInt(this.cookie.get('CentreID')),
           selectedActivities,
           unselectedActivity
         )
@@ -294,7 +295,7 @@ export class DayCareSettingsComponent implements OnInit {
       }
 
       const ageGroupResponse = await this.dayCareSetting
-        .assignAgeGroupsForDayCare(2, selectedAgeGroups, unselectedAgeGroup)
+        .assignAgeGroupsForDayCare(parseInt(this.cookie.get('CentreID')), selectedAgeGroups, unselectedAgeGroup)
         .toPromise();
       if (ageGroupResponse.message === 'OK') {
         this.spinner.hide();
@@ -312,7 +313,7 @@ export class DayCareSettingsComponent implements OnInit {
 
       //Arsh
       const FacilityResponse = await this.dayCareSetting
-        .assignFacilityForDayCare(2, selectedFacilities, unselectedfacility)
+        .assignFacilityForDayCare(parseInt(this.cookie.get('CentreID')), selectedFacilities, unselectedfacility)
         .toPromise();
       if (FacilityResponse.message === 'OK') {
         // if (activityResponse.activity === "Added") {
@@ -326,7 +327,7 @@ export class DayCareSettingsComponent implements OnInit {
       }
 
       const classRoomResponse = await this.dayCareSetting
-        .assignClassRoomForDayCare(2, selectedClassRooms, unselectedClass)
+        .assignClassRoomForDayCare(parseInt(this.cookie.get('CentreID')), selectedClassRooms, unselectedClass)
         .toPromise();
       if (classRoomResponse.message === 'OK') {
         if (classRoomResponse.activity === 'Added') {
@@ -394,3 +395,5 @@ export class DayCareSettingsComponent implements OnInit {
     });
   }
 }
+
+

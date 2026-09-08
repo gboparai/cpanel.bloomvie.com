@@ -812,6 +812,7 @@
         <button
           type="button"
           class="btn btn-secondary"
+          data-bs-dismiss="modal"
           (click)="resetGiveDiscountForm()"
         >
           Cancel
@@ -1124,7 +1125,7 @@
           >
             Submit
           </button>
-          <button class="btn btn-secondary" (click)="reset()">Cancel</button>
+            <button class="btn btn-secondary" data-bs-dismiss="modal" (click)="reset()">Cancel</button>
         </div>
       </div>
     </div>

@@ -271,13 +271,13 @@ export class ChildParentDetailsComponent {
       });
     }
 
-    const currentDate = new Date();
-    // added on 06/11/2024
-    flatpickr('#dobDatePicker', {
-      dateFormat: 'd/m/Y',
-      allowInput: true,
-      maxDate: 'today',
-    });
+    setTimeout(() => {
+      flatpickr('#dobDatePicker', {
+        dateFormat: 'd/m/Y',
+        allowInput: true,
+        maxDate: 'today',
+      });
+    }, 100);
   }
 
   calculateAge(dob: Date): number {

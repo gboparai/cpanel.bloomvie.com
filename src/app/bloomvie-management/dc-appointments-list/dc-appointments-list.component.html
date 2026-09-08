@@ -248,11 +248,7 @@
                               type="button"
                               class="btn btn-success apoint-button"
                               (click)="completeMeeting(dayCareAppointment.id)"
-                              *ngIf="
-                                
-                                dayCareAppointment.counsellorID == UserID &&
-                                dayCareAppointment.isMeetingJoined == true
-                              "
+                              *ngIf="(userRoleID == 1 || dayCareAppointment.counsellorID == UserID) && dayCareAppointment.isMeetingJoined == true"
                             >
                               Meeting Wrapped
                             </button>
@@ -963,3 +959,4 @@
     </div>
   </div>
 </div>
+

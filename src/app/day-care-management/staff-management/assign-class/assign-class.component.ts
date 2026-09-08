@@ -44,6 +44,7 @@ interface createTeacherAssignmentSlotType {
   slotID: number;
   dayID: number;
   classSlotID: number;
+  classID: number;
   teacherID: number;
   startTime: string;
   endTime: string;
@@ -121,6 +122,7 @@ export class AssignClassComponent {
       slotID: [0],
       dayID: [0],
       classSlotID: [0],
+      classID: [0],
       teacherID: [0],
       startTime: [null, Validators.required],
       endTime: [null, Validators.required],
@@ -435,10 +437,10 @@ export class AssignClassComponent {
       )?.slotID;
 
       this.assignClassForm.patchValue({
-        slotID: 0,
         dayID: this.dayID,
         teacherID: this.teacherID,
         classSlotID: classSlotID,
+        classID: this.classID,
       });
 
       this.TempAssignmentList.push(this.assignClassForm.value);

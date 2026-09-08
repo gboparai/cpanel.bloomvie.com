@@ -1028,7 +1028,7 @@ export class SubscriptionPlansComponent implements OnInit {
 
   onSubmit() {
     if (this.UserRoleId == 1) {
-      //need to cross check
+      // TODO: (Billing) Yearly plans are currently disabled. This forcefully overrides the Super Admin's "Yearly" UI selection back to "Monthly". Needs to be removed once Yearly payment processing is fully supported.
       this.subscriptionFormPlanA.patchValue({
         duration: 'Monthly',
         discountValues: this.storedDiscounts,
@@ -1212,6 +1212,7 @@ export class SubscriptionPlansComponent implements OnInit {
           );
       }
     } else {
+      this.toastr.error('Please fill in all required fields correctly to save the plan.');
       this.subscriptionFormPlanA.markAllAsTouched();
       this.spinner.hide();
     }
@@ -1306,18 +1307,25 @@ export class SubscriptionPlansComponent implements OnInit {
     this.strikeOnStorageType = false;
     this.storedDiscounts = [];
     this.subscriptionFormPlanA.reset({
-      id: 0,
+      ID: 0,
       userRoleID: '',
       planName: '',
       description: '',
       price: '',
-      featureList: '',
-      discounts: '',
-      yearly: '',
-      monthly: false,
-      daily: false,
-      duration: '',
+      featureList: [],
+      Discounts: null,
+      isDefault: null,
+      ageGroupID: null,
+      discountValues: [],
       loginUserID: 0,
+      isActive: null,
+      duration: 'Monthly',
+      discount: '0',
+      daily: null,
+      monthly: null,
+      yearly: null,
+      isJobPostPlan: null,
+      isStorageTypePlan: null
     });
     this.isEditMode = false;
   }
@@ -1389,6 +1397,13 @@ export class SubscriptionPlansComponent implements OnInit {
         isActive ? check() : uncheck();
       }
     });
+  }
+
+  goToSubscriptionFeatures() {
+    $('#exampleModal1').modal('hide');
+    setTimeout(() => {
+      this.router.navigate(['/subscription-features']);
+    }, 300);
   }
 
   close() {

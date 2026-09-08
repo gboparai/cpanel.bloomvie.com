@@ -32,7 +32,7 @@ import * as CryptoJS from 'crypto-js';
 import { DayCareDashboardService } from './day-care-dashboard.service';
 import { CommonModule, DatePipe } from '@angular/common';
 import { environment } from '../../../environments/environment';
-// import { ViewStudentEnrollmentComponent } from '../student-management/view-student-enrollment/view-student-enrollment.component';
+import { ViewStudentEnrollmentComponent } from '../student-management/view-student-enrollment/view-student-enrollment.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { JobPortalServiceService } from '../job-portal-details/job-portal-service.service';
 import { ClassroomDetailsService } from '../classroom-management/classroom-details/classroom-details.service';
@@ -64,7 +64,7 @@ interface ChangeStatus {
   standalone: true,
   imports: [
     BreadcrumbComponent,
-    // ViewStudentEnrollmentComponent,
+    ViewStudentEnrollmentComponent,
     FullCalendarModule,
     RouterLink,
     CommonModule,
@@ -289,11 +289,10 @@ export class DaycareDashboardComponent {
                 this.stripeOnboardingSteps();
               }, 100);
             } else {
-              !this.onBoardingService.isOnboardedAccount() &&
+              if (!this.onBoardingService.isOnboardedAccount()) {
                 $('#stripeProcessingModal').modal('show');
-              // this.disabledStep1 = true;
-              // this.disabledStep2 = true;
-              // this.stripeOnboardingSteps();
+                this.pollStripeStatus();
+              }
             }
           }
         }
@@ -315,8 +314,24 @@ export class DaycareDashboardComponent {
         stripestepsCount == 2
       ) {
         $('#stripeProcessingModal').modal('show');
+        this.pollStripeStatus();
       }
     }
+  }
+
+  pollStripeStatus() {
+    const userId = parseInt(this.UserID, 10);
+    const intervalId = setInterval(() => {
+      this.onBoardingService.getAccountDetails(userId, '').subscribe((response) => {
+        if (response.result && response.result.isOnboarded) {
+          clearInterval(intervalId);
+          $('#stripeProcessingModal').modal('hide');
+          this.onBoardingService.isOnboardedAccount.set(true);
+          this.onBoardingService.stripeOnboardingStepsCount.set(3);
+          window.location.reload();
+        }
+      });
+    }, 3000);
   }
 
   private getCookie() {
@@ -588,27 +603,26 @@ export class DaycareDashboardComponent {
         discountListObj['studentName'] = studentName;
 
         let totalAmount: number = 0;
+        let fullPlanPrice = this.paymentDetails.planPrice;
+        let priceAfterDiscount = 0;
 
         if (discountListObj.discountType == 'amount') {
-          //Commented on 16/06/25
-          // let calDiscountPercentage = Math.round((discountListObj.discountValue / studentIndividualPlanPrice) * 100 );
-          let calDiscountPercentage =
-            (discountListObj.discountValue.toFixed(2) /
-              studentIndividualPlanPrice) *
-            100;
-          totalAmount =
-            studentIndividualPlanPrice - discountListObj.discountValue;
+          priceAfterDiscount = Math.max(0, fullPlanPrice - discountListObj.discountValue);
+          let calDiscountPercentage = (discountListObj.discountValue / fullPlanPrice) * 100;
           discountListObj['discountPercentage'] = calDiscountPercentage;
-          discountListObj['discountAmount'] =
-            discountListObj.discountValue.toFixed(2);
+          discountListObj['discountAmount'] = parseFloat(discountListObj.discountValue).toFixed(2);
         } else {
-          //Commented on 16/06/25
-          // let totalDiscountAmount = Math.round((discountListObj.planPrice * discountListObj.discountValue) / 100 );
-          const totalDiscountAmount =
-            (discountListObj.planPrice * discountListObj.discountValue) / 100;
-          totalAmount = studentIndividualPlanPrice - totalDiscountAmount;
+          let totalDiscountAmount = (fullPlanPrice * discountListObj.discountValue) / 100;
+          priceAfterDiscount = Math.max(0, fullPlanPrice - totalDiscountAmount);
           discountListObj['discountAmount'] = totalDiscountAmount.toFixed(2);
         }
+
+        let date = new Date(this.paymentDetails.startDate);
+        let daysInMonth = this.daysInMonth(date.getFullYear(), date.getMonth() + 1);
+        let perDayPrice = priceAfterDiscount / daysInMonth;
+        let numberOfDaysLeftInMonth = daysInMonth - date.getDate() + 1;
+        totalAmount = numberOfDaysLeftInMonth * perDayPrice;
+        
         discountListObj['totalAmount'] = totalAmount.toFixed(2);
 
         this.paymentDetails['totalDiscountAmount'] = this.paymentDetails[
@@ -634,25 +648,30 @@ export class DaycareDashboardComponent {
             studentRecord.totalAmount;
 
           let totalAmount = 0;
-          if (studentRecord.discountType == 'amount') {
-            totalAmount =
-              studentIndividualPlanPrice - studentRecord.discountValue;
+          let fullPlanPrice = this.paymentDetails.planPrice;
+          let priceAfterDiscount = 0;
 
-            let calDiscountPercentage = Math.round(
-              (studentRecord.discountValue / studentIndividualPlanPrice) * 100
-            );
+          if (studentRecord.discountType == 'amount') {
+            priceAfterDiscount = Math.max(0, fullPlanPrice - studentRecord.discountValue);
+            let calDiscountPercentage = (studentRecord.discountValue / fullPlanPrice) * 100;
             studentRecord['discountPercentage'] = calDiscountPercentage;
+            studentRecord['discountAmount'] = parseFloat(studentRecord.discountValue).toFixed(2);
           } else {
-            let totalDiscountAmount = Math.round(
-              (studentRecord.planPrice * studentRecord.discountValue) / 100
-            );
-            totalAmount = studentIndividualPlanPrice - totalDiscountAmount;
+            let totalDiscountAmount = (fullPlanPrice * studentRecord.discountValue) / 100;
+            priceAfterDiscount = Math.max(0, fullPlanPrice - totalDiscountAmount);
+            studentRecord['discountAmount'] = totalDiscountAmount.toFixed(2);
           }
 
-          studentRecord['totalAmount'] = totalAmount;
+          let date = new Date(this.paymentDetails.startDate);
+          let daysInMonth = this.daysInMonth(date.getFullYear(), date.getMonth() + 1);
+          let perDayPrice = priceAfterDiscount / daysInMonth;
+          let numberOfDaysLeftInMonth = daysInMonth - date.getDate() + 1;
+          totalAmount = numberOfDaysLeftInMonth * perDayPrice;
 
-          previousTotalAmount = previousTotalAmount + totalAmount;
-          this.paymentDetails['totalDiscountAmount'] = previousTotalAmount;
+          studentRecord['totalAmount'] = totalAmount.toFixed(2);
+
+          previousTotalAmount = parseFloat(previousTotalAmount) + parseFloat(totalAmount.toFixed(2));
+          this.paymentDetails['totalDiscountAmount'] = previousTotalAmount.toFixed(2);
 
           this.isDisabled = false;
           this.isUpdateCase = false;
@@ -1136,7 +1155,7 @@ export class DaycareDashboardComponent {
       date.getMonth() + 1
     );
 
-    let perDayPrice = Math.trunc(enrollment.planPrice / daysInMonth);
+    let perDayPrice = enrollment.planPrice / daysInMonth;
 
     let numberOfDaysLeft = daysInMonth - date.getDate();
 
@@ -1725,3 +1744,4 @@ export class DaycareDashboardComponent {
     }
   }
 }
+

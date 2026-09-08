@@ -108,35 +108,20 @@
                   [value]="
                     planInfo
                       ? planInfo.planName +
-                        ' - ' +
-                        planInfo.discountValue +
-                        '% OFF'
+                        (planInfo.discountValue
+                          ? ' - ' +
+                            (planInfo.discountType === 'amount'
+                              ? '$' + planInfo.discountValue
+                              : planInfo.discountValue + '%') +
+                            ' OFF'
+                          : '')
                       : ''
                   "
                 />
               </div>
             </div>
 
-            <div class="col-md-4 mb-4">
-              <div class="form-group local-forms">
-                <label>Billing Date<span class="login-danger">*</span></label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="billingDate"
-                  formControlName="billingDate"
-                />
-                <span
-                  class="text-danger"
-                  *ngIf="
-                    studentRegistrationForm.get('billingDate').errors
-                      ?.required &&
-                    studentRegistrationForm.get('billingDate').touched
-                  "
-                  >This field is required.</span
-                >
-              </div>
-            </div>
+            
 
             <div class="col-md-4 mb-4">
               <div class="gender-section">
@@ -208,3 +193,4 @@
     </div>
   </div>
 </form>
+

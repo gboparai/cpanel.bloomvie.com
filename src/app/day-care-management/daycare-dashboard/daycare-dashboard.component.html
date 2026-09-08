@@ -246,8 +246,7 @@
                       } @else {
                       <h3 *ngIf="DayCareCount != null">
                         {{
-                          DayCareCount.pendingStudents.length +
-                            DayCareCount.unassignedTeachers.length +
+                          DayCareCount.unassignedTeachers.length +
                             DayCareCount.pendingTeacherTransfer +
                             DayCareCount.tocAcceptedByBloomvie +
                             DayCareCount.pendingSupply +
@@ -362,17 +361,17 @@
           <h5 class="card-title">Pending for Approval</h5>
         </div>
         <div class="card-body">
-          <ul class="nav nav-tabs mb-3" role="tablist ">
-            <!-- <li class="nav-item" role="presentation">
-              <a *ngIf="DayCareCount != null" class="nav-link active" href="#basictab1" data-bs-toggle="tab"
-                aria-selected="true" role="tab">
+          <ul class="nav nav-tabs mb-3" role="tablist" style="flex-wrap: nowrap; overflow-x: auto; white-space: nowrap; overflow-y: hidden;">
+            <li class="nav-item" role="presentation">
+              <a *ngIf="DayCareCount != null" class="nav-link" href="#basictab1" data-bs-toggle="tab"
+                aria-selected="false" role="tab">
                 Student Enrollment ({{
                 DayCareCount?.pendingStudentsCount > 0
                 ? DayCareCount?.pendingStudentsCount
                 : 0
                 }})
               </a>
-            </li> -->
+            </li>
 
             <li class="nav-item" role="presentation">
               <a
@@ -461,11 +460,11 @@
           </ul>
 
           <div class="tab-content">
-            <!-- <div class="tab-pane fade show active" id="basictab1" role="tabpanel">
+            <div class="tab-pane fade" id="basictab1" role="tabpanel">
               <div class="breadcrumb-none heading-hide">
                 <app-view-student-enrollment></app-view-student-enrollment>
               </div>
-            </div> -->
+            </div>
 
             <!-- Teacher Enrollment Tab -->
             <div
@@ -2530,3 +2529,4 @@
     </div>
   </div>
 </div>
+
