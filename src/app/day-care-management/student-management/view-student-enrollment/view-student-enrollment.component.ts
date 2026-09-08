@@ -127,7 +127,9 @@ export class ViewStudentEnrollmentComponent {
   getStudentDetails(daycareID: number) {
     this.viewStudent.getStudent(daycareID).subscribe((data) => {
       if (data.message == 'Success') {
-        this.Students = data.result;
+        this.Students = data.result.filter(
+          (s: any) => s.classID == null || s.classID == 0
+        );
         this.skeletonShow = this.Students.length === 0 ? 'NoRecord' : '';
       }
     });
