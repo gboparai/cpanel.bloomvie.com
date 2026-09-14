@@ -13,8 +13,7 @@ import { environment } from '../../environments/environment';
 import { CommonService } from '../common-component/common.service';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { SkeletonLoaderComponent } from '../common-component/skeleton-loader/skeleton-loader.component';
-import { Console } from 'console';
-import { AnyTxtRecord } from 'dns';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-bloomvie-plans',
@@ -84,26 +83,47 @@ export class BloomviePlansComponent implements OnInit {
       .GetSubscriptionPlanandFeaturesByUserId(this.decryptedUserId, 'renew')
       .subscribe({
         next: (response) => {
-          this.planFeatureList = response.result.sort((a: any, b: any) => {
-            return a.planeId === this.currentPlanId
-              ? -1
-              : b.planeId === this.currentPlanId
-                ? 1
-                : 0;
-          });
-          this.loadFeatures();
+          if (response && response.result) {
+            this.planFeatureList = response.result.sort((a: any, b: any) => {
+              return a.planeId === this.currentPlanId
+                ? -1
+                : b.planeId === this.currentPlanId
+                  ? 1
+                  : 0;
+            });
+            this.loadFeatures();
+          } else {
+            this.skeletonShow = '';
+          }
         },
         error: (err) => {
-          this.toastrService.error(err.message);
+          this.skeletonShow = '';
+          if (err?.message === 'Server not responding. Please try again later.') {
+            Swal.fire(
+              'Network Error',
+              'Unable to load subscription plans. If you are using a strict firewall, web filter, or AdBlocker, please temporarily disable it for this site to view your options.',
+              'warning'
+            );
+          } else {
+            this.toastrService.error(err?.message || 'Failed to load plans');
+          }
         },
       });
   }
 
   getBloomvieOwner() {
-    this.commonService.getBloomvieOwner().subscribe((data: any) => {
-      if (data.message == 'Ok') {
-        this.bloomvieOwerID = data.result.id;
-        this.getPlanList();
+    this.commonService.getBloomvieOwner().subscribe({
+      next: (data: any) => {
+        if (data && data.message == 'Ok') {
+          this.bloomvieOwerID = data.result.id;
+          this.getPlanList();
+        } else {
+          this.skeletonShow = '';
+        }
+      },
+      error: (err) => {
+        this.skeletonShow = '';
+        this.toastrService.error('Failed to load owner data');
       }
     });
   }
