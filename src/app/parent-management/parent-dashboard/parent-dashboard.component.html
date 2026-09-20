@@ -368,8 +368,14 @@
                   <td>
                     {{ pendingRecord.monthDueDate | date : "MM/dd/yyyy" }}
                   </td>
-                  <td>{{ pendingRecord.discount }}%</td>
-                  <td>${{ pendingRecord.totalPaidAmount }}</td>
+                  <td>
+                    @if (pendingRecord.discountType === 'amount') {
+                      ${{ (pendingRecord.planAmount * pendingRecord.discount / 100) | number:'1.2-2' }}
+                    } @else {
+                      {{ pendingRecord.discount }}%
+                    }
+                  </td>
+                  <td>${{ pendingRecord.totalPaidAmount | number:'1.2-2' }}</td>
                 </tbody>
                 } @else {
                 <tbody>
@@ -483,15 +489,21 @@
                       <td>{{ pending.planName }}</td>
                       <td>{{ pending.monthDueDate | date : "MM/dd/yyyy" }}</td>
                       <td>${{ pending.planAmount }}</td>
-                      <td>{{ pending.discount }}%</td>
-                      <td>${{ pending.totalPaidAmount }}</td>
+                      <td>
+                        @if (pending.discountType === 'amount') {
+                          ${{ (pending.planAmount * pending.discount / 100) | number:'1.2-2' }}
+                        } @else {
+                          {{ pending.discount }}%
+                        }
+                      </td>
+                      <td>${{ pending.totalPaidAmount | number:'1.2-2' }}</td>
                     </tr>
                     <tr>
                       <td></td>
                       <td></td>
                       <td></td>
                       <td></td>
-                      <td>total Amount: ${{ totalAmount }}</td>
+                      <td>total Amount: ${{ totalAmount | number:'1.2-2' }}</td>
                     </tr>
                   </tbody>
                   } @else {

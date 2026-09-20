@@ -493,7 +493,7 @@ export class ParentDashboardComponent {
           if (!this.manualCardElement) {
             this.manualCardElement = elements.create('card', {
               style: this.cardOptions.style,
-              hidePostalCode: true
+              hidePostalCode: false
             });
           }
           // Only mount if the element is not already mounted
@@ -1063,6 +1063,10 @@ export class ParentDashboardComponent {
       next: (response) => {
         if (response.message === 'OK') {
           this.daycarecentreDetails = response.result;
+          if (this.centreAdminId === 0 && this.daycarecentreDetails?.centreAdminID) {
+            this.centreAdminId = this.daycarecentreDetails.centreAdminID;
+            this.getAccountDetails();
+          }
         }
       },
       error: (err) => { },
