@@ -423,14 +423,14 @@ export class JobsAppliedComponent implements OnInit {
         </div>
         <div class="swal-static-content">
           <h2 class="swal-static-title">Confirmation</h2>
-          <p class="swal-static-text">Please confirm if you would like to approve this candidate.</p>
+          <p class="swal-static-text">Please confirm if you would like to shortlist this candidate.</p>
         </div>
       </div>
     `,
       showConfirmButton: true,
       showDenyButton: false,
       showCancelButton: true,
-      confirmButtonText: 'Approve',
+      confirmButtonText: 'Shortlist',
       cancelButtonText: 'Cancel',
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#6c757d',
@@ -509,7 +509,7 @@ export class JobsAppliedComponent implements OnInit {
         }).then((reasonResult) => {
           if (reasonResult.isConfirmed && reasonResult.value) {
             const reason = reasonResult.value.trim();
-            this.ApprovedReject(id, 2, reason, type, encryptedUserID);
+            this.ApprovedReject(id, 3, reason, type, encryptedUserID);
             this.getDDCJobPosting();
 
             if (tab == 'Shortlisted') {
@@ -734,7 +734,7 @@ export class JobsAppliedComponent implements OnInit {
                 confirmButtonColor: '#3085d6',
                 denyButtonColor: '#28a745',
               }).then((result) => {
-                if (result.isDenied) {
+                if (result.isConfirmed || result.isDenied) {
                   $('a[href="#basictab3"]').tab('show');
                   this.getJobList('shortlisted');
                 }

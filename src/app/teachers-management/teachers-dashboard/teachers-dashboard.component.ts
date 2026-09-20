@@ -34,6 +34,7 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { EventsComponent } from '../../common-component/events/events.component';
 import { OnboardingService } from '../../onboarding/onboarding.service';
 import { SkeletonLoaderComponent } from "../../common-component/skeleton-loader/skeleton-loader.component";
+import { LoginService } from '../../login/login.service';
 
 declare var $: any;
 
@@ -128,7 +129,8 @@ export class TeachersDashboardComponent implements OnInit {
     private tocregistrationservice: TocRegistrationService,
     private DayCareDashBoard: DayCareDashboardService,
     private Toaster: ToastrService,
-    public onBoardingService: OnboardingService
+    public onBoardingService: OnboardingService,
+    private loginService: LoginService
   ) { }
 
   getTeacherDashboardCount() {
@@ -219,7 +221,6 @@ export class TeachersDashboardComponent implements OnInit {
   // mohit
 
   async employeeJoiningDocuments(event: string) {
-    this.spinner.show();
     const ipResponse = await fetch('https://api64.ipify.org?format=json');
     const ipData = await ipResponse.json();
     const acceptanceIP = ipData.ip; // Get the public IP
@@ -236,6 +237,7 @@ export class TeachersDashboardComponent implements OnInit {
         reverseButtons: true,
       }).then((result) => {
         if (result.isConfirmed) {
+          this.spinner.show();
           this.letterAccepted = false;
           this.letterSignature = null;
 
@@ -247,6 +249,7 @@ export class TeachersDashboardComponent implements OnInit {
               acceptanceIP
             )
             .subscribe(() => {
+              this.spinner.hide();
               Swal.fire({
                 title: 'Rejected!',
                 text: 'You have rejected the offer letter.',
@@ -254,9 +257,8 @@ export class TeachersDashboardComponent implements OnInit {
               }).then(() => {
                 this.getEmployeeJoiningDocuments();
                 $('#AgrrementLetter').modal('hide');
-                this.spinner.hide();
 
-                window.location.href = '/login';
+                this.loginService.logOut();
               });
             });
         }
@@ -284,6 +286,7 @@ export class TeachersDashboardComponent implements OnInit {
         reverseButtons: true,
       }).then((result) => {
         if (result.isConfirmed) {
+          this.spinner.show();
           this.service
             .employeeJoiningDocuments(
               this.userID,
@@ -310,7 +313,6 @@ export class TeachersDashboardComponent implements OnInit {
         }
       });
     }
-    this.spinner.hide();
   }
 
   //   AcceptDocumentLetterByEmployeeID(type:any,isAccept:any)

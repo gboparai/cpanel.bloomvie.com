@@ -509,9 +509,9 @@ export class ManageStaffComponent implements OnInit {
       next: (response) => {
         this.spinner.hide();
         if (response.message === 'Success') {
+          this.handleSuccess(response.activity);
           this.DefaultValue();
           this.enableAllDates();
-          this.handleSuccess(response.activity);
           this.onSelectEdit = null;
 
           this.commonService.trigger();

@@ -437,6 +437,7 @@
           type="button"
           class="btn-close"
           data-bs-dismiss="modal"
+          (click)="closePaymentModal()"
           aria-label="Close"></button>
       </div>
 
@@ -603,9 +604,12 @@
                   </div>
 
                   <div class="col-md-6">
-                    <ngx-stripe-card
-                      #cardElem
-                      [options]="cardOptions"></ngx-stripe-card>
+                    <ng-container *ngIf="isPaymentModalOpen">
+                      <label class="mb-1">Card Details <span class="text-danger">*</span></label>
+                      <div style="padding: 10px; border: 1px solid #ced4da; border-radius: 4px; background: white;">
+                        <div id="card-element"></div>
+                      </div>
+                    </ng-container>
                   </div>
                 </div>
 
@@ -627,9 +631,9 @@
             Proceed To Pay
           </button>
           <button
-            type="reset"
+            type="button"
             class="btn btn-secondary"
-            data-bs-dismiss="modal">
+            (click)="closePaymentModal()">
             Cancel
           </button>
         </div>

@@ -609,9 +609,15 @@
                                 <i class="feather-eye"></i>
                               </a>
 
-                              <!-- <a data-bs-toggle="modal" title="Assign-Class" data-bs-target="#exampleModal45"
-                                (click)="setDefaultValue(staff)" class="action-btn bg-danger-light ng-star-inserted"><i
-                                  class="fa-chalkboard-teacher fas"></i></a> -->
+                                <a
+                                  data-bs-toggle="modal"
+                                  title="Assign-Class"
+                                  data-bs-target="#exampleModal45"
+                                  (click)="setDefaultValue(staff)"
+                                  class="action-btn bg-danger-light"
+                                >
+                                  <i class="fa-chalkboard-teacher fas"></i>
+                                </a>
 
                               <!-- <a *ngIf="item.status == 'Approved'" data-bs-toggle="modal" title="Assign-Class"
                                 data-bs-target="#exampleModal2" class="action-btn bg-danger-light"
@@ -1538,11 +1544,43 @@
           type="button"
           class="btn-close"
           data-bs-dismiss="modal"
+          (click)="resetDropdown()"
           aria-label="Close"
         ></button>
       </div>
       <div class="modal-body pt-0">
-        <!--  -->
+        <form class="row" [formGroup]="assignClassForm">
+          <div class="col-md-12 mb-4">
+            <div class="form-group local-forms">
+              <label>Teacher Name</label>
+              <input class="form-control" type="text" readonly [value]="selectedTeacherName" />
+            </div>
+          </div>
+  
+          <div class="col-md-12 mb-4">
+            <div class="form-group local-forms">
+              <label>Class</label>
+              <ng-select [items]="classList" bindLabel="name" bindValue="id" formControlName="classID"
+                [(ngModel)]="selectedClass">
+              </ng-select>
+              @if(assignClassForm.get('classID')?.hasError('required') &&
+              assignClassForm.get('classID')?.touched) { @if
+              (assignClassForm.get('classID')?.errors) {
+              <span class="text-danger">This field is required.</span>
+              } }
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="student-submit text-end">
+              <button class="btn btn-primary me-2" (click)="onSubmit()">
+                Submit
+              </button>
+              <button class="btn btn-secondary" data-bs-dismiss="modal" (click)="resetDropdown()">
+                Cancel
+              </button>
+            </div>
+          </div>
+        </form>
       </div>
     </div>
   </div>
@@ -1708,7 +1746,7 @@
                           <i class="feather-calendar"></i>
                         </div>
                         <div class="views-personal">
-                          <h4>Qualification</h4>
+                          <h4>Expertise</h4>
                           <h5>{{ ModalList[0]?.expertise }}</h5>
                         </div>
                       </div>

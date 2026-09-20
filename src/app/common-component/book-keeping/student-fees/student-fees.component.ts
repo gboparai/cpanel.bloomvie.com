@@ -562,13 +562,13 @@ export class StudentFeesComponent {
     this.spinner.show();
     this.bookKeepingService.getInvoice(orderID).subscribe({
       next: (response: any) => {
-        if (response.message == 'OK') {
-          const fileUrl = `${this.URL}/Content/Invoice/${response.result}`;
-          const link = document.createElement('a');
-          link.href = fileUrl;
-          link.target = fileUrl.substring(fileUrl.lastIndexOf('/') + 1);
-          link.click();
-        } else {
+          if (response.message == 'OK') {
+            const fileUrl = `${this.URL}/Content/Invoice/${response.result}`;
+            const link = document.createElement('a');
+            link.href = fileUrl;
+            link.target = fileUrl.substring(fileUrl.lastIndexOf('/') + 1);
+            link.click();
+          } else {
           this.spinner.hide();
           this.toastr.error('Invoice Not Found.');
         }

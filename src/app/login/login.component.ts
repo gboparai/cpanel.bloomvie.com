@@ -652,6 +652,20 @@ export class LoginComponent implements OnInit {
           this.toastr.error('Complete the payment First!!');
         } else if (authResponse.message === 'Incorrect password') {
           this.toastr.error('Incorrect password. Please try again.');
+        } else if (authResponse.message === 'Access denied. Your joining date is in the future') {
+          Swal.fire({
+            html: '<p style="font-size: 16px;">' + authResponse.message + '</p>',
+            customClass: {
+              popup: 'custom-swal-popup',
+              title: 'custom-swal-title',
+            },
+            icon: 'warning',
+            showCancelButton: false,
+            showConfirmButton: true,
+            confirmButtonText: 'OK',
+            allowOutsideClick: true,
+            allowEscapeKey: true,
+          });
         } else {
           this.toastr.error(authResponse.message);
         }

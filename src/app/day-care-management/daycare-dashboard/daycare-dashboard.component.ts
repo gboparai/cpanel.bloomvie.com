@@ -140,6 +140,7 @@ export class DaycareDashboardComponent {
   public holidayList: any[] = [];
   TOCUserDetail: any;
   isExpanded: boolean = true;
+  selectedClass: any = null;
   selectedWorkingDays: any;
   currentExpandedDay: {
     slotIndex: number;
@@ -628,8 +629,8 @@ export class DaycareDashboardComponent {
         this.paymentDetails['totalDiscountAmount'] = this.paymentDetails[
           'totalDiscountAmount'
         ]
-          ? totalAmount.toFixed(2) + this.paymentDetails['totalDiscountAmount']
-          : totalAmount.toFixed(2);
+          ? Number(totalAmount.toFixed(2)) + Number(this.paymentDetails['totalDiscountAmount'])
+          : Number(totalAmount.toFixed(2));
         this.appliedDiscountStudentList.push(discountListObj);
         this.studentDiscountAppliedForm.reset();
       } else {
@@ -1200,7 +1201,7 @@ export class DaycareDashboardComponent {
       });
 
     this.appliedDiscountStudentList.forEach((item: any) => {
-      totalDiscountAmount = item.discountAmount + totalDiscountAmount;
+      totalDiscountAmount = Number(item.discountAmount) + totalDiscountAmount;
 
       let isExists = acceptedStudentList.some(
         (record: any) => record.studentID == item.studentID
@@ -1237,9 +1238,9 @@ export class DaycareDashboardComponent {
       startDate: this.paymentDetails.startDate,
       endDate: this.paymentDetails.endDate,
       totalAmountPaid: this.paymentDetails.totalDiscountAmount
-        ? this.paymentDetails.totalDiscountAmount +
-        this.paymentDetails.amountPerStudent * acceptedStudentList.length
-        : this.paymentDetails.totalAmountPaid,
+        ? Number(this.paymentDetails.totalDiscountAmount) +
+        Number(this.paymentDetails.amountPerStudent) * acceptedStudentList.length
+        : Number(this.paymentDetails.totalAmountPaid),
       isDiscountApplied:
         this.appliedDiscountStudentList.length > 0 ? true : false,
       TotalDiscountAmount: totalDiscountAmount,
@@ -1685,6 +1686,7 @@ export class DaycareDashboardComponent {
   resetDropdown() {
     this.classList = [];
     this.selectedTeacherName = '';
+    this.selectedClass = null;
   }
 
   onSubmit() {
@@ -1703,6 +1705,7 @@ export class DaycareDashboardComponent {
           });
           $('#exampleModal45').modal('hide');
           $('#exampleModal2').modal('hide');
+          this.getDayCareDashBoardCount(this.DayCareId);
           // this.getStudentDetails(this.daycareID);
         } else if (response.message == 'Duplicate entry exists') {
           this.Toaster.warning('Teacher is already Assigned to this section');

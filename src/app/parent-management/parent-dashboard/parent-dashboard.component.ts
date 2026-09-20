@@ -1,4 +1,4 @@
-import { Component, effect, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, effect, OnInit, ViewChild } from '@angular/core';
 import { BreadcrumbComponent } from '../../common-component/breadcrumb/breadcrumb.component';
 import { CookieService } from 'ngx-cookie-service';
 import { ParentDashboardService } from './parent-dashboard.service';
@@ -57,7 +57,7 @@ declare var $: any;
   styleUrl: './parent-dashboard.component.css',
 })
 export class ParentDashboardComponent {
-  @ViewChild('cardElem') cardElement!: StripeCardComponent;
+  manualCardElement: any;
 
   readonly ImageRootURL = environment.apiUrl.slice(0, -3);
   loginUserId: any;
@@ -88,6 +88,7 @@ export class ParentDashboardComponent {
   isDisabledCondition: boolean = true;
   public paymentForm!: FormGroup;
   public submitted: boolean = false;
+  isPaymentModalOpen: boolean = false;
   private connectedAccountId: string = '';
   private centreAdminId: number = 0;
   skeletonShowList2 = 'SkeltonList2';
@@ -132,8 +133,8 @@ export class ParentDashboardComponent {
     private fb: FormBuilder,
     private onBoardingService: OnboardingService,
     private authService: LoginService,
-    
- private manageStudentService:ManageStudentService
+    private manageStudentService: ManageStudentService,
+    private cdr: ChangeDetectorRef
   ) {
     this.paymentForm = this.fb.group({
       firstName: ['', [Validators.required]],
@@ -190,7 +191,9 @@ export class ParentDashboardComponent {
   getAccountDetails() {
     this.onBoardingService.getAccountDetails(this.centreAdminId).subscribe({
       next: (response) => {
-        this.connectedAccountId = response.result.accountId;
+        if (response && response.result) {
+          this.connectedAccountId = response.result.accountId;
+        }
       },
       error: (err) => {
         // this.toastr.error(err.message);
@@ -482,8 +485,37 @@ export class ParentDashboardComponent {
 
       this.totalAmount = totalPaidAmount;
       $('#staticBackdrop').modal('show');
+      setTimeout(() => {
+        this.isPaymentModalOpen = true;
+        this.cdr.detectChanges();
+        
+        this.stripeService.elements().subscribe(elements => {
+          if (!this.manualCardElement) {
+            this.manualCardElement = elements.create('card', {
+              style: this.cardOptions.style,
+              hidePostalCode: true
+            });
+          }
+          // Only mount if the element is not already mounted
+          const cardDiv = document.getElementById('card-element');
+          if (cardDiv && cardDiv.innerHTML === '') {
+            this.manualCardElement.mount('#card-element');
+          }
+        });
+
+      }, 500);
     } else {
       Swal.fire('Select Atleast one Record !!', '', 'error');
+    }
+  }
+
+  closePaymentModal() {
+    this.isPaymentModalOpen = false;
+    this.paymentForm.reset();
+    this.submitted = false;
+    $('#staticBackdrop').modal('hide');
+    if (this.manualCardElement) {
+      this.manualCardElement.unmount();
     }
   }
 
@@ -495,6 +527,28 @@ export class ParentDashboardComponent {
       }
       this.spinner.show();
       this.submitted = true;
+
+      const totalAmount = this.calculateTotal();
+
+      if (totalAmount === 0) {
+        const subscriptionPaymentResponse = await this.proceedToPay();
+        if (subscriptionPaymentResponse) {
+          const subscriptionPalnPaymentId =
+            subscriptionPaymentResponse.result.subscriptionPlanPaymentIdList;
+          await this.handlePayment(
+            subscriptionPalnPaymentId,
+            null,
+            'succeeded',
+            null,
+            null
+          );
+          await this.handlePaymentResponse();
+          this.paymentForm.reset();
+        }
+        this.spinner.hide();
+        return;
+      }
+
       // stripe apis
       const clientSecret = await this.createPaymentIntent();
       const {
@@ -506,6 +560,7 @@ export class ParentDashboardComponent {
       } = await this.confirmPayment(clientSecret);
       if (!paymentIntentId || !status) {
         console.warn('Payment was not successful. Status:', status);
+        this.spinner.hide();
         return;
       }
       if (status === 'succeeded') {
@@ -556,10 +611,10 @@ export class ParentDashboardComponent {
 
   async handlePayment(
     subscriptionPlanPaymentId: number[],
-    transactionId: string,
+    transactionId: string | null,
     paymentStatus: string,
-    paymentMethod: string,
-    currency: string
+    paymentMethod: string | null,
+    currency: string | null
   ): Promise<any | null> {
     try {
       const formValues = this.paymentForm.value;
@@ -620,7 +675,7 @@ export class ParentDashboardComponent {
       const result = await this.stripeService
         .confirmCardPayment(clientSecret, {
           payment_method: {
-            card: this.cardElement.element,
+            card: this.manualCardElement,
             billing_details: {
               name: `${firstName} ${lastName}`,
               email,

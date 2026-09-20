@@ -767,13 +767,16 @@ export class HeaderComponent implements OnInit {
 
   async switchStudentProfile(id: number) {
     this.spinner.show();
+    this.headerImage = '';
     const student = this.allStudents.find((x: { id: number }) => x.id === id);
     if (student) {
       let studentOnboardingResult = await this.headerService
         .checkStudentOnboardingCompleteOrNotByStudentID(id)
         .toPromise();
       if (studentOnboardingResult.message == 'Success') {
-        this.spinner.hide();
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 500);
         Swal.fire({
           title: 'Pending Onboarding !!',
           text: 'Student onboarding is still pending. Please complete the onboarding process to proceed further. ',
@@ -823,7 +826,9 @@ export class HeaderComponent implements OnInit {
 
         this.getProfileDetailsHeaderComponent();
         this.toastr.success('Profile Switched Successfully.');
-        this.spinner.hide();
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 500);
 
         //commented on 05/02/2025 by sarthak.
 

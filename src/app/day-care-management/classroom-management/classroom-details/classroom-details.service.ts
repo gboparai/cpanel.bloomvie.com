@@ -46,7 +46,7 @@ export class ClassroomDetailsService {
   }
 
   getClassListByCentreId(id: any): Observable<any> {
-    return this.http.get(this.URL + '/Classroom/getClassListByDaycareID', {
+    return this.http.get(this.URL + '/Classroom/getDaycareClassListDropdown', {
       params: { id },
     });
   }

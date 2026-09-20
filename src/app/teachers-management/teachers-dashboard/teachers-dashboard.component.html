@@ -1,6 +1,6 @@
 <app-breadcrumb></app-breadcrumb>
 <div class="row">
-  <ng-container *ngIf="!onBoardingService.onboardingState().isOnboardedAccount">
+  <ng-container *ngIf="!onBoardingService.onboardingState().isOnboardedAccount && userRoleID == '8'">
     <div class="student-banner onboard-payment">
       <div class="d-flex align-items-center">
         <div class="icon">

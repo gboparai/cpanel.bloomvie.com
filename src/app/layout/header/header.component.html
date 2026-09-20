@@ -225,10 +225,10 @@
           <div class="submenu">
             <a *ngFor="let item of allStudents" class="dropdown-item d-flex justify-content-between align-items-center"
               (click)="switchStudentProfile(item.id)">
-              <span class="avatar avatar-sm">
-                <img class="avatar-img rounded-circle" [src]="item.s3UrlImage"
-                  alt="Profile of {{ item.firstName }} {{ item.lastName }}" />
-              </span>
+                <span class="avatar avatar-sm">
+                  <img class="avatar-img rounded-circle" [src]="item.s3UrlImage ? item.s3UrlImage : 'assets/img/dummy-avatar.jpg'"
+                    alt="Profile of {{ item.firstName }} {{ item.lastName }}" />
+                </span>
               {{ item.firstName }} {{ item.lastName }}
             </a>
           </div>
