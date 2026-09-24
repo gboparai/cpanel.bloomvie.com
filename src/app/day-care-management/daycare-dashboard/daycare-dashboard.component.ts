@@ -471,14 +471,40 @@ export class DaycareDashboardComponent {
   }
 
   navigateToStripeOnboarding() {
-    window.location.href =
+    const stripeUrl =
       this.onBoardingService.onboardingState().stripeOnboardingUrl;
-    // const adminID = parseInt(this.UserID)
-    //   this.commonService.updateIsOnboarding(adminID).subscribe((response:any)=>{
-    //     if(response.message=="Success"){
 
-    //     }
-    //   });
+    if (stripeUrl && stripeUrl.trim() !== '') {
+      window.location.href = stripeUrl;
+    } else {
+      // URL is empty — fetch a fresh onboarding link before navigating
+      this.spinner.show();
+      const userId = parseInt(this.UserID, 10);
+      this.onBoardingService.getAccountDetails(userId, '').subscribe({
+        next: (response: any) => {
+          this.spinner.hide();
+          const freshUrl = response?.result?.onBoardingUrl;
+          if (freshUrl && freshUrl.trim() !== '') {
+            this.onBoardingService.stripeOnboardingUrl.set(freshUrl);
+            window.location.href = freshUrl;
+          } else {
+            Swal.fire(
+              'Unable to load Stripe setup',
+              'Please try again or contact support.',
+              'error'
+            );
+          }
+        },
+        error: (err: any) => {
+          this.spinner.hide();
+          Swal.fire(
+            'Server error',
+            'Could not retrieve Stripe onboarding link. Please try again.',
+            'error'
+          );
+        },
+      });
+    }
   }
 
   //Applying discount to Student
