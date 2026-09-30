@@ -163,6 +163,7 @@ import { SupplyRequestComponent } from './supply-request/supply-request.componen
 import { ViewSupplyRequestComponent } from './view-supply-request/view-supply-request.component';
 import { MyScheduleComponent } from './teachers-management/my-schedule/my-schedule.component';
 import { ManageStudentActivitiesComponent } from './day-care-management/classroom-management/manage-student-activities/manage-student-activities.component';
+import { ManageBroadcastsComponent } from './day-care-management/classroom-management/manage-broadcasts/manage-broadcasts.component';
 import { ManageQualificationComponent } from
   './settings/manage-qualification/manage-qualification.component';
 import { Error404Component } from './layout/error404/error404.component';
@@ -269,6 +270,7 @@ export const routes: Routes = [
       { path: 'view-classroom', component: ViewClassroomComponent },
       { path: 'manage-classroom', component: ManageClassroomComponent },
       { path: 'edit-classroom', component: EditClassroomComponent },
+      { path: 'manage-broadcasts', component: ManageBroadcastsComponent },
 
       //teacher
       { path: 'teachers-dashboard', component: TeachersDashboardComponent },
