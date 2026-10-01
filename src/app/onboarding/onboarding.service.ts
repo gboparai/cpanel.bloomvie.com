@@ -26,6 +26,14 @@ export class OnboardingService {
   public isOnboarding: boolean = false;
   public onBoardingData: any = {};
 
+  clearState(): void {
+    this.isOnboardedAccount.set(false);
+    this.connectedAccountId.set('');
+    this.stripeOnboardingUrl.set('');
+    this.stripeOnboardingStepsCount.set(0);
+  }
+
+
   private readonly rootURL: string = environment.apiUrl;
   public currentTab: string = 'Tab-1';
   constructor(

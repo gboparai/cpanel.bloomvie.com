@@ -25,6 +25,14 @@ export class HeaderServiceService {
   public updateTriggerTermsAndCondition = () =>
     this.triggerTermsAndCondition.set(true);
 
+  clearState(): void {
+    this.triggerModal.set(false);
+    this.triggerTermsAndCondition.set(false);
+    this.triggerEffect.set(false);
+    this.switchProfile.set(0);
+    this.newStudent.set(0);
+  }
+
   CheckParentOnboarding(UserID: number): Observable<any> {
     return this.http.get<any>(
       this.rootUrl + '/DayCareCentreUser/CheckParentOnboarding',

@@ -7,6 +7,7 @@ import { userInfo } from 'os';
 import { OnboardingService } from '../onboarding/onboarding.service';
 import { Router } from '@angular/router';
 import { CommonService } from '../common-component/common.service';
+import { HeaderServiceService } from '../layout/header/header-service.service';
 
 export interface AuthData {
   token: string;
@@ -32,7 +33,9 @@ export class LoginService {
     private http: HttpClient,
     private cookieService: CookieService,
     private router: Router,
-    private CommonService: CommonService
+    private CommonService: CommonService,
+    private onBoardingService: OnboardingService,
+    private headerService: HeaderServiceService
   ) {}
 
   get authData() {
@@ -116,6 +119,8 @@ export class LoginService {
     this.cookieService.deleteAll();
     this.cookieService.deleteAll('/', cookiesDomain);
     this._user.set(null);
+    this.onBoardingService.clearState();
+    this.headerService.clearState();
     this.router.navigate(['/login']);
   }
 
