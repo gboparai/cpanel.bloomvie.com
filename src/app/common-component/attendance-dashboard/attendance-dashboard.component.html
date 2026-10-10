@@ -16,7 +16,7 @@
             <p>
               Keep track of your
               {{
-              userRoleID !== "4" && userRoleID !== "8"
+              displayRole !== "4" && displayRole !== "8"
               ? "staff's"
               : "students'"
               }}
@@ -24,7 +24,7 @@
               smoothly.
             </p>
           </div>
-          <span class="leave-text btn btn-success mb-3" *ngIf="userRoleID == '3'" (click)="goToApplyLeave()">
+          <span class="leave-text btn btn-success mb-3" *ngIf="displayRole == '3'" (click)="goToApplyLeave()">
             Applied Leave This Month:
             <span class="num-leave">{{ leaveList?.length>0 ? leaveList : 0 }}</span></span>
         </div>
@@ -39,13 +39,13 @@
           <span class="boxed boxed3">
             <span class="img-box1 mb-1"><img src="assets/img/total.png" width="100%" height="100%" /></span>
             <!-- <span class="def">Total Staff</span><span class="num-def">{{attendanceCount?.totalStaff}}</span> -->
-            <ng-container *ngIf="userRoleID">
-              <ng-container *ngIf="userRoleID !== '4' && userRoleID !== '8'">
+            <ng-container *ngIf="displayRole">
+              <ng-container *ngIf="displayRole !== '4' && displayRole !== '8'">
                 <span class="def">Total Staff</span>
                 <span class="num-def">{{ attendanceCount?.totalStaff }}</span>
               </ng-container>
 
-              <ng-container *ngIf="userRoleID === '4' || userRoleID == '8'">
+              <ng-container *ngIf="displayRole === '4' || displayRole == '8'">
                 <span class="def">Total Student</span>
                 <span class="num-def">{{ attendanceCount?.totalStaff }}</span>
               </ng-container>
@@ -55,13 +55,13 @@
           <span class="boxed boxed1 me-2">
             <span class="img-box"><img src="assets/img/present.png" width="100%" height="100%" /></span>
             <!-- <span class="def">Present Staff</span><span class="num-def">{{attendanceCount?.presentCount}}</span></span> -->
-            <ng-container *ngIf="userRoleID">
-              <ng-container *ngIf="userRoleID !== '4' && userRoleID !== '8'">
+            <ng-container *ngIf="displayRole">
+              <ng-container *ngIf="displayRole !== '4' && displayRole !== '8'">
                 <span class="def">Present Staff</span>
                 <span class="num-def">{{ attendanceCount?.presentCount }}</span>
               </ng-container>
 
-              <ng-container *ngIf="userRoleID === '4' || userRoleID == '8'">
+              <ng-container *ngIf="displayRole === '4' || displayRole == '8'">
                 <span class="def">Present Student</span>
                 <span class="num-def">{{ attendanceCount?.presentCount }}</span>
               </ng-container>
@@ -75,12 +75,12 @@
           <span class="boxed boxed2 me-2">
             <span class="img-box"><img src="assets/img/absent.png" width="100%" height="100%" /></span>
             <!-- <span class="def">Absent Staff</span><span class="num-def">{{attendanceCount?.absentCount}}</span></span> -->
-            <ng-container *ngIf="userRoleID">
-              <ng-container *ngIf="userRoleID !== '4' && userRoleID !== '8'">
+            <ng-container *ngIf="displayRole">
+              <ng-container *ngIf="displayRole !== '4' && displayRole !== '8'">
                 <span class="def">Absent Staff</span>
                 <span class="num-def">{{ attendanceCount?.absentCount }}</span>
               </ng-container>
-              <ng-container *ngIf="userRoleID === '4' || userRoleID == '8'">
+              <ng-container *ngIf="displayRole === '4' || displayRole == '8'">
                 <span class="def">Absent Student</span>
                 <span class="num-def">{{ attendanceCount?.absentCount }}</span>
               </ng-container>
@@ -152,7 +152,7 @@
               <div class="row">
                 <div class="col-md-12">
                   <div class="row">
-                    <div class="col-md-3 text-start mb-1" *ngIf="userRoleID !== '3'">
+                    <div class="col-md-3 text-start mb-1" *ngIf="displayRole !== '3'">
                       <div class="form-group local-forms select-class-room">
                         <label for="classroomSelect" class="form-label">Classroom</label>
                         <ng-select id="classroomSelect" [multiple]="false" aria-placeholder="-Select-"
@@ -208,33 +208,33 @@
                   background: white;
                   z-index: 2;
                 ">
-                <ng-container *ngIf="userRoleID">
+                <ng-container *ngIf="displayRole">
                   <tr>
                     <th style="width: 8%">#</th>
                     <th>Name</th>
                     <th>Date</th>
                     <!-- <th>Attendance End Date</th> -->
-                    <th *ngIf="userRoleID !== '4' && userRoleID !== '8'">
+                    <th *ngIf="displayRole !== '4' && displayRole !== '8'">
                       In Time
                     </th>
-                    <th *ngIf="userRoleID !== '4' && userRoleID !== '8'">
+                    <th *ngIf="displayRole !== '4' && displayRole !== '8'">
                       Out Time
                     </th>
-                    <th *ngIf="userRoleID !== '4' && userRoleID !== '8'" class>
+                    <th *ngIf="displayRole !== '4' && displayRole !== '8'" class>
                       Working Hours
                     </th>
-                    <th *ngIf="userRoleID !== '4' && userRoleID !== '8'" class>
+                    <th *ngIf="displayRole !== '4' && displayRole !== '8'" class>
                       Overtime
                     </th>
-                    <th *ngIf="userRoleID !== '4' && userRoleID !== '8'" class>
+                    <th *ngIf="displayRole !== '4' && displayRole !== '8'" class>
                       Total Working Hours
                     </th>
 
-                    <th *ngIf="userRoleID == '4' || userRoleID == '8'">
+                    <th *ngIf="displayRole == '4' || displayRole == '8'">
                       Mark By
                     </th>
                     <th class>Status</th>
-                    <th *ngIf="userRoleID !== '4' && userRoleID !== '8'" class>
+                    <th *ngIf="displayRole !== '4' && displayRole !== '8'" class>
                       View Details
                     </th>
                   </tr>
@@ -263,22 +263,22 @@
                   <td>{{ item.firstName }}</td>
                   <td>{{ item.attendanceDate | date : "MM/dd/yyyy" }}</td>
                   <!-- <td>{{item.endAttendanceDate | date: 'MM/dd/yyyy'}}</td> -->
-                  <!-- <td *ngIf="userRoleID!='4' && userRoleID !== '8'">{{ item.inTime?.slice(0, 5)}}</td>
-                  <td *ngIf="userRoleID!='4' && userRoleID !== '8'">{{ item.outTime?.slice(0, 5)}}</td> -->
+                  <!-- <td *ngIf="displayRole!='4' && displayRole !== '8'">{{ item.inTime?.slice(0, 5)}}</td>
+                  <td *ngIf="displayRole!='4' && displayRole !== '8'">{{ item.outTime?.slice(0, 5)}}</td> -->
 
-                  <td *ngIf="userRoleID != '4' && userRoleID !== '8'">
+                  <td *ngIf="displayRole != '4' && displayRole !== '8'">
                     {{ item.inTime ? (item.inTime | TimeFormatAmPm) : "--" }}
                   </td>
-                  <td *ngIf="userRoleID != '4' && userRoleID !== '8'">
+                  <td *ngIf="displayRole != '4' && displayRole !== '8'">
                     {{ item.outTime ? (item.outTime | TimeFormatAmPm) : "--" }}
                   </td>
 
-                  <td *ngIf="userRoleID !== '4' && userRoleID !== '8'">
+                  <td *ngIf="displayRole !== '4' && displayRole !== '8'">
                     {{
                     item.workingHours ? item.workingHours.slice(0, 5) : "--"
                     }}
                   </td>
-                  <td *ngIf="userRoleID !== '4' && userRoleID !== '8'">
+                  <td *ngIf="displayRole !== '4' && displayRole !== '8'">
                     {{
                     item.overTime &&
                     item.overTime !== "00:00:00" &&
@@ -287,7 +287,7 @@
                     : "--"
                     }}
                   </td>
-                  <td *ngIf="userRoleID !== '4' && userRoleID !== '8'">
+                  <td *ngIf="displayRole !== '4' && displayRole !== '8'">
                     {{
                     item.totalWorkingHours
                     ? item.totalWorkingHours.slice(0, 5)
@@ -295,7 +295,7 @@
                     }}
                   </td>
 
-                  <td *ngIf="userRoleID == '4' || userRoleID == '8'">
+                  <td *ngIf="displayRole == '4' || displayRole == '8'">
                     <span *ngIf="item.type == 'Attendance'" class="badge badge-success text-center">{{ item.markBy
                       }}</span>
                   </td>
@@ -306,7 +306,7 @@
 
                     <span *ngIf="item.type === 'Absent'" class="badge badge-warning text-center">Absent</span>
                   </td>
-                  <td *ngIf="userRoleID != '4'">
+                  <td *ngIf="displayRole != '4'">
                     <div class="actions">
                       <a class="action-btn bg-danger-light me-2" data-bs-toggle="modal" data-bs-target="#view-del"
                         (click)="

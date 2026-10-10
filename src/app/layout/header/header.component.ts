@@ -946,16 +946,14 @@ export class HeaderComponent implements OnInit {
 
   filteredNotifications() {
     if (!this.notification) return [];
-    return this.notification.filter((item: { notificationID: number }) => {
+    return this.notification.filter((item: any) => {
       switch (this.loginUserRoleId) {
         case 6:
           return [13, 42, 46].includes(item.notificationID);
         case 4:
           return [5, 15, 42, 44].includes(item.notificationID);
         case 5:
-          return [4, 6, 43, 47, 48, 49, 50, 51, 52, 53, 54].includes(
-            item.notificationID
-          );
+          return [4, 6, 43, 47, 48, 49, 50, 51, 52, 53, 54, 55].includes(item.notificationID);
         case 3:
           return [
             1, 2, 3, 7, 17, 18, 21, 23, 24, 25, 26, 27, 28, 29, 36, 38, 40, 41,

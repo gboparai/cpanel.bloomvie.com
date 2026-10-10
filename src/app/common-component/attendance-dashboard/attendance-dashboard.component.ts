@@ -59,6 +59,8 @@ export type ApexPieChartOptions = {
   styleUrls: ['./attendance-dashboard.component.css'],
 })
 export class AttendanceDashboardComponent implements OnInit, AfterViewInit {
+  isStudentAttendance: boolean = false;
+  displayRole: string | undefined;
   readonly rootUrl = environment.apiUrl.slice(0, -3);
   ContentP: number = 1;
   Contentsize: number = 5;
@@ -112,7 +114,7 @@ export class AttendanceDashboardComponent implements OnInit, AfterViewInit {
       // labels: [" Total Staff", " Present", " On Leave", " Absent"],
       // labels: [" Total Staff", " Present"," Absent"],
       labels:
-        this.userRoleID != '4' || this.userRoleID != '8'
+        this.displayRole != '4' && this.displayRole != '8'
           ? ['Total Staff', 'Present', 'Absent']
           : ['Total Student', 'Present', 'Absent'],
 
@@ -146,6 +148,9 @@ export class AttendanceDashboardComponent implements OnInit, AfterViewInit {
 
     // setTimeout(() => {
     this.userRoleID = this.cookieService.get('UserRoleId');
+    const ChildComponent = this.cookieService.get('ChildComponent');
+    this.isStudentAttendance = ChildComponent === 'Student Attendance';
+    this.displayRole = (this.userRoleID === '3' && this.isStudentAttendance) ? '4' : this.userRoleID;
     // }, 10);
 
     const UserInfo = this.cookieService.get('UserInfo');
@@ -163,7 +168,7 @@ export class AttendanceDashboardComponent implements OnInit, AfterViewInit {
     if (this.centreID != null) {
       this.getDayCareByID();
 
-      if (this.userRoleID != '3') {
+      if (this.displayRole != '3') {
         this.getClassListByTeacherID();
       }
 
@@ -340,7 +345,7 @@ export class AttendanceDashboardComponent implements OnInit, AfterViewInit {
       : '';
 
     var userId;
-    if (this.userRoleID != '4' && this.userRoleID != '8') {
+    if (this.displayRole != '4' && this.displayRole != '8') {
       userId = this.centreID;
     } else {
       userId = this.userID;
@@ -382,7 +387,7 @@ export class AttendanceDashboardComponent implements OnInit, AfterViewInit {
       : '';
 
     var userId;
-    if (this.userRoleID != '4' && this.userRoleID != '8') {
+    if (this.displayRole != '4' && this.displayRole != '8') {
       userId = this.centreID;
     } else {
       userId = this.userID;
@@ -432,7 +437,7 @@ export class AttendanceDashboardComponent implements OnInit, AfterViewInit {
   //     this.endDateInstance.clear();
   //   }
 
-  //   if (this.userRoleID != '3') {
+  //   if (this.displayRole != '3') {
   //     this.getClassListByTeacherID();
   //   }
   //   this.getstaffAttendanceByCentreID();
@@ -441,7 +446,7 @@ export class AttendanceDashboardComponent implements OnInit, AfterViewInit {
   //Added on 04/08/25
   resetfilter() {
     this.initDatePicker();
-    if (this.userRoleID != '3') {
+    if (this.displayRole != '3') {
       this.getClassListByTeacherID();
     }
     this.getstaffAttendanceByCentreID();
@@ -454,7 +459,7 @@ export class AttendanceDashboardComponent implements OnInit, AfterViewInit {
   //Commented on 01/08/25
   // getTodayAttendanceSummaryByCentreID() {
   //   var userId;
-  //   if (this.userRoleID != '4' && this.userRoleID != '8') {
+  //   if (this.displayRole != '4' && this.displayRole != '8') {
   //     userId = this.centreID;
   //   } else {
   //     userId = this.userID;
@@ -476,7 +481,7 @@ export class AttendanceDashboardComponent implements OnInit, AfterViewInit {
   //           },
   //           // labels: ["Total Staff", "Present", "On Leave", "Absent"],
   //           labels: 
-  //             this.userRoleID != '4' && this.userRoleID != '8'
+  //             this.displayRole != '4' && this.displayRole != '8'
   //               ? ['Total Staff', 'Present', 'Absent']
   //               : ['Total Student', 'Present', 'Absent'],
   //           responsive: [
@@ -509,7 +514,7 @@ export class AttendanceDashboardComponent implements OnInit, AfterViewInit {
   //               type: 'pie',
   //             },
   //             labels:
-  //               this.userRoleID != '4' && this.userRoleID != '8'
+  //               this.displayRole != '4' && this.displayRole != '8'
   //                 ? ['Total Staff', 'Present', 'Absent']
   //                 : ['Total Student', 'Present', 'Absent'],
   //             responsive: [
@@ -535,7 +540,7 @@ export class AttendanceDashboardComponent implements OnInit, AfterViewInit {
   //               type: 'pie',
   //             },
   //             labels:
-  //               this.userRoleID != '4' && this.userRoleID != '8'
+  //               this.displayRole != '4' && this.displayRole != '8'
   //                 ? ['Total Staff', 'Present', 'Absent']
   //                 : ['Total Student', 'Present', 'Absent'],
   //             responsive: [
@@ -562,9 +567,11 @@ export class AttendanceDashboardComponent implements OnInit, AfterViewInit {
   //Added on 01/08/25
   getTodayAttendanceSummaryByCentreID() {
     this.spinner.show();
-    let userId = (this.userRoleID != '4' && this.userRoleID != '8') ? this.centreID : this.userID;
+    let userId = (this.displayRole != '4' && this.displayRole != '8') ? this.centreID : this.userID;
+     let roleToPass = (this.userRoleID === '3' && this.isStudentAttendance) ? 30 : Number(this.userRoleID);
+    
 
-    this.service.getTodayAttendanceSummaryByCentreID(Number(userId), Number(this.userRoleID)).subscribe((response) => {
+    this.service.getTodayAttendanceSummaryByCentreID(Number(userId), roleToPass).subscribe((response) => {
       if (response.message === 'Success') {
         this.attendanceCount = response.result;
 
@@ -578,7 +585,7 @@ export class AttendanceDashboardComponent implements OnInit, AfterViewInit {
           this.chartOptions = {
             series: [total, present, absent],
             chart: { width: 380, type: 'pie' },
-            labels: (this.userRoleID != '4' && this.userRoleID != '8')
+            labels: (this.displayRole != '4' && this.displayRole != '8')
               ? ['Total Staff', 'Present', 'Absent']
               : ['Total Student', 'Present', 'Absent'],
             responsive: [{
@@ -695,8 +702,8 @@ export class AttendanceDashboardComponent implements OnInit, AfterViewInit {
   //   const img = new Image();
   //   img.src = 'assets/img/logo-new.png';
 
-  //   const dayCareName = this.userRoleID == '3' ? this.CentreName : '';
-  //   const attendanceInfoText = this.userRoleID == '3' ? `This report shows the attendance records including In Time, Out Time, and total working hours for all staff. Total records: ${this.attendanceList.length}`
+  //   const dayCareName = this.displayRole == '3' ? this.CentreName : '';
+  //   const attendanceInfoText = this.displayRole == '3' ? `This report shows the attendance records including In Time, Out Time, and total working hours for all staff. Total records: ${this.attendanceList.length}`
   //   : `This report shows the attendance records for all students. Total records: ${this.attendanceList.length}`;
 
   //   img.onload = () => {

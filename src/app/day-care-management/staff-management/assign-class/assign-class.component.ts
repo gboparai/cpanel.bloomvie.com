@@ -242,9 +242,7 @@ export class AssignClassComponent {
         (item: any) => item.teacherID == teacherID
       );
       let index = this.AssignmentBO.indexOf(assignmentData);
-      this.AssignmentBO[index] = assignmentData.slots.filter(
-        (item: any) => item.teacherID != teacherID && item.dayID != id
-      );
+      this.AssignmentBO[index].slots = assignmentData.slots.filter((item: any) => item.dayID != id);
     }
   }
 
