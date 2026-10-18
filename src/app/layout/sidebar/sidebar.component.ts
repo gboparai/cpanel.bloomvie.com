@@ -21,6 +21,7 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { finalize, Subscription } from 'rxjs';
 import { debug } from 'console';
 import { CommonService } from '../../common-component/common.service';
+import { DaycareService } from '../../day-care-management/day-care-settings/daycare.service';
 
 interface ApiResponse {
   message: string | null;
@@ -70,6 +71,9 @@ export class SidebarComponent implements OnInit {
   @Output() sideBarLoad = new EventEmitter<any>();
   centreID: any;
   isSlotAccepted: string = '';
+  public isExternalBilling: boolean = typeof localStorage !== 'undefined' && localStorage.getItem('isExternalBilling') === 'true';
+  public rawMenus: any[] = [];
+  private externalBillingSub?: Subscription;
 
   constructor(
     private sideBarService: UserPermissionService,
@@ -81,7 +85,8 @@ export class SidebarComponent implements OnInit {
     private toastr: ToastrService,
     private route: ActivatedRoute,
     private cookie: CookieService,
-    private tocservice: TocRegistrationService
+    private tocservice: TocRegistrationService,
+    private daycareService: DaycareService
   ) {
     effect(() => {
       this.commonService.loadSideBar();
@@ -96,10 +101,40 @@ export class SidebarComponent implements OnInit {
   // }
 
   ngOnInit(): void {
+    this.isExternalBilling = typeof localStorage !== 'undefined' && localStorage.getItem('isExternalBilling') === 'true';
     this.checkRoute();
     this.loginUserId = this.cookies.get('UserId');
-    this.centreID = this.cookies.get('CentreID');
-    this.UserRoleId = this.cookies.get('UserRoleId');
+    this.centreID = this.cookies.get('CentreID') || this.cookies.get('centreID');
+    const UserInfo = this.cookies.get('UserInfo');
+    if (UserInfo) {
+      try {
+        const parsedInfo = JSON.parse(UserInfo);
+        this.UserRoleId = parsedInfo?.result?.userRoleID || parsedInfo?.result?.UserRoleID;
+        if (!this.centreID) {
+          this.centreID = parsedInfo?.result?.centreID || parsedInfo?.result?.CentreID;
+        }
+      } catch (e) {}
+    } else {
+      this.UserRoleId = this.cookies.get('UserRoleId');
+    }
+
+    this.externalBillingSub = this.daycareService.externalBilling$.subscribe((enabled: boolean) => {
+      this.isExternalBilling = enabled;
+      localStorage.setItem('isExternalBilling', enabled ? 'true' : 'false');
+      this.applyMenuFilter();
+    });
+
+    if (this.centreID) {
+      this.daycareService.checkExternalBilling(Number(this.centreID)).subscribe({
+        next: (res: any) => {
+          if (res && res.result) {
+            this.isExternalBilling = !!(res.result.externalBillingEnabled ?? res.result.ExternalBillingEnabled ?? (typeof res.result === 'boolean' ? res.result : false));
+            localStorage.setItem('isExternalBilling', this.isExternalBilling ? 'true' : 'false');
+            this.applyMenuFilter();
+          }
+        }
+      });
+    }
     if (this.UserRoleId == 8) {
       this.isSlotAccepted = this.cookies.get('isSlotAccepted');
     }
@@ -114,12 +149,6 @@ export class SidebarComponent implements OnInit {
         this.getPermissions(); // Call your method to update data
       }
     });
-
-    const UserInfo = this.cookies.get('UserInfo');
-    if (UserInfo) {
-      const parsedInfo = JSON.parse(UserInfo);
-      this.UserRoleId = parsedInfo.result.userRoleID;
-    }
 
     this.router.events.subscribe(() => {
       this.activateRoute = this.router.url;
@@ -170,6 +199,9 @@ export class SidebarComponent implements OnInit {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
+    if (this.externalBillingSub) {
+      this.externalBillingSub.unsubscribe();
+    }
   }
   showChildList(item: any) {
     
@@ -195,7 +227,8 @@ export class SidebarComponent implements OnInit {
 
     this.menus.forEach((menu: any) => {
       if (item.id == menu.id) {
-        this.cookie.set('Component', item.value);
+        const compVal = (this.isExternalBilling && (item.value === 'Special Offers' || item.menuUrl === 'special-offer')) ? 'Offers' : item.value;
+        this.cookie.set('Component', compVal);
         this.cookie.delete('ChildComponent');
         this.cookie.delete('NestedChild');
       }
@@ -285,15 +318,15 @@ export class SidebarComponent implements OnInit {
 
         //Added on 30/06/25
         if (this.UserRoleId == 8 && this.isSlotAccepted != 'true') {
-          this.menus = data.result.filter(
+          this.rawMenus = data.result.filter(
             (menu: any) => !dashboardMenuValues.has(menu.value)
           );
 
-          const IsCompleteProfile = this.menus.find(
+          const IsCompleteProfile = this.rawMenus.find(
             (x: { value: string }) => x.value == 'Complete Profile'
           );
           if (IsCompleteProfile != null) {
-            this.menus = this.menus.filter((x: { value: string }) =>
+            this.rawMenus = this.rawMenus.filter((x: { value: string }) =>
               [
                 'My Profile',
                 'My Scheduler',
@@ -302,30 +335,19 @@ export class SidebarComponent implements OnInit {
               ].includes(x.value)
             );
           } else {
-            this.menus = this.menus.filter((x: { value: string }) =>
+            this.rawMenus = this.rawMenus.filter((x: { value: string }) =>
               ['My Profile', 'My Scheduler', 'View Slot Requests'].includes(
                 x.value
               )
             );
           }
         } else {
-          this.menus = data.result.filter(
+          this.rawMenus = data.result.filter(
             (menu: any) => !dashboardMenuValues.has(menu.value)
           );
         }
 
-        //commented on 30/06/25
-        // this.menus = data.result.filter(
-        //   (menu: any) => !dashboardMenuValues.has(menu.value)
-        // );
-
-        // Reset isOpen for all menus
-        const initializeIsOpen = (menu: any) => {
-          menu.isOpen = false;
-          menu.childList?.forEach(initializeIsOpen);
-          menu.nestedchildList?.forEach(initializeIsOpen);
-        };
-        this.menus.forEach(initializeIsOpen);
+        this.applyMenuFilter();
 
         this.dashboardMenu = data.result.find((menu: any) =>
           dashboardMenuValues.has(menu.value)
@@ -370,7 +392,8 @@ export class SidebarComponent implements OnInit {
       if (item.menuUrl === currentRoute) {
         item.isOpen = true;
         if (!this.dashboardRoutes.includes(currentRoute)) {
-          this.cookie.set('Component', item.value);
+          const compVal = (this.isExternalBilling && (item.value === 'Special Offers' || item.menuUrl === 'special-offer')) ? 'Offers' : item.value;
+          this.cookie.set('Component', compVal);
           this.cookie.delete('ChildComponent');
           this.cookie.delete('NestedChild');
         }
@@ -414,5 +437,65 @@ export class SidebarComponent implements OnInit {
           this.bloomvieSettings = response.result;
         }
       });
+  }
+
+  applyMenuFilter() {
+    if (!this.rawMenus || this.rawMenus.length === 0) return;
+    if (this.isExternalBilling) {
+      this.menus = this.filterExternalBillingMenus(this.rawMenus);
+    } else {
+      this.menus = JSON.parse(JSON.stringify(this.rawMenus));
+    }
+
+    const initializeIsOpen = (menu: any) => {
+      menu.isOpen = false;
+      menu.childList?.forEach(initializeIsOpen);
+      menu.nestedchildList?.forEach(initializeIsOpen);
+    };
+    this.menus.forEach(initializeIsOpen);
+
+    const currentPath = this.router.url.split('?')[0];
+    if (currentPath) {
+      this.openMenuPath(this.menus, currentPath.replace('/', ''));
+    }
+  }
+
+  filterExternalBillingMenus(list: any[]): any[] {
+    const isBillingItem = (item: any) => {
+      const val = (item.value || '').toLowerCase().trim();
+      const url = (item.menuUrl || '').toLowerCase().trim();
+
+      // Specifically filter student fees, fee packages/plans, and invoices/payments (keep Special Offers accessible for parent invites)
+      if (val === 'student fees' || url === 'student-fees') return true;
+      if (url === 'subscription-plans' || url === 'subscription-features') return true;
+      if (url.includes('invoice') || val.includes('invoice')) return true;
+      if (url.includes('payment') || val.includes('payment')) return true;
+      if (url === 'billing-report') return true;
+
+      return false;
+    };
+
+    const filterList = (items: any[]): any[] => {
+      if (!items) return [];
+      return items
+        .filter(item => !isBillingItem(item))
+        .map(item => {
+          const copy = { ...item };
+          const val = (copy.value || '').toLowerCase().trim();
+          const url = (copy.menuUrl || '').toLowerCase().trim();
+          if (val === 'special offers' || url === 'special-offer' || val.includes('special offer') || url.includes('special-offer') || val === 'offers') {
+            copy.value = 'Offers';
+          }
+          if (copy.childList && copy.childList.length > 0) {
+            copy.childList = filterList(copy.childList);
+          }
+          if (copy.nestedchildList && copy.nestedchildList.length > 0) {
+            copy.nestedchildList = filterList(copy.nestedchildList);
+          }
+          return copy;
+        });
+    };
+
+    return filterList(list);
   }
 }

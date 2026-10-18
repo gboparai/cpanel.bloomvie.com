@@ -65,6 +65,7 @@
   <!-- Right-side User Menu -->
   <ul class="nav user-menu">
     <ng-container *ngIf="
+        !isExternalBilling &&
         [3, 4].includes(loginUserRoleId) &&
         onBoardingService.onboardingState().isOnboardedAccount
       ">

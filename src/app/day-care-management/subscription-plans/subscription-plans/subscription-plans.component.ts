@@ -35,6 +35,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ManageStudentService } from '../../student-management/manage-student/manage-student.service';
 import { SkeletonLoaderComponent } from '../../../common-component/skeleton-loader/skeleton-loader.component';
+import { DaycareService } from '../../day-care-settings/daycare.service';
 
 declare var $: any;
 
@@ -60,6 +61,7 @@ declare var $: any;
   ],
 })
 export class SubscriptionPlansComponent implements OnInit {
+  isExternalBilling: boolean = false;
   selectedStorage: string | null = null;
   features: any[] = [];
   subscriptionFormPlanA: any;
@@ -148,7 +150,8 @@ export class SubscriptionPlansComponent implements OnInit {
     private router: Router,
     private spinner: NgxSpinnerService,
     private manageStudentService: ManageStudentService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private daycareService: DaycareService
   ) {
     this.subscriptionFormPlanA = this.fb.group({
       ID: 0,
@@ -223,6 +226,15 @@ export class SubscriptionPlansComponent implements OnInit {
     this.centreID = parseInt(this.cookie.get('CentreID'))
       ? parseInt(this.cookie.get('CentreID'))
       : 0;
+    if (this.centreID > 0) {
+      this.daycareService.checkExternalBilling(this.centreID).subscribe({
+        next: (res: any) => {
+          if (res && res.message === 'Success') {
+            this.isExternalBilling = !!(res.result?.externalBillingEnabled ?? (typeof res.result === 'boolean' ? res.result : false));
+          }
+        }
+      });
+    }
     const UserInfo = this.cookie.get('UserInfo');
     if (UserInfo) {
       const parsedInfo = JSON.parse(UserInfo);

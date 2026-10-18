@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnInit, OnDestroy } from '@angular/core';
 import {
   ReactiveFormsModule,
   FormBuilder,
@@ -10,9 +10,11 @@ import { CommonModule } from '@angular/common';
 import { CookieService } from 'ngx-cookie-service';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { Subscription } from 'rxjs';
 import { AddDiscountService } from './add-discount.service';
 import { ManageClassroomService } from '../classroom-management/manage-classroom/manage-classroom.service';
 import { DayCareDashboardService } from '../daycare-dashboard/day-care-dashboard.service';
+import { DaycareService } from '../day-care-settings/daycare.service';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { SkeletonLoaderComponent } from '../../common-component/skeleton-loader/skeleton-loader.component';
 import { TooltipComponent } from '../../common-component/tooltip/tooltip.component';
@@ -35,7 +37,7 @@ declare var $: any;
   templateUrl: './add-discount.component.html',
   styleUrl: './add-discount.component.css',
 })
-export class AddDiscountComponent {
+export class AddDiscountComponent implements OnInit, OnDestroy {
   parentDiscountForm: any;
   public customPlanList: any[] = [];
   public discountedPlanList: any[] = [];
@@ -70,6 +72,8 @@ export class AddDiscountComponent {
 
   public enrolledStudentList: any[] = [];
   discountType: string = 'amount';
+  public isExternalBilling: boolean = false;
+  private externalBillingSub?: Subscription;
 
   @ViewChild('discountToggle', { static: false })
   discountToggle!: ElementRef<HTMLInputElement>;
@@ -81,7 +85,8 @@ export class AddDiscountComponent {
     private fb: FormBuilder,
     private discountService: AddDiscountService,
     private classService: ManageClassroomService,
-    private daycaredashboardService: DayCareDashboardService
+    private daycaredashboardService: DayCareDashboardService,
+    private daycareService: DaycareService
   ) {
     this.parentDiscountForm = this.fb.group({
       parentID: [null, Validators.required],
@@ -98,7 +103,7 @@ export class AddDiscountComponent {
     this.giveDiscountForm = this.fb.group({
       name: ['', Validators.required],
       ageGroup: ['', Validators.required],
-      email: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
       planID: ['', Validators.required],
       centreID: [''],
       tempOrderNumber: [''],
@@ -106,9 +111,58 @@ export class AddDiscountComponent {
   }
 
   ngOnInit() {
+    this.isExternalBilling = localStorage.getItem('isExternalBilling') === 'true';
+    this.adjustFormValidatorsForExternalBilling();
     this.getCookieData();
 
+    if (this.centreID) {
+      this.daycareService.checkExternalBilling(Number(this.centreID)).subscribe({
+        next: (res: any) => {
+          if (res && res.result) {
+            this.isExternalBilling = !!(res.result.externalBillingEnabled ?? res.result.ExternalBillingEnabled ?? (typeof res.result === 'boolean' ? res.result : false));
+            localStorage.setItem('isExternalBilling', this.isExternalBilling ? 'true' : 'false');
+            this.adjustFormValidatorsForExternalBilling();
+          }
+        }
+      });
+    }
+
+    this.externalBillingSub = this.daycareService.externalBilling$.subscribe((enabled: boolean) => {
+      this.isExternalBilling = enabled;
+      localStorage.setItem('isExternalBilling', enabled ? 'true' : 'false');
+      this.adjustFormValidatorsForExternalBilling();
+    });
+
     this.getDiscountAppliedRequest();
+  }
+
+  ngOnDestroy(): void {
+    if (this.externalBillingSub) {
+      this.externalBillingSub.unsubscribe();
+    }
+  }
+
+  adjustFormValidatorsForExternalBilling() {
+    if (this.isExternalBilling) {
+      this.giveDiscountForm.get('planID')?.clearValidators();
+      this.giveDiscountForm.get('planID')?.updateValueAndValidity();
+      this.parentDiscountForm.get('PlanID')?.clearValidators();
+      this.parentDiscountForm.get('PlanID')?.updateValueAndValidity();
+      this.parentDiscountForm.get('discount')?.clearValidators();
+      this.parentDiscountForm.get('discount')?.updateValueAndValidity();
+      this.parentDiscountForm.patchValue({
+        PlanID: 0,
+        discount: '0',
+        discountType: 'amount'
+      });
+    } else {
+      this.giveDiscountForm.get('planID')?.setValidators([Validators.required]);
+      this.giveDiscountForm.get('planID')?.updateValueAndValidity();
+      this.parentDiscountForm.get('PlanID')?.setValidators([Validators.required]);
+      this.parentDiscountForm.get('PlanID')?.updateValueAndValidity();
+      this.parentDiscountForm.get('discount')?.setValidators([Validators.required]);
+      this.parentDiscountForm.get('discount')?.updateValueAndValidity();
+    }
   }
 
   convertMonthsToYears(months: number): number {
@@ -259,27 +313,43 @@ export class AddDiscountComponent {
   }
 
   sendDiscountFormToParent() {
+    if (this.isExternalBilling) {
+      this.giveDiscountForm.patchValue({
+        planID: this.giveDiscountForm.value.planID || 0,
+      });
+    }
+
     if (this.giveDiscountForm.valid) {
       this.spinner.show();
       this.giveDiscountForm.patchValue({
+        name: this.giveDiscountForm.value.name?.trim(),
+        email: this.giveDiscountForm.value.email?.trim(),
         centreID: this.centreID,
         tempOrderNumber: this.generateTempOrderNumber(),
       });
 
-      // TODO: (Discount) Currently, this only sends an email. We need to save the generated discount 
-      // invitation (with tempOrderNumber) to the database here, so Daycare Owners can see a 
-      // "Pending Invites" list before the parent actually responds and creates a formal enrollment request.
-
       this.discountService
         .sendDiscountFormMail(this.giveDiscountForm.value)
-        .subscribe((response: any) => {
-          if (response.message == 'Success') {
+        .subscribe({
+          next: (response: any) => {
             setTimeout(() => {
               this.spinner.hide();
             }, 100);
-            $('#giveDiscount').modal('hide');
-            this.toastr.success('Discount form email send successfully.');
-            this.resetGiveDiscountForm();
+            if (response.message == 'Success') {
+              $('#giveDiscount').modal('hide');
+              this.toastr.success(
+                this.isExternalBilling
+                  ? 'Offer email sent successfully.'
+                  : 'Discount form email send successfully.'
+              );
+              this.resetGiveDiscountForm();
+            } else {
+              this.toastr.error(response.message || 'Failed to send offer email.');
+            }
+          },
+          error: () => {
+            this.spinner.hide();
+            this.toastr.error('Failed to send offer email.');
           }
         });
     } else {
@@ -288,9 +358,17 @@ export class AddDiscountComponent {
   }
 
   getCookieData() {
-    this.centreID = this.cookie.get('CentreID')
-      ? parseInt(this.cookie.get('CentreID'))
-      : 0;
+    let cid = this.cookie.get('CentreID') || this.cookie.get('centreID');
+    if (!cid) {
+      const userInfoStr = this.cookie.get('UserInfo');
+      if (userInfoStr) {
+        try {
+          const parsed = JSON.parse(userInfoStr);
+          cid = parsed?.result?.centreID || parsed?.result?.CentreID;
+        } catch (e) {}
+      }
+    }
+    this.centreID = cid ? parseInt(cid) : 0;
     this.userID = this.cookie.get('UserId')
       ? parseInt(this.cookie.get('UserId'))
       : 0;
@@ -319,6 +397,7 @@ export class AddDiscountComponent {
     this.setDiscountType('amount');
 
     this.parentDiscountForm.patchValue({
+      parentID: event.parentID,
       studentID: null,
       planID: null,
       discount: null,
@@ -331,45 +410,65 @@ export class AddDiscountComponent {
         planName: event.planName,
       };
 
-      this.parentDiscountForm.patchValue({
-        studentID: null,
-        planID: null,
-      });
       if (event) {
-        const planObject = {
-          planID: event.planID,
-          planName: event.planName,
-        };
-
-        this.planList.push(planObject);
+        if (event.planID) {
+          const planObject = {
+            planID: event.planID,
+            planName: event.planName,
+          };
+          this.planList.push(planObject);
+        }
         this.parentDiscountForm.patchValue({
-          PlanID: event.planID,
+          parentID: event.parentID,
+          PlanID: event.planID || 0,
           email: event.email,
         });
         this.studentRecord = event.students;
+        if (this.studentRecord && this.studentRecord.length > 0) {
+          this.parentDiscountForm.patchValue({
+            studentID: this.studentRecord[0].studentID,
+          });
+        }
       }
     } else {
       if (event) {
         this.studentRecord = event.student;
         this.parentDiscountForm.patchValue({
+          parentID: event.parentID,
           email: event.email,
         });
+        if (this.studentRecord && this.studentRecord.length > 0) {
+          this.parentDiscountForm.patchValue({
+            studentID: this.studentRecord[0].studentID,
+          });
+        }
       }
     }
+
+    if (this.isExternalBilling) {
+      this.parentDiscountForm.patchValue({
+        PlanID: 0,
+        discount: '0',
+        discountType: 'amount',
+      });
+    }
+
     if (action == 'edit') window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   reset() {
-    // setTimeout(() => {
-    //   this.discountToggle.nativeElement.checked = false;
-    //   this.setDiscountType('amount');
-    // }, 0);
     this.discountType = '';
     this.parentDiscountForm.reset();
     this.parentDiscountForm.patchValue({
       discountType: 'amount',
       parentType: 'new',
     });
+    if (this.isExternalBilling) {
+      this.parentDiscountForm.patchValue({
+        PlanID: 0,
+        discount: '0',
+      });
+    }
   }
 
   getDiscountsForSelectedPlan(event: any) {
@@ -413,21 +512,21 @@ export class AddDiscountComponent {
   }
 
   sendDiscountPlanEmail() {
-    this.spinner.show();
-    if (this.parentDiscountForm.valid) {
-      // const obj = {
-      //   firstName: this.parentDiscountForm.value.firstName,
-      //   lastName: this.parentDiscountForm.value.lastName,
-      //   planID: this.parentDiscountForm.value.selectPlan,
-      //   email: this.parentDiscountForm.value.email,
-      //   centreID: this.cookie.get('CentreID')
-      //     ? this.cookie.get('CentreID')
-      //     : '0',
-      //   tempOrderNumber: orderNumber,
-      //   discountPlanID: this.parentDiscountForm.value.selectDiscount,
-      //   parentType: this.parentDiscountForm.value.parentType,
-      // };
+    if (this.isExternalBilling) {
+      this.parentDiscountForm.patchValue({
+        PlanID: 0,
+        discount: '0',
+        discountType: 'amount',
+      });
+      if (!this.parentDiscountForm.value.studentID && this.studentRecord && this.studentRecord.length > 0) {
+        this.parentDiscountForm.patchValue({
+          studentID: this.studentRecord[0].studentID,
+        });
+      }
+    }
 
+    if (this.parentDiscountForm.valid) {
+      this.spinner.show();
       let isNewDiscount = this.request == true ? true : false;
 
       this.parentDiscountForm.patchValue({
@@ -437,29 +536,36 @@ export class AddDiscountComponent {
 
       this.discountService
         .sendPaymentMailToParent(this.parentDiscountForm.value)
-        .subscribe((res: any) => {
-          if (res.message == 'Success') {
-            this.getDiscountAppliedRequest();
-            this.planDetails = null;
-
+        .subscribe({
+          next: (res: any) => {
             setTimeout(() => {
               this.spinner.hide();
             }, 100);
 
-            $('#editModal').modal('hide');
-            this.toastr.success('Payment Email Send Successfully');
-            this.reset();
-          } else if (res.message == 'Plan Assignment Succesfull') {
-            this.planDetails = null;
+            if (res.message == 'Success') {
+              this.getDiscountAppliedRequest();
+              this.planDetails = null;
+              $('#editModal').modal('hide');
+              this.toastr.success(
+                this.isExternalBilling
+                  ? 'Enrollment offer finalized and onboarding email sent successfully.'
+                  : 'Payment Email Send Successfully'
+              );
+              this.reset();
+            } else if (res.message == 'Plan Assignment Succesfull') {
+              this.planDetails = null;
+              $('#editModal').modal('hide');
+              this.toastr.success('Plan Assigned Successfully');
+              this.reset();
+            } else {
+              this.planDetails = null;
+              this.toastr.warning(res.message);
+              this.reset();
+            }
+          },
+          error: () => {
             this.spinner.hide();
-            $('#editModal').modal('hide');
-            this.toastr.success('Plan Assigned Successfully');
-            this.reset();
-          } else {
-            this.planDetails = null;
-            this.spinner.hide();
-            this.toastr.warning(res.message);
-            this.reset();
+            this.toastr.error('An error occurred while processing.');
           }
         });
     } else {

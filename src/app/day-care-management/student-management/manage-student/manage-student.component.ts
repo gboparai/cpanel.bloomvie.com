@@ -35,6 +35,7 @@ import { SubscriptionFeaturesService } from '../../subscription-plans/subscripti
 import flatpickr from 'flatpickr';
 import { DatePipe } from '@angular/common';
 import { NgIf } from '@angular/common';
+import { DaycareService } from '../../day-care-settings/daycare.service';
 
 declare var $: any;
 
@@ -100,6 +101,7 @@ export class ManageStudentComponent implements OnInit {
   studentInformation: any;
   countries: any[] = [];
   selectedCountry: any;
+  isExternalBilling: boolean = false;
 
   constructor(
     private manageStudentService: ManageStudentService,
@@ -115,7 +117,8 @@ export class ManageStudentComponent implements OnInit {
     private fb: FormBuilder,
     public onBoardingService: OnboardingService,
     private cdRef: ChangeDetectorRef,
-    private navigate: Router
+    private navigate: Router,
+    private daycareService: DaycareService
   ) {
     this.form = fb.group({
       studentInformation: fb.group({
@@ -222,14 +225,34 @@ export class ManageStudentComponent implements OnInit {
           this.loginUserID = parseInt(this.cookie.get('UserId'));
         }
         this.getAgeGroupList();
+        this.checkExternalBilling();
       }
     });
-    this.getAllAddedPlans();
     this.getDayCareCentreDetails();
     if (this.StudentItem) {
       this.onEditStudent(this.StudentItem);
     }
     // this.cdRef.detectChanges();
+  }
+
+  checkExternalBilling() {
+    if (!this.centreID) return;
+    this.daycareService.getCentreSettings(this.centreID).subscribe({
+      next: (res) => {
+        if (res && (res.message === 'Success' || res.message === 'OK')) {
+          this.isExternalBilling = !!(res.result?.externalBillingEnabled ?? (typeof res.result === 'boolean' ? res.result : false));
+          this.getAllAddedPlans();
+          if (this.isExternalBilling) {
+            this.getFormGroup('parentInformation').get('planID')?.clearValidators();
+            this.getFormGroup('parentInformation').get('planID')?.updateValueAndValidity();
+          }
+          this.cdRef.detectChanges();
+        }
+      },
+      error: () => {
+        this.getAllAddedPlans();
+      }
+    });
   }
 
   ngAfterViewInit(): void {
@@ -612,6 +635,10 @@ export class ManageStudentComponent implements OnInit {
   }
 
   onAddStudent() {
+    if (this.isExternalBilling) {
+      this.getFormGroup('parentInformation').get('planID')?.clearValidators();
+      this.getFormGroup('parentInformation').get('planID')?.updateValueAndValidity();
+    }
     if (
       this.getFormGroup('studentInformation').valid &&
       this.getFormGroup('parentInformation').valid
@@ -621,6 +648,10 @@ export class ManageStudentComponent implements OnInit {
 
       jsonData['dob'] = this.changeFormat(jsonData.dob);
       const parentData = this.getFormGroup('parentInformation').value;
+      if (this.isExternalBilling) {
+        parentData.planID = null;
+        parentData.PaymentDates = [];
+      }
       jsonData.loginUserID = this.loginUserID;
       jsonData.centreID = this.centreID;
       if (!jsonData.id && !parentData.id) {
@@ -876,6 +907,11 @@ export class ManageStudentComponent implements OnInit {
       this.selectedCountry = this.commonService.getDefaultCountryFlag(1);
     } else {
       this.selectedCountry = this.commonService.getDefaultCountryFlag(0);
+    }
+
+    if (this.isExternalBilling) {
+      this.getFormGroup('parentInformation').get('planID')?.clearValidators();
+      this.getFormGroup('parentInformation').get('planID')?.updateValueAndValidity();
     }
   }
 

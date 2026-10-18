@@ -257,7 +257,7 @@
 
             <div class="col-md-4 mb-4">
               <div class="form-group local-forms">
-                <label> Plan<span class="login-danger">*</span></label>
+                <label> Plan<span class="login-danger" *ngIf="!isExternalBilling">*</span></label>
 
                 <input type="text" class="form-control" placeholder="-Select-" id="planName" [disabled]="true"
                   *ngIf="viewDropDown == false" />
@@ -273,7 +273,7 @@
 
             <div class="col-md-4 mb-4">
               <div class="form-group local-forms">
-                <label>Billing Date<span class="login-danger">*</span></label>
+                <label>Billing Date<span class="login-danger" *ngIf="!isExternalBilling">*</span></label>
                 <input type="text" class="form-control" [disabled]="startDateToggle" (change)="getPlanEndDate($event)"
                   id="datePickerStartDate" />
               </div>

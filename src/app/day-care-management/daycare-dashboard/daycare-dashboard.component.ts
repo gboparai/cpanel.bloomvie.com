@@ -50,6 +50,7 @@ import { CommonService } from '../../common-component/common.service';
 import { SkeletonLoaderComponent } from '../../common-component/skeleton-loader/skeleton-loader.component';
 import { HeaderServiceService } from '../../layout/header/header-service.service';
 import { TooltipComponent } from '../../common-component/tooltip/tooltip.component';
+import { DaycareService } from '../day-care-settings/daycare.service';
 
 declare var $: any;
 interface ChangeStatus {
@@ -175,6 +176,7 @@ export class DaycareDashboardComponent {
   skalatonShowCard = 'skalatonShowCard';
   centreName = 'centreName';
   private hasInitialized = false;
+  public isExternalBilling: boolean = false;
   public unassignedTeacherListCurrentPage: number = 1;
   public unassignedTeacherListItemPerPage: number = 5;
 
@@ -198,7 +200,8 @@ export class DaycareDashboardComponent {
     private WorkTimingService: WorkTimingService,
     private service: ManageEventService,
     public onBoardingService: OnboardingService,
-    private headerService: HeaderServiceService
+    private headerService: HeaderServiceService,
+    private daycareService: DaycareService
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -243,6 +246,13 @@ export class DaycareDashboardComponent {
     this.getCookie();
     // this.getQueryParams();
     if (this.DayCareId > 0) {
+      this.daycareService.checkExternalBilling(this.DayCareId).subscribe({
+        next: (res: any) => {
+          if (res && res.message === 'Success') {
+            this.isExternalBilling = !!res.result;
+          }
+        }
+      });
       this.getDayCareByID(this.DayCareId);
       this.getDayCareDashBoardCount(this.DayCareId);
       this.getActivitesByCenterId(this.DayCareId);
@@ -1182,7 +1192,7 @@ export class DaycareDashboardComponent {
       date.getMonth() + 1
     );
 
-    let perDayPrice = enrollment.planPrice / daysInMonth;
+    let perDayPrice = (enrollment.planPrice || 0) / daysInMonth;
 
     let numberOfDaysLeft = daysInMonth - date.getDate();
 
@@ -1195,10 +1205,11 @@ export class DaycareDashboardComponent {
     this.paymentDetails['endDate'] = formattedEndDate;
 
     let totalAmountForOneChild = (numberOfDaysLeft + 1) * perDayPrice;
-    this.paymentDetails['totalAmountPaid'] =
-      totalAmountForOneChild * this.acceptedStudent.length;
+    this.paymentDetails['totalAmountPaid'] = this.isExternalBilling
+      ? 0
+      : totalAmountForOneChild * this.acceptedStudent.length;
 
-    this.paymentDetails['amountPerStudent'] = totalAmountForOneChild;
+    this.paymentDetails['amountPerStudent'] = this.isExternalBilling ? 0 : totalAmountForOneChild;
     setTimeout(() => {
       $('#plan-details').modal('show');
     }, 0);
@@ -1222,67 +1233,70 @@ export class DaycareDashboardComponent {
           studentName: data.studentLastName
             ? data.studentFirstName + ' ' + data.studentLastName
             : data.studentFirstName,
-          totalPaidAmount: this.paymentDetails.amountPerStudent,
+          totalPaidAmount: this.isExternalBilling ? 0 : this.paymentDetails.amountPerStudent,
         };
       });
 
-    this.appliedDiscountStudentList.forEach((item: any) => {
-      totalDiscountAmount = Number(item.discountAmount) + totalDiscountAmount;
+    if (!this.isExternalBilling) {
+      this.appliedDiscountStudentList.forEach((item: any) => {
+        totalDiscountAmount = Number(item.discountAmount) + totalDiscountAmount;
 
-      let isExists = acceptedStudentList.some(
-        (record: any) => record.studentID == item.studentID
-      );
-
-      if (isExists) {
-        acceptedStudentList = acceptedStudentList.filter(
-          (record: any) => record.studentID != item.studentID
+        let isExists = acceptedStudentList.some(
+          (record: any) => record.studentID == item.studentID
         );
-      }
 
-      const obj = {
-        studentID: item.studentID,
-        studentName: item.studentName,
-        discountPercentage:
-          item.discountType == 'amount'
-            ? item.discountPercentage
-            : item.discountValue,
-        discountValue: item.discountValue,
-        discountType: item.discountType,
-        totalPaidAmount: item.totalAmount,
-      };
+        if (isExists) {
+          acceptedStudentList = acceptedStudentList.filter(
+            (record: any) => record.studentID != item.studentID
+          );
+        }
 
-      studentList.push(obj);
-    });
+        const obj = {
+          studentID: item.studentID,
+          studentName: item.studentName,
+          discountPercentage:
+            item.discountType == 'amount'
+              ? item.discountPercentage
+              : item.discountValue,
+          discountValue: item.discountValue,
+          discountType: item.discountType,
+          totalPaidAmount: item.totalAmount,
+        };
+
+        studentList.push(obj);
+      });
+    }
 
     studentList.push(...acceptedStudentList);
 
     let paymentEmailBO = {
       centreID: this.DayCareId,
       parentID: this.paymentDetails.parentID,
-      planID: this.paymentDetails.planID,
+      planID: this.isExternalBilling ? 0 : (this.paymentDetails.planID || 0),
       daycareID: this.UserID,
       startDate: this.paymentDetails.startDate,
       endDate: this.paymentDetails.endDate,
-      totalAmountPaid: this.paymentDetails.totalDiscountAmount
-        ? Number(this.paymentDetails.totalDiscountAmount) +
-        Number(this.paymentDetails.amountPerStudent) * acceptedStudentList.length
-        : Number(this.paymentDetails.totalAmountPaid),
-      isDiscountApplied:
-        this.appliedDiscountStudentList.length > 0 ? true : false,
-      TotalDiscountAmount: totalDiscountAmount,
+      totalAmountPaid: this.isExternalBilling
+        ? 0
+        : (this.paymentDetails.totalDiscountAmount
+            ? Number(this.paymentDetails.totalDiscountAmount) +
+              Number(this.paymentDetails.amountPerStudent) * acceptedStudentList.length
+            : Number(this.paymentDetails.totalAmountPaid)),
+      isDiscountApplied: !this.isExternalBilling && this.appliedDiscountStudentList.length > 0,
+      TotalDiscountAmount: this.isExternalBilling ? 0 : totalDiscountAmount,
       studentList:
         studentList.length > 0
           ? studentList
           : this.paymentDetails.students
-            .filter((item: any) => item.statusID == 6)
-            .map((data: any) => {
-              return {
-                studentID: data.studentID,
-                studentName: data.studentLastName
-                  ? data.studentFirstName + ' ' + data.studentLastName
-                  : data.studentFirstName,
-              };
-            }),
+              .filter((item: any) => item.statusID == 6)
+              .map((data: any) => {
+                return {
+                  studentID: data.studentID,
+                  studentName: data.studentLastName
+                    ? data.studentFirstName + ' ' + data.studentLastName
+                    : data.studentFirstName,
+                };
+              }),
     };
 
     this.DayCareDashBoard.sendPaymentEmailToParent(paymentEmailBO).subscribe(
@@ -1295,11 +1309,15 @@ export class DaycareDashboardComponent {
           this.resetDiscountButton();
           this.appliedDiscountStudentList = [];
           $('#plan-details').modal('hide');
-          Swal.fire('Email Send Successfully', '', 'success');
+          Swal.fire(this.isExternalBilling ? 'Offer Sent Successfully' : 'Email Send Successfully', '', 'success');
         } else {
           this.spinner.hide();
           this.Toaster.error(response.message);
         }
+      },
+      (error: any) => {
+        this.spinner.hide();
+        this.Toaster.error('An error occurred while sending');
       }
     );
   }
