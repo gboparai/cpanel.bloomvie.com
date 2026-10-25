@@ -47,7 +47,7 @@ export class BreadcrumbComponent implements OnInit {
     this.Component = this.cookies.get('Component');
     const isExt = typeof localStorage !== 'undefined' && localStorage.getItem('isExternalBilling') === 'true';
     if (isExt && (this.Component === 'Special Offers' || this.Component === 'Discount Details')) {
-      this.Component = 'Offers';
+      this.Component = 'Enrollment Invites';
     }
     this.nestedChild = this.cookies.get('NestedChild');
     this.ChildComponent = this.cookies.get('ChildComponent');

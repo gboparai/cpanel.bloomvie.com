@@ -429,9 +429,9 @@ export const routes: Routes = [
 
 
       { path: 'my-schedule', component: MyScheduleComponent },
-      { path: 'manage-announcements', component: ManageAnnouncementsComponent },
       { path: 'announcements', component: ManageAnnouncementsComponent },
       { path: "**", component: Error404Component }
     ],
   },
 ];
+
