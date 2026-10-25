@@ -33,7 +33,7 @@
             (click)="showChildList(item)"
             [ngClass]="{ subdrop: item.isOpen }"
           >
-            <i class="{{ item.icon }}"></i>
+            <i class="{{ item.icon || item.Icon }}"></i>
             <span>{{ (isExternalBilling && (item.value === 'Special Offers' || item.menuUrl === 'special-offer')) ? 'Offers' : item.value }}</span>
             <span
               class="menu-arrow"

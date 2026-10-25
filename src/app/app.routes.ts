@@ -42,6 +42,7 @@ import { ManageClassRosterComponent } from './day-care-management/class-rosters/
 import { SubscriptionFeaturesComponent } from './day-care-management/subscription-plans/subscription-features/subscription-features.component';
 import { SubscriptionPlansComponent } from './day-care-management/subscription-plans/subscription-plans/subscription-plans.component';
 import { SubscriptionDetailsComponent } from './day-care-management/subscription-plans/subscription-details/subscription-details.component';
+import { ManageAnnouncementsComponent } from './announcements/manage-announcements/manage-announcements.component';
 import { Routes } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { DashboardComponent } from './bloomvie-management/dashboard/dashboard.component';
@@ -428,6 +429,8 @@ export const routes: Routes = [
 
 
       { path: 'my-schedule', component: MyScheduleComponent },
+      { path: 'manage-announcements', component: ManageAnnouncementsComponent },
+      { path: 'announcements', component: ManageAnnouncementsComponent },
       { path: "**", component: Error404Component }
     ],
   },

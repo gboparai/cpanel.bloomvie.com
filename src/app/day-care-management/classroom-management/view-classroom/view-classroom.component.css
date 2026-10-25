@@ -75,3 +75,15 @@
     color: #000000;
     padding: 7px 15px;
 }
+
+.actions a.action-btn {
+    border-radius: 50% !important;
+    height: 27px;
+    width: 27px;
+    padding: 0;
+    text-align: center;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
