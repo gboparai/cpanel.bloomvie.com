@@ -51,6 +51,7 @@ import { SkeletonLoaderComponent } from '../../common-component/skeleton-loader/
 import { HeaderServiceService } from '../../layout/header/header-service.service';
 import { TooltipComponent } from '../../common-component/tooltip/tooltip.component';
 import { DaycareService } from '../day-care-settings/daycare.service';
+import { RecentAnnouncementsComponent } from '../../common-component/recent-announcements/recent-announcements.component';
 
 declare var $: any;
 interface ChangeStatus {
@@ -78,6 +79,7 @@ interface ChangeStatus {
     EventsComponent,
     SkeletonLoaderComponent,
     TooltipComponent,
+    RecentAnnouncementsComponent,
   ],
   providers: [DatePipe],
   templateUrl: './daycare-dashboard.component.html',

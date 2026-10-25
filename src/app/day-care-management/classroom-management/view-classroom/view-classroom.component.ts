@@ -150,6 +150,12 @@ export class ViewClassroomComponent implements OnInit {
     }
   }
 
+  onQuickAnnouncement(item: any) {
+    this.router.navigate(['/announcements'], {
+      queryParams: { newAnnouncement: 'true', classId: item.id }
+    });
+  }
+
   get filteredClssList() {
     return this.classList.filter((x) =>
       x.className
@@ -158,3 +164,4 @@ export class ViewClassroomComponent implements OnInit {
     );
   }
 }
+

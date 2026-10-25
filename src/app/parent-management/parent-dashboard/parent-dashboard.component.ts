@@ -36,6 +36,7 @@ import { LoginService } from '../../login/login.service';
 import { SkeletonLoaderComponent } from '../../common-component/skeleton-loader/skeleton-loader.component';
 import { ManageStudentService } from '../../day-care-management/student-management/manage-student/manage-student.service';
 import { DaycareService } from '../../day-care-management/day-care-settings/daycare.service';
+import { RecentAnnouncementsComponent } from '../../common-component/recent-announcements/recent-announcements.component';
 
 declare var $: any;
 @Component({
@@ -52,6 +53,7 @@ declare var $: any;
     ReactiveFormsModule,
     StripeCardComponent,
     SkeletonLoaderComponent,
+    RecentAnnouncementsComponent,
   ],
   providers: [DatePipe],
   templateUrl: './parent-dashboard.component.html',

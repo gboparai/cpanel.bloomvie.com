@@ -35,6 +35,7 @@ import { EventsComponent } from '../../common-component/events/events.component'
 import { OnboardingService } from '../../onboarding/onboarding.service';
 import { SkeletonLoaderComponent } from "../../common-component/skeleton-loader/skeleton-loader.component";
 import { LoginService } from '../../login/login.service';
+import { RecentAnnouncementsComponent } from '../../common-component/recent-announcements/recent-announcements.component';
 
 declare var $: any;
 
@@ -56,7 +57,8 @@ declare var $: any;
     NgSelectModule,
     CommonModule,
     EventsComponent,
-    SkeletonLoaderComponent
+    SkeletonLoaderComponent,
+    RecentAnnouncementsComponent,
   ],
   providers: [DatePipe],
   templateUrl: './teachers-dashboard.component.html',

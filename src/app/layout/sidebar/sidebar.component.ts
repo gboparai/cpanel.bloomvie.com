@@ -364,6 +364,41 @@ export class SidebarComponent implements OnInit {
           );
         }
 
+        this.rawMenus.forEach((m: any) => { if (m.menuUrl === '/manage-announcements' || m.menuUrl === 'manage-announcements') { m.menuUrl = '/announcements'; } if (m.MenuUrl === '/manage-announcements' || m.MenuUrl === 'manage-announcements') { m.MenuUrl = '/announcements'; } });
+
+
+        if (this.UserRoleId == 5) {
+          const annIndex = this.rawMenus.findIndex((m: any) =>
+            m.menuUrl === '/announcements' || m.menuUrl === 'announcements' || m.menuUrl === '/manage-announcements' || m.menuUrl === 'manage-announcements' || m.value === 'Announcements'
+          );
+          const chatBoxIndex = this.rawMenus.findIndex((m: any) =>
+            m.menuUrl === 'chatbox' || m.menuUrl === '/chatbox' || m.value === 'ChatBox'
+          );
+
+          if (annIndex === -1) {
+            const announcementMenu = {
+              id: 179,
+              value: 'Announcements',
+              icon: 'feather-volume-2',
+              Icon: 'feather-volume-2',
+              menuUrl: '/announcements',
+              MenuUrl: '/announcements',
+              childList: []
+            };
+            if (chatBoxIndex !== -1) {
+              this.rawMenus.splice(chatBoxIndex, 0, announcementMenu);
+            } else {
+              this.rawMenus.push(announcementMenu);
+            }
+          } else if (chatBoxIndex !== -1) {
+            const [annMenu] = this.rawMenus.splice(annIndex, 1);
+            const targetChatIndex = this.rawMenus.findIndex((m: any) =>
+              m.menuUrl === 'chatbox' || m.menuUrl === '/chatbox' || m.value === 'ChatBox'
+            );
+            this.rawMenus.splice(targetChatIndex, 0, annMenu);
+          }
+        }
+
         this.applyMenuFilter();
 
         this.dashboardMenu = data.result.find((menu: any) =>
@@ -516,3 +551,6 @@ export class SidebarComponent implements OnInit {
     return filterList(list);
   }
 }
+
+
+

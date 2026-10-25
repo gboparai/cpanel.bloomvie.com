@@ -1,0 +1,325 @@
+<app-breadcrumb></app-breadcrumb>
+
+<div class="row">
+  <div class="col-sm-12">
+    <div class="card card-table">
+      <div class="card-body">
+        
+        <!-- Page Header -->
+        <div class="page-header">
+          <div class="row align-items-center">
+            <div class="col d-flex align-items-center flex-wrap gap-2">
+              <h3 class="page-title mb-0">{{ canSend ? 'Announcements History' : 'Announcements' }}</h3>
+              <p class="text-muted mb-0" *ngIf="isTeacher">View announcements you've broadcasted to your assigned classrooms.</p>
+              <p class="text-muted mb-0" *ngIf="isAdmin">View all broadcasted announcements across the facility.</p>
+              <p class="text-muted mb-0" *ngIf="isParent">View announcements received from your daycare and teachers.</p>
+            </div>
+            <div class="col-auto text-end float-end ms-auto download-grp" *ngIf="canSend">
+              <button class="btn btn-primary" (click)="openNewAnnouncementModal()">
+                <i class="feather-plus me-1"></i> New Announcement
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <ul class="nav nav-tabs mb-3" role="tablist" *ngIf="canSend">
+          <li class="nav-item" role="presentation">
+            <a class="nav-link" [class.active]="activeTab === 'received'" (click)="setTab('received')" role="tab" style="cursor: pointer;">
+              Received Announcements
+              <span class="badge bg-primary ms-1" *ngIf="recipientAnnouncements.length">{{ recipientAnnouncements.length }}</span>
+            </a>
+          </li>
+          <li class="nav-item" role="presentation">
+            <a class="nav-link" [class.active]="activeTab === 'sent'" (click)="setTab('sent')" role="tab" style="cursor: pointer;">
+              {{ isTeacher ? 'My Broadcasts' : 'All Facility Broadcasts' }}
+              <span class="badge bg-secondary ms-1" *ngIf="announcementHistory.length">{{ announcementHistory.length }}</span>
+            </a>
+          </li>
+        </ul>
+
+        <!-- Received Announcements Table -->
+        <div class="table-responsive" *ngIf="!canSend || activeTab === 'received'">
+          <table class="table table-hover mb-0">
+            <thead class="student-thread">
+              <tr>
+                <th>Date</th>
+                <th>Sender</th>
+                <th *ngIf="!isParent">Classroom / Scope</th>
+                <th *ngIf="!isParent">Target Audience</th>
+                <th>Title</th>
+                <th class="text-end">Actions</th>
+              </tr>
+            </thead>
+            <tbody *ngIf="!isLoading && recipientAnnouncements.length > 0">
+              <tr *ngFor="let item of recipientAnnouncements | paginate: { itemsPerPage: 10, currentPage: pReceived, id: 'recvPager' }">
+                <td>{{ item.sentDate | date:'medium' }}</td>
+                <td>
+                  <span class="fw-bold">{{ item.senderName }}</span>
+                  <small class="d-block text-muted" *ngIf="item.daycareName">{{ item.daycareName }}</small>
+                </td>
+                <td *ngIf="!isParent">
+                  <span class="badge" [ngClass]="item.classID === 0 ? 'bg-primary-light' : 'bg-info-light'">
+                    {{ item.className }}
+                  </span>
+                </td>
+                <td *ngIf="!isParent">
+                  <span class="badge" [ngClass]="{
+                    'bg-success-light': item.targetAudience === 'Both',
+                    'bg-purple-light': item.targetAudience === 'Students',
+                    'bg-warning-light': item.targetAudience === 'Teachers'
+                  }">
+                    {{ item.targetAudience === 'Students' ? 'Students (Parents)' : (item.targetAudience === 'Both' ? 'Students & Teachers' : item.targetAudience) }}
+                  </span>
+                </td>
+                <td>{{ item.title }}</td>
+                <td class="text-end">
+                  <button class="btn btn-sm btn-outline-primary" (click)="viewDetails(item)">
+                    <i class="feather-eye me-1"></i> Details
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+            <tbody *ngIf="isLoading">
+              <tr>
+                <td [attr.colspan]="isParent ? 4 : 6" class="text-center py-4">
+                  <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                  <p class="text-muted mt-2 mb-0">Loading announcements...</p>
+                </td>
+              </tr>
+            </tbody>
+            <tbody *ngIf="!isLoading && recipientAnnouncements.length === 0">
+              <tr>
+                <td [attr.colspan]="isParent ? 4 : 6" class="text-center py-5">
+                  <i class="feather-bell-off fs-1 text-muted d-block mb-3"></i>
+                  <h5>No received announcements</h5>
+                  <p class="text-muted">You have not received any broadcasts yet.</p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Received Pagination -->
+        <div class="d-flex justify-content-between align-items-center mt-4 no-flex" *ngIf="(!canSend || activeTab === 'received') && recipientAnnouncements.length > 0">
+          <div class="total-entry" style="font-size: small">
+            <span>Total Received:</span> <span class="entry-count fw-bold">{{ recipientAnnouncements.length }}</span>
+          </div>
+          <div class="datatable-pager datatable-paging-loaded">
+            <pagination-controls id="recvPager" previousLabel="Prev" nextLabel="Next" [maxSize]="5" class="datatable-pager-nav my-2 mb-sm-0" (pageChange)="pReceived = $event"></pagination-controls>
+          </div>
+        </div>
+
+        <!-- Broadcasted Announcements Table -->
+        <div class="table-responsive" *ngIf="canSend && activeTab === 'sent'">
+          <table class="table table-hover mb-0">
+            <thead class="student-thread">
+              <tr>
+                <th>Date</th>
+                <th>Sender</th>
+                <th>Classroom</th>
+                <th>Target Audience</th>
+                <th>Title</th>
+                <th class="text-end">Actions</th>
+              </tr>
+            </thead>
+            <tbody *ngIf="!isLoading && announcementHistory.length > 0">
+              <tr *ngFor="let item of announcementHistory | paginate: { itemsPerPage: 10, currentPage: pSent, id: 'sentPager' }">
+                <td>{{ item.sentDate | date:'medium' }}</td>
+                <td>
+                  <span class="fw-bold">{{ item.senderName }}</span>
+                  <small class="d-block text-muted">{{ item.senderRoleName }}</small>
+                </td>
+                <td>
+                  <span class="badge" [ngClass]="item.classID === 0 ? 'bg-primary-light' : 'bg-info-light'">
+                    {{ item.className }}
+                  </span>
+                </td>
+                <td>
+                  <span class="badge" [ngClass]="{
+                    'bg-success-light': item.targetAudience === 'Both',
+                    'bg-purple-light': item.targetAudience === 'Students',
+                    'bg-warning-light': item.targetAudience === 'Teachers'
+                  }">
+                    {{ item.targetAudience === 'Students' ? 'Students (Parents)' : (item.targetAudience === 'Both' ? 'Students & Teachers' : item.targetAudience) }}
+                  </span>
+                </td>
+                <td>{{ item.title }}</td>
+                <td class="text-end">
+                  <button class="btn btn-sm btn-outline-primary" (click)="viewDetails(item)">
+                    <i class="feather-eye me-1"></i> Details
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+            <tbody *ngIf="isLoading">
+              <tr>
+                <td colspan="6" class="text-center py-4">
+                  <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                  <p class="text-muted mt-2 mb-0">Loading announcements...</p>
+                </td>
+              </tr>
+            </tbody>
+            <tbody *ngIf="!isLoading && announcementHistory.length === 0">
+              <tr>
+                <td colspan="6" class="text-center py-5">
+                  <i class="feather-bell-off fs-1 text-muted d-block mb-3"></i>
+                  <h5>No announcements found</h5>
+                  <p class="text-muted">Click "New Announcement" above to broadcast an update to your classrooms.</p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Sent Pagination -->
+        <div class="d-flex justify-content-between align-items-center mt-4 no-flex" *ngIf="canSend && activeTab === 'sent' && announcementHistory.length > 0">
+          <div class="total-entry" style="font-size: small">
+            <span>Total Broadcasted:</span> <span class="entry-count fw-bold">{{ announcementHistory.length }}</span>
+          </div>
+          <div class="datatable-pager datatable-paging-loaded">
+            <pagination-controls id="sentPager" previousLabel="Prev" nextLabel="Next" [maxSize]="5" class="datatable-pager-nav my-2 mb-sm-0" (pageChange)="pSent = $event"></pagination-controls>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Dialog (Compose / Details) -->
+<div class="modal fade show d-block" tabindex="-1" *ngIf="showModal" style="background-color: rgba(0, 0, 0, 0.5);">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      
+      <!-- New Announcement Form -->
+      <ng-container *ngIf="canSend && !selectedAnnouncement">
+        <div class="modal-header">
+          <h5 class="modal-title">Create New Announcement</h5>
+          <button type="button" class="btn-close" (click)="closeModal()" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="announcementForm">
+            <div class="row">
+              
+              <!-- Select Classroom -->
+              <div class="col-md-12 mb-3">
+                <div class="form-group local-forms select-class-room">
+                  <label for="classroomSelect" class="form-label">Select Target Classroom <span class="login-danger">*</span></label>
+                  <ng-select
+                    id="classroomSelect"
+                    [items]="classroomOptions"
+                    bindLabel="className"
+                    bindValue="id"
+                    formControlName="classID"
+                    [clearable]="false"
+                    placeholder="Select Classroom">
+                  </ng-select>
+                  <small class="text-danger" *ngIf="announcementForm.get('classID')?.touched && announcementForm.get('classID')?.invalid">
+                    Please select a classroom.
+                  </small>
+                </div>
+              </div>
+
+              <!-- Target Audience -->
+              <div class="col-md-12 mb-3">
+                <label class="form-label d-block fw-bold">Target Audience <span class="login-danger">*</span></label>
+                <div class="form-check form-check-inline mt-1">
+                  <input class="form-check-input" type="radio" id="audBoth" formControlName="targetAudience" value="Both">
+                  <label class="form-check-label" for="audBoth">Both Students (Parents) &amp; Teachers</label>
+                </div>
+                <div class="form-check form-check-inline mt-1">
+                  <input class="form-check-input" type="radio" id="audStudents" formControlName="targetAudience" value="Students">
+                  <label class="form-check-label" for="audStudents">Students (Parents) Only</label>
+                </div>
+                <div class="form-check form-check-inline mt-1">
+                  <input class="form-check-input" type="radio" id="audTeachers" formControlName="targetAudience" value="Teachers">
+                  <label class="form-check-label" for="audTeachers">Teachers Only</label>
+                </div>
+              </div>
+
+              <!-- Title -->
+              <div class="col-md-12 mb-3">
+                <div class="form-group local-forms">
+                  <label>Announcement Title <span class="login-danger">*</span></label>
+                  <input type="text" class="form-control" formControlName="title" placeholder="Enter concise announcement title" maxlength="250">
+                  <small class="text-danger" *ngIf="announcementForm.get('title')?.touched && announcementForm.get('title')?.invalid">
+                    Title is required (maximum 250 characters).
+                  </small>
+                </div>
+              </div>
+
+              <!-- Message -->
+              <div class="col-md-12 mb-3">
+                <div class="form-group local-forms">
+                  <label>Announcement Message <span class="login-danger">*</span></label>
+                  <textarea class="form-control" rows="5" formControlName="message" placeholder="Type your full announcement message here..."></textarea>
+                  <small class="text-danger" *ngIf="announcementForm.get('message')?.touched && announcementForm.get('message')?.invalid">
+                    Message is required.
+                  </small>
+                </div>
+              </div>
+
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeModal()" [disabled]="isSubmitting">Cancel</button>
+          <button type="button" class="btn btn-primary" (click)="submitAnnouncement()" [disabled]="isSubmitting">
+            <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-1" role="status"></span>
+            <i *ngIf="!isSubmitting" class="feather-send me-1"></i> Send Announcement
+          </button>
+        </div>
+      </ng-container>
+
+      <!-- View Details View -->
+      <ng-container *ngIf="selectedAnnouncement">
+        <div class="modal-header">
+          <h5 class="modal-title">Announcement Details</h5>
+          <button type="button" class="btn-close" (click)="closeModal()" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row mb-2">
+            <div class="col-sm-3 fw-bold text-muted">Sent Date:</div>
+            <div class="col-sm-9">{{ selectedAnnouncement.sentDate | date:'medium' }}</div>
+          </div>
+          <div class="row mb-2">
+            <div class="col-sm-3 fw-bold text-muted">Sender:</div>
+            <div class="col-sm-9">{{ selectedAnnouncement.senderName }}<span *ngIf="selectedAnnouncement.senderRoleName"> ({{ selectedAnnouncement.senderRoleName }})</span></div>
+          </div>
+          <div class="row mb-2" *ngIf="!isParent">
+            <div class="col-sm-3 fw-bold text-muted">Classroom:</div>
+            <div class="col-sm-9"><span class="badge bg-info-light">{{ selectedAnnouncement.className }}</span></div>
+          </div>
+          <div class="row mb-2" *ngIf="!isParent">
+            <div class="col-sm-3 fw-bold text-muted">Audience:</div>
+            <div class="col-sm-9">
+              <span class="badge" [ngClass]="{
+                'bg-success-light': selectedAnnouncement.targetAudience === 'Both',
+                'bg-purple-light': selectedAnnouncement.targetAudience === 'Students',
+                'bg-warning-light': selectedAnnouncement.targetAudience === 'Teachers'
+              }">
+                {{ selectedAnnouncement.targetAudience === 'Students' ? 'Students (Parents)' : (selectedAnnouncement.targetAudience === 'Both' ? 'Students & Teachers' : selectedAnnouncement.targetAudience) }}
+              </span>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-sm-3 fw-bold text-muted">Title:</div>
+            <div class="col-sm-9 fw-bold">{{ selectedAnnouncement.title }}</div>
+          </div>
+          <hr />
+          <div class="mb-2 fw-bold text-muted">Message:</div>
+          <div class="p-3 bg-light border rounded" style="white-space: pre-wrap; line-height: 1.6;">{{ selectedAnnouncement.message }}</div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeModal()">Close</button>
+        </div>
+      </ng-container>
+
+    </div>
+  </div>
+</div>
