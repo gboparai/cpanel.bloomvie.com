@@ -244,7 +244,7 @@ export class SidebarComponent implements OnInit {
 
     this.menus.forEach((menu: any) => {
       if (item.id == menu.id) {
-        const compVal = (this.isExternalBilling && (item.value === 'Special Offers' || item.menuUrl === 'special-offer')) ? 'Offers' : item.value;
+        const compVal = (this.isExternalBilling && (item.value === 'Special Offers' || item.menuUrl === 'special-offer')) ? 'Enrollment Invites' : item.value;
         this.cookie.set('Component', compVal);
         this.cookie.delete('ChildComponent');
         this.cookie.delete('NestedChild');
@@ -441,7 +441,7 @@ export class SidebarComponent implements OnInit {
       if (item.menuUrl === currentRoute) {
         item.isOpen = true;
         if (!this.dashboardRoutes.includes(currentRoute)) {
-          const compVal = (this.isExternalBilling && (item.value === 'Special Offers' || item.menuUrl === 'special-offer')) ? 'Offers' : item.value;
+          const compVal = (this.isExternalBilling && (item.value === 'Special Offers' || item.menuUrl === 'special-offer')) ? 'Enrollment Invites' : item.value;
           this.cookie.set('Component', compVal);
           this.cookie.delete('ChildComponent');
           this.cookie.delete('NestedChild');
@@ -532,8 +532,8 @@ export class SidebarComponent implements OnInit {
           const copy = { ...item };
           const val = (copy.value || '').toLowerCase().trim();
           const url = (copy.menuUrl || '').toLowerCase().trim();
-          if (val === 'special offers' || url === 'special-offer' || val.includes('special offer') || url.includes('special-offer') || val === 'offers') {
-            copy.value = 'Offers';
+          if (val === 'special offers' || url === 'special-offer' || val.includes('special offer') || url.includes('special-offer') || val === 'offers' || val === 'enrollment invites') {
+            copy.value = 'Enrollment Invites';
           }
           if (copy.childList && copy.childList.length > 0) {
             copy.childList = filterList(copy.childList);
