@@ -33,6 +33,8 @@ export class DayCareSettingsComponent implements OnInit {
   ageList: any[] = [];
   facilityList: any[] = [];
   activitylist: any[] = [];
+  centreID: number = 0;
+  userRoleID: number = 0;
 
   constructor(
     private dayCareSetting: DaycareService,
@@ -46,7 +48,11 @@ export class DayCareSettingsComponent implements OnInit {
     this.getAllActivites();
     this.getAllClasses();
     this.getAllFacility();
-    this.editDayCareSettings(parseInt(this.cookie.get('CentreID')));
+    this.centreID = parseInt(this.cookie.get('CentreID')) || 0;
+    this.userRoleID = parseInt(this.cookie.get('UserRoleId')) || 0;
+    if (this.centreID) {
+      this.editDayCareSettings(this.centreID);
+    }
   }
 
   getAllActivites() {

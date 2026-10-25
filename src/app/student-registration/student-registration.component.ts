@@ -9,6 +9,7 @@ import { StudentRegistrationService } from './student-registration.service';
 import flatpickr from 'flatpickr';
 import { CookieService } from 'ngx-cookie-service';
 import { HeaderServiceService } from '../layout/header/header-service.service';
+import { DaycareService } from '../day-care-management/day-care-settings/daycare.service';
 
 @Component({
   selector: 'app-student-registration',
@@ -36,6 +37,7 @@ export class StudentRegistrationComponent {
   filteredageGroupList: any[] = [];
   planList: any[] = [];
   selectedPlan: any;
+  isExternalBilling: boolean = false;
   constructor(
     private datePipe: DatePipe,
     private cookie: CookieService,
@@ -43,7 +45,8 @@ export class StudentRegistrationComponent {
     private spinner: NgxSpinnerService,
     private toastr: ToastrService,
     private studentRegistrationService: StudentRegistrationService,
-    private headerService: HeaderServiceService
+    private headerService: HeaderServiceService,
+    private daycareService: DaycareService
   ) {
     this.studentRegistrationForm = this.fb.group({
       id: [0],
@@ -63,7 +66,38 @@ export class StudentRegistrationComponent {
       this.centreID = parseInt(centreID);
     }
     this.getAgeGroupList();
-    this.getPlanDetailsByUserID(this.UserID);
+    if (this.centreID) {
+      this.checkExternalBilling();
+    } else {
+      this.getPlanDetailsByUserID(this.UserID);
+    }
+  }
+
+  checkExternalBilling() {
+    this.daycareService.getCentreSettings(this.centreID).subscribe({
+      next: (res) => {
+        if (res && (res.message === 'Success' || res.message === 'OK')) {
+          this.isExternalBilling = !!(res.result?.externalBillingEnabled ?? res.result);
+          if (this.isExternalBilling) {
+            this.planInfo = null;
+            this.planList = [];
+          } else {
+            this.getPlanDetailsByUserID(this.UserID);
+          }
+        } else {
+          this.getPlanDetailsByUserID(this.UserID);
+        }
+      },
+      error: () => {
+        this.getPlanDetailsByUserID(this.UserID);
+      }
+    });
+  }
+
+  onAgeGroupChange(ageId: number) {
+    if (!this.isExternalBilling) {
+      this.getPlanListByAge(ageId);
+    }
   }
 
   ngAfterViewInit(): void {
@@ -147,14 +181,22 @@ export class StudentRegistrationComponent {
       formObject['billingDate'] = formattedDate;
       formObject['centreID'] = this.centreID;
       formObject['parentID'] = this.UserID;
-                  if (this.planInfo != null) {
+      if (this.isExternalBilling) {
+        formObject['ageGroup'] = formObject.ageGroup || 0;
+        formObject['planID'] = null;
+        formObject['planPrice'] = 0;
+        formObject['centreAdminID'] = 0;
+        formObject['discount'] = 0;
+        formObject['discountType'] = null;
+        formObject['billingDate'] = null;
+      } else if (this.planInfo != null) {
         formObject['ageGroup'] = 0;
         formObject['planID'] = this.planInfo.planID;
         formObject['planPrice'] = this.planInfo.planPrice;
         formObject['centreAdminID'] = this.planInfo.centreAdminID;
         formObject['discount'] = this.planInfo.discountValue;
         formObject['discountType'] = this.planInfo.discountType;
-      } else {
+      } else if (this.selectedPlan) {
         formObject['ageGroup'] = 0;
         formObject['planID'] = this.selectedPlan.id;
         formObject['planPrice'] = this.selectedPlan.price;

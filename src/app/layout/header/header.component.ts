@@ -2,6 +2,7 @@ import {
   ChangeDetectorRef,
   Component,
   OnInit,
+  OnDestroy,
   effect,
   Output,
   EventEmitter,
@@ -13,6 +14,8 @@ import { environment } from '../../../environments/environment';
 import { UserRoleService } from '../../settings/Permission/user-role/user-role.service';
 import { ProfileService } from '../../common-component/profile/profile.service';
 import { CommonModule } from '@angular/common';
+import { Subscription } from 'rxjs';
+import { DaycareService } from '../../day-care-management/day-care-settings/daycare.service';
 import { FormBuilder } from '@angular/forms';
 import { HeaderServiceService } from './header-service.service';
 import { TimeDifferencePipe } from '../../custom-pipes/time-difference.pipe';
@@ -45,12 +48,14 @@ declare var $: any;
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css'],
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy {
   loginUserEmail: string = '';
   loginUserName: string = '';
   loginUserId: number = 0;
   loginUserRoleId: number = 0;
   expressLoginLink: string = '';
+  isExternalBilling: boolean = false;
+  private externalBillingSub?: Subscription;
 
   // Implements OnInit
   readonly rootUrl = environment.apiUrl.slice(0, -3);
@@ -103,7 +108,8 @@ export class HeaderComponent implements OnInit {
     private toastr: ToastrService,
     private commonService: CommonService,
     public loginService: LoginService,
-    public onBoardingService: OnboardingService
+    public onBoardingService: OnboardingService,
+    private daycareService: DaycareService
   ) {
     effect(() => {
       this.headerService.newStudent();
@@ -131,6 +137,24 @@ export class HeaderComponent implements OnInit {
     this.subscribeToBreadcrumbs();
     this.subscribeToNotifications();
     this.setUserDetails();
+
+    const targetCentreId = this.centreId || Number(this.cookie.get('CentreID')) || 0;
+    if (targetCentreId) {
+      this.daycareService.checkExternalBilling(targetCentreId).subscribe({
+        next: (res: any) => {
+          if (res && res.message === 'Success') {
+            this.isExternalBilling = !!(res.result?.externalBillingEnabled ?? (typeof res.result === 'boolean' ? res.result : false));
+            this.cdr.markForCheck();
+          }
+        }
+      });
+    }
+
+    this.externalBillingSub = this.daycareService.externalBilling$.subscribe((enabled: boolean) => {
+      this.isExternalBilling = enabled;
+      this.cdr.markForCheck();
+    });
+
     if (
       this.centreId &&
       this.loginUserRoleId != 5 &&
@@ -214,11 +238,11 @@ export class HeaderComponent implements OnInit {
     }
   }
 
-  // ngOnDestroy(): void {
-  //   if (this.refreshInterval) {
-  //     clearInterval(this.refreshInterval);
-  //   }
-  // }
+  ngOnDestroy(): void {
+    if (this.externalBillingSub) {
+      this.externalBillingSub.unsubscribe();
+    }
+  }
 
   getPlanDetail() {
     this.profileService
@@ -1011,18 +1035,22 @@ export class HeaderComponent implements OnInit {
       });
   }
   generateExpressLoginLink() {
+    const accountId =
+      this.onBoardingService.onboardingState()?.connectedAccountId ||
+      this.onBoardingService.connectedAccountId?.();
+    if (!accountId || accountId === 'null' || accountId === 'undefined') {
+      return;
+    }
     this.spinner.show();
     this.headerService
-      .generateExpressLoginLink(
-        this.onBoardingService.onboardingState().connectedAccountId
-      )
+      .generateExpressLoginLink(accountId)
       .pipe(finalize(() => this.spinner.hide()))
       .subscribe({
         next: (response) => {
-          this.expressLoginLink = response.result.url;
+          this.expressLoginLink = response?.result?.url;
         },
         error: (err) => {
-          this.toastr.error(err.message);
+          // Silent error - do not disrupt page load
         },
       });
   }

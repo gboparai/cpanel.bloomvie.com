@@ -1,13 +1,19 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DaycareService {
   readonly URL = environment.apiUrl;
+  private externalBillingSubject = new BehaviorSubject<boolean>(false);
+  externalBilling$ = this.externalBillingSubject.asObservable();
+
+  notifyExternalBillingChanged(enabled: boolean) {
+    this.externalBillingSubject.next(enabled);
+  }
   constructor(private http: HttpClient) {}
 
   getAllActivites(ActivityBO: any): Observable<any> {
@@ -140,5 +146,26 @@ export class DaycareService {
 
   getAllFacility(): Observable<any> {
     return this.http.get(this.URL + '/Common/getAllFacility');
+  }
+
+  getCentreSettings(centreID: number): Observable<any> {
+    return this.http.get(`${this.URL}/Centre/getCentreSettings`, {
+      params: { centreID },
+    });
+  }
+
+  updateCentreSettings(model: any): Observable<any> {
+    return this.http.put(`${this.URL}/Centre/updateCentreSettings`, model);
+  }
+
+  checkExternalBilling(centreID: number): Observable<any> {
+    return this.getCentreSettings(centreID).pipe(
+      tap((res: any) => {
+        if (res && res.result) {
+          const enabled = !!(res.result.externalBillingEnabled ?? res.result.ExternalBillingEnabled ?? (typeof res.result === 'boolean' ? res.result : false));
+          this.notifyExternalBillingChanged(enabled);
+        }
+      })
+    );
   }
 }

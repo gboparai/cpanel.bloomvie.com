@@ -34,7 +34,7 @@
             [ngClass]="{ subdrop: item.isOpen }"
           >
             <i class="{{ item.icon }}"></i>
-            <span>{{ item.value }}</span>
+            <span>{{ (isExternalBilling && (item.value === 'Special Offers' || item.menuUrl === 'special-offer')) ? 'Enrollment Invites' : item.value }}</span>
             <span
               class="menu-arrow"
               *ngIf="item.childList && item.childList.length"

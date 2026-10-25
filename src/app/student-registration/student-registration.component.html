@@ -55,7 +55,7 @@
               </div>
             </div> -->
 
-            <div class="col-md-4 mb-4" *ngIf="planInfo == null">
+            <div class="col-md-4 mb-4" *ngIf="isExternalBilling || planInfo == null">
               <div class="form-group local-forms">
                 <label
                   >Select Age Group<span class="login-danger">*</span></label
@@ -66,7 +66,7 @@
                   bindLabel="name"
                   bindValue="id"
                   [(ngModel)]="selectedAge"
-                  (change)="getPlanListByAge($event.id)"
+                  (change)="onAgeGroupChange($event ? $event.id : null)"
                   placeholder="Select Age"
                 ></ng-select>
                 <span
@@ -80,7 +80,7 @@
               </div>
             </div>
 
-            <div class="col-md-4 mb-4" *ngIf="planInfo == null">
+            <div class="col-md-4 mb-4" *ngIf="!isExternalBilling && planInfo == null">
               <div class="form-group local-forms">
                 <label>Select Plan<span class="login-danger">*</span></label>
                 <ng-select
@@ -97,7 +97,7 @@
               </div>
             </div>
 
-            <div class="col-md-4 mb-4" *ngIf="planInfo != null">
+            <div class="col-md-4 mb-4" *ngIf="!isExternalBilling && planInfo != null">
               <div class="form-group local-forms">
                 <label>Plan Assigned<span class="login-danger"></span></label>
                 <input

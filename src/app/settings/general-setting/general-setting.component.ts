@@ -23,6 +23,7 @@ import { OnboardingService } from '../../onboarding/onboarding.service';
 import { validateHeaderName } from 'http';
 import { SwitcherComponentComponent } from '../../common-component/switcher-component/switcher-component.component';
 import { SkeletonLoaderComponent } from "../../common-component/skeleton-loader/skeleton-loader.component";
+import { DaycareService } from '../../day-care-management/day-care-settings/daycare.service';
 declare var $: any;
 
 @Component({
@@ -50,6 +51,8 @@ export class GeneralSettingComponent implements OnInit {
   public form: any;
   public loginUserID: number = 0;
   public trackForm: boolean = true;
+  public externalBillingEnabled: boolean = false;
+  public initialExternalBillingEnabled: boolean = false;
   selectAgeGroups: number[] = [];
   selectFacility: number[] = [];
   selectActivities: number[] = [];
@@ -67,7 +70,8 @@ export class GeneralSettingComponent implements OnInit {
     private genralSettingService: GeneralSettingService,
     private commonService: CommonService,
     private cookie: CookieService,
-    public onBoardingService: OnboardingService
+    public onBoardingService: OnboardingService,
+    private daycareService: DaycareService
   ) {
     this.form = fb.group({
       ageGroups: fb.array([], Validators.required),
@@ -120,6 +124,7 @@ export class GeneralSettingComponent implements OnInit {
           this.loginUserID = parseInt(this.cookie.get('UserId'));
         }
         this.loadAllLists();
+        this.loadExternalBillingSetting(this.centreID);
       }
       //Arsh Added on 19/03/25
       else {
@@ -377,7 +382,9 @@ export class GeneralSettingComponent implements OnInit {
   }
 
   trackingFields() {
-    if (
+    if (this.externalBillingEnabled !== this.initialExternalBillingEnabled) {
+      this.trackForm = false;
+    } else if (
       this.form.value.ageGroups.includes(true) &&
       this.form.value.facilities.includes(true) &&
       this.form.value.activities.includes(true)
@@ -419,6 +426,18 @@ export class GeneralSettingComponent implements OnInit {
       .subscribe({
         next: (response) => {
           if (response.message === 'Success') {
+            this.daycareService
+              .updateCentreSettings({
+                centreID: this.centreID,
+                externalBillingEnabled: this.externalBillingEnabled,
+              })
+              .subscribe({
+                next: () => {
+                  this.initialExternalBillingEnabled = this.externalBillingEnabled;
+                  this.daycareService.notifyExternalBillingChanged(this.externalBillingEnabled);
+                  this.commonService.updateLoadSideBar();
+                }
+              });
             // if (hasQueryParams) {
             this.commonService
               .manageDaycareOnBoarding(
@@ -569,14 +588,20 @@ export class GeneralSettingComponent implements OnInit {
     }
   }
 
-  // UpdateAgeGroup(ageGroups: any) {
-  //   this.ageGroupForm.patchValue({
-  //     id: ageGroups.id,
-  //     minAge: ageGroups.minAge,
-  //     maxAge: ageGroups.maxAge,
-  //     centreId: this.centreID,
-  //     loginUserId: this.loginUserID,
-  //     isActive : ageGroups.isActive
-  //   });
-  // }
+  loadExternalBillingSetting(centreID: number) {
+    this.daycareService.getCentreSettings(centreID).subscribe({
+      next: (res: any) => {
+        if (res.message === 'Success' && res.result) {
+          this.externalBillingEnabled = res.result.externalBillingEnabled ?? false;
+          this.initialExternalBillingEnabled = this.externalBillingEnabled;
+        }
+      },
+      error: () => {}
+    });
+  }
+
+  toggleExternalBilling(event: Event) {
+    this.externalBillingEnabled = (event.target as HTMLInputElement).checked;
+    this.trackForm = false;
+  }
 }

@@ -35,6 +35,7 @@ import { OnboardingService } from '../../onboarding/onboarding.service';
 import { LoginService } from '../../login/login.service';
 import { SkeletonLoaderComponent } from '../../common-component/skeleton-loader/skeleton-loader.component';
 import { ManageStudentService } from '../../day-care-management/student-management/manage-student/manage-student.service';
+import { DaycareService } from '../../day-care-management/day-care-settings/daycare.service';
 
 declare var $: any;
 @Component({
@@ -100,6 +101,7 @@ export class ParentDashboardComponent {
 
   skeletonShow = 'Skelton';
   daycarecentreDetails:any;
+  isExternalBilling: boolean = false;
 
   cardOptions = {
     style: {
@@ -134,7 +136,8 @@ export class ParentDashboardComponent {
     private onBoardingService: OnboardingService,
     private authService: LoginService,
     private manageStudentService: ManageStudentService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private daycareService: DaycareService
   ) {
     this.paymentForm = this.fb.group({
       firstName: ['', [Validators.required]],
@@ -156,6 +159,13 @@ export class ParentDashboardComponent {
     const authData = this.authService.authData;
     this.centreAdminId = authData?.centreAdminId || 0;
     this.centreID = authData?.centreId || 0;
+    if (!this.centreID && this.cookies.check('CentreID')) {
+      this.centreID = Number(this.cookies.get('CentreID'));
+    }
+
+    if (this.centreID) {
+      await this.checkExternalBilling(this.centreID);
+    }
 
     this.today = new Date();
     this.loginUserId = this.cookies.get('UserId');
@@ -168,6 +178,10 @@ export class ParentDashboardComponent {
       this.parentName = parsedUserInfo.result.lastName
         ? parsedUserInfo.result.firstName + ' ' + parsedUserInfo.result.lastName
         : parsedUserInfo.result.firstName;
+      if (!this.centreID && parsedUserInfo?.result?.centreID) {
+        this.centreID = Number(parsedUserInfo.result.centreID);
+        await this.checkExternalBilling(this.centreID);
+      }
     }
     this.CheckParentOnboarding(this.studentID);
     // this.getTeacherCount(this.loginUserId);
@@ -184,15 +198,43 @@ export class ParentDashboardComponent {
     this.isTermAndConditionModalOpen();
     this.getAccountDetails();
     
-  this.getDayCareCentreDetails();
+    this.getDayCareCentreDetails();
+  }
 
+  async checkExternalBilling(centreId?: number): Promise<boolean> {
+    const id = centreId || this.centreID;
+    if (!id) return false;
+    try {
+      const res: any = await firstValueFrom(this.daycareService.getCentreSettings(id));
+      if (res && (res.message === 'OK' || res.message === 'Success')) {
+        this.isExternalBilling = !!(res.result?.externalBillingEnabled ?? res.result);
+        if (this.isExternalBilling) {
+          this.pendingPaymentRecord = [];
+          this.paymentDetail = null;
+          this.cdr.detectChanges();
+        }
+        return this.isExternalBilling;
+      }
+    } catch (e) {
+      console.error('Error checking external billing', e);
+    }
+    return false;
   }
 
   getAccountDetails() {
+    if (!this.centreAdminId) return;
     this.onBoardingService.getAccountDetails(this.centreAdminId).subscribe({
       next: (response) => {
         if (response && response.result) {
           this.connectedAccountId = response.result.accountId;
+          if (response.result.externalBillingEnabled !== undefined && response.result.externalBillingEnabled !== null) {
+            this.isExternalBilling = !!response.result.externalBillingEnabled;
+            if (this.isExternalBilling) {
+              this.pendingPaymentRecord = [];
+              this.paymentDetail = null;
+              this.cdr.detectChanges();
+            }
+          }
         }
       },
       error: (err) => {
@@ -343,18 +385,27 @@ export class ParentDashboardComponent {
   }
 
   async getAllPendingPaymentsByStudentID() {
+    if (this.isExternalBilling) {
+      this.pendingPaymentRecord = [];
+      this.skeletonShow = '';
+      return;
+    }
     this.skeletonShow = 'Skelton';
 
     let data = await this.parentDashboardservice
       .getAllPendingPaymentsByStudentID(this.studentID)
       .toPromise();
     if (data.message == 'Success') {
-      this.pendingPaymentRecord = data.result.map((item: any) => {
-        return {
-          ...item,
-          check: false,
-        };
-      });
+      if (this.isExternalBilling) {
+        this.pendingPaymentRecord = [];
+      } else {
+        this.pendingPaymentRecord = data.result.map((item: any) => {
+          return {
+            ...item,
+            check: false,
+          };
+        });
+      }
 
       this.skeletonShow = '';
     } else {
@@ -1021,32 +1072,48 @@ export class ParentDashboardComponent {
         const student = this.allStudents.find(
           (x: { id: number }) => x.id === studentId
         );
-        this.headerService
-          .CheckStudentSubscriptionPayment(
-            student.parentID,
-            this.userroleID,
-            student.id,
-            student.centreID
-          )
-          .subscribe({
-            next: (authResponse: {
-              result: any;
-              message: string;
-              activity: any;
-            }) => {
-              if (authResponse.message === 'Success') {
-                this.paymentDetail = authResponse.result;
-                this.planName = '';
-              } else {
-                this.paymentDetail = [];
-                this.planName = '';
-              }
-            },
-            error: () => {
-              // this.toastr.error('An error occurred during login');
-              this.planName = '';
-            },
-          });
+        if (student) {
+          if (!this.centreID && student.centreID) {
+            this.centreID = student.centreID;
+            await this.checkExternalBilling(this.centreID);
+            this.getDayCareCentreDetails();
+          }
+
+          if (this.isExternalBilling) {
+            this.paymentDetail = [];
+            this.planName = '';
+          } else {
+            this.headerService
+              .CheckStudentSubscriptionPayment(
+                student.parentID,
+                this.userroleID,
+                student.id,
+                student.centreID
+              )
+              .subscribe({
+                next: (authResponse: {
+                  result: any;
+                  message: string;
+                  activity: any;
+                }) => {
+                  if (authResponse.message === 'Success' && !this.isExternalBilling) {
+                    this.paymentDetail = authResponse.result;
+                    this.planName = '';
+                  } else {
+                    this.paymentDetail = [];
+                    this.planName = '';
+                  }
+                },
+                error: () => {
+                  // this.toastr.error('An error occurred during login');
+                  this.planName = '';
+                },
+              });
+          }
+        } else {
+          this.paymentDetail = [];
+          this.planName = '';
+        }
       } else {
         // console.error('No data found', response.message);
         this.paymentDetail = [];
@@ -1059,10 +1126,19 @@ export class ParentDashboardComponent {
 
   
   getDayCareCentreDetails() {
+    if (!this.centreID) return;
     this.manageStudentService.getDayCareCentreDetails(this.centreID).subscribe({
       next: (response) => {
         if (response.message === 'OK') {
           this.daycarecentreDetails = response.result;
+          if (this.daycarecentreDetails?.externalBillingEnabled !== undefined && this.daycarecentreDetails.externalBillingEnabled !== null) {
+            this.isExternalBilling = !!this.daycarecentreDetails.externalBillingEnabled;
+            if (this.isExternalBilling) {
+              this.pendingPaymentRecord = [];
+              this.paymentDetail = null;
+              this.cdr.detectChanges();
+            }
+          }
           if (this.centreAdminId === 0 && this.daycarecentreDetails?.centreAdminID) {
             this.centreAdminId = this.daycarecentreDetails.centreAdminID;
             this.getAccountDetails();

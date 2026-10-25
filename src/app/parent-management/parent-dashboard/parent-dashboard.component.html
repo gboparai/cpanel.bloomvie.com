@@ -57,7 +57,7 @@
     <div class="Card">
       <div class="card-body parent-body">
         <div class="row">
-          <div class="col-xl-3 col-sm-6 col-12 d-flex">
+          <div class="col-xl-3 col-sm-6 col-12 d-flex" *ngIf="!isExternalBilling">
             <!-- <a routerLink="../view-teacher" class="col-xl-3 col-sm-6 col-12 d-flex">   -->
             <div class="card bg-comman w-100 parents-mine hvr-float-shadow">
               <div
@@ -93,7 +93,7 @@
 
           <a
             routerLink="../view-teacher"
-            class="col-xl-3 col-sm-6 col-12 d-flex">
+            [ngClass]="isExternalBilling ? 'col-xl-4 col-sm-6 col-12 d-flex' : 'col-xl-3 col-sm-6 col-12 d-flex'">
             <div class="card bg-comman w-100 hvr-float-shadow">
               <div
                 class="db-widgets d-flex justify-content-between align-items-center logo-second-color">
@@ -118,7 +118,7 @@
           </a>
 
           <div
-            class="col-xl-3 col-sm-6 col-12 d-flex"
+            [ngClass]="isExternalBilling ? 'col-xl-4 col-sm-6 col-12 d-flex' : 'col-xl-3 col-sm-6 col-12 d-flex'"
             routerLink="../my-attendance">
             <div class="card bg-comman w-100 hvr-float-shadow">
               <div
@@ -167,7 +167,7 @@
           </div> -->
 
           <div
-            class="col-xl-3 col-sm-6 col-12 d-flex"
+            [ngClass]="isExternalBilling ? 'col-xl-4 col-sm-6 col-12 d-flex' : 'col-xl-3 col-sm-6 col-12 d-flex'"
             routerLink="../my-attendance">
             <div class="card bg-comman w-100 hvr-float-shadow">
               <div
@@ -295,7 +295,7 @@
   </div>
 </section>
 
-<section>
+<section *ngIf="!isExternalBilling">
   <div class="row">
     <div class="card">
       <div class="card-body">
@@ -428,6 +428,7 @@
 <!-- Modal -->
 
 <div
+  *ngIf="!isExternalBilling"
   class="modal fade"
   id="staticBackdrop"
   data-bs-backdrop="static"

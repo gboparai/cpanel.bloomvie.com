@@ -4,7 +4,7 @@
     <div class="card">
       <div class="card-body">
         <div class="heading-new d-flex gp-50">
-          <h5 class="mb-0">Discount Details</h5>
+          <h5 class="mb-0">{{ isExternalBilling ? 'Enrollment Invites' : 'Discount Details' }}</h5>
         </div>
         <ul class="nav nav-tabs" role="tablist">
           <li class="nav-item" role="presentation">
@@ -38,7 +38,7 @@
               class="btn-primary"
               (click)="openDiscountModal()"
             >
-              Give Discount to Special Parents
+              {{ isExternalBilling ? 'Send Enrollment Invite' : 'Give Discount to Special Parents' }}
             </button>
           </div>
           }
@@ -61,12 +61,10 @@
                           </div>
                           <div>
                             <h5 class="mb-1 fw-semibold">
-                              Welcome to Parent Discount Request
+                              {{ isExternalBilling ? 'Welcome to Enrollment Invites' : 'Welcome to Parent Discount Request' }}
                             </h5>
                             <p class="mb-0 text-muted">
-                              This section allows you to review and manage
-                              discount requests submitted by parents. Approve or
-                              decline based on your center's policies.
+                              {{ isExternalBilling ? 'This section allows you to send enrollment invitations to parents and review accepted applications.' : 'This section allows you to review and manage discount requests submitted by parents. Approve or decline based on your center\'s policies.' }}
                             </p>
                           </div>
                         </div>
@@ -216,6 +214,7 @@
                                         class="action-btn bg-danger-light me-2"
                                         data-bs-toggle="modal"
                                         data-bs-target="#editModal"
+                                        [title]="isExternalBilling ? 'Finalize Enrollment & Send Onboarding' : 'Edit'"
                                       >
                                         <i class="feather-edit"></i>
                                       </a>
@@ -354,12 +353,10 @@
                           </div>
                           <div>
                             <h5 class="mb-1 fw-semibold">
-                              Welcome to Enrolled Parent Discount List
+                              {{ isExternalBilling ? 'Welcome to Enrolled Students' : 'Welcome to Enrolled Parent Discount List' }}
                             </h5>
                             <p class="mb-0 text-muted">
-                              This section allows you to review and manage
-                              discount requests Offered by Daycare. Approve or
-                              decline based on your center's policies.
+                              {{ isExternalBilling ? 'This section allows you to review enrolled students under external billing.' : 'This section allows you to review and manage discount requests Offered by Daycare. Approve or decline based on your center\'s policies.' }}
                             </p>
                           </div>
                         </div>
@@ -504,10 +501,16 @@
                                             <th>Student&nbsp;Name</th>
                                             <th>Age&nbsp;Group</th>
                                             <th>DOB</th>
-                                            <th>Plan Amount</th>
-                                            <th>Total Paid Amount</th>
-                                            <th>Discount</th>
-                                            <th>Discount In</th>
+                                            <ng-container *ngIf="!isExternalBilling">
+                                              <th>Plan Amount</th>
+                                              <th>Total Paid Amount</th>
+                                              <th>Discount</th>
+                                              <th>Discount In</th>
+                                            </ng-container>
+                                            <ng-container *ngIf="isExternalBilling">
+                                              <th>Status</th>
+                                              <th>Billing Mode</th>
+                                            </ng-container>
                                           </tr>
                                         </thead>
                                         <tbody
@@ -528,45 +531,54 @@
                                                   | date : "MM-dd-yyyy"
                                               }}
                                             </td>
-                                            <td>
-                                              {{
-                                                student.paymentRecord.planAmount
-                                                  ? "$ " +
-                                                    student.paymentRecord
-                                                      .planAmount +
-                                                    ".00"
-                                                  : "--"
-                                              }}
-                                            </td>
-                                            <td>
-                                              {{
-                                                student.paymentRecord.paidAmount
-                                                  ? "$ " +
-                                                    student.paymentRecord
-                                                      .planAmount +
-                                                    ".00"
-                                                  : "--"
-                                              }}
-                                            </td>
-                                            <td>
-                                              {{
-                                                student.paymentRecord.discount
-                                                  ? "$ " +
-                                                    student.paymentRecord
-                                                      .discount.discount +
-                                                    ".00"
-                                                  : "--"
-                                              }}
-                                            </td>
-                                            <td>
-                                              {{
-                                                "$ " +
-                                                student.paymentRecord.discount
-                                                  ? student.paymentRecord
-                                                      .discount.discountType
-                                                  : "--"
-                                              }}
-                                            </td>
+                                            <ng-container *ngIf="!isExternalBilling">
+                                              <td>
+                                                {{
+                                                  student.paymentRecord?.planAmount
+                                                    ? "$ " +
+                                                      student.paymentRecord
+                                                        .planAmount +
+                                                      ".00"
+                                                    : "--"
+                                                }}
+                                              </td>
+                                              <td>
+                                                {{
+                                                  student.paymentRecord?.paidAmount
+                                                    ? "$ " +
+                                                      student.paymentRecord
+                                                        .planAmount +
+                                                      ".00"
+                                                    : "--"
+                                                }}
+                                              </td>
+                                              <td>
+                                                {{
+                                                  student.paymentRecord?.discount
+                                                    ? "$ " +
+                                                      student.paymentRecord
+                                                        .discount.discount +
+                                                      ".00"
+                                                    : "--"
+                                                }}
+                                              </td>
+                                              <td>
+                                                {{
+                                                  student.paymentRecord?.discount
+                                                    ? student.paymentRecord
+                                                        .discount.discountType
+                                                    : "--"
+                                                }}
+                                              </td>
+                                            </ng-container>
+                                            <ng-container *ngIf="isExternalBilling">
+                                              <td>
+                                                <span class="badge bg-success-light text-success fw-semibold">Enrolled</span>
+                                              </td>
+                                              <td>
+                                                <span class="badge bg-info-light text-info">External Billing</span>
+                                              </td>
+                                            </ng-container>
                                           </tr>
                                         </tbody>
                                       </table>
@@ -720,7 +732,7 @@
     <div class="modal-content">
       <!-- Modal Header -->
       <div class="modal-header">
-        <h5 class="modal-title">Give Discount</h5>
+        <h5 class="modal-title">{{ isExternalBilling ? 'Send Enrollment Invite' : 'Give Discount' }}</h5>
         <button
           type="button"
           class="btn-close"
@@ -779,7 +791,7 @@
             <span class="text-danger">This field is required</span>
             }
           </div>
-          <div class="col-md-12" style="padding: 0px">
+          <div class="col-md-12" style="padding: 0px" *ngIf="!isExternalBilling">
             <div class="local-forms form-group">
               <label>Plan<span class="text-danger">*</span></label>
               <ng-select
@@ -807,7 +819,7 @@
           class="btn btn-primary"
           (click)="sendDiscountFormToParent()"
         >
-          Send Discount Form
+          {{ isExternalBilling ? 'Send Invite' : 'Send Discount Form' }}
         </button>
         <button
           type="button"
@@ -943,7 +955,7 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="editModalLabel">Edit Details</h5>
+        <h5 class="modal-title" id="editModalLabel">{{ isExternalBilling ? 'Finalize Enrollment & Send Onboarding' : 'Edit Details' }}</h5>
         <button
           type="button"
           class="btn-close"
@@ -952,30 +964,16 @@
         ></button>
       </div>
       <div class="modal-body">
+        <div class="alert alert-info py-2 px-3 mb-3" *ngIf="isExternalBilling">
+          <i class="feather-info me-1"></i>
+          Finalizing this enrollment will activate the student enrollment under your daycare and email the parent their portal login credentials.
+        </div>
         <form [formGroup]="parentDiscountForm">
           <div class="row">
             <div class="row">
               <div class="col-md-12 text-start mb-3 mt-2">
                 <div class="row">
-                  <!-- <div class="col-md-2">
-                    
-                      <div class="toggle-container">
-                        <label>Discount in :</label>
-                        <div class="left-f">
-                          <input
-                            type="checkbox"
-                            id="toggle"
-                            class="toggleCheckbox"
-                            #discountToggle
-                          />
-                          <label for="toggle" class="toggleContainer">
-                            <div (click)="setDiscountType('amount')">$</div>
-                            <div (click)="setDiscountType('percentage')">%</div>
-                          </label>
-                        </div>
-                      </div>
-                    </div> -->
-                  <div class="col-md-4 mb-4">
+                  <div class="col-md-4 mb-4" *ngIf="!isExternalBilling">
                     <div class="form-group local-forms">
                       <label>
                         Discount Type<span class="login-danger">*</span>
@@ -992,7 +990,7 @@
                     </div>
                   </div>
 
-                  <div class="col-md-4 mb-4">
+                  <div [ngClass]="isExternalBilling ? 'col-md-6 mb-4' : 'col-md-4 mb-4'">
                     <div class="form-group local-forms">
                       <label
                         >Parent Name<span class="login-danger">*</span></label
@@ -1013,7 +1011,7 @@
                       }
                     </div>
                   </div>
-                  <div class="col-md-4 mb-4">
+                  <div [ngClass]="isExternalBilling ? 'col-md-6 mb-4' : 'col-md-4 mb-4'">
                     <div class="form-group local-forms">
                       <label
                         >Student Name<span class="login-danger">*</span></label
@@ -1037,7 +1035,7 @@
               </div>
             </div>
             <div class="row">
-              <div class="col-md-4 mb-4">
+              <div [ngClass]="isExternalBilling ? 'col-md-12 mb-4' : 'col-md-4 mb-4'">
                 <div class="form-group local-forms">
                   <label>Email</label>
                   <input
@@ -1052,7 +1050,7 @@
                   }
                 </div>
               </div>
-              <div class="col-md-4">
+              <div class="col-md-4" *ngIf="!isExternalBilling">
                 <div class="form-group local-forms">
                   <label> Discount<span class="login-danger">*</span> </label>
                   <input
@@ -1071,7 +1069,7 @@
                   }
                 </div>
               </div>
-              <div class="col-md-4 mb-4">
+              <div class="col-md-4 mb-4" *ngIf="!isExternalBilling">
                 <div class="form-group local-forms">
                   <label>Select Plan<span class="login-danger">*</span> </label>
                   <ng-select
@@ -1090,31 +1088,10 @@
               </div>
             </div>
           </div>
-          <p *ngIf="planDetails" class="plan-name">
+          <p *ngIf="!isExternalBilling && planDetails" class="plan-name">
             <b>Plan Name :</b> P {{ planDetails.planName }},
             <b>Plan Price :</b> ${{ planDetails.PlanPrice }}.00
           </p>
-          <!-- <div class="row"> -->
-          <!-- <div class="col-md-4 mb-4"> -->
-          <!-- <div class="form-group local-forms">
-                  <label
-                    >Select Age Group<span class="login-danger">*</span>
-                  </label>
-                  <ng-select
-                    formControlName="ageGroupID"
-                    placeholder="-Select Age Of Child-"
-                    [items]="ageGroupList"
-                    bindLabel="label"
-                    bindValue="value"
-                    (change)="getAllCustomPlanList($event.value)"
-                  >
-                  </ng-select>
-                  @if(parentDiscountForm.controls['ageGroupID']?.invalid &&
-                  parentDiscountForm.controls['ageGroupID'].touched){
-                  <span class="text-danger">This field is required</span>
-                  }
-                </div>
-              </div> -->
         </form>
       </div>
       <div class="modal-footer">
@@ -1123,7 +1100,7 @@
             class="btn btn-primary me-2"
             (click)="sendDiscountPlanEmail()"
           >
-            Submit
+            {{ isExternalBilling ? 'Finalize & Send Onboarding' : 'Submit' }}
           </button>
             <button class="btn btn-secondary" data-bs-dismiss="modal" (click)="reset()">Cancel</button>
         </div>
