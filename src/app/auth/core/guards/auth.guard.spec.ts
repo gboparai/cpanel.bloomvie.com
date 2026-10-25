@@ -28,14 +28,14 @@ describe('AuthGuard', () => {
   });
 
   it('should allow activation when authenticated', () => {
-    loginServiceSpy.user.and.returnValue({ token: 'tok', centreId: 1 } as any);
+    loginServiceSpy.user.and.returnValue({ token: 'mock-token', centreId: 1 } as any);
     loginServiceSpy.isAuthenticated.and.returnValue(true);
     loginServiceSpy.getUrlParameters.and.returnValue('token123');
 
     expect(guard.canActivate()).toBeTrue();
   });
 
-  it('should redirect to login and prevent activation when not authenticated and no urlToken', () => {
+  it('should redirect to login when unauthenticated and no urlToken', () => {
     loginServiceSpy.user.and.returnValue(null as any);
     loginServiceSpy.isAuthenticated.and.returnValue(false);
     loginServiceSpy.getUrlParameters.and.returnValue(null);
