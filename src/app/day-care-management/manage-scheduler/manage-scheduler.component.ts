@@ -28,7 +28,6 @@ import { CommonService } from '../../common-component/common.service';
 import Swal from 'sweetalert2';
 import { SkeletonLoaderComponent } from '../../common-component/skeleton-loader/skeleton-loader.component';
 import introJs from 'intro.js';
-import 'intro.js/introjs.css';
 
 declare var $: any;
 

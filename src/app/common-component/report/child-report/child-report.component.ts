@@ -30,7 +30,6 @@ import { CommonService } from '../../common.service';
 import { OwlOptions } from 'ngx-owl-carousel-o';
 import { CarouselModule } from 'ngx-owl-carousel-o';
 import { tns } from 'tiny-slider/src/tiny-slider';
-import '@fancyapps/fancybox/dist/jquery.fancybox.min.css';
 import { TimeFormatAmPmPipe } from '../../../bloomvie-management/dc-appointments-list/time-format.pipe';
 import { SkeletonLoaderComponent } from '../../skeleton-loader/skeleton-loader.component';
 import { BreadcrumbComponent } from '../../breadcrumb/breadcrumb.component';

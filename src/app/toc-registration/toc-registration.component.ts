@@ -28,7 +28,6 @@ import { TocRegistrationService } from './toc-registration.service';
 import { environment } from '../../environments/environment';
 import * as CryptoJS from 'crypto-js';
 import { BreadcrumbComponent } from '../common-component/breadcrumb/breadcrumb.component';
-import { ProfileComponent } from '../common-component/profile/profile.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { CommonService } from '../common-component/common.service';
 import { TimeFormatAmPmPipe } from '../bloomvie-management/dc-appointments-list/time-format.pipe';
@@ -70,7 +69,6 @@ export function charOnlyValidator(): ValidatorFn {
     FormsModule,
     NgxPaginationModule,
     BreadcrumbComponent,
-    ProfileComponent,
     TimeFormatAmPmPipe,
     TooltipComponent
   ],
