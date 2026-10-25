@@ -12,10 +12,10 @@
       </div>
     </div>
     <div class="d-flex align-items-center gap-2">
-      <a *ngIf="canSend" [routerLink]="['/manage-announcements']" [queryParams]="{ newAnnouncement: 'true' }" class="btn btn-sm btn-primary">
+      <a *ngIf="canSend" [routerLink]="['/announcements']" [queryParams]="{ newAnnouncement: 'true' }" class="btn btn-sm btn-primary">
         <i class="feather-plus me-1"></i> New
       </a>
-      <a routerLink="/manage-announcements" class="btn btn-sm btn-outline-primary">
+      <a routerLink="/announcements" class="btn btn-sm btn-outline-primary">
         View All <i class="feather-arrow-right ms-1"></i>
       </a>
     </div>
@@ -144,3 +144,4 @@
     </div>
   </div>
 </div>
+

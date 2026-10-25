@@ -151,7 +151,7 @@ export class ViewClassroomComponent implements OnInit {
   }
 
   onQuickAnnouncement(item: any) {
-    this.router.navigate(['/manage-announcements'], {
+    this.router.navigate(['/announcements'], {
       queryParams: { newAnnouncement: 'true', classId: item.id }
     });
   }
@@ -164,3 +164,4 @@ export class ViewClassroomComponent implements OnInit {
     );
   }
 }
+
