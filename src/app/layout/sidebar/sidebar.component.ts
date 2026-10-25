@@ -71,7 +71,7 @@ export class SidebarComponent implements OnInit {
   @Output() sideBarLoad = new EventEmitter<any>();
   centreID: any;
   isSlotAccepted: string = '';
-  public isExternalBilling: boolean = typeof localStorage !== 'undefined' && localStorage.getItem('isExternalBilling') === 'true';
+  public isExternalBilling: boolean = false;
   public rawMenus: any[] = [];
   private externalBillingSub?: Subscription;
 
@@ -101,7 +101,6 @@ export class SidebarComponent implements OnInit {
   // }
 
   ngOnInit(): void {
-    this.isExternalBilling = typeof localStorage !== 'undefined' && localStorage.getItem('isExternalBilling') === 'true';
     this.checkRoute();
     this.loginUserId = this.cookies.get('UserId');
     this.centreID = this.cookies.get('CentreID') || this.cookies.get('centreID');
@@ -118,9 +117,24 @@ export class SidebarComponent implements OnInit {
       this.UserRoleId = this.cookies.get('UserRoleId');
     }
 
+    if (typeof localStorage !== 'undefined') {
+      const scopedKey = this.centreID ? `isExternalBilling_${this.centreID}` : null;
+      const scopedVal = scopedKey ? localStorage.getItem(scopedKey) : null;
+      if (scopedVal !== null) {
+        this.isExternalBilling = scopedVal === 'true';
+      } else {
+        this.isExternalBilling = localStorage.getItem('isExternalBilling') === 'true';
+      }
+    }
+
     this.externalBillingSub = this.daycareService.externalBilling$.subscribe((enabled: boolean) => {
       this.isExternalBilling = enabled;
-      localStorage.setItem('isExternalBilling', enabled ? 'true' : 'false');
+      if (typeof localStorage !== 'undefined') {
+        if (this.centreID) {
+          localStorage.setItem(`isExternalBilling_${this.centreID}`, enabled ? 'true' : 'false');
+        }
+        localStorage.setItem('isExternalBilling', enabled ? 'true' : 'false');
+      }
       this.applyMenuFilter();
     });
 
@@ -129,7 +143,10 @@ export class SidebarComponent implements OnInit {
         next: (res: any) => {
           if (res && res.result) {
             this.isExternalBilling = !!(res.result.externalBillingEnabled ?? res.result.ExternalBillingEnabled ?? (typeof res.result === 'boolean' ? res.result : false));
-            localStorage.setItem('isExternalBilling', this.isExternalBilling ? 'true' : 'false');
+            if (typeof localStorage !== 'undefined') {
+              localStorage.setItem(`isExternalBilling_${this.centreID}`, this.isExternalBilling ? 'true' : 'false');
+              localStorage.setItem('isExternalBilling', this.isExternalBilling ? 'true' : 'false');
+            }
             this.applyMenuFilter();
           }
         }
