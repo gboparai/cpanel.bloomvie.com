@@ -339,7 +339,7 @@ export class AddDiscountComponent implements OnInit, OnDestroy {
               $('#giveDiscount').modal('hide');
               this.toastr.success(
                 this.isExternalBilling
-                  ? 'Offer email sent successfully.'
+                  ? 'Enrollment invite sent successfully.'
                   : 'Discount form email send successfully.'
               );
               this.resetGiveDiscountForm();
@@ -548,7 +548,7 @@ export class AddDiscountComponent implements OnInit, OnDestroy {
               $('#editModal').modal('hide');
               this.toastr.success(
                 this.isExternalBilling
-                  ? 'Enrollment offer finalized and onboarding email sent successfully.'
+                  ? 'Enrollment finalized and onboarding email sent successfully.'
                   : 'Payment Email Send Successfully'
               );
               this.reset();
