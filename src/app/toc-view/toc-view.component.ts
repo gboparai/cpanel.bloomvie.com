@@ -327,11 +327,11 @@ export class TocViewComponent {
         const data = await this.tocservice
           .getAppliedJobTOCList(this.Name, this.statusId, this.CentreID)
           .toPromise();
-        if (data.message == 'ok') {
+        if (data && data.message == 'ok') {
           setTimeout(() => {
             this.spinner.hide();
           }, 0);
-          this.AppliedJobTocList = data.result;
+          this.AppliedJobTocList = data.result || [];
 
           if (status == 'Pending') {
           }

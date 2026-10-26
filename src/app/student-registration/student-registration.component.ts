@@ -175,7 +175,13 @@ export class StudentRegistrationComponent {
   manageStudentRegistration() {
     if (this.studentRegistrationForm.valid) {
       this.spinner.show();
-      let formObject = this.studentRegistrationForm.value;
+      let formObject = { ...this.studentRegistrationForm.value };
+      if (typeof formObject.firstName === 'string') {
+        formObject.firstName = formObject.firstName.trim();
+      }
+      if (typeof formObject.lastName === 'string') {
+        formObject.lastName = formObject.lastName.trim();
+      }
       let originalDate = new Date(formObject.billingDate);
       let formattedDate = this.datePipe.transform(originalDate, 'yyyy-MM-dd');
       formObject['billingDate'] = formattedDate;
@@ -207,17 +213,22 @@ export class StudentRegistrationComponent {
 
       this.studentRegistrationService
         .manageStudentRegistration(formObject)
-        .subscribe((result: any) => {
-          if (result.message == 'Success') {
+        .subscribe({
+          next: (result: any) => {
             this.spinner.hide();
-            this.toastr.success(result.activity);
-            this.resetForm();
-            this.headerService.newStudent.set(
-              this.headerService.newStudent() + 1
-            );
-          } else {
+            if (result.message == 'Success') {
+              this.toastr.success(result.activity);
+              this.resetForm();
+              this.headerService.newStudent.set(
+                this.headerService.newStudent() + 1
+              );
+            } else {
+              this.toastr.warning(result.message);
+            }
+          },
+          error: (err: any) => {
             this.spinner.hide();
-            this.toastr.warning(result.message);
+            this.toastr.error(err?.message || 'Error occurred during registration');
           }
         });
     } else {

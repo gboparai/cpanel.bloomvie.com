@@ -45,7 +45,7 @@ export class AppService {
       this.commonService.TokenMatchQueryParam(token).subscribe({
         next: (response) => {
           const jwtToken = response.token;
-          if (jwtToken) {
+          if (jwtToken && response.result) {
             response.result['token'] = jwtToken;
             let userInfo = JSON.stringify(response);
             this.cookie.set('UserInfo', userInfo);

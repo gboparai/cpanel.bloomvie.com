@@ -82,8 +82,8 @@ export class TeachersJourneyComponent {
     this.profileService.GetUserById(this.id, 4).subscribe(
       async (response) => {
         if (response.message === 'Success' && response.result) {
-          let finalImage = response.result.s3ImageUrl
-            ? this.commonService.convertS3File(response.result.s3ImageUrl)
+          let finalImage = response.result?.s3ImageUrl
+            ? this.commonService.convertS3File(response.result.s3ImageUrl as string)
             : '';
 
           this.profileData = response.result;

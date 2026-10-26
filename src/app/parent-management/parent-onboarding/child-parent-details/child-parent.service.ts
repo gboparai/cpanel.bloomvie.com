@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import { Observable } from 'rxjs';
+import { ApiResponse, MasterAgeGroupItem } from '../../../models/api.types';
 
 @Injectable({
   providedIn: 'root',
@@ -9,20 +10,20 @@ import { Observable } from 'rxjs';
 export class ChildParentService {
   readonly URL = environment.apiUrl;
   constructor(private http: HttpClient) {}
-  CheckInterestedMobileExist(mobile: any): Observable<any> {
-    return this.http.get<any>(this.URL + '/User/CheckInterestedMobileExist', {
+  CheckInterestedMobileExist(mobile: any): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(this.URL + '/User/CheckInterestedMobileExist', {
       params: { mobile },
     });
   }
-  manageDetail(basicDetailForm: any): Observable<any> {
-    return this.http.post<any>(
+  manageDetail(basicDetailForm: any): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(
       this.URL + '/DayCareCentreUser/parentStudent',
       basicDetailForm
     );
   }
 
-  GetAllAgeGroup(CentreID: number): Observable<any> {
-    return this.http.get<any>(this.URL + '/Centre/getAllAgeGroupByCentreID', {
+  GetAllAgeGroup(CentreID: number): Observable<ApiResponse<MasterAgeGroupItem[]>> {
+    return this.http.get<ApiResponse<MasterAgeGroupItem[]>>(this.URL + '/Centre/getAllAgeGroupByCentreID', {
       params: { CentreID },
     });
   }
@@ -35,15 +36,15 @@ export class ChildParentService {
   getStudentParentDetailsByParentID(
     parentID: number,
     studentID: number
-  ): Observable<any> {
-    return this.http.get<any>(
+  ): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(
       this.URL + '/DayCareCentreUser/getStudentParentDetailsByParentID',
       { params: { parentID, studentID } }
     );
   }
 
-  getStudentLikesAndDislikes(parentID: any): Observable<any> {
-    return this.http.get(
+  getStudentLikesAndDislikes(parentID: any): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(
       this.URL + '/DayCareCentreUser/getStudentLikesAndDislikes',
       { params: { parentID } }
     );

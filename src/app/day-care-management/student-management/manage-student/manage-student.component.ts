@@ -597,11 +597,13 @@ export class ManageStudentComponent implements OnInit {
       .subscribe({
         next: (response) => {
           if (response.message === 'Success') {
-            this.classList = response.result;
+            this.classList = response.result || [];
 
           }
         },
-        error: (err) => { },
+        error: (err) => {
+          this.toastr.error(err?.message || 'Failed to load classes');
+        },
       });
   }
 
@@ -614,7 +616,9 @@ export class ManageStudentComponent implements OnInit {
             this.classDetails = response.result;
           }
         },
-        error: (err) => { },
+        error: (err) => {
+          this.toastr.error(err?.message || 'Failed to load class details');
+        },
       });
   }
 
@@ -645,9 +649,28 @@ export class ManageStudentComponent implements OnInit {
     ) {
       this.spinner.show();
       const jsonData = this.getFormGroup('studentInformation').value;
+      if (typeof jsonData.firstName === 'string') {
+        jsonData.firstName = jsonData.firstName.trim();
+      }
+      if (typeof jsonData.lastName === 'string') {
+        jsonData.lastName = jsonData.lastName.trim();
+      }
 
       jsonData['dob'] = this.changeFormat(jsonData.dob);
       const parentData = this.getFormGroup('parentInformation').value;
+      if (typeof parentData.firstName === 'string') {
+        parentData.firstName = parentData.firstName.trim();
+      }
+      if (typeof parentData.lastName === 'string') {
+        parentData.lastName = parentData.lastName.trim();
+      }
+      if (typeof parentData.email === 'string') {
+        parentData.email = parentData.email.trim();
+      }
+      if (typeof parentData.mobile === 'string') {
+        parentData.mobile = parentData.mobile.trim();
+      }
+
       if (this.isExternalBilling) {
         parentData.planID = null;
         parentData.PaymentDates = [];
@@ -658,10 +681,11 @@ export class ManageStudentComponent implements OnInit {
         jsonData.id = 0;
         parentData.id = 0;
       }
-      jsonData['parent'] = parentData;
-      if (this.showSpecifyRelationship) {
-        jsonData.relation = jsonData.specifyRelationship;
+      if (this.showSpecifyRelationship && parentData.specifyRelationship) {
+        parentData.relation = parentData.specifyRelationship.trim();
+        jsonData.relation = parentData.relation;
       }
+      jsonData['parent'] = parentData;
 
       this.manageStudentService.manageStudentEnrollment(jsonData).subscribe({
         next: (response) => {
@@ -680,7 +704,7 @@ export class ManageStudentComponent implements OnInit {
               this.viewDropDown = true;
               this.isUpdate = false;
               this.childComponent.getStudentList();
-              this.toastr.success(response.activity);
+              this.toastr.success(response.activity || 'Student enrolled successfully');
               this.getDayCareCentreDetails();
             } else {
               this.getFormGroup('studentInformation').reset({
@@ -692,7 +716,7 @@ export class ManageStudentComponent implements OnInit {
               this.viewDropDown = true;
               this.isUpdate = false;
               this.classDetails = '';
-              this.toastr.success(response.activity);
+              this.toastr.success(response.activity || 'Student enrolled successfully');
               if (
                 window.location.href ===
                 window.location.origin + '/student-enrollment'
@@ -703,14 +727,15 @@ export class ManageStudentComponent implements OnInit {
           } else if (response.message === 'This DayCare is already full.') {
             this.toastr.error('This DayCare is already full.');
           } else {
-            this.toastr.error(response.message);
+            this.toastr.error(response.message || 'Operation failed');
           }
           setTimeout(() => {
             this.spinner.hide();
           }, 300);
         },
         error: (err) => {
-          this.toastr.error(err.message);
+          this.spinner.hide();
+          this.toastr.error(err?.message || 'Failed to enroll student');
         },
       });
     } else {
@@ -918,17 +943,33 @@ export class ManageStudentComponent implements OnInit {
   addParent(): void {
     if (this.parentForm?.valid) {
       this.spinner.show();
+      const parentFormValue = { ...this.parentForm.value };
+      if (typeof parentFormValue.firstName === 'string') {
+        parentFormValue.firstName = parentFormValue.firstName.trim();
+      }
+      if (typeof parentFormValue.lastName === 'string') {
+        parentFormValue.lastName = parentFormValue.lastName.trim();
+      }
+      if (typeof parentFormValue.email === 'string') {
+        parentFormValue.email = parentFormValue.email.trim();
+      }
+      if (typeof parentFormValue.mobile === 'string') {
+        parentFormValue.mobile = parentFormValue.mobile.trim();
+      }
       if (this.showSpecifyRelationship1) {
+        if (parentFormValue.specifyRelationship) {
+          parentFormValue.relation = parentFormValue.specifyRelationship.trim();
+        }
         this.parentForm
           .get('relation')
           ?.setValue(this.parentForm.get('specifyRelationship')?.value);
       }
       this.manageStudentService
-        .manageParent(this.parentForm.value, this.childComponent.studentID)
+        .manageParent(parentFormValue, this.childComponent.studentID)
         .subscribe({
           next: (response) => {
             if (response.message === 'Success') {
-              this.toastr.success(response.activity);
+              this.toastr.success(response.activity || 'Parent added successfully');
 
               $('#more-parent').modal('hide');
               this.childComponent.getStudentList();
@@ -940,14 +981,15 @@ export class ManageStudentComponent implements OnInit {
             } else if (response.message == 'Mobile number already exists.') {
               this.toastr.warning('Mobile number already exists.');
             } else {
-              this.toastr.warning(response.message);
+              this.toastr.warning(response.message || 'Operation failed');
             }
             setTimeout(() => {
               this.spinner.hide();
             }, 300);
           },
           error: (error) => {
-            // handle error
+            this.spinner.hide();
+            this.toastr.error(error?.message || 'Failed to save parent information');
           },
         });
     } else {

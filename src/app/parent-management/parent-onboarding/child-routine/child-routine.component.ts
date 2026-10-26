@@ -19,7 +19,6 @@ import * as CryptoJS from 'crypto-js';
 import { CookieService } from 'ngx-cookie-service';
 
 import Swal from 'sweetalert2';
-import { rejects } from 'node:assert';
 import { DaycareQuestionnaireService } from '../../../daycare-questionnaire/daycare-questionnaire.service';
 import { commaSeparatedValidator } from '../../../toc-registration/toc-registration.component';
 import { retry } from 'rxjs';

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { ApiResponse } from '../models/api.types';
 
 @Injectable({
   providedIn: 'root',
@@ -16,49 +17,49 @@ export class ApplicationServiceService {
     searchItem: any,
     regionHours: number,
     regionMinutes: number
-  ): Observable<any> {
-    return this.http.get<any>(
+  ): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(
       this.rootURL + '/SlotTimeTable/getRescheduleOrCompleteDayCareList',
       { params: { statusID, searchItem, regionHours, regionMinutes } }
     );
   }
 
-  rescheduleMeeting(rescheduleForm: any): Observable<any> {
-    return this.http.post<any>(
+  rescheduleMeeting(rescheduleForm: any): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(
       this.rootURL + '/SlotTimeTable/rescheduledayCareMeeting',
       rescheduleForm
     );
   }
 
-  getPlansForDaycare(userRoleId: number): Observable<any> {
-    return this.http.get<any>(this.rootURL + '/Common/getAllPlans', {
+  getPlansForDaycare(userRoleId: number): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(this.rootURL + '/Common/getAllPlans', {
       params: { userRoleId },
     });
   }
 
-  getAllStudentMediaPlans(userRoleId: number): Observable<any> {
-    return this.http.get<any>(
+  getAllStudentMediaPlans(userRoleId: number): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(
       this.rootURL + '/Common/getAllStudentMediaPlans',
       { params: { userRoleId } }
     );
   }
 
-  getSubscriptionPlansByID(id: any): Observable<any> {
-    return this.http.get<any>(
+  getSubscriptionPlansByID(id: any): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(
       this.rootURL + '/SlotTimeTable/getSubscriptionPlansByID',
       { params: { id } }
     );
   }
 
-  getPrimaryDayCareID(CentreEmail: any): Observable<any> {
-    return this.http.get<any>(
+  getPrimaryDayCareID(CentreEmail: any): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(
       this.rootURL + '/DayCareCentreUser/getPrimaryCentreIdByEmail',
       { params: { CentreEmail } }
     );
   }
 
-  getPrimaryDayCareList(centreID: any, type: any): Observable<any> {
-    return this.http.get<any>(
+  getPrimaryDayCareList(centreID: any, type: any): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(
       this.rootURL + '/DayCareCentreUser/getPrimaryDayCareByCentreID',
       { params: { centreID, type } }
     );
@@ -69,8 +70,8 @@ export class ApplicationServiceService {
     dayCareUserEncryptID: any,
     CentreEmail: any,
     DayCareType: any
-  ): Observable<any> {
-    return this.http.get<any>(
+  ): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(
       this.rootURL + '/DayCareCentreUser/sendMailPrimaryDaycareCentre',
       {
         params: {
@@ -86,8 +87,8 @@ export class ApplicationServiceService {
   primaryDaycareCentreRegistration(
     data: any,
     oldDayCareID: any
-  ): Observable<any> {
-    return this.http.post<any>(
+  ): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(
       this.rootURL +
         '/DayCareCentreUser/managePrimaryDaycareCentreRegistration',
       data,
@@ -95,14 +96,14 @@ export class ApplicationServiceService {
     );
   }
 
-  getTrialFreeDaycares(): Observable<any> {
-    return this.http.get(
+  getTrialFreeDaycares(): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(
       this.rootURL + '/DayCareCentreUser/getTrialPeriodDaycares'
     );
   }
 
-  activateTrial(intresetedDayCareId: any, days: any): Observable<any> {
-    return this.http.get(this.rootURL + '/DayCareCentreUser/activateTrial', {
+  activateTrial(intresetedDayCareId: any, days: any): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(this.rootURL + '/DayCareCentreUser/activateTrial', {
       params: { intresetedDayCareId, days },
     });
   }

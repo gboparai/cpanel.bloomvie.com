@@ -14,7 +14,6 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonService } from '../../../common-component/common.service';
 import { CookieService } from 'ngx-cookie-service';
-import { response } from 'express';
 import { NgxPaginationModule } from 'ngx-pagination';
 import {
   FormBuilder,
@@ -30,7 +29,6 @@ import flatpickr from 'flatpickr';
 import { ApplicationServiceService } from '../../../application-status/application-service.service';
 import { ProfileService } from '../../../common-component/profile/profile.service';
 import { environment } from '../../../../environments/environment';
-import { Action } from 'rxjs/internal/scheduler/Action';
 import { ManageTeacherService } from '../../../teachers-management/manage-teacher/manage-teacher.service';
 
 declare var $: any;
@@ -417,7 +415,7 @@ export class TransferStaffComponent implements OnInit {
         next: (response) => {
           if (response.message === 'Success') {
             this.spinner.hide();
-            this.staffList = response.result;
+            this.staffList = response.result || [];
 
           }
 

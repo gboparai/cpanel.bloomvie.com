@@ -16,7 +16,6 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import Swal from 'sweetalert2';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { Router } from '@angular/router';
-import { error } from 'node:console';
 import { CommonService } from '../common-component/common.service';
 import { ElementRef, ViewChild } from '@angular/core';
 import { SkeletonLoaderComponent } from '../common-component/skeleton-loader/skeleton-loader.component';

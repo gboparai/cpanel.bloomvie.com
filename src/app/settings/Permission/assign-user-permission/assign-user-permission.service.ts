@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
+import { ApiResponse, UserRoleItem } from '../../../models/api.types';
 
 @Injectable({
   providedIn: 'root',
@@ -9,28 +10,26 @@ import { environment } from '../../../../environments/environment';
 export class AssignUserPermissionService {
   readonly URL = environment.apiUrl;
   public UserRole = '/User/getAllUserRoles';
-  //public viewEmployeeRole='User/getEmployeeRole'
-  //public EmployeeRoleForm='/User/EmployeeRole'
 
   constructor(private http: HttpClient) {}
 
   // GET
-  getUserRole(): Observable<any> {
-    return this.http.get(this.URL + this.UserRole);
+  getUserRole(): Observable<ApiResponse<UserRoleItem[]>> {
+    return this.http.get<ApiResponse<UserRoleItem[]>>(this.URL + this.UserRole);
   }
 
-  getDayCare(type:any): Observable<any> {
-    return this.http.get(this.URL + '/Centre/getAllCentre', {params: { type }});
+  getDayCare(type: any): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(this.URL + '/Centre/getAllCentre', { params: { type } });
   }
 
-  getEmployeeRole(userRoleId: any, isActive: any): Observable<any> {
-    return this.http.get(this.URL + '/User/getEmployeeRole', {
+  getEmployeeRole(userRoleId: any, isActive: any): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(this.URL + '/User/getEmployeeRole', {
       params: { userRoleId, isActive },
     });
   }
 
-  getassignedDcc(counsellorID: any): Observable<any> {
-    return this.http.get(
+  getassignedDcc(counsellorID: any): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(
       this.URL + '/DayCareCentreUser/getAssignedDccForCounsellor',
       {
         params: { counsellorID },
@@ -38,32 +37,27 @@ export class AssignUserPermissionService {
     );
   }
 
-  getEmployeebyID(): Observable<any> {
-    return this.http.get(this.URL + '');
+  getEmployeebyID(): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(this.URL + '');
   }
 
   activeInActiveEmployeeStatusByID(
     id: any,
     isActive: boolean
-  ): Observable<any> {
-    return this.http.get<any>(this.URL + '/User/activeInActiveEmployeesByID', {
+  ): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(this.URL + '/User/activeInActiveEmployeesByID', {
       params: { id, isActive },
     });
   }
 
-  validateDayCareAssignment(centreID:any):Observable<any>{
-    return this.http.get<any>(this.URL+'/User/validateDayCareAssignment',{
-      params:{centreID}
-    })
-
+  validateDayCareAssignment(centreID: any): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(this.URL + '/User/validateDayCareAssignment', {
+      params: { centreID }
+    });
   }
 
   // POST
-
-  EmployeeRole(EmployeeRoleForm: any): Observable<any> {
-    return this.http.post<any>(`${this.URL}/User/EmployeeRole`, EmployeeRoleForm);
+  EmployeeRole(EmployeeRoleForm: any): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(`${this.URL}/User/EmployeeRole`, EmployeeRoleForm);
   }
-
-  
-  
 }

@@ -8,7 +8,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommonService } from '../../../common-component/common.service';
 import { CookieService } from 'ngx-cookie-service';
 import { BreadcrumbComponent } from '../../../common-component/breadcrumb/breadcrumb.component';
-import { response } from 'express';
 import { NgxPaginationModule } from 'ngx-pagination';
 import * as CryptoJS from 'crypto-js';
 
@@ -197,7 +196,7 @@ export class ViewStaffComponent implements OnInit {
     this.manageStaffSerivece.getDaycareClasses(this.centreID).subscribe({
       next: (response) => {
         if (response.message === 'Success') {
-          this.classList = response.result;
+          this.classList = response.result || [];
         }
 
         this.spinner.hide();
@@ -289,7 +288,7 @@ export class ViewStaffComponent implements OnInit {
         next: async (response) => {
           if (response.message === 'Success') {
             if (this.userRoleID === 1) {
-              this.bloomvieStaff = response.result.map((item: any) => {
+              this.bloomvieStaff = (response.result || []).map((item: any) => {
                 const staffProfile = item.s3ImageUrl
                   ? this.getS3FileName(item.s3ImageUrl)
                   : '';
@@ -299,7 +298,7 @@ export class ViewStaffComponent implements OnInit {
                 };
               });
             } else {
-              this.staffList = response.result.map((item: any) => {
+              this.staffList = (response.result || []).map((item: any) => {
                 const staffProfile = item.s3ImageUrl
                   ? this.getS3FileName(item.s3ImageUrl)
                   : '';

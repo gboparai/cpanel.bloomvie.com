@@ -1,7 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, ObservableLike } from 'rxjs';
+import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
+import {
+  ApiResponse,
+  AddStudentRegistrationRequest,
+} from '../models/api.types';
 
 @Injectable({
   providedIn: 'root',
@@ -10,22 +14,22 @@ export class StudentRegistrationService {
   private readonly rootUrl = environment.apiUrl;
   constructor(private http: HttpClient) {}
 
-  getPlanDetailsByUserID(ID: number): Observable<any> {
-    return this.http.get(
+  getPlanDetailsByUserID(ID: number): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(
       `${this.rootUrl}/DayCareCentreUser/getPlanDetailsByUserID`,
       { params: { ID } }
     );
   }
 
-  GetAllAgeGroup(CentreID: number): Observable<any> {
-    return this.http.get<any>(
+  GetAllAgeGroup(CentreID: number): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(
       this.rootUrl + '/Centre/getAllAgeGroupByCentreID',
       { params: { CentreID } }
     );
   }
 
-  manageStudentRegistration(formObj: any): Observable<any> {
-    return this.http.post<any>(
+  manageStudentRegistration(formObj: AddStudentRegistrationRequest): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(
       `${this.rootUrl}/DayCareCentreUser/manageStudentRegistration`,
       formObj
     );
@@ -34,8 +38,8 @@ export class StudentRegistrationService {
   getSubscriptionPlansByCentreAndAgeID(
     centreID: number,
     ageGroupID: number
-  ): Observable<any> {
-    return this.http.get<any>(
+  ): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(
       this.rootUrl + '/SubscriptionPlans/getSubscriptionPlansByCentreAndAgeID',
       { params: { centreID, ageGroupID } }
     );

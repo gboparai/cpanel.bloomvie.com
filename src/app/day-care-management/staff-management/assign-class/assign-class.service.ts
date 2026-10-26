@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
+import { ApiResponse, ClassroomDropdownItem, DaycareDaysItem } from '../../../models/api.types';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -9,8 +11,8 @@ export class AssignClassService {
   private readonly rootURL = environment.apiUrl;
   constructor(private http: HttpClient) {}
 
-  getDaycareClasses(ID: number): Observable<any> {
-    return this.http.get<{ id: number; name: string }>(
+  getDaycareClasses(ID: number): Observable<ApiResponse<ClassroomDropdownItem[]>> {
+    return this.http.get<ApiResponse<ClassroomDropdownItem[]>>(
       this.rootURL + '/Classroom/getDaycareClassListDropdown',
       { params: { ID } }
     );
@@ -19,24 +21,24 @@ export class AssignClassService {
   getAllAvailableTeachersByCentreID(
     ClassID: number,
     classTimings: any[]
-  ): Observable<any> {
-    return this.http.post<any>(
+  ): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(
       this.rootURL + '/Classroom/getAllAvailableTeachersByCentreID',
       classTimings,
       { params: { ClassID } }
     );
   }
 
-  getAllDays(): Observable<any> {
-    return this.http.get<any>(this.rootURL + '/Classroom/getAllDays');
+  getAllDays(): Observable<ApiResponse<DaycareDaysItem[]>> {
+    return this.http.get<ApiResponse<DaycareDaysItem[]>>(this.rootURL + '/Classroom/getAllDays');
   }
 
-  BulkClassAssignment(BulkTeacherAssignment: any[]): Observable<any> {
+  BulkClassAssignment(BulkTeacherAssignment: any[]): Observable<ApiResponse<any>> {
     const payload = {
       BulkTeacherAssignment: BulkTeacherAssignment,
       UserType: 'DayCare'
     };
-    return this.http.post<any>(
+    return this.http.post<ApiResponse<any>>(
       this.rootURL + '/Classroom/BulkClassAssignment',
       payload
     );

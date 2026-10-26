@@ -18,7 +18,6 @@ import { ProfileService } from '../common-component/profile/profile.service';
 
 import * as CryptoJS from 'crypto-js';
 import Swal from 'sweetalert2';
-import { promises } from 'node:dns';
 import { environment } from '../../environments/environment';
 import { ApplicationServiceService } from '../application-status/application-service.service';
 import { AppService } from '../app.service';
@@ -26,7 +25,6 @@ import { CommonService } from '../common-component/common.service';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { OnboardingService } from '../onboarding/onboarding.service';
 import { lastValueFrom, firstValueFrom, finalize, catchError, of } from 'rxjs';
-import { response } from 'express';
 import { TocRegistrationService } from '../toc-registration/toc-registration.service';
 import { NgxPaginationModule } from 'ngx-pagination';
 import flatpickr from 'flatpickr';
@@ -322,7 +320,7 @@ export class LoginComponent implements OnInit {
           parsedTOCcentreList = JSON.parse(decryptedTocList);
           this.TOCUserCentreList = parsedTOCcentreList;
           this.spinner.show();
-          let response = await this.loginService
+          let response: any = await this.loginService
             .CheckLoginEmail(email)
             .toPromise();
 
@@ -419,7 +417,7 @@ export class LoginComponent implements OnInit {
       ).then((authResponse) => {
         if (!authResponse) return;
 
-        if (authResponse.message === 'Success') {
+        if (authResponse.message === 'Success' && authResponse.result) {
           const userRoleId = authResponse.result.userRoleID;
 
           if (userRoleId == 8 && authResponse.result.isTOCprofilecompleted) {
@@ -444,7 +442,7 @@ export class LoginComponent implements OnInit {
             this.login();
           }
         } else {
-          this.toastr.error(authResponse.message);
+          this.toastr.error(authResponse.message || 'Login failed');
         }
       });
     } else {
@@ -475,7 +473,7 @@ export class LoginComponent implements OnInit {
         this.loginService.Login(this.loginForm.value)
       );
 
-      if (authResponse.message === 'Success') {
+      if (authResponse.message === 'Success' && authResponse.result) {
         this.toastr.success('Login Successful');
         this.UserId = authResponse.result.id;
 
@@ -499,8 +497,8 @@ export class LoginComponent implements OnInit {
 
         this.setCookie('UserId', this.UserId);
         this.setCookie('UserInfo', JSON.stringify(authResponse));
-        this.setCookie('RefreshToken',authResponse.refreshToken);
-        this.setCookie('UserRoleId', authResponse.result.userRoleID);
+        this.setCookie('RefreshToken', authResponse.refreshToken ?? '');
+        this.setCookie('UserRoleId', String(authResponse.result.userRoleID ?? ''));
         this.loginService.loadUserFromStorage();
 
         const UserInfo = this.cookie.get('UserInfo');
@@ -537,8 +535,8 @@ export class LoginComponent implements OnInit {
         ) {
           const studentID = authResponse.result.studentID[0].id;
           const centreID = authResponse.result.studentID[0].centreID;
-          this.setCookie('StudentID', studentID);
-          this.setCookie('CentreID', centreID);
+          this.setCookie('StudentID', String(studentID ?? ''));
+          this.setCookie('CentreID', String(centreID ?? ''));
 
           if (!authResponse.result.isOnBoarded) {
             // this.spinner.hide();
@@ -550,7 +548,8 @@ export class LoginComponent implements OnInit {
         if (userRoleId === 3 && !authResponse.result.isOnBoarded) {
           this.router.navigate(['onboarding']);
         } else {
-          this.router.navigate([roleRoutes[userRoleId] || '/dashboard']);
+          const targetRoute = (userRoleId ? roleRoutes[userRoleId] : undefined) || '/dashboard';
+          this.router.navigate([targetRoute]);
         }
       } else if (authResponse.message === 'Plan-Expired') {
         // Handle Plan-Expired scenario
@@ -569,10 +568,10 @@ export class LoginComponent implements OnInit {
           cancelButtonText: 'Choose New Plan',
         }).then((result) => {
           const planencryptID = this.commonService.encrypt(
-            String(authResponse.result.latestPlanId)
+            String(authResponse.result?.latestPlanId ?? '')
           );
           const dayCareUserencryptID = this.commonService.encrypt(
-            String(authResponse.result.userId)
+            String(authResponse.result?.userId ?? '')
           );
           const encNewType = this.commonService.encrypt('encType');
 
@@ -614,10 +613,10 @@ export class LoginComponent implements OnInit {
         }).then((result) => {
           if (result.isConfirmed) {
             const planencryptID = this.commonService.encrypt(
-              String(authResponse.result.latestPlanId)
+              String(authResponse.result?.latestPlanId ?? '')
             );
             const dayCareUserencryptID = this.commonService.encrypt(
-              String(authResponse.result.userId)
+              String(authResponse.result?.userId ?? '')
             );
             const encryptType =
               this.commonService.encrypt('Trial-Plan-Expired');
@@ -667,7 +666,7 @@ export class LoginComponent implements OnInit {
             allowEscapeKey: true,
           });
         } else {
-          this.toastr.error(authResponse.message);
+          this.toastr.error(authResponse.message || 'Login failed');
         }
       }
     } catch (error) {

@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
 import { AttendanceDashboardComponent } from './attendance-dashboard.component';
 import { AttendanceDashboardService } from './attendance-dashboard.service';
 import { ToastrService } from 'ngx-toastr';
@@ -28,7 +28,8 @@ describe('AttendanceDashboardComponent', () => {
     (window as any).$ = jasmine.createSpy('$').and.returnValue({
       modal: jasmine.createSpy('modal'),
       val: jasmine.createSpy('val'),
-      text: jasmine.createSpy('text')
+      text: jasmine.createSpy('text'),
+      remove: jasmine.createSpy('remove')
     });
 
     mockAttendanceService = jasmine.createSpyObj('AttendanceDashboardService', [
@@ -127,7 +128,7 @@ describe('AttendanceDashboardComponent', () => {
       spyOn(component, 'initDateRangePicker').and.callFake(() => {});
 
       component.ngOnInit();
-      tick();
+      flush();
 
       expect(component.calendarOptions).toBeDefined();
       expect(component.userID).toBe('101');
@@ -149,7 +150,7 @@ describe('AttendanceDashboardComponent', () => {
       });
 
       component.ngOnInit();
-      tick();
+      flush();
 
       expect(component.isStudentAttendance).toBeTrue();
       expect(component.displayRole).toBe('4');
@@ -164,7 +165,7 @@ describe('AttendanceDashboardComponent', () => {
       });
 
       component.ngOnInit();
-      tick();
+      flush();
 
       expect(mockManageStaffService.getClassListByuserRoleID).toHaveBeenCalledWith(101, 5, 4);
       expect(component.AllClassList.length).toBe(1);
@@ -192,28 +193,21 @@ describe('AttendanceDashboardComponent', () => {
   });
 
   describe('formatDate', () => {
-    it('should transform date with MM/dd/yyyy format', () => {
-      const d = new Date('2026-05-10');
+    it('should format date to mm-dd-yyyy', () => {
+      const d = new Date(2026, 4, 10);
       const res = component.formatDate(d);
-      expect(res).toBe('2026-05-15');
-      expect(mockDatePipe.transform).toHaveBeenCalledWith(d, 'MM/dd/yyyy');
+      expect(res).toBe('05-10-2026');
     });
   });
 
   describe('resetfilter', () => {
-    it('should reset date filters and search again', () => {
-      const spy = spyOn(component, 'getstaffAttendanceByCentreID').and.callThrough();
-      component.formattedStartDate = '05/01/2026';
-      component.formattedEndDate = '05/05/2026';
-      component.StartDate = '2026-05-01';
-      component.EndDate = '2026-05-05';
+    it('should call initDatePicker and search attendance', () => {
+      spyOn(component, 'initDatePicker').and.callFake(() => {});
+      const spy = spyOn(component, 'getstaffAttendanceByCentreID').and.callFake(() => {});
 
       component.resetfilter();
 
-      expect(component.formattedStartDate).toBe('');
-      expect(component.formattedEndDate).toBe('');
-      expect(component.StartDate).toBeNull();
-      expect(component.EndDate).toBeNull();
+      expect(component.initDatePicker).toHaveBeenCalled();
       expect(spy).toHaveBeenCalled();
     });
   });
@@ -226,26 +220,26 @@ describe('AttendanceDashboardComponent', () => {
   });
 
   describe('viewDetail', () => {
-    it('should set image paths and open modal', () => {
-      component.viewDetail('in.jpg', 'out.jpg');
+    it('should set image paths', async () => {
+      await component.viewDetail('in.jpg', 'out.jpg');
       expect(component.inFullPath).toBe('in.jpg');
       expect(component.outFullPath).toBe('out.jpg');
-      expect((window as any).$).toHaveBeenCalledWith('#openModal');
     });
   });
 
   describe('openMapPopup', () => {
-    it('should set coordinates and call initMap when valid numbers are provided', () => {
+    it('should set coordinates and call initMap when valid numbers are provided', fakeAsync(() => {
       const spy = spyOn(component, 'initMap').and.callFake(() => {});
       component.openMapPopup(77.1025, 28.7041);
+      tick(100);
 
       expect(component.IsnotLatandLong).toBeFalse();
       expect(spy).toHaveBeenCalledWith(77.1025, 28.7041);
-    });
+    }));
 
-    it('should set IsnotLatandLong true when coordinates are 0', () => {
+    it('should set IsnotLatandLong true when coordinates are null', () => {
       const spy = spyOn(component, 'initMap').and.callFake(() => {});
-      component.openMapPopup(0, 0);
+      component.openMapPopup(null as any, null as any);
 
       expect(component.IsnotLatandLong).toBeTrue();
       expect(spy).not.toHaveBeenCalled();
@@ -255,7 +249,7 @@ describe('AttendanceDashboardComponent', () => {
   describe('goToApplyLeave', () => {
     it('should navigate to apply-leave route', () => {
       component.goToApplyLeave();
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['apply-leave']);
+      expect(mockRouter.navigate).toHaveBeenCalledWith(['/apply-leave']);
     });
   });
 

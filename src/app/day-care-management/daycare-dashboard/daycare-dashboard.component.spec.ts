@@ -131,7 +131,7 @@ describe('DaycareDashboardComponent', () => {
     });
 
     mockDaycareService.checkExternalBilling.and.returnValue(
-      of({ message: 'Success', result: false })
+      of({ message: 'Success', result: false } as any)
     );
     mockDaycareDashboardService.getDayCareByID.and.returnValue(
       of({ message: 'OK', result: { centreName: 'Sunshine Daycare' } })

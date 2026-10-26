@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { CookieService } from 'ngx-cookie-service';
-import { userInfo } from 'os';
+import { ApiResponse, LoginRequest, LoginResult } from '../models/api.types';
 import { OnboardingService } from '../onboarding/onboarding.service';
 import { Router } from '@angular/router';
 import { CommonService } from '../common-component/common.service';
@@ -89,16 +89,16 @@ export class LoginService {
     return url.searchParams.get('urlToken');
   }
 
-  Login(loginForm: any): Observable<any> {
-    return this.http.post<any>(this.URL + '/Login/login', loginForm);
+  Login(loginForm: LoginRequest | any): Observable<ApiResponse<LoginResult>> {
+    return this.http.post<ApiResponse<LoginResult>>(this.URL + '/Login/login', loginForm);
   }
 
-  IsUserExit(loginForm: any): Observable<any> {
-    return this.http.post<any>(this.URL + '/Login/IsUserExit', loginForm);
+  IsUserExit(loginForm: LoginRequest | any): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(this.URL + '/Login/IsUserExit', loginForm);
   }
 
-  checkTOCUserAcceptedSlotRequest(userID: any, centreID: any): Observable<any> {
-    return this.http.get(this.URL + '/Login/checkTOCUserAcceptedSlotRequest', {
+  checkTOCUserAcceptedSlotRequest(userID: any, centreID: any): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(this.URL + '/Login/checkTOCUserAcceptedSlotRequest', {
       params: { userID, centreID },
     });
   }
@@ -124,7 +124,7 @@ export class LoginService {
     this.router.navigate(['/login']);
   }
 
-  CheckLoginEmail(email: string): Observable<any> {
+  CheckLoginEmail(email: string): Observable<ApiResponse<any>> {
     return this.http.get<any>(`${this.URL}/User/CheckLoginEmail`, {
       params: { email },
     });

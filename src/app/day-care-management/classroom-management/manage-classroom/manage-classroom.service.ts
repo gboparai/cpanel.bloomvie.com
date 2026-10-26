@@ -2,6 +2,14 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import { Observable } from 'rxjs';
+import {
+  ApiResponse,
+  AddClassroomRequest,
+  ClassroomListResponse,
+  DaycareSectionItem,
+  DaycareDaysItem,
+  MasterAgeGroupItem,
+} from '../../../models/api.types';
 
 @Injectable({
   providedIn: 'root',
@@ -10,81 +18,83 @@ export class ManageClassroomService {
   readonly rootUrl = environment.apiUrl;
   constructor(private http: HttpClient) {}
 
-  ManageClasses(formDataArray: any): Observable<any> {
-    return this.http.post<any>(
+  ManageClasses(formDataArray: AddClassroomRequest | Record<string, unknown>): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(
       this.rootUrl + '/Classroom/manageClasses',
       formDataArray
     );
   }
 
-  editClass(id: number): Observable<any> {
-    return this.http.get<any>(this.rootUrl + '/Classroom/getClassesByID', {
+  editClass(id: number): Observable<ApiResponse<AddClassroomRequest>> {
+    return this.http.get<ApiResponse<AddClassroomRequest>>(this.rootUrl + '/Classroom/getClassesByID', {
       params: { id },
     });
   }
 
-  getSectionByClassID(classID: any): Observable<any> {
-    return this.http.get<any>(this.rootUrl + '/Classroom/getSectionByClassID', {
+  getSectionByClassID(classID: any): Observable<ApiResponse<DaycareSectionItem[]>> {
+    return this.http.get<ApiResponse<DaycareSectionItem[]>>(this.rootUrl + '/Classroom/getSectionByClassID', {
       params: { classID },
     });
   }
 
-  GetAllAgeGroup(CentreID: number): Observable<any> {
-    return this.http.get<any>(
+  GetAllAgeGroup(CentreID: number): Observable<ApiResponse<MasterAgeGroupItem[]>> {
+    return this.http.get<ApiResponse<MasterAgeGroupItem[]>>(
       this.rootUrl + '/Centre/getAllAgeGroupByCentreID',
       { params: { CentreID } }
     );
   }
 
-  getClassListByDaycareID(daycareId: number,userRoleId:any,userId:any,searchText:string): Observable<any> {
-    return this.http.get<any>(this.rootUrl + '/Classroom/getClassListByDaycareID',{params:{daycareId,userRoleId,userId,searchText}});
+  getClassListByDaycareID(daycareId: number, userRoleId: any, userId: any, searchText: string): Observable<ClassroomListResponse> {
+    return this.http.get<ClassroomListResponse>(this.rootUrl + '/Classroom/getClassListByDaycareID', {
+      params: { daycareId, userRoleId, userId, searchText },
+    });
   }
 
-  ActiveInactiveClassroom(id: number): Observable<any> {
-    return this.http.get<any>(
+  ActiveInactiveClassroom(id: number): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(
       this.rootUrl + '/Classroom/activeInactiveclassByID',
       { params: { id } }
     );
   }
 
-  getAllDays(): Observable<any> {
-    return this.http.get<any>(this.rootUrl + '/Classroom/getAllDays');
+  getAllDays(): Observable<ApiResponse<DaycareDaysItem[]>> {
+    return this.http.get<ApiResponse<DaycareDaysItem[]>>(this.rootUrl + '/Classroom/getAllDays');
   }
 
-  getClassTeacher(CentreID: any, ClassID: any): Observable<any> {
-    return this.http.get(this.rootUrl + '/Centre/getTeacherByCenterID', {
+  getClassTeacher(CentreID: any, ClassID: any): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(this.rootUrl + '/Centre/getTeacherByCenterID', {
       params: { CentreID, ClassID },
     });
   }
-  onClassDuplicateCheck(centreID: any, className: any): Observable<any> {
-    return this.http.get(this.rootUrl + '/Centre/onClassDuplicateCheck', {
+  onClassDuplicateCheck(centreID: any, className: any): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(this.rootUrl + '/Centre/onClassDuplicateCheck', {
       params: { centreID, className },
     });
   }
-  checkSectionExists(sectionName: string, centreID: any): Observable<any> {
-    return this.http.get(this.rootUrl + '/Centre/checkSectionExists', {
+  checkSectionExists(sectionName: string, centreID: any): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(this.rootUrl + '/Centre/checkSectionExists', {
       params: { sectionName, centreID },
     });
   }
 
-  getCentreWorkingDaysByCentreID(centreID: number): Observable<any> {
-    return this.http.get(
+  getCentreWorkingDaysByCentreID(centreID: number): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(
       this.rootUrl + '/Centre/getCentreWorkingDaysByCentreID',
       { params: { centreID } }
     );
   }
 
-  checkSlotExists(slotObj: any): Observable<any> {
-    return this.http.post<any>(
+  checkSlotExists(slotObj: any): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(
       this.rootUrl + '/Classroom/checkSlotExists',
       slotObj
     );
   }
 
-  getClassroomCapacityByClassID(daycareID: number,inputCapacity:number): Observable<any> {
-    return this.http.get<any>(
+  getClassroomCapacityByClassID(daycareID: number, inputCapacity: number): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(
       this.rootUrl + '/Classroom/getClassroomCapacityByClassID',
-      { params: { daycareID,inputCapacity } }
+      { params: { daycareID, inputCapacity } }
     );
   }
 }

@@ -200,7 +200,7 @@ export class ViewStudentComponent implements OnInit {
             //   }
             // });
 
-            this.studentList = response.result.map((item: any) => {
+            this.studentList = (response.result || []).map((item: any) => {
               if (item.isMonthly == true) {
                 let minYear = this.convertMonthsToYears(item.minAge);
                 let maxYear = this.convertMonthsToYears(item.maxAge);

@@ -17,7 +17,6 @@ import { JobPortalServiceService } from '../job-portal-details/job-portal-servic
 import { CommonModule, DatePipe, NgIf } from '@angular/common';
 import { NgSelectModule } from '@ng-select/ng-select';
 import Swal from 'sweetalert2';
-import { debug } from 'node:console';
 import flatpickr from 'flatpickr';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import { ChangeDetectorRef } from '@angular/core';

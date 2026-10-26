@@ -2,6 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
+import { ApiResponse, SubscriptionPlanItem } from '../../../models/api.types';
 
 @Injectable({
   providedIn: 'root',
@@ -14,32 +15,25 @@ export class SubscriptionPlansService {
 
   constructor(private http: HttpClient) {}
 
-  // manageSubscription(subscriptionData: any): Observable<any> {
-  //   return this.http.post(this.URL+ this.postPlan, subscriptionData);
-  // }
-  manageSubscription(plans: any[]): Observable<any> {
-    return this.http.post(this.URL + this.postPlan, plans);
+  manageSubscription(plans: SubscriptionPlanItem[] | any[]): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(this.URL + this.postPlan, plans);
   }
 
-  // activeInActiveSubscriptionPlansByID(PlanId:any):Observable<any>{
-  //   return this.http.get<any>(this.URL+ this.ActiveInactivePlanById ,{params:{PlanId}})
-  //  }
-  activeInActiveSubscriptionPlansByID(id: number): Observable<any> {
-    //const params = new HttpParams().set('id', planId.toString()); // Set 'id' as the key
-    return this.http.get<any>(this.URL + this.ActiveInactivePlanById, {
+  activeInActiveSubscriptionPlansByID(id: number): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(this.URL + this.ActiveInactivePlanById, {
       params: { id },
     });
   }
 
-  CheckJobPostFeatureExists(featureList: any[],userRoleId:any): Observable<any> {
-    return this.http.post<any>(
+  CheckJobPostFeatureExists(featureList: any[], userRoleId: any): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(
       this.URL + '/SubscriptionPlans/CheckJobPostFeatureExists',
       featureList, { params: { userRoleId } }
     );
   }
 
-  PlanAlreadyAssignedOrNot(PlanID: number): Observable<any> {
-    return this.http.get<any>(
+  PlanAlreadyAssignedOrNot(PlanID: number): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(
       this.URL + '/SubscriptionPlans/PlanAlreadyAssignedOrNot',
       { params: { PlanID } }
     );

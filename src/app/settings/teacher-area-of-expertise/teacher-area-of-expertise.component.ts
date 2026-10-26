@@ -11,9 +11,9 @@ import { SwitcherComponentComponent } from '../../common-component/switcher-comp
 import { SkeletonLoaderComponent } from "../../common-component/skeleton-loader/skeleton-loader.component";
 
 interface ApiResponse {
-  message: string | null;
-  activity: string | undefined;
-  result: any | null;
+  message?: string | null;
+  activity?: string | undefined;
+  result?: any | null;
 }
 
 @Component({

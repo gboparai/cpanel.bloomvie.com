@@ -1082,7 +1082,7 @@ export class ProfileComponent implements AfterViewInit {
               ' ' +
               this.profilevalue.lastName,
             email: this.profilevalue.email,
-            dob: this.formatDateForDisplay(user.dob),
+            dob: this.formatDateForDisplay(user.dob || ''),
 
             address: this.profilevalue.address,
             mobile: this.profilevalue.mobile,
@@ -1581,8 +1581,8 @@ export class ProfileComponent implements AfterViewInit {
         .getAllStudentsByParentID(this.UserId)
         .toPromise();
       if (data.message === 'Success') {
-        const students = data.result;
-        const student = students.find((student: any) => student.id === id);
+        const students: any = (data.result as any)?.studentList || data.result;
+        const student = (students as any[])?.find ? (students as any[]).find((student: any) => student.id === id) : null;
 
         if (student) {
           return student;

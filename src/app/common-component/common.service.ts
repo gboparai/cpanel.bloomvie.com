@@ -100,7 +100,7 @@ export class CommonService {
   }
 
   updateTriggerLogoSignal() {
-    this.triggerLogoSignal.set(!this.triggerLogoSignal);
+    this.triggerLogoSignal.set(!this.triggerLogoSignal());
   }
 
   triggerSignal = this._triggerSignal.asReadonly();

@@ -63,7 +63,7 @@ export class DayCareSettingsComponent implements OnInit {
 
     this.dayCareSetting.getAllActivites(BO).subscribe(
       (data) => {
-        if (data.message === 'Ok' && Array.isArray(data.result)) {
+        if (data && data.message === 'Ok' && Array.isArray(data.result)) {
           this.activitiesList = data.result;
         } else {
         }
@@ -85,7 +85,7 @@ export class DayCareSettingsComponent implements OnInit {
       const data = await this.dayCareSetting.getAllActivites(BO).toPromise();
 
       // Check the response and update activitiesList
-      if (data.message === 'Ok' && Array.isArray(data.result)) {
+      if (data && data.message === 'Ok' && Array.isArray(data.result)) {
         this.activitiesList = data.result;
       } else {
         //console.error('Invalid data format or no activities found', data);

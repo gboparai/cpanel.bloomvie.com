@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AddStudentComponent } from './add-student.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
@@ -8,11 +9,12 @@ describe('AddStudentComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AddStudentComponent],
+      imports: [AddStudentComponent, HttpClientTestingModule],
       schemas: [NO_ERRORS_SCHEMA],
     })
       .overrideComponent(AddStudentComponent, {
         set: {
+          imports: [],
           schemas: [NO_ERRORS_SCHEMA],
         },
       })

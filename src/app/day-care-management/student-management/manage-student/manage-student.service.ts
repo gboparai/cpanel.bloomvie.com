@@ -2,7 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import { Observable, Subject } from 'rxjs';
-import { parseArgs } from 'util';
+import {
+  ApiResponse,
+  AddStudentEnrollmentRequest,
+  StudentInfo,
+  StudentListResponse,
+  ClassroomDropdownItem,
+} from '../../../models/api.types';
 
 @Injectable({
   providedIn: 'root',
@@ -11,14 +17,14 @@ export class ManageStudentService {
   private readonly rootURL: string = environment.apiUrl;
   private locationDataSubject = new Subject<any>();
   constructor(private http: HttpClient) {}
-  manageStudentEnrollment(postData: any): Observable<any> {
-    return this.http.post<any>(
+  manageStudentEnrollment(postData: AddStudentEnrollmentRequest): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(
       this.rootURL + '/DayCareCentreUser/manageStudentEnrollment',
       postData
     );
   }
-  getClassesByAgeGroup(CentreID: number, AgeGroupID: number): Observable<any> {
-    return this.http.get<{ id: number; name: string }>(
+  getClassesByAgeGroup(CentreID: number, AgeGroupID: number): Observable<ApiResponse<ClassroomDropdownItem[]>> {
+    return this.http.get<ApiResponse<ClassroomDropdownItem[]>>(
       this.rootURL + '/Classroom/getClassListDropdownByAgeGroup',
       { params: { CentreID, AgeGroupID } }
     );
@@ -31,9 +37,9 @@ export class ManageStudentService {
     userId: number,
     classId: number,
     type: any
-  ): Observable<any> {
+  ): Observable<StudentListResponse> {
     
-    return this.http.get<any>(
+    return this.http.get<StudentListResponse>(
       this.rootURL + '/DayCareCentreUser/getChildrenListByCentreID',
       { params: { id, searchItem, userRoleId, userId, classId, type } }
     );
@@ -67,8 +73,8 @@ export class ManageStudentService {
     );
   }
 
-  manageParent(postData: any, studentID: number): Observable<any> {
-    return this.http.post<any>(
+  manageParent(postData: any, studentID: number): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(
       this.rootURL + '/DayCareCentreUser/manageParent',
       postData,
       { params: { studentID } }

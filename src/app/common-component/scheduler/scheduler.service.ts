@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-
+import { ApiResponse, StaffInfo, StudentInfo } from '../../models/api.types';
 
 @Injectable({
   providedIn: 'root'
@@ -12,30 +12,29 @@ export class SchedulerService {
 
   constructor(private http: HttpClient) { }
 
-getCentreStaffList(centreID: number,NameOrEmail:any,type:string,IsOnlystaff:boolean): Observable<any> {
-    return this.http.get<any>(this.rootURL + '/DayCareCentreUser/getCentreStaffList', { params: { centreID,NameOrEmail,type,IsOnlystaff } });
-}
+  getCentreStaffList(centreID: number, NameOrEmail: any, type: string, IsOnlystaff: boolean): Observable<ApiResponse<StaffInfo[]>> {
+    return this.http.get<ApiResponse<StaffInfo[]>>(this.rootURL + '/DayCareCentreUser/getCentreStaffList', { params: { centreID, NameOrEmail, type, IsOnlystaff } });
+  }
 
-getStudentList(daycareID:number): Observable<any> {
-    return this.http.get<any>(this.rootURL + "/DayCareCentreUser/getStudentsByDayCareID", {params:{daycareID}});
-}
-deleteClassAssignment(timeSlot: any, scheduleType: string): Observable<any> {
-  const payload = {
-    classID: timeSlot.classID,
-    dayId: timeSlot.dayId,
-    startTime: timeSlot.startTime,
-    endTime : timeSlot.endTime,
-    assignmentDate: timeSlot.assignmentDate,
-    isRepeated: timeSlot.isRepeated != null ? timeSlot.isRepeated : null,
-    userId: timeSlot.userId,
-    scheduleType: scheduleType
-  };
+  getStudentList(daycareID: number): Observable<ApiResponse<StudentInfo[]>> {
+    return this.http.get<ApiResponse<StudentInfo[]>>(this.rootURL + "/DayCareCentreUser/getStudentsByDayCareID", { params: { daycareID } });
+  }
+  deleteClassAssignment(timeSlot: any, scheduleType: string): Observable<ApiResponse<any>> {
+    const payload = {
+      classID: timeSlot.classID,
+      dayId: timeSlot.dayId,
+      startTime: timeSlot.startTime,
+      endTime: timeSlot.endTime,
+      assignmentDate: timeSlot.assignmentDate,
+      isRepeated: timeSlot.isRepeated != null ? timeSlot.isRepeated : null,
+      userId: timeSlot.userId,
+      scheduleType: scheduleType
+    };
 
-  return this.http.post(`${this.rootURL}/Classroom/deleteClassAssignment`, payload);
-}
+    return this.http.post<ApiResponse<any>>(`${this.rootURL}/Classroom/deleteClassAssignment`, payload);
+  }
 
-editAssignment(obj: any): Observable<any> {
-  return this.http.post(`${this.rootURL}/Classroom/editAssignment`, obj);
-}
-
+  editAssignment(obj: any): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(`${this.rootURL}/Classroom/editAssignment`, obj);
+  }
 }
