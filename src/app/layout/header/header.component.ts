@@ -19,7 +19,6 @@ import { DaycareService } from '../../day-care-management/day-care-settings/dayc
 import { FormBuilder } from '@angular/forms';
 import { HeaderServiceService } from './header-service.service';
 import { TimeDifferencePipe } from '../../custom-pipes/time-difference.pipe';
-import { ProfileComponent } from '../../common-component/profile/profile.component';
 import * as CryptoJS from 'crypto-js';
 import { WelcomeService } from '../../welcome/welcome.service';
 import { CookieService } from 'ngx-cookie-service';
@@ -42,7 +41,6 @@ declare var $: any;
     RouterLink,
     CommonModule,
     TimeDifferencePipe,
-    ProfileComponent,
     SkeletonLoaderComponent,
   ],
   templateUrl: './header.component.html',

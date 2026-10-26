@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { signal } from '@angular/core';
+import { ApiResponse, ParentStudentsResponse, StudentInfo } from '../../models/api.types';
 
 @Injectable({
   providedIn: 'root',
@@ -33,8 +34,8 @@ export class HeaderServiceService {
     this.newStudent.set(0);
   }
 
-  CheckParentOnboarding(UserID: number): Observable<any> {
-    return this.http.get<any>(
+  CheckParentOnboarding(UserID: number): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(
       this.rootUrl + '/DayCareCentreUser/CheckParentOnboarding',
       { params: { UserID } }
     );
@@ -44,8 +45,8 @@ export class HeaderServiceService {
     this.notificationSubject.next(true);
   }
 
-  getAllStudentsByParentID(parentID: number): Observable<any> {
-    return this.http.get<any>(
+  getAllStudentsByParentID(parentID: number): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(
       this.rootUrl + '/Common/getAllStudentsByParentID',
       { params: { parentID } }
     );
@@ -56,8 +57,8 @@ export class HeaderServiceService {
     userRoleId: any,
     studentId: any,
     centreId: any
-  ): Observable<any> {
-    return this.http.get<any>(
+  ): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(
       this.rootUrl + '/Login/CheckStudentSubscriptionPaymentByParentId',
       { params: { parentId, userRoleId, studentId, centreId } }
     );
@@ -65,15 +66,15 @@ export class HeaderServiceService {
 
   checkStudentOnboardingCompleteOrNotByStudentID(
     StudentID: number
-  ): Observable<any> {
-    return this.http.get<any>(
+  ): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(
       `${this.rootUrl}/DayCareCentreUser/checkStudentOnboardingCompleteOrNotByStudentID`,
       { params: { StudentID } }
     );
   }
 
-  generateExpressLoginLink(connectedAccountId: string): Observable<any> {
-    return this.http.post<any>(
+  generateExpressLoginLink(connectedAccountId: string): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(
       this.rootUrl + '/Payment/express-login-link',
       {},
       { params: { connectedAccountId } }

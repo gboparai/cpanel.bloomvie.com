@@ -1,31 +1,30 @@
-import { environment } from './../../../environments/environment';
-
+import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { ApiResponse, SMTPSettingItem } from '../../models/api.types';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SmtpService {
-  readonly rootUrl=environment.apiUrl
+  readonly rootUrl = environment.apiUrl;
 
-  constructor(private http:HttpClient) { }
+  constructor(private http: HttpClient) { }
 
-
-  ManageSMTP(SmtpBO:any):Observable<any>{
-   return this.http.post<any>(this.rootUrl+'/Common/manageSMTPSettings',SmtpBO)
+  ManageSMTP(SmtpBO: SMTPSettingItem | any): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(this.rootUrl + '/Common/manageSMTPSettings', SmtpBO);
   }
 
-  GetAllSMTPSettings(centreID:number):Observable<any>{
-    return this.http.get<any>(this.rootUrl+'/Common/getAllSMTPSettings',{params:{centreID}})
+  GetAllSMTPSettings(centreID: number): Observable<ApiResponse<SMTPSettingItem[]>> {
+    return this.http.get<ApiResponse<SMTPSettingItem[]>>(this.rootUrl + '/Common/getAllSMTPSettings', { params: { centreID } });
   }
 
-  GetSMTPSettingbyId(id:any):Observable<any>{
-    return this.http.get<any>(this.rootUrl+'/Common/getSMTPsettingsbyId',{params:{id}})
+  GetSMTPSettingbyId(id: any): Observable<ApiResponse<SMTPSettingItem>> {
+    return this.http.get<ApiResponse<SMTPSettingItem>>(this.rootUrl + '/Common/getSMTPsettingsbyId', { params: { id } });
   }
 
-  ActiveInactiveSMTPSettingbyId(id:any):Observable<any>{
-    return this.http.get<any>(this.rootUrl+'/Common/activeInactiveSMTPSettingbyId',{params:{id}})
+  ActiveInactiveSMTPSettingbyId(id: any): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(this.rootUrl + '/Common/activeInactiveSMTPSettingbyId', { params: { id } });
   }
 }

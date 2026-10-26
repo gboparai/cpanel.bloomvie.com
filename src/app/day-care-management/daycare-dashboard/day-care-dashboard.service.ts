@@ -2,6 +2,7 @@ import { Injectable, signal, WritableSignal } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { ApiResponse, ClassroomDropdownItem, DaycareEventItem } from '../../models/api.types';
 
 @Injectable({
   providedIn: 'root',
@@ -10,25 +11,25 @@ export class DayCareDashboardService {
   private readonly URL: string = environment.apiUrl;
   constructor(private http: HttpClient) {}
 
-  getDayCareByID(ID: any): Observable<any> {
-    return this.http.get(this.URL + '/Centre/getCentreByID', {
+  getDayCareByID(ID: any): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(this.URL + '/Centre/getCentreByID', {
       params: { ID },
     });
   }
-  getDayCareDashBoardCount(DayCareID: any): Observable<any> {
-    return this.http.get(this.URL + '/Dashboard/getDayCareDashBoardCount', {
+  getDayCareDashBoardCount(DayCareID: any): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(this.URL + '/Dashboard/getDayCareDashBoardCount', {
       params: { DayCareID },
     });
   }
 
-  getEventsByDayCareId(DayCareId: any): Observable<any> {
-    return this.http.get(this.URL + '/Dashboard/getEventsByDayCareId', {
+  getEventsByDayCareId(DayCareId: any): Observable<ApiResponse<DaycareEventItem[]>> {
+    return this.http.get<ApiResponse<DaycareEventItem[]>>(this.URL + '/Dashboard/getEventsByDayCareId', {
       params: { DayCareId },
     });
   }
 
-  getActivitesByCenterId(DayCareId: any): Observable<any> {
-    return this.http.get(this.URL + '/Dashboard/getActivitesByCenterId', {
+  getActivitesByCenterId(DayCareId: any): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(this.URL + '/Dashboard/getActivitesByCenterId', {
       params: { DayCareId },
     });
   }
@@ -38,9 +39,8 @@ export class DayCareDashboardService {
     UserRoleID: number,
     status: any,
     type: any
-  ): Observable<any> {
-
-    return this.http.get(
+  ): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(
       this.URL + '/Common/getStaffTransferedDetailsByCentreID',
       { params: { centreID, UserRoleID, status, type } }
     );
@@ -49,9 +49,8 @@ export class DayCareDashboardService {
   getStaffTransferedDetailsTeacherID(
     teacherID: number,
     UserRoleID: number
-  ): Observable<any> {
-  
-    return this.http.get(
+  ): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(
       this.URL + '/Common/getStaffTransferedDetailsTeacherID',
       { params: { teacherID, UserRoleID } }
     );
@@ -63,26 +62,25 @@ export class DayCareDashboardService {
     statusID: any,
     Reason: any,
     date: any
-  ): Observable<any> {
-
-    return this.http.get(this.URL + '/Common/manageTransferApprovedEmployee', {
+  ): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(this.URL + '/Common/manageTransferApprovedEmployee', {
       params: { employeeID, transferCentreID, statusID, Reason, date },
     });
   }
 
-  getAllEventManagementType() {
-    return this.http.get(this.URL + '/Common/getAllEventManagementType');
+  getAllEventManagementType(): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(this.URL + '/Common/getAllEventManagementType');
   }
 
-  manageDaycareCentreEventManagment(payload: any) {
-    return this.http.post(
+  manageDaycareCentreEventManagment(payload: DaycareEventItem | any): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(
       `${this.URL}/Common/ManageDaycareCentreEventManagment`,
       payload
     );
   }
 
-  deleteEvent(eventID: any, daycareID: any): Observable<any> {
-    return this.http.get(this.URL + '/Common/deleteEventByDayCareId', {
+  deleteEvent(eventID: any, daycareID: any): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(this.URL + '/Common/deleteEventByDayCareId', {
       params: { eventID, daycareID },
     });
   }
@@ -91,8 +89,8 @@ export class DayCareDashboardService {
     CentreID: number,
     IsDiscountApplied: boolean,
     searchItem: string
-  ): Observable<any> {
-    return this.http.get(
+  ): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(
       `${this.URL}/DayCareCentreUser/getAllEnrollmentRequestByCentreID`,
       { params: { CentreID, IsDiscountApplied, searchItem } }
     );
@@ -101,8 +99,8 @@ export class DayCareDashboardService {
   getClassListDropdownByAgeGroup(
     CentreID: number,
     AgeGroupID: number
-  ): Observable<any> {
-    return this.http.get<any>(
+  ): Observable<ApiResponse<ClassroomDropdownItem[]>> {
+    return this.http.get<ApiResponse<ClassroomDropdownItem[]>>(
       `${this.URL}/Classroom/getClassListDropdownByAgeGroup`,
       { params: { CentreID, AgeGroupID } }
     );
@@ -113,23 +111,23 @@ export class DayCareDashboardService {
     StatusID: number,
     Reason: string,
     ParentID: number
-  ): Observable<any> {
-    return this.http.put<any>(
+  ): Observable<ApiResponse<any>> {
+    return this.http.put<ApiResponse<any>>(
       `${this.URL}/DayCareCentreUser/AcceptOrRejectEnrollmentRequest`,
       AcceptOrRejct,
       { params: { StatusID, Reason, ParentID } }
     );
   }
 
-  sendPaymentEmailToParent(paymentDetails: any): Observable<any> {
-    return this.http.put<any>(
+  sendPaymentEmailToParent(paymentDetails: any): Observable<ApiResponse<any>> {
+    return this.http.put<ApiResponse<any>>(
       `${this.URL}/DayCareCentreUser/sendPaymentEmailToParent`,
       paymentDetails
     );
   }
 
-  updateStripeStepCount(accountId: string): Observable<any> {
-    return this.http.put<any>(
+  updateStripeStepCount(accountId: string): Observable<ApiResponse<any>> {
+    return this.http.put<ApiResponse<any>>(
       `${this.URL}/Payment/updateStripeStepCount`,
       null,
       { params: { accountId } }

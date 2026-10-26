@@ -200,7 +200,7 @@ export class WelcomeComponent {
     let data = await this.welcomeService
       .getCentreIDByStudentID(studentID)
       .toPromise();
-    if (data.message == 'Success') {
+    if (data && data.message == 'Success' && data.result) {
       this.cookieService.set('CentreID', data.result.centreID, undefined, '/');
       this.cookieService.set(
         'CentreAdminID',

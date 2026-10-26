@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
+import { ApiResponse, MasterAgeGroupItem } from '../../../models/api.types';
 
 @Injectable({
   providedIn: 'root',
@@ -11,26 +12,26 @@ export class AddAgeGroupService {
 
   constructor(private http: HttpClient) {}
 
-  ManageAgeGroup(MasterAgeGroupsBO: any): Observable<any> {
-    return this.http.post<any>(
+  ManageAgeGroup(MasterAgeGroupsBO: MasterAgeGroupItem | any): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(
       this.rootUrl + '/Centre/manageAgeGroup',
       MasterAgeGroupsBO
     );
   }
 
-  GetAgeGroupByID(ID: any): Observable<any> {
-    return this.http.get<any>(this.rootUrl + '/Centre/getAgeGroupByID', {
+  GetAgeGroupByID(ID: any): Observable<ApiResponse<MasterAgeGroupItem>> {
+    return this.http.get<ApiResponse<MasterAgeGroupItem>>(this.rootUrl + '/Centre/getAgeGroupByID', {
       params: { ID },
     });
   }
 
-  ActiveInactiveAgeGroup(ID: any): Observable<any> {
-    return this.http.get<any>(this.rootUrl + '/Centre/activeInactiveAgeGroup', {
+  ActiveInactiveAgeGroup(ID: any): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(this.rootUrl + '/Centre/activeInactiveAgeGroup', {
       params: { ID },
     });
   }
 
-  GetAllAgeGroup(): Observable<any> {
-    return this.http.get<any>(this.rootUrl + '/Centre/getAllAgeGroups');
+  GetAllAgeGroup(): Observable<ApiResponse<MasterAgeGroupItem[]>> {
+    return this.http.get<ApiResponse<MasterAgeGroupItem[]>>(this.rootUrl + '/Centre/getAllAgeGroups');
   }
 }

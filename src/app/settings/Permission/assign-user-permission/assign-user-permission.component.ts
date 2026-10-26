@@ -18,7 +18,6 @@ import Swal from 'sweetalert2';
 import { ToastrService, ToastrModule } from 'ngx-toastr';
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 import { FormsModule } from '@angular/forms';
-import { error } from 'node:console';
 import { AssignUserPermissionService } from './assign-user-permission.service';
 
 declare var $: any;
@@ -159,7 +158,7 @@ export class AssignUserPermissionComponent {
     if (finaluserRoleId == 0 && finalisActive == null) {
       this.service.getEmployeeRole(0, '').subscribe({
         next: (roles) => {
-          this.EmployeeRoleList = roles;
+          this.EmployeeRoleList = roles.result || roles;
           this.totalCount = this.EmployeeRoleList.length || 0;
           // this.toastr.success('All employee roles fetched successfully!');
           this.sortEmployeeRoleList();

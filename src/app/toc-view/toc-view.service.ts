@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { ApiResponse, DaycareDaysItem, ForInterestedAppliedJobTOCItem } from '../models/api.types';
 
 @Injectable({
   providedIn: 'root'
@@ -15,48 +16,48 @@ export class TocViewService {
 //   return this.http.get(this.roootUrl+"/Frontend/getAppliedJobTOCList",{params:{Name,statusID,pinCode}})
 // }
 
-getAppliedJobTOCList(Name:any,statusID:any,centreId:any):Observable<any>
+getAppliedJobTOCList(Name:any,statusID:any,centreId:any):Observable<ApiResponse<ForInterestedAppliedJobTOCItem[]>>
 {
-  return this.http.get(this.roootUrl+"/Frontend/getAppliedJobTOCList",{params:{Name,statusID,centreId}})
+  return this.http.get<ApiResponse<ForInterestedAppliedJobTOCItem[]>>(this.roootUrl+"/Frontend/getAppliedJobTOCList",{params:{Name,statusID,centreId}})
 }
 
 // getAppliedJobTOByID(id:any):Observable<any>{
 //   return this.http.get(this.roootUrl+"/Frontend/getAppliedJobTOByID",{params : {id}});
 // }
 
-getAppliedJobTOByID(id:any,centreID : number):Observable<any>{
-  return this.http.get(this.roootUrl+"/Frontend/getAppliedJobTOByID",{params : {id,centreID}});
+getAppliedJobTOByID(id:any,centreID : number):Observable<ApiResponse<ForInterestedAppliedJobTOCItem>>{
+  return this.http.get<ApiResponse<ForInterestedAppliedJobTOCItem>>(this.roootUrl+"/Frontend/getAppliedJobTOByID",{params : {id,centreID}});
 }
 
-getQualifications():Observable<any>
+getQualifications():Observable<ApiResponse<any>>
 {
-  return this.http.get(this.roootUrl+"/Frontend/getMasterQualifications")
+  return this.http.get<ApiResponse<any>>(this.roootUrl+"/Frontend/getMasterQualifications")
 }
-getDocumentTypeList():Observable<any>{
-  return this.http.get<any>(this.roootUrl+'/User/getAllMasterDocumentType');
+getDocumentTypeList():Observable<ApiResponse<any>>{
+  return this.http.get<ApiResponse<any>>(this.roootUrl+'/User/getAllMasterDocumentType');
 }
 
-tocApprovedReject(obj: any):Observable<any>
+tocApprovedReject(obj: any):Observable<ApiResponse<any>>
 {
-return this.http.post<any>(this.roootUrl+'/Frontend/tocApprovedReject',obj);
+return this.http.post<ApiResponse<any>>(this.roootUrl+'/Frontend/tocApprovedReject',obj);
 }
 
 
-SendTOCRequestToUser(Slotid:any,LoginUserid:any):Observable<any>
+SendTOCRequestToUser(Slotid:any,LoginUserid:any):Observable<ApiResponse<any>>
 {
-  return this.http.get(this.roootUrl+"/Frontend/SendTOCRequestToUser",{params:{Slotid,LoginUserid}})
+  return this.http.get<ApiResponse<any>>(this.roootUrl+"/Frontend/SendTOCRequestToUser",{params:{Slotid,LoginUserid}})
 }
 
-SendSlotRequestToUserAtOnce(requestData: any[]): Observable<any> {
-  return this.http.post(this.roootUrl + "/Frontend/SendSlotRequestToUserAtOnce", requestData);
+SendSlotRequestToUserAtOnce(requestData: any[]): Observable<ApiResponse<any>> {
+  return this.http.post<ApiResponse<any>>(this.roootUrl + "/Frontend/SendSlotRequestToUserAtOnce", requestData);
 }
 
-GetAllDays():Observable<any>{
-  return this.http.get(this.roootUrl + "/Classroom/getAllDays");
+GetAllDays():Observable<ApiResponse<DaycareDaysItem[]>>{
+  return this.http.get<ApiResponse<DaycareDaysItem[]>>(this.roootUrl + "/Classroom/getAllDays");
 }
 
-getTocUserFilter(obj : any):Observable<any>{
-  return this.http.post(this.roootUrl + '/Frontend/getTocUserWithOtherFilters',obj);
+getTocUserFilter(obj : any):Observable<ApiResponse<any>>{
+  return this.http.post<ApiResponse<any>>(this.roootUrl + '/Frontend/getTocUserWithOtherFilters',obj);
 }
 
 

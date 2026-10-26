@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter, forwardRef } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import {
   FormBuilder,
@@ -23,7 +23,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
     OTPComponent,
     ToastrModule,
     CommonModule,
-    LoginComponent,
+    forwardRef(() => LoginComponent),
   ],
   templateUrl: './forgot-password.component.html',
   styleUrls: ['./forgot-password.component.css'],

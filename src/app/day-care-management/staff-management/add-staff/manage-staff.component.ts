@@ -32,7 +32,12 @@ import { ViewStaffComponent } from '../view-staff/view-staff.component';
 import { BreadcrumbComponent } from '../../../common-component/breadcrumb/breadcrumb.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { TimeFormatAmPmPipe } from '../../../bloomvie-management/dc-appointments-list/time-format.pipe';
-import { Console } from 'node:console';
+import {
+  AddStaffRequest,
+  StaffInfo,
+  RoleDropdownItem,
+  ApiResponse,
+} from '../../../models/api.types';
 import { TooltipComponent } from '../../../common-component/tooltip/tooltip.component';
 import flatpickr from 'flatpickr';
 
@@ -91,7 +96,7 @@ export class ManageStaffComponent implements OnInit {
   @ViewChild(ViewStaffComponent) childComponent!: ViewStaffComponent;
   public staffForm: any;
   // public assignmentForm: any;
-  public userRoleList: any[] = [];
+  public userRoleList: RoleDropdownItem[] = [];
   public roleSpecializationList: any[] = [];
   public arrIndex1: any;
   private centreID: number = 0;
@@ -465,7 +470,21 @@ export class ManageStaffComponent implements OnInit {
       return;
     }
 
-    const formValue = { ...this.staffForm.value };
+    const formValue: AddStaffRequest = { ...this.staffForm.value };
+    if (typeof formValue.firstName === 'string') {
+      formValue.firstName = formValue.firstName.trim();
+    }
+    if (typeof formValue.lastName === 'string') {
+      formValue.lastName = formValue.lastName.trim();
+    }
+    if (typeof formValue.email === 'string') {
+      formValue.email = formValue.email.trim();
+    }
+    if (!formValue.firstName) {
+      this.staffForm.get('firstName')?.setErrors({ required: true });
+      this.staffForm.markAllAsTouched();
+      return;
+    }
     formValue.qualification = formValue.qualification?.toString();
     formValue.jobType =
       formValue.jobType === 'partTime'
@@ -475,7 +494,7 @@ export class ManageStaffComponent implements OnInit {
           : 0;
     formValue.centreID = this.centreID;
     formValue.loginUserID = this.loginUserID;
-    formValue.id = formValue.id > 0 ? formValue.id : 0;
+    formValue.id = formValue.id && formValue.id > 0 ? formValue.id : 0;
 
     const isTeacherOrAdmin =
       formValue.userRoleID === 4 || formValue.userRoleID === 8;
@@ -509,14 +528,14 @@ export class ManageStaffComponent implements OnInit {
       next: (response) => {
         this.spinner.hide();
         if (response.message === 'Success') {
-          this.handleSuccess(response.activity);
+          this.handleSuccess(response.activity || 'Success');
           this.DefaultValue();
           this.enableAllDates();
           this.onSelectEdit = null;
 
           this.commonService.trigger();
         } else {
-          this.toastr.warning(response.message);
+          this.toastr.warning(response.message || 'Operation failed');
         }
       },
       error: (err) => {
@@ -555,7 +574,7 @@ export class ManageStaffComponent implements OnInit {
     return assignmentList;
   }
 
-  private handleSuccess(activityMessage: string) {
+  private handleSuccess(activityMessage: string | any) {
     this.toastr.success(activityMessage);
     this.childComponent.getStaffList();
     this.reset();
@@ -1216,7 +1235,8 @@ export class ManageStaffComponent implements OnInit {
   getCentreWorkingDaysByCentreID() {
     this.manageStaffSerivece
       .getCentreWorkingDaysByCentreID(this.centreID)
-      .subscribe((result: any) => {
+      .subscribe({
+        next: (result: any) => {
         if (result.message == 'Success') {
           this.workCalendar.mon = result.result.mon;
           this.workCalendar.monStartTime = result.result.monStartTime;
@@ -1246,7 +1266,11 @@ export class ManageStaffComponent implements OnInit {
           this.workCalendar.sunStartTime = result.result.sunStartTime;
           this.workCalendar.sunEndTime = result.result.sunEndTime;
         }
-      });
+      },
+      error: (err: any) => {
+        console.error('Failed to load centre working days:', err);
+      }
+    });
   }
 
   isDisabledDays(day: any) {
@@ -2019,7 +2043,7 @@ export class ManageStaffComponent implements OnInit {
       .subscribe({
         next: (response) => {
           if (response.message === 'Success') {
-            this.toastr.success(response.activity);
+            this.toastr.success(response.activity || 'Staff uploaded successfully');
             $('#exampleModal3').modal('hide');
 
             if (response.result.skipRecords.length > 0) {
@@ -2034,7 +2058,7 @@ export class ManageStaffComponent implements OnInit {
             const formData = new FormData();
             $('#formFile').val('');
           } else {
-            this.toastr.warning(response.message);
+            this.toastr.warning(response.message || 'Staff upload failed');
           }
           setTimeout(() => {
             this.spinner.hide();

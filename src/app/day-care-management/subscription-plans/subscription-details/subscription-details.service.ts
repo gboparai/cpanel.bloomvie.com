@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import { Observable } from 'rxjs';
+import { ApiResponse, SubscriptionPlanItem } from '../../../models/api.types';
 
 @Injectable({
   providedIn: 'root'
@@ -14,17 +15,10 @@ export class SubscriptionDetailsService {
 
   constructor(private http: HttpClient) { }
 
-  // getDetails(IsActive: any, SearchText: any): Observable<any> {
-  //   const requestBody = { IsActive, SearchText };
-  //   return this.http.post(this.URL + this.getPlans, requestBody);
-  // }
-  getDetails(getForm: any):Observable <any>{
-    return this.http.post<any>(this.URL + this.getPlans,getForm )
+  getDetails(getForm: any): Observable<ApiResponse<SubscriptionPlanItem[]>> {
+    return this.http.post<ApiResponse<SubscriptionPlanItem[]>>(this.URL + this.getPlans, getForm);
   }
-  activeInActiveSubscriptionPlansByID(Id: any): Observable<any> {
-    return this.http.get<any>(this.URL + this.activeInactive, { params: { Id } })
+  activeInActiveSubscriptionPlansByID(Id: any): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(this.URL + this.activeInactive, { params: { Id } });
   }
-
-  
-
 }

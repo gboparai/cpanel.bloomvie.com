@@ -2,6 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
+import {
+  ApiResponse,
+  AddStaffRequest,
+  StaffInfo,
+  StaffListResponse,
+  ClassroomDropdownItem,
+} from '../../../models/api.types';
 
 @Injectable({
   providedIn: 'root',
@@ -9,15 +16,15 @@ import { environment } from '../../../../environments/environment';
 export class ManageStaffService {
   private readonly rootURL: string = environment.apiUrl;
   constructor(private http: HttpClient) {}
-  getStaffAccToNameAndEmailSearch(NameOrEmail: number,centreID: number): Observable<any> {
-    return this.http.get<any>(
+  getStaffAccToNameAndEmailSearch(NameOrEmail: number | string, centreID: number): Observable<ApiResponse<StaffInfo[]>> {
+    return this.http.get<ApiResponse<StaffInfo[]>>(
       this.rootURL + '/DayCareCentreUser/getStaffAccToNameAndEmailSearch',
-      { params: { NameOrEmail,centreID } }
+      { params: { NameOrEmail, centreID } }
     );
   }
 
-  getCentreStaffList(centreID: number, NameOrEmail: any, type: any,IsOnlystaff:boolean): Observable<any> {
-    return this.http.get<any>(this.rootURL + '/DayCareCentreUser/getCentreStaffList',{ params: { centreID, NameOrEmail, type,IsOnlystaff } });
+  getCentreStaffList(centreID: number, NameOrEmail: any, type: any, IsOnlystaff: boolean): Observable<StaffListResponse> {
+    return this.http.get<StaffListResponse>(this.rootURL + '/DayCareCentreUser/getCentreStaffList', { params: { centreID, NameOrEmail, type, IsOnlystaff } });
   }
 
   // getClassListByTeacherID(id: number): Observable<any> {
@@ -39,19 +46,19 @@ export class ManageStaffService {
     );
   }
 
-  getDaycareClasses(ID: number): Observable<any> {
-    return this.http.get<{ id: number; name: string }>(
+  getDaycareClasses(ID: number): Observable<ApiResponse<ClassroomDropdownItem[]>> {
+    return this.http.get<ApiResponse<ClassroomDropdownItem[]>>(
       this.rootURL + '/Classroom/getDaycareClassListDropdown',
       { params: { ID } }
     );
   }
   getDaycareClassSections(ID: number): Observable<any> {
-    return this.http.get<{ id: number; name: string }>(
+    return this.http.get<ApiResponse<ClassroomDropdownItem[]>>(
       this.rootURL + '/Classroom/getDaycareClassSectionListDropdown',
       { params: { ID } }
     );
   }
-  manageStaff(postData: any, CreatedByRoleID: number): Observable<any> {
+  manageStaff(postData: AddStaffRequest, CreatedByRoleID: number): Observable<ApiResponse<any>> {
     return this.http.post<any>(
       this.rootURL + '/DayCareCentreUser/ManageStaffAsync',
       postData,
@@ -87,7 +94,7 @@ export class ManageStaffService {
       { params: { centreID, teacherID } }
     );
   }
-  uploadBulkStaff(postData: any, centreID: number): Observable<any> {
+  uploadBulkStaff(postData: FormData | any, centreID: number): Observable<ApiResponse<any>> {
     return this.http.post<any>(
       this.rootURL + '/DayCareCentreUser/uploadBulkStaff',
       postData,

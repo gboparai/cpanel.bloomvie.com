@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { TocTeacherViewService } from './toc-teacher-view.service';
 
@@ -6,7 +7,7 @@ describe('TocTeacherViewService', () => {
   let service: TocTeacherViewService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({ imports: [HttpClientTestingModule] });
     service = TestBed.inject(TocTeacherViewService);
   });
 

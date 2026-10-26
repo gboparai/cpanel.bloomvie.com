@@ -6,6 +6,12 @@ import { ToastrService } from 'ngx-toastr';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { AnnouncementService } from '../announcement.service';
+import {
+  ApiResponse,
+  AnnouncementItem,
+  CreateAnnouncementRequest,
+  RecipientAnnouncementItem,
+} from '../../models/api.types';
 import { BreadcrumbComponent } from '../../common-component/breadcrumb/breadcrumb.component';
 import { ActivatedRoute } from '@angular/router';
 import { HeaderServiceService } from '../../layout/header/header-service.service';
@@ -19,12 +25,12 @@ import { HeaderServiceService } from '../../layout/header/header-service.service
 })
 export class ManageAnnouncementsComponent implements OnInit {
   activeTab: 'received' | 'sent' = 'received';
-  recipientAnnouncements: any[] = [];
-  announcementHistory: any[] = [];
+  recipientAnnouncements: RecipientAnnouncementItem[] = [];
+  announcementHistory: AnnouncementItem[] = [];
   classroomOptions: { id: number; className: string }[] = [];
   announcementForm!: FormGroup;
   showModal: boolean = false;
-  selectedAnnouncement: any = null;
+  selectedAnnouncement: AnnouncementItem | RecipientAnnouncementItem | null = null;
   pReceived: number = 1;
   pSent: number = 1;
   isLoading: boolean = false;
@@ -248,7 +254,7 @@ export class ManageAnnouncementsComponent implements OnInit {
   loadHistory(): void {
     this.isLoading = true;
     this.announcementService.getAnnouncementHistory(this.userId, this.userRoleId, this.centreId).subscribe({
-      next: (res: any) => {
+      next: (res: ApiResponse<AnnouncementItem[]>) => {
         this.isLoading = false;
         if (res && res.result) {
           this.announcementHistory = res.result;
@@ -268,7 +274,7 @@ export class ManageAnnouncementsComponent implements OnInit {
     this.isLoading = true;
     const currentStudentId = this.isParent ? (this.studentId || (this.cookie.check('StudentID') ? parseInt(this.cookie.get('StudentID'), 10) : null)) : null;
     this.announcementService.getRecipientAnnouncements(this.userId, this.userRoleId, currentStudentId, this.centreId).subscribe({
-      next: (res: any) => {
+      next: (res: ApiResponse<RecipientAnnouncementItem[]>) => {
         this.isLoading = false;
         this.recipientAnnouncements = res?.result || [];
       },
@@ -340,7 +346,7 @@ export class ManageAnnouncementsComponent implements OnInit {
 
     this.isSubmitting = true;
     this.announcementService.createAnnouncement(payload).subscribe({
-      next: (res: any) => {
+      next: (res: ApiResponse<AnnouncementItem>) => {
         this.isSubmitting = false;
         if (res && (res.activity === 'Success' || res.message?.includes('successfully'))) {
           this.toastr.success(res.message || 'Announcement sent successfully!');

@@ -28,7 +28,6 @@ import { TocRegistrationService } from './toc-registration.service';
 import { environment } from '../../environments/environment';
 import * as CryptoJS from 'crypto-js';
 import { BreadcrumbComponent } from '../common-component/breadcrumb/breadcrumb.component';
-import { ProfileComponent } from '../common-component/profile/profile.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { CommonService } from '../common-component/common.service';
 import { TimeFormatAmPmPipe } from '../bloomvie-management/dc-appointments-list/time-format.pipe';
@@ -70,7 +69,6 @@ export function charOnlyValidator(): ValidatorFn {
     FormsModule,
     NgxPaginationModule,
     BreadcrumbComponent,
-    ProfileComponent,
     TimeFormatAmPmPipe,
     TooltipComponent
   ],
@@ -2746,7 +2744,7 @@ export class TOCRegistrationComponent {
         // Save the data to the server
         const data = await this.tocservice.ManageAppliedTOC(combinedData).toPromise();
 
-        if (data.message === 'ok') {
+        if (data && data.message === 'ok') {
           this.spinner.hide();
           this.toastr.success('Data saved successfully');
           $('#formFile').val('');
@@ -2766,7 +2764,7 @@ export class TOCRegistrationComponent {
           this.router.navigate(['/profile']);
         } else {
           this.spinner.hide();
-          this.toastr.error(data.message);
+          this.toastr.error(data?.message || 'Failed to save data');
         }
       } catch (error) {
         this.spinner.hide();
@@ -3032,7 +3030,7 @@ export class TOCRegistrationComponent {
           .updateTocUserDetail(this.TOCRegistration.value)
           .toPromise();
 
-        if (data.message === 'ok') {
+        if (data && data.message === 'ok') {
           this.spinner.hide();
           this.toastr.success('Data update successfully');
           $('#formFile').val('');
@@ -3062,7 +3060,7 @@ export class TOCRegistrationComponent {
           this.tocservice.refreshTocSubject();
         } else {
           this.spinner.hide();
-          this.toastr.error(data.message);
+          this.toastr.error(data?.message || 'Failed to update data');
         }
       } catch (error) {
         this.spinner.hide();

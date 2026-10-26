@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
+import { ApiResponse } from '../../models/api.types';
 
 @Injectable({
   providedIn: 'root',
@@ -11,26 +12,26 @@ export class AddBulkActivityService {
 
   constructor(private http: HttpClient) {}
 
-  getTeacherAssignments(teacherID: number, centreID: number): Observable<any> {
-    return this.http.get<any>(this.URL + '/Centre/getTeacherAssignments', {
+  getTeacherAssignments(teacherID: number, centreID: number): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(this.URL + '/Centre/getTeacherAssignments', {
       params: { teacherID, centreID },
     });
   }
 
-  getFoodType(): Observable<any> {
-    return this.http.get<any>(this.URL + '/Centre/getMealType');
+  getFoodType(): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(this.URL + '/Centre/getMealType');
   }
 
-  getMealType(): Observable<any> {
-    return this.http.get<any>(this.URL + '/Centre/getFoodType');
+  getMealType(): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(this.URL + '/Centre/getFoodType');
   }
 
   downloadInvalidRecordsSheet(
     invalidRecords: any,
     centreID: number,
     teacherID: number
-  ): Observable<any> {
-    return this.http.post<any>(
+  ): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(
       this.URL + '/Centre/DownloadInvalidActivityRecord',
       invalidRecords,
       { params: { centreID, teacherID } }

@@ -91,7 +91,7 @@ export class ViewDaycareComponent implements OnInit {
               };
             });
           }
-          this.paginationConfig.totalItems = response.count;
+          this.paginationConfig.totalItems = response.count || 0;
           this.skeletonShow = '';
         },
         error: (err) => {

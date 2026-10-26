@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { HttpHeaders } from '@angular/common/http';
+import { ApiResponse } from '../../models/api.types';
 
 @Injectable({
   providedIn: 'root',
@@ -12,19 +12,19 @@ export class ReminderTypeServiceService {
 
   constructor(private http: HttpClient) {}
 
-  manageReminderTypes(ReminderTypeBO: Object): Observable<any> {
-    return this.http.post<any>(
+  manageReminderTypes(ReminderTypeBO: Object): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(
       this.rootURL + '/common/manageReminderTypes',
       ReminderTypeBO
     );
   }
 
-  getAllReminderType(): Observable<any> {
-    return this.http.get<any>(this.rootURL + '/common/getAllReminderTypeList');
+  getAllReminderType(): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(this.rootURL + '/common/getAllReminderTypeList');
   }
 
-  activeInActiveReminderType(ID: number, isActive: boolean) {
-    return this.http.put<any>(
+  activeInActiveReminderType(ID: number, isActive: boolean): Observable<ApiResponse<any>> {
+    return this.http.put<ApiResponse<any>>(
       this.rootURL + '/common/activeInActiveReminderType',
       null,
       { params: { ID, isActive } }

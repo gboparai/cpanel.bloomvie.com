@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { ApiResponse } from '../models/api.types';
 
 @Injectable({
   providedIn: 'root'
@@ -15,12 +16,11 @@ export class ForgotPasswordService {
 
   constructor(private http: HttpClient) {}
 
-  forgotPassword(email: any): Observable<any> {
-    return this.http.get<any>(this.URL + this.forgotUrl,  {params:{email}} );
+  forgotPassword(email: any): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(this.URL + this.forgotUrl, { params: { email } });
   }
-setEmail(email:string)
-{
-  this.breadcrumbSubject.next(email);
-}
 
+  setEmail(email: string) {
+    this.breadcrumbSubject.next(email);
+  }
 }

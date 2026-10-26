@@ -152,7 +152,7 @@ async onSubmit(type: any) {
       if (manageResponse.message === 'Success') {
         this.Appservice.GetApplicationSetting().subscribe(data=>{
           this.appservice.changeFavicon(this.rootUrl+'Content/Image/favicon/'+data.result.favicon)
-          this.Title.setTitle(data.result.businessName)
+          this.Title.setTitle(data.result.businessName || '')
          this.bloomvie= $("#name").text(data.result.businessName);
        
         //  this.imageMain=this.rootUrl+'Content/Image/mainLogo/'+data.result.mainLogo;

@@ -9,15 +9,12 @@ import { ToastrService } from 'ngx-toastr';
 import { CommonService } from '../../common-component/common.service';
 import { ManageStudentGalleryService } from '../manage-student-gallery/manage-student-gallery.service';
 import flatpickr from 'flatpickr';
-import { response } from 'express';
 import { environment } from '../../../environments/environment';
 import { CommonModule, DatePipe, NgFor } from '@angular/common';
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 import Swal from 'sweetalert2';
 import { ClassroomDetailsService } from '../classroom-management/classroom-details/classroom-details.service';
-import { log } from 'console';
-import { AnyCatcher } from 'rxjs/internal/AnyCatcher';
 
 declare var $: any;
 
@@ -609,7 +606,7 @@ export class StudentViewGalleryComponent {
           let allImages: any[] = [];
 
           for (const student of data.result) {
-            for (const day of student.days) {
+            for (const day of student.days || []) {
               for (const activity of day.studentGalleryData) {
                 const activityDate = new Date(activity.activityDate);
                 const start = new Date(this.firstStartDate);

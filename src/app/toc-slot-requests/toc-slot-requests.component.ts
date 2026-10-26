@@ -66,10 +66,10 @@ export class TocSlotRequestsComponent {
   async getTocSlotbyUserid() {
     this.skeletonShow = 'Skelton';
     let data = await this.tocrequestservice.getTocSlotbyUserid(this.UserID,this.centreID).toPromise();
-    if (data.message == 'OK') {
+    if (data && data.message == 'OK') {
       this.skeletonShow = '';
       // this.TocSlotRequests = data.result;
-      this.TocSlotRequests = data.result.filter(
+      this.TocSlotRequests = (data.result || []).filter(
         (x: { centreId: number }) => x.centreId == this.centreID
       );
 

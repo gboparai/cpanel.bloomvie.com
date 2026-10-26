@@ -27,7 +27,6 @@ import { log } from 'console';
 import { NgSelectModule } from '@ng-select/ng-select';
 // Uppercase name (recommended)
 import introJs from 'intro.js';
-import 'intro.js/introjs.css';
 import { TimeFormatAmPmPipe } from '../../bloomvie-management/dc-appointments-list/time-format.pipe';
 import { BreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
 import { SkeletonLoaderComponent } from '../skeleton-loader/skeleton-loader.component';

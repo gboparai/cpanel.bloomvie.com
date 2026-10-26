@@ -2,6 +2,12 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { Observable, BehaviorSubject, tap } from 'rxjs';
+import {
+  ApiResponse,
+  CentreSettings,
+  UpdateCentreSettingsRequest,
+  ActivityRequest,
+} from '../../models/api.types';
 
 @Injectable({
   providedIn: 'root',
@@ -16,8 +22,8 @@ export class DaycareService {
   }
   constructor(private http: HttpClient) {}
 
-  getAllActivites(ActivityBO: any): Observable<any> {
-    return this.http.post(this.URL + '/Classroom/getAllActivities', ActivityBO);
+  getAllActivites(ActivityBO: ActivityRequest | any): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(this.URL + '/Classroom/getAllActivities', ActivityBO);
   }
   assignmentActivitesForDayCare(
     centerId: any,
@@ -130,39 +136,39 @@ export class DaycareService {
   //   );
   // }
 
-  editDayCareSettings(centerId: any): Observable<any> {
-    return this.http.get(this.URL + '/Common/GetDayCareSettingsByCenterID', {
+  editDayCareSettings(centerId: any): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(this.URL + '/Common/GetDayCareSettingsByCenterID', {
       params: { centerId },
     });
   }
 
-  getAllClasses(): Observable<any> {
-    return this.http.get(this.URL + '/Classroom/getAllClasses');
+  getAllClasses(): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(this.URL + '/Classroom/getAllClasses');
   }
 
-  getAllAgeGroup(): Observable<any> {
-    return this.http.get(this.URL + '/Centre/getAllAgeGroups');
+  getAllAgeGroup(): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(this.URL + '/Centre/getAllAgeGroups');
   }
 
-  getAllFacility(): Observable<any> {
-    return this.http.get(this.URL + '/Common/getAllFacility');
+  getAllFacility(): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(this.URL + '/Common/getAllFacility');
   }
 
-  getCentreSettings(centreID: number): Observable<any> {
-    return this.http.get(`${this.URL}/Centre/getCentreSettings`, {
+  getCentreSettings(centreID: number): Observable<ApiResponse<CentreSettings>> {
+    return this.http.get<ApiResponse<CentreSettings>>(`${this.URL}/Centre/getCentreSettings`, {
       params: { centreID },
     });
   }
 
-  updateCentreSettings(model: any): Observable<any> {
-    return this.http.put(`${this.URL}/Centre/updateCentreSettings`, model);
+  updateCentreSettings(model: UpdateCentreSettingsRequest | any): Observable<ApiResponse<CentreSettings>> {
+    return this.http.put<ApiResponse<CentreSettings>>(`${this.URL}/Centre/updateCentreSettings`, model);
   }
 
-  checkExternalBilling(centreID: number): Observable<any> {
+  checkExternalBilling(centreID: number): Observable<ApiResponse<CentreSettings>> {
     return this.getCentreSettings(centreID).pipe(
-      tap((res: any) => {
+      tap((res: ApiResponse<CentreSettings>) => {
         if (res && res.result) {
-          const enabled = !!(res.result.externalBillingEnabled ?? res.result.ExternalBillingEnabled ?? (typeof res.result === 'boolean' ? res.result : false));
+          const enabled = !!res.result?.externalBillingEnabled;
           this.notifyExternalBillingChanged(enabled);
         }
       })

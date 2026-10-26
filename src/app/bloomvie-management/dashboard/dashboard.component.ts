@@ -270,7 +270,7 @@ export class DashboardComponent {
   loadJobDetails(id: any) {
     this.jobPortalDetailService.getJobByID(id).subscribe(
       (data) => {
-        this.job = data.result[0];
+        this.job = data.result ? data.result[0] : null;
 
       },
       (error) => {

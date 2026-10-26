@@ -4,9 +4,9 @@ import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
-import { Subject } from '@microsoft/signalr';
 import { CookieService } from 'ngx-cookie-service';
 import { CommonService } from '../common-component/common.service';
+import { ApiResponse } from '../models/api.types';
 
 @Injectable({
   providedIn: 'root',

@@ -3,6 +3,7 @@ import { FullCalendarModule } from '@fullcalendar/angular';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { AttendanceDashboardService } from './attendance-dashboard.service';
+import { ApiResponse, AttendanceSummary } from '../../models/api.types';
 import { CommonModule, DatePipe, NgFor, NgIf } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -72,7 +73,7 @@ export class AttendanceDashboardComponent implements OnInit, AfterViewInit {
 
   public chartOptions: ApexPieChartOptions;
   centreID: any | undefined;
-  attendanceCount: any;
+  attendanceCount: AttendanceSummary | any;
   fullName: string | undefined;
   inFullPath: string | undefined;
   outFullPath: string | undefined;
@@ -297,14 +298,20 @@ export class AttendanceDashboardComponent implements OnInit, AfterViewInit {
 
   selectedClass(event: any) {
     if (event) {
-      if (event.classID != null || event.classID !== undefined) {
-        this.selectedClassId = event.classID;
-        this.selectedClassName = event.className;
+      if (typeof event === 'object') {
+        const id = event.classID ?? event.classroomID ?? event.id ?? null;
+        const name = event.className ?? event.classroomName ?? event.name ?? null;
+        this.selectedClassId = id ?? 0;
+        this.selectedClassID = id;
+        this.selectedClassName = name;
       } else {
         this.selectedClassId = event;
+        this.selectedClassID = typeof event === 'number' ? event : null;
       }
     } else {
       this.selectedClassId = 0;
+      this.selectedClassID = null;
+      this.selectedClassName = null;
     }
     this.getstaffAttendanceByCentreID();
   }
@@ -323,10 +330,15 @@ export class AttendanceDashboardComponent implements OnInit, AfterViewInit {
   // }
 
   getDayCareByID() {
-    this.service.getDayCareByID(this.centreID).subscribe((data) => {
-      if (data.message == 'Success') {
-        this.CentreName = data.result.centreName;
-      } else {
+    this.service.getDayCareByID(this.centreID).subscribe({
+      next: (data) => {
+        if (data && data.message == 'Success' && data.result) {
+          this.CentreName = data.result.centreName;
+        } else {
+          this.CentreName = [];
+        }
+      },
+      error: () => {
         this.CentreName = [];
       }
     });
@@ -361,8 +373,8 @@ export class AttendanceDashboardComponent implements OnInit, AfterViewInit {
         Number(this.userRoleID),
         Number(classId)
       )
-      .subscribe(
-        (response) => {
+      .subscribe({
+        next: (response) => {
           if (response.message === 'ok') {
             this.attendanceList = response.result;
             this.skeletonShow = '';
@@ -371,8 +383,12 @@ export class AttendanceDashboardComponent implements OnInit, AfterViewInit {
             this.skeletonShow = '';
           }
         },
-        () => (this.skeletonShow = '')
-      );
+        error: () => {
+          this.attendanceList = [];
+          this.skeletonShow = '';
+          this.spinner.hide();
+        }
+      });
   }
 
   Onsearchclick() {
@@ -403,8 +419,8 @@ export class AttendanceDashboardComponent implements OnInit, AfterViewInit {
         Number(this.userRoleID),
         Number(classId)
       )
-      .subscribe(
-        (response) => {
+      .subscribe({
+        next: (response) => {
           if (response.message === 'ok') {
             this.attendanceList = response.result;
             this.skeletonShow = '';
@@ -413,8 +429,12 @@ export class AttendanceDashboardComponent implements OnInit, AfterViewInit {
             this.skeletonShow = '';
           }
         },
-        () => (this.skeletonShow = '')
-      );
+        error: () => {
+          this.attendanceList = [];
+          this.skeletonShow = '';
+          this.spinner.hide();
+        }
+      });
   }
 
   formatDate(date: Date): string {
@@ -571,38 +591,42 @@ export class AttendanceDashboardComponent implements OnInit, AfterViewInit {
      let roleToPass = (this.userRoleID === '3' && this.isStudentAttendance) ? 30 : Number(this.userRoleID);
     
 
-    this.service.getTodayAttendanceSummaryByCentreID(Number(userId), roleToPass).subscribe((response) => {
-      if (response.message === 'Success') {
-        this.attendanceCount = response.result;
+    this.service.getTodayAttendanceSummaryByCentreID(Number(userId), roleToPass).subscribe({
+      next: (response: ApiResponse<AttendanceSummary>) => {
+        if (response.message === 'Success' && response.result) {
+          this.attendanceCount = response.result;
 
-        const total = (this.attendanceCount.totalStaff || this.attendanceCount.totalStudent || 0);
-        const present = this.attendanceCount.presentCount || 0;
-        const absent = this.attendanceCount.absentCount || 0;
+          const total = (this.attendanceCount.totalStaff || this.attendanceCount.totalStudent || 0);
+          const present = this.attendanceCount.presentCount || 0;
+          const absent = this.attendanceCount.absentCount || 0;
 
-        this.isChartVisible = (total > 0 || present > 0 || absent > 0);
+          this.isChartVisible = (total > 0 || present > 0 || absent > 0);
 
-        if (this.isChartVisible) {
-          this.chartOptions = {
-            series: [total, present, absent],
-            chart: { width: 380, type: 'pie' },
-            labels: (this.displayRole != '4' && this.displayRole != '8')
-              ? ['Total Staff', 'Present', 'Absent']
-              : ['Total Student', 'Present', 'Absent'],
-            responsive: [{
-              breakpoint: 480,
-              options: {
-                chart: { width: 200 },
-                legend: { position: 'bottom' }
-              }
-            }]
-          };
+          if (this.isChartVisible) {
+            this.chartOptions = {
+              series: [total, present, absent],
+              chart: { width: 380, type: 'pie' },
+              labels: (this.displayRole != '4' && this.displayRole != '8')
+                ? ['Total Staff', 'Present', 'Absent']
+                : ['Total Student', 'Present', 'Absent'],
+              responsive: [{
+                breakpoint: 480,
+                options: {
+                  chart: { width: 200 },
+                  legend: { position: 'bottom' }
+                }
+              }]
+            };
+          }
+        } else {
+          this.isChartVisible = false;
         }
-
-      } else {
+        this.spinner.hide();
+      },
+      error: () => {
         this.isChartVisible = false;
+        this.spinner.hide();
       }
-
-      this.spinner.hide();
     });
   }
 

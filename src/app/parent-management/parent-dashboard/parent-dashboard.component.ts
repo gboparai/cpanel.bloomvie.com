@@ -1093,11 +1093,11 @@ export class ParentDashboardComponent {
                 student.centreID
               )
               .subscribe({
-                next: (authResponse: {
-                  result: any;
-                  message: string;
-                  activity: any;
-                }) => {
+                next: (authResponse: any) => {
+
+
+
+
                   if (authResponse.message === 'Success' && !this.isExternalBilling) {
                     this.paymentDetail = authResponse.result;
                     this.planName = '';

@@ -22,7 +22,6 @@ import { ViewClassroomComponent } from '../view-classroom/view-classroom.compone
 import { OnboardingService } from '../../../onboarding/onboarding.service';
 import { ActivatedRoute } from '@angular/router';
 import { CommonService } from '../../../common-component/common.service';
-import e from 'express';
 import { ManageStudentService } from '../../student-management/manage-student/manage-student.service';
 import { SkeletonLoaderComponent } from "../../../common-component/skeleton-loader/skeleton-loader.component";
 declare var $: any;
@@ -482,8 +481,12 @@ export class ManageClassroomComponent {
         }
         this.spinner.show();
         this.classID = this.isEditMode ? this.classForm.value.id : 0;
+        const trimmedClassName = typeof this.classForm.value.className === 'string'
+          ? this.classForm.value.className.trim()
+          : this.classForm.value.className;
         this.classForm.patchValue({
           id: this.classID,
+          className: trimmedClassName,
           loginUserID: this.loginUserID,
           daycareCentreID: this.centreID,
         });
@@ -522,41 +525,39 @@ export class ManageClassroomComponent {
   }
 
   getAllAge() {
-    // this.spinner.show();
-    this.classService.GetAllAgeGroup(this.centreID).subscribe((data) => {
-      if (data.message == 'Success') {
-        const activeAgeGroups = data.result.filter(
-          (item: { isActive: boolean }) => item.isActive
-        );
-        this.ageGroupList = activeAgeGroups.map(
-          (item: {
-            id: any;
-            ageGroupTitle: string;
-            minAge: any;
-            maxAge: any;
-            isMonthly: boolean;
-          }) => ({
-            value: item.id,
-            //label: `(${item.minAge} - ${item.maxAge}) Months`,
-
-            //Added on 25/04/25
-            label: `${item.minAge} - ${item.maxAge} ${item.isMonthly ? 'Month' : 'Year'
-              } (${item.isMonthly
-                ? this.convertMonthToYear(item.minAge) +
-                ' - ' +
-                this.convertMonthToYear(item.maxAge) +
-                ' Year'
-                : this.convertYearToMonth(item.minAge) +
-                ' - ' +
-                this.convertYearToMonth(item.maxAge) +
-                ' Month'
-              })`,
-          })
-        );
-        // setTimeout(() => {
-        //   this.spinner.hide();
-        // }, 300);
-      }
+    this.classService.GetAllAgeGroup(this.centreID).subscribe({
+      next: (data) => {
+        if (data && (data.message == 'Success' || data.success)) {
+          const activeAgeGroups = (data.result || []).filter(
+            (item: { isActive?: boolean | null }) => item?.isActive
+          );
+          this.ageGroupList = activeAgeGroups.map(
+            (item: {
+              id: any;
+              ageGroupTitle?: string;
+              minAge: any;
+              maxAge: any;
+              isMonthly: boolean;
+            }) => ({
+              value: item.id,
+              label: `${item.minAge} - ${item.maxAge} ${item.isMonthly ? 'Month' : 'Year'
+                } (${item.isMonthly
+                  ? this.convertMonthToYear(item.minAge) +
+                  ' - ' +
+                  this.convertMonthToYear(item.maxAge) +
+                  ' Year'
+                  : this.convertYearToMonth(item.minAge) +
+                  ' - ' +
+                  this.convertYearToMonth(item.maxAge) +
+                  ' Month'
+                })`,
+            })
+          );
+        }
+      },
+      error: (err) => {
+        this.toastr.error('Failed to load age groups');
+      },
     });
   }
 

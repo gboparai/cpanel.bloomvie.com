@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { GeneralSettingService } from './general-setting.service';
 
@@ -6,7 +7,7 @@ describe('GeneralSettingService', () => {
   let service: GeneralSettingService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({ imports: [HttpClientTestingModule] });
     service = TestBed.inject(GeneralSettingService);
   });
 
