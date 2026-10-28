@@ -58,7 +58,7 @@
                 [ngClass]="{ subdrop: childItem.isOpen }"
                 [routerLink]="childItem.menuUrl"
               >
-                <span>{{ childItem.value }}</span>
+                <span>{{ (isExternalBilling && (childItem.value === 'Special Offers' || childItem.menuUrl === 'special-offer' || childItem.menuUrl === '/special-offer')) ? 'Enrollment Invites' : childItem.value }}</span>
                 <span
                   class="menu-arrow"
                   *ngIf="
