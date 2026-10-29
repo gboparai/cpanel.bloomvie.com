@@ -237,7 +237,8 @@ export class SidebarComponent implements OnInit {
 
     if (parent) {
       parent.isOpen = true;
-      this.cookie.set('ChildComponent', item.value);
+      const compVal = (this.isExternalBilling && (item.value === 'Special Offers' || item.menuUrl === 'special-offer' || item.menuUrl === '/special-offer')) ? 'Enrollment Invites' : item.value;
+      this.cookie.set('ChildComponent', compVal);
       this.cookie.delete('NestedChild');
       return;
     }
@@ -439,12 +440,18 @@ export class SidebarComponent implements OnInit {
   }
 
   private openMenuPath(menuList: any[], currentRoute: string): boolean {
-    
+    const matchRoute = (itemUrl: string, current: string) => {
+      if (!itemUrl || !current) return false;
+      const cleanItem = itemUrl.replace(/^\/+/, '');
+      const cleanCurrent = current.replace(/^\/+/, '');
+      return cleanItem === cleanCurrent;
+    };
+
     for (const item of menuList) {
-      if (item.menuUrl === currentRoute) {
+      if (matchRoute(item.menuUrl, currentRoute)) {
         item.isOpen = true;
         if (!this.dashboardRoutes.includes(currentRoute)) {
-          const compVal = (this.isExternalBilling && (item.value === 'Special Offers' || item.menuUrl === 'special-offer')) ? 'Enrollment Invites' : item.value;
+          const compVal = (this.isExternalBilling && (item.value === 'Special Offers' || item.menuUrl === 'special-offer' || item.menuUrl === '/special-offer')) ? 'Enrollment Invites' : item.value;
           this.cookie.set('Component', compVal);
           this.cookie.delete('ChildComponent');
           this.cookie.delete('NestedChild');
@@ -491,12 +498,195 @@ export class SidebarComponent implements OnInit {
       });
   }
 
+  organizeStudentManagementMenu(menus: any[]): any[] {
+    if (this.UserRoleId != 3 && this.UserRoleId != 1 && this.UserRoleId != 2) {
+      return menus;
+    }
+
+    const cloned: any[] = JSON.parse(JSON.stringify(menus));
+
+    let specialOfferMenu: any = null;
+    let addStudentMenu: any = null;
+    let viewStudentMenu: any = null;
+    let studentEnrollmentMenu: any = null;
+    let studentMgmtMenu: any = null;
+
+    const isOffer = (m: any) => {
+      const url = (m.menuUrl || m.MenuUrl || '').toLowerCase();
+      const val = (m.value || '').toLowerCase();
+      return url.includes('special-offer') || val.includes('special offer') || val.includes('enrollment invite') || val === 'offers';
+    };
+
+    const isAddStudent = (m: any) => {
+      const url = (m.menuUrl || m.MenuUrl || '').toLowerCase();
+      const val = (m.value || '').toLowerCase();
+      return url === 'manage-student' || url === 'student-enrollment' || val.includes('add student') || val === 'add student';
+    };
+
+    const isStudentEnrollment = (m: any) => {
+      const url = (m.menuUrl || m.MenuUrl || '').toLowerCase().replace(/^\/+|\/+$/g, '');
+      return url === 'view-student-enrollment';
+    };
+
+    const isViewStudent = (m: any) => {
+      const url = (m.menuUrl || m.MenuUrl || '').toLowerCase().replace(/^\/+|\/+$/g, '');
+      const val = (m.value || '').toLowerCase();
+      return url === 'view-student' || val === 'view students' || val === 'students list';
+    };
+
+    const isStudentMgmtParent = (m: any) => {
+      const val = (m.value || '').toLowerCase().trim();
+      return val === 'student management' || val === 'students';
+    };
+
+    const mgmtIndex = cloned.findIndex(isStudentMgmtParent);
+    if (mgmtIndex !== -1) {
+      studentMgmtMenu = cloned[mgmtIndex];
+    }
+
+    for (let i = cloned.length - 1; i >= 0; i--) {
+      const item = cloned[i];
+      if (item === studentMgmtMenu) continue;
+
+      if (isOffer(item)) {
+        specialOfferMenu = item;
+        cloned.splice(i, 1);
+      } else if (isStudentEnrollment(item)) {
+        studentEnrollmentMenu = item;
+        cloned.splice(i, 1);
+      } else if (isAddStudent(item)) {
+        addStudentMenu = item;
+        cloned.splice(i, 1);
+      } else if (isViewStudent(item)) {
+        viewStudentMenu = item;
+        cloned.splice(i, 1);
+      } else if (item.childList && item.childList.length > 0) {
+        for (let j = item.childList.length - 1; j >= 0; j--) {
+          const child = item.childList[j];
+          if (isOffer(child)) {
+            specialOfferMenu = child;
+            item.childList.splice(j, 1);
+          } else if (isStudentEnrollment(child)) {
+            studentEnrollmentMenu = child;
+            item.childList.splice(j, 1);
+          } else if (isAddStudent(child)) {
+            addStudentMenu = child;
+            item.childList.splice(j, 1);
+          } else if (isViewStudent(child)) {
+            viewStudentMenu = child;
+            item.childList.splice(j, 1);
+          }
+        }
+      }
+    }
+
+    if (studentMgmtMenu && studentMgmtMenu.childList) {
+      studentMgmtMenu.childList.forEach((child: any) => {
+        if (isOffer(child)) specialOfferMenu = child;
+        if (isStudentEnrollment(child)) studentEnrollmentMenu = child;
+        if (isAddStudent(child)) addStudentMenu = child;
+        if (isViewStudent(child)) viewStudentMenu = child;
+      });
+    }
+
+    const viewStudentChild = viewStudentMenu || {
+      id: 9801,
+      value: 'Students',
+      icon: 'feather-users',
+      Icon: 'feather-users',
+      menuUrl: '/view-student',
+      MenuUrl: '/view-student',
+      childList: []
+    };
+    viewStudentChild.value = 'Students';
+    viewStudentChild.menuUrl = '/view-student';
+    viewStudentChild.MenuUrl = '/view-student';
+
+    const studentEnrollmentChild = studentEnrollmentMenu || {
+      id: 9804,
+      value: 'Student Enrollment',
+      icon: 'feather-user-check',
+      Icon: 'feather-user-check',
+      menuUrl: '/view-student-enrollment',
+      MenuUrl: '/view-student-enrollment',
+      childList: []
+    };
+    studentEnrollmentChild.value = 'Student Enrollment';
+    studentEnrollmentChild.menuUrl = '/view-student-enrollment';
+    studentEnrollmentChild.MenuUrl = '/view-student-enrollment';
+
+    const addStudentChild = addStudentMenu || {
+      id: 9802,
+      value: 'Add Student',
+      icon: 'feather-user-plus',
+      Icon: 'feather-user-plus',
+      menuUrl: '/student-enrollment',
+      MenuUrl: '/student-enrollment',
+      childList: []
+    };
+    addStudentChild.value = 'Add Student';
+    addStudentChild.menuUrl = '/student-enrollment';
+    addStudentChild.MenuUrl = '/student-enrollment';
+
+    const offerLabel = this.isExternalBilling ? 'Enrollment Invites' : 'Special Offers';
+    const offerChild = specialOfferMenu || {
+      id: 9803,
+      value: offerLabel,
+      icon: 'feather-gift',
+      Icon: 'feather-gift',
+      menuUrl: '/special-offer',
+      MenuUrl: '/special-offer',
+      childList: []
+    };
+    offerChild.value = offerLabel;
+    offerChild.menuUrl = '/special-offer';
+    offerChild.MenuUrl = '/special-offer';
+
+    // Removed addStudentChild per requirement: just keep students and offers/enrollment invites
+    const childList = [viewStudentChild, studentEnrollmentChild, offerChild];
+
+    if (studentMgmtMenu) {
+      studentMgmtMenu.value = 'Student Management';
+      studentMgmtMenu.menuUrl = null;
+      studentMgmtMenu.MenuUrl = null;
+      studentMgmtMenu.icon = studentMgmtMenu.icon || 'feather-users';
+      studentMgmtMenu.Icon = studentMgmtMenu.Icon || 'feather-users';
+      studentMgmtMenu.childList = childList;
+    } else {
+      studentMgmtMenu = {
+        id: 9800,
+        value: 'Student Management',
+        icon: 'feather-users',
+        Icon: 'feather-users',
+        menuUrl: null,
+        MenuUrl: null,
+        childList: childList,
+        isOpen: false
+      };
+      const classIndex = cloned.findIndex((m: any) => {
+        const val = (m.value || '').toLowerCase();
+        return val.includes('classroom') || val.includes('staff');
+      });
+      if (classIndex !== -1) {
+        cloned.splice(classIndex, 0, studentMgmtMenu);
+      } else {
+        cloned.splice(1, 0, studentMgmtMenu);
+      }
+    }
+
+    return cloned;
+  }
+
   applyMenuFilter() {
     if (!this.rawMenus || this.rawMenus.length === 0) return;
+    let processed = JSON.parse(JSON.stringify(this.rawMenus));
+    if (this.UserRoleId == 3 || this.UserRoleId == 1 || this.UserRoleId == 2) {
+      processed = this.organizeStudentManagementMenu(processed);
+    }
     if (this.isExternalBilling) {
-      this.menus = this.filterExternalBillingMenus(this.rawMenus);
+      this.menus = this.filterExternalBillingMenus(processed);
     } else {
-      this.menus = JSON.parse(JSON.stringify(this.rawMenus));
+      this.menus = processed;
     }
 
     const initializeIsOpen = (menu: any) => {
@@ -517,12 +707,13 @@ export class SidebarComponent implements OnInit {
       const val = (item.value || '').toLowerCase().trim();
       const url = (item.menuUrl || '').toLowerCase().trim();
 
-      // Specifically filter student fees, fee packages/plans, and invoices/payments (keep Special Offers accessible for parent invites)
+      // Filter student fees, fee packages/plans, invoices/payments, and individual student addition
       if (val === 'student fees' || url === 'student-fees') return true;
       if (url === 'subscription-plans' || url === 'subscription-features') return true;
       if (url.includes('invoice') || val.includes('invoice')) return true;
       if (url.includes('payment') || val.includes('payment')) return true;
       if (url === 'billing-report') return true;
+      // keep student enrollment accessible under student management
 
       return false;
     };
@@ -551,6 +742,5 @@ export class SidebarComponent implements OnInit {
     return filterList(list);
   }
 }
-
 
 

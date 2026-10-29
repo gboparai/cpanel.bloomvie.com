@@ -209,9 +209,9 @@ export class AddDiscountComponent implements OnInit, OnDestroy {
     // $('#viewStudentListModal').modal('show');
   }
 
-  getEnrolledStudentRecords(enrollmentRecord: any) {
-    this.enrolledStudentList = [];
-    this.enrolledStudentList = enrollmentRecord.student.map((item: any) => {
+  formatEnrolledStudents(students: any[]): any[] {
+    if (!students || !Array.isArray(students)) return [];
+    return students.map((item: any) => {
       if (item.isMonthlyAge == true) {
         let minYear = this.convertMonthsToYears(item.minAge);
         let maxYear = this.convertMonthsToYears(item.maxAge);
@@ -229,6 +229,13 @@ export class AddDiscountComponent implements OnInit, OnDestroy {
         };
       }
     });
+  }
+
+  getEnrolledStudentRecords(enrollmentRecord: any) {
+    if (enrollmentRecord && !enrollmentRecord.formattedStudents) {
+      enrollmentRecord.formattedStudents = this.formatEnrolledStudents(enrollmentRecord.student || []);
+    }
+    this.enrolledStudentList = enrollmentRecord?.formattedStudents || [];
     // $('#viewEnrolledStudent').modal('show');
   }
 
@@ -302,7 +309,10 @@ export class AddDiscountComponent implements OnInit, OnDestroy {
       .getAllEnrolledStudentsRecord(this.centreID)
       .subscribe((data: any) => {
         if (data.message == 'Success') {
-          this.EnrolledParentRecord = data.result;
+          this.EnrolledParentRecord = (data.result || []).map((enrollment: any) => ({
+            ...enrollment,
+            formattedStudents: this.formatEnrolledStudents(enrollment.student || [])
+          }));
           this.parentList = this.EnrolledParentRecord;
           this.skeletonShow2 = '';
         } else {

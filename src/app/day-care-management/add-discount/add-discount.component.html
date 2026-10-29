@@ -515,12 +515,12 @@
                                         </thead>
                                         <tbody
                                           *ngFor="
-                                            let student of enrolledStudentList;
-                                            let i = index
+                                            let student of (enrollment.formattedStudents || formatEnrolledStudents(enrollment.student));
+                                            let sIdx = index
                                           "
                                         >
                                           <tr>
-                                            <td>{{ i + 1 }}</td>
+                                            <td>{{ sIdx + 1 }}</td>
                                             <td>
                                               {{ student.studentFullName }}
                                             </td>

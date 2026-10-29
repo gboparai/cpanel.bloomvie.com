@@ -370,6 +370,7 @@ export const routes: Routes = [
       },
 
       { path: 'student-enrollment', component: ManageStudentComponent },
+      { path: 'manage-student', component: ManageStudentComponent },
       { path: 'view-student', component: ViewStudentComponent },
       { path: 'edit-student', component: EditStudentComponent },
       { path: 'job-status', component: JobStatusComponent },

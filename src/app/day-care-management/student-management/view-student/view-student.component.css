@@ -9,3 +9,10 @@ i.fa.fa-user-plus {
 .table-responsive {
     margin: 22px 0px;
 }
+.heading-new::before {
+    pointer-events: none !important;
+}
+.heading-new a, .heading-new button {
+    position: relative;
+    z-index: 10;
+}

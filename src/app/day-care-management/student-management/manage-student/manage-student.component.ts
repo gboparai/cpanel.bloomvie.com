@@ -608,6 +608,9 @@ export class ManageStudentComponent implements OnInit {
   }
 
   getDayCareCentreDetails() {
+    if (!this.selectClassID) {
+      return;
+    }
     this.manageStudentService
       .getDayCareCentreClassDetails(this.selectClassID)
       .subscribe({
@@ -1275,6 +1278,7 @@ export class ManageStudentComponent implements OnInit {
 
   resetForm() {
     this.isUpdate = false;
+    this.navigate.navigate(['/view-student']);
   }
 
   onEnterMobileNumber(event: any) {

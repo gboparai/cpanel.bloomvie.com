@@ -41,10 +41,10 @@ export class ViewStudentEnrollmentComponent {
   assignClassForm: FormGroup;
   classList: any;
   sectionList: any;
-  selectedClass: any;
   selectedSection: any;
   sectionID: any;
-  skeletonShow: 'Skelton' | 'NoRecord' | '' = 'Skelton';
+  isAssigningClass = false;
+  skeletonShow: 'Skelton' | 'NoRecord' | 'Error' | '' = 'Skelton';
 
   constructor(
     private viewStudent: ViewStudentEnrollmentService,
@@ -96,7 +96,6 @@ export class ViewStudentEnrollmentComponent {
     this.sectionList = [];
     this.classList = [];
 
-    this.selectedClass = null;
     this.selectedSection = null;
   }
 
@@ -105,33 +104,61 @@ export class ViewStudentEnrollmentComponent {
   }
 
   onSubmit() {
-    // this.assignClassForm.patchValue({
-    //   sectionID : this.sectionID
-    //   });
+    if (this.isAssigningClass) {
+      return;
+    }
+
+    if (this.assignClassForm.invalid) {
+      this.assignClassForm.markAllAsTouched();
+      return;
+    }
+
+    this.isAssigningClass = true;
     this.viewStudent
       .studentClassAssignment(this.assignClassForm.value)
-      .subscribe((response) => {
-        if (response.message == 'Success') {
-          this.assignClassForm.reset();
-          this.toastr.success('Class Assigned Successfully !', 'Success');
-          $('#exampleModal2').modal('hide');
-          this.getStudentDetails(this.daycareID);
-        } else {
-          this.toastr.error(
-            'Class limit exceeded. You cannot enroll more student.'
-          );
-        }
+      .subscribe({
+        next: (response) => {
+          this.isAssigningClass = false;
+          const message = response.message ?? response.Message;
+          if (message === 'Success') {
+            this.assignClassForm.reset();
+            this.resetDropdown();
+            this.toastr.success('Class Assigned Successfully !', 'Success');
+            $('#exampleModal2').modal('hide');
+            this.getStudentDetails(this.daycareID);
+          } else {
+            this.toastr.error(message || 'Unable to assign this student to the selected class.');
+          }
+        },
+        error: (error) => {
+          this.isAssigningClass = false;
+          this.toastr.error(error?.message || 'Unable to assign this student to the selected class.');
+        },
       });
   }
 
   getStudentDetails(daycareID: number) {
-    this.viewStudent.getStudent(daycareID).subscribe((data) => {
-      if (data.message == 'Success') {
-        this.Students = data.result.filter(
-          (s: any) => s.classID == null || s.classID == 0
-        );
-        this.skeletonShow = this.Students.length === 0 ? 'NoRecord' : '';
-      }
+    this.viewStudent.getStudent(daycareID, true).subscribe({
+      next: (data) => {
+        const message = data.message ?? data.Message;
+        if (message === 'Success') {
+          const students = data.result ?? data.Result ?? [];
+          this.Students = students.filter((student: any) => {
+            const classID = student.classID ?? student.ClassID;
+            return classID == null || Number(classID) === 0;
+          });
+          this.skeletonShow = this.Students.length === 0 ? 'NoRecord' : '';
+        } else {
+          this.Students = [];
+          this.skeletonShow = 'Error';
+          this.toastr.error(message || 'Failed to load student enrollment.');
+        }
+      },
+      error: (error) => {
+        this.Students = [];
+        this.skeletonShow = 'Error';
+        this.toastr.error(error?.message || 'Failed to load student enrollment.');
+      },
     });
   }
 

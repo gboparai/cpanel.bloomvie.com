@@ -28,7 +28,17 @@ describe('ViewStudentEnrollmentService', () => {
     service.getStudent(5).subscribe();
 
     const req = httpTestingController.expectOne(
-      `${environment.apiUrl}/DayCareCentreUser/getStudentsByDayCareID?daycareID=5`
+      `${environment.apiUrl}/DayCareCentreUser/getStudentsByDayCareID?daycareID=5&unassignedOnly=false`
+    );
+    expect(req.request.method).toBe('GET');
+    req.flush([]);
+  });
+
+  it('should request only unassigned students when requested', () => {
+    service.getStudent(5, true).subscribe();
+
+    const req = httpTestingController.expectOne(
+      `${environment.apiUrl}/DayCareCentreUser/getStudentsByDayCareID?daycareID=5&unassignedOnly=true`
     );
     expect(req.request.method).toBe('GET');
     req.flush([]);

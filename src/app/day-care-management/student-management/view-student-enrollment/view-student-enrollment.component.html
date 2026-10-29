@@ -29,7 +29,20 @@
             <tbody>
 
               @if (skeletonShow === 'Skelton') {
-              <app-skeleton-loader skeletonShow="Skelton" viewType="table" [cardCount]="6"></app-skeleton-loader>
+              <tr>
+                <td colspan="8">
+                  <app-skeleton-loader skeletonShow="Skelton" viewType="table" [tableRows]="5" [tableCols]="8">
+                  </app-skeleton-loader>
+                </td>
+              </tr>
+              }
+
+              @else if (skeletonShow === 'Error') {
+              <tr>
+                <td colspan="8" class="text-center text-danger py-3">
+                  Unable to load student enrollment. Please try again.
+                </td>
+              </tr>
               }
 
               @else {
@@ -449,7 +462,7 @@
             <div class="form-group local-forms">
               <label>Class</label>
               <ng-select [items]="classList" bindLabel="name" bindValue="id" formControlName="classID"
-                [(ngModel)]="selectedClass" placeholder="-select-">
+                placeholder="-select-">
               </ng-select>
               @if(assignClassForm.get('classID')?.hasError('required') &&
               assignClassForm.get('classID')?.touched) { @if
@@ -485,8 +498,9 @@
 
           <div class="col-md-12 mb-2 mt-4">
             <div class="student-submit text-end">
-              <button class="btn btn-primary me-2" (click)="onSubmit()">
-                Submit
+              <button class="btn btn-primary me-2" type="button" (click)="onSubmit()"
+                [disabled]="isAssigningClass || assignClassForm.invalid">
+                {{ isAssigningClass ? 'Assigning...' : 'Submit' }}
               </button>
               <button class="btn btn-secondary" data-bs-dismiss="modal" (click)="resetDropdown()">
                 Cancel

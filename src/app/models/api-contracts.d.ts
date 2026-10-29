@@ -12306,6 +12306,7 @@ export interface paths {
             parameters: {
                 query?: {
                     dayCareID?: number;
+                    unassignedOnly?: boolean;
                 };
                 header?: never;
                 path?: never;

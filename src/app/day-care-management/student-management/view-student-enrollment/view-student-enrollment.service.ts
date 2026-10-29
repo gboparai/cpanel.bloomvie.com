@@ -12,8 +12,10 @@ export class ViewStudentEnrollmentService {
   readonly URL = environment.apiUrl;
   constructor(private http: HttpClient) { }
 
-  getStudent(daycareID: number): Observable<ApiResponse<any>> {
-    return this.http.get<ApiResponse<any>>(this.URL + "/DayCareCentreUser/getStudentsByDayCareID", { params: { daycareID } });
+  getStudent(daycareID: number, unassignedOnly = false): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(this.URL + "/DayCareCentreUser/getStudentsByDayCareID", {
+      params: { daycareID, unassignedOnly },
+    });
   }
 
   getStudentParentDetailsByStudentID(studentID: number): Observable<ApiResponse<any>> {

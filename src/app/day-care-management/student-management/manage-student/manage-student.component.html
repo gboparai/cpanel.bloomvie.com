@@ -255,7 +255,7 @@
 
             <!-- select plan and some add ons -->
 
-            <div class="col-md-4 mb-4">
+            <div class="col-md-4 mb-4" *ngIf="!isExternalBilling">
               <div class="form-group local-forms">
                 <label> Plan<span class="login-danger" *ngIf="!isExternalBilling">*</span></label>
 
@@ -271,7 +271,7 @@
               </span>
             </div>
 
-            <div class="col-md-4 mb-4">
+            <div class="col-md-4 mb-4" *ngIf="!isExternalBilling">
               <div class="form-group local-forms">
                 <label>Billing Date<span class="login-danger" *ngIf="!isExternalBilling">*</span></label>
                 <input type="text" class="form-control" [disabled]="startDateToggle" (change)="getPlanEndDate($event)"
