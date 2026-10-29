@@ -508,6 +508,7 @@ export class SidebarComponent implements OnInit {
     let specialOfferMenu: any = null;
     let addStudentMenu: any = null;
     let viewStudentMenu: any = null;
+    let studentEnrollmentMenu: any = null;
     let studentMgmtMenu: any = null;
 
     const isOffer = (m: any) => {
@@ -519,13 +520,18 @@ export class SidebarComponent implements OnInit {
     const isAddStudent = (m: any) => {
       const url = (m.menuUrl || m.MenuUrl || '').toLowerCase();
       const val = (m.value || '').toLowerCase();
-      return url.includes('manage-student') || url.includes('student-enrollment') || val.includes('add student') || val === 'add student';
+      return url === 'manage-student' || url === 'student-enrollment' || val.includes('add student') || val === 'add student';
+    };
+
+    const isStudentEnrollment = (m: any) => {
+      const url = (m.menuUrl || m.MenuUrl || '').toLowerCase().replace(/^\/+|\/+$/g, '');
+      return url === 'view-student-enrollment';
     };
 
     const isViewStudent = (m: any) => {
-      const url = (m.menuUrl || m.MenuUrl || '').toLowerCase();
+      const url = (m.menuUrl || m.MenuUrl || '').toLowerCase().replace(/^\/+|\/+$/g, '');
       const val = (m.value || '').toLowerCase();
-      return url.includes('view-student') || val === 'view students' || val === 'students list';
+      return url === 'view-student' || val === 'view students' || val === 'students list';
     };
 
     const isStudentMgmtParent = (m: any) => {
@@ -545,6 +551,9 @@ export class SidebarComponent implements OnInit {
       if (isOffer(item)) {
         specialOfferMenu = item;
         cloned.splice(i, 1);
+      } else if (isStudentEnrollment(item)) {
+        studentEnrollmentMenu = item;
+        cloned.splice(i, 1);
       } else if (isAddStudent(item)) {
         addStudentMenu = item;
         cloned.splice(i, 1);
@@ -556,6 +565,9 @@ export class SidebarComponent implements OnInit {
           const child = item.childList[j];
           if (isOffer(child)) {
             specialOfferMenu = child;
+            item.childList.splice(j, 1);
+          } else if (isStudentEnrollment(child)) {
+            studentEnrollmentMenu = child;
             item.childList.splice(j, 1);
           } else if (isAddStudent(child)) {
             addStudentMenu = child;
@@ -571,6 +583,7 @@ export class SidebarComponent implements OnInit {
     if (studentMgmtMenu && studentMgmtMenu.childList) {
       studentMgmtMenu.childList.forEach((child: any) => {
         if (isOffer(child)) specialOfferMenu = child;
+        if (isStudentEnrollment(child)) studentEnrollmentMenu = child;
         if (isAddStudent(child)) addStudentMenu = child;
         if (isViewStudent(child)) viewStudentMenu = child;
       });
@@ -588,6 +601,19 @@ export class SidebarComponent implements OnInit {
     viewStudentChild.value = 'Students';
     viewStudentChild.menuUrl = '/view-student';
     viewStudentChild.MenuUrl = '/view-student';
+
+    const studentEnrollmentChild = studentEnrollmentMenu || {
+      id: 9804,
+      value: 'Student Enrollment',
+      icon: 'feather-user-check',
+      Icon: 'feather-user-check',
+      menuUrl: '/view-student-enrollment',
+      MenuUrl: '/view-student-enrollment',
+      childList: []
+    };
+    studentEnrollmentChild.value = 'Student Enrollment';
+    studentEnrollmentChild.menuUrl = '/view-student-enrollment';
+    studentEnrollmentChild.MenuUrl = '/view-student-enrollment';
 
     const addStudentChild = addStudentMenu || {
       id: 9802,
@@ -617,7 +643,7 @@ export class SidebarComponent implements OnInit {
     offerChild.MenuUrl = '/special-offer';
 
     // Removed addStudentChild per requirement: just keep students and offers/enrollment invites
-    const childList = [viewStudentChild, offerChild];
+    const childList = [viewStudentChild, studentEnrollmentChild, offerChild];
 
     if (studentMgmtMenu) {
       studentMgmtMenu.value = 'Student Management';
@@ -716,6 +742,5 @@ export class SidebarComponent implements OnInit {
     return filterList(list);
   }
 }
-
 
 

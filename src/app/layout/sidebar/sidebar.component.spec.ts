@@ -199,6 +199,49 @@ describe('SidebarComponent', () => {
     });
   });
 
+  describe('organizeStudentManagementMenu', () => {
+    it('should put the Student Enrollment page under Student Management without treating it as Add Student', () => {
+      component.UserRoleId = 3;
+
+      const menus = component.organizeStudentManagementMenu([
+        {
+          id: 50,
+          value: 'Student Management',
+          menuUrl: null,
+          childList: [
+            { id: 142, value: 'Guardian Management', menuUrl: 'view-student', childList: [] },
+          ],
+        },
+        {
+          id: 104,
+          value: 'Student Enrollment',
+          menuUrl: 'view-student-enrollment',
+          childList: [],
+        },
+        {
+          id: 70,
+          value: 'Special Offers',
+          menuUrl: 'special-offer',
+          childList: [],
+        },
+      ]);
+
+      const studentManagement = menus.find((menu: any) => menu.id === 50);
+      const enrollmentMenu = studentManagement.childList.find(
+        (menu: any) => menu.menuUrl === '/view-student-enrollment',
+      );
+
+      expect(enrollmentMenu).toBeTruthy();
+      expect(enrollmentMenu.id).toBe(104);
+      expect(menus.some((menu: any) => menu.id === 104)).toBeFalse();
+      expect(
+        studentManagement.childList.some(
+          (menu: any) => menu.menuUrl === '/student-enrollment',
+        ),
+      ).toBeFalse();
+    });
+  });
+
   describe('getPermissions', () => {
     it('should handle role 8 TOC user correctly', () => {
       component.UserRoleId = 8;

@@ -5,7 +5,7 @@ import { ViewStudentEnrollmentService } from './view-student-enrollment.service'
 import { ToastrService } from 'ngx-toastr';
 import { CookieService } from 'ngx-cookie-service';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 
 describe('ViewStudentEnrollmentComponent', () => {
   let component: ViewStudentEnrollmentComponent;
@@ -67,8 +67,78 @@ describe('ViewStudentEnrollmentComponent', () => {
       component.ngOnInit();
 
       expect(component.daycareID).toBe(10);
-      expect(mockViewStudentService.getStudent).toHaveBeenCalledWith(10);
+      expect(mockViewStudentService.getStudent).toHaveBeenCalledWith(10, true);
       expect(component.Students.length).toBe(1);
+    });
+
+    it('should stop showing the skeleton when the enrollment request fails', () => {
+      mockViewStudentService.getStudent.and.returnValue(
+        throwError(() => new Error('Network failure')),
+      );
+
+      component.getStudentDetails(10);
+
+      expect(component.skeletonShow).toBe('Error');
+      expect(component.Students).toEqual([]);
+      expect(mockToastr.error).toHaveBeenCalledWith('Network failure');
+    });
+
+    it('should show an error state when the API returns a failure response', () => {
+      mockViewStudentService.getStudent.and.returnValue(
+        of({ message: 'Request failed', result: null }),
+      );
+
+      component.getStudentDetails(10);
+
+      expect(component.skeletonShow).toBe('Error');
+      expect(component.Students).toEqual([]);
+      expect(mockToastr.error).toHaveBeenCalledWith('Request failed');
+    });
+
+    it('should show the empty state when the API returns no enrollment records', () => {
+      mockViewStudentService.getStudent.and.returnValue(
+        of({ message: 'Success', result: [] }),
+      );
+
+      component.getStudentDetails(10);
+
+      expect(component.skeletonShow).toBe('NoRecord');
+      expect(component.Students).toEqual([]);
+    });
+
+    it('should remove assigned students from the enrollment list after refresh', () => {
+      mockViewStudentService.getStudent.and.returnValues(
+        of({
+          message: 'Success',
+          result: [{ studentID: 5, classID: null }],
+        }),
+        of({
+          message: 'Success',
+          result: [{ studentID: 5, ClassID: 12 }],
+        }),
+      );
+      mockViewStudentService.studentClassAssignment.and.returnValue(
+        of({ message: 'Success' }),
+      );
+      component.daycareID = 10;
+      component.assignClassForm.patchValue({ studentID: 5, classID: 12 });
+
+      component.getStudentDetails(10);
+      expect(component.Students.length).toBe(1);
+
+      component.onSubmit();
+
+      expect(mockViewStudentService.getStudent).toHaveBeenCalledTimes(2);
+      expect(component.Students).toEqual([]);
+      expect(component.skeletonShow).toBe('NoRecord');
+    });
+
+    it('should not submit an assignment without a selected class', () => {
+      component.assignClassForm.patchValue({ studentID: 5, classID: null });
+
+      component.onSubmit();
+
+      expect(mockViewStudentService.studentClassAssignment).not.toHaveBeenCalled();
     });
   });
 
@@ -131,14 +201,12 @@ describe('ViewStudentEnrollmentComponent', () => {
     it('should reset dropdowns on resetDropdown()', () => {
       component.classList = [{ id: 1 }];
       component.sectionList = [{ id: 2 }];
-      component.selectedClass = 1;
       component.selectedSection = 2;
 
       component.resetDropdown();
 
       expect(component.classList).toEqual([]);
       expect(component.sectionList).toEqual([]);
-      expect(component.selectedClass).toBeNull();
       expect(component.selectedSection).toBeNull();
     });
 
