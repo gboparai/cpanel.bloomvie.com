@@ -3,8 +3,11 @@
   <div class="col-md-12">
     <div class="card">
       <div class="card-body">
-        <div class="heading-new new-student">
+        <div class="heading-new new-student d-flex justify-content-between align-items-center mb-3">
           <h5 class="mb-0">View Student</h5>
+          <a routerLink="/student-enrollment" class="btn btn-primary" style="color: #ffffff;">
+            <i class="feather-user-plus me-1"></i> Add Student
+          </a>
         </div>
         <div class="row">
           <div class="col-md-12" *ngIf="showBanner">
@@ -19,8 +22,7 @@
                   </h5>
                   <p class="mb-0 text-muted">
                     This is where you will add and manage all students in your
-                    school. Explore Bloomvie's functionality with the demo
-                    students.
+                    school.
                   </p>
                 </div>
               </div>

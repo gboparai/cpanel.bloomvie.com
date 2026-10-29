@@ -8,7 +8,7 @@ import { ToastrService } from 'ngx-toastr';
 import { CookieService } from 'ngx-cookie-service';
 import { BreadcrumbComponent } from '../../../common-component/breadcrumb/breadcrumb.component';
 import { OnboardingService } from '../../../onboarding/onboarding.service';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ThirdPartyDraggable } from '@fullcalendar/interaction';
@@ -33,7 +33,8 @@ declare var $: any;
     NgSelectModule,
     CommonModule,
     SkeletonLoaderComponent,
-    TooltipComponent
+    TooltipComponent,
+    RouterModule
   ],
   templateUrl: './view-student.component.html',
   styleUrl: './view-student.component.css',

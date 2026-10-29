@@ -499,7 +499,7 @@ export class SidebarComponent implements OnInit {
   }
 
   organizeStudentManagementMenu(menus: any[]): any[] {
-    if (this.UserRoleId != 3) {
+    if (this.UserRoleId != 3 && this.UserRoleId != 1 && this.UserRoleId != 2) {
       return menus;
     }
 
@@ -616,11 +616,7 @@ export class SidebarComponent implements OnInit {
     offerChild.menuUrl = '/special-offer';
     offerChild.MenuUrl = '/special-offer';
 
-    const childList = [viewStudentChild];
-    if (!this.isExternalBilling) {
-      childList.push(addStudentChild);
-    }
-    childList.push(offerChild);
+    const childList = [viewStudentChild, addStudentChild, offerChild];
 
     if (studentMgmtMenu) {
       studentMgmtMenu.value = 'Student Management';
@@ -657,7 +653,7 @@ export class SidebarComponent implements OnInit {
   applyMenuFilter() {
     if (!this.rawMenus || this.rawMenus.length === 0) return;
     let processed = JSON.parse(JSON.stringify(this.rawMenus));
-    if (this.UserRoleId == 3) {
+    if (this.UserRoleId == 3 || this.UserRoleId == 1 || this.UserRoleId == 2) {
       processed = this.organizeStudentManagementMenu(processed);
     }
     if (this.isExternalBilling) {
@@ -690,14 +686,7 @@ export class SidebarComponent implements OnInit {
       if (url.includes('invoice') || val.includes('invoice')) return true;
       if (url.includes('payment') || val.includes('payment')) return true;
       if (url === 'billing-report') return true;
-      if (
-        url === 'manage-student' ||
-        url === '/manage-student' ||
-        url === 'student-enrollment' ||
-        url === '/student-enrollment' ||
-        val === 'add student' ||
-        val === 'add students'
-      ) return true;
+      // keep student enrollment accessible under student management
 
       return false;
     };
