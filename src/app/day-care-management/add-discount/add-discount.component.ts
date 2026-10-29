@@ -52,15 +52,6 @@ export class AddDiscountComponent implements OnInit, OnDestroy {
   public planList: any[] = [];
   public planDetails: any;
   public giveDiscountForm: any;
-  public offerStudents: Array<{
-    studentName: string;
-    ageGroupID: number;
-    ageGroupLabel?: string;
-    planID?: number | null;
-    planName?: string;
-    tempOrderNumber?: string;
-  }> = [];
-  public addStudentOfferForm: any;
   public frontendPlanList: any[] = [];
   public searchItem: string = '';
   public loading: boolean = false;
@@ -111,14 +102,11 @@ export class AddDiscountComponent implements OnInit, OnDestroy {
 
     this.giveDiscountForm = this.fb.group({
       name: ['', Validators.required],
+      ageGroup: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
+      planID: ['', Validators.required],
       centreID: [''],
-    });
-
-    this.addStudentOfferForm = this.fb.group({
-      studentName: ['', Validators.required],
-      ageGroupID: [null, Validators.required],
-      planID: [null, Validators.required],
+      tempOrderNumber: [''],
     });
   }
 
@@ -156,26 +144,24 @@ export class AddDiscountComponent implements OnInit, OnDestroy {
 
   adjustFormValidatorsForExternalBilling() {
     if (this.isExternalBilling) {
-      this.giveDiscountForm?.get('planID')?.clearValidators();
-      this.giveDiscountForm?.get('planID')?.updateValueAndValidity();
-      this.addStudentOfferForm?.get('planID')?.clearValidators();
-      this.addStudentOfferForm?.get('planID')?.updateValueAndValidity();
-      this.parentDiscountForm?.get('PlanID')?.clearValidators();
-      this.parentDiscountForm?.get('PlanID')?.updateValueAndValidity();
-      this.parentDiscountForm?.get('discount')?.clearValidators();
-      this.parentDiscountForm?.get('discount')?.updateValueAndValidity();
-      this.parentDiscountForm?.patchValue({
+      this.giveDiscountForm.get('planID')?.clearValidators();
+      this.giveDiscountForm.get('planID')?.updateValueAndValidity();
+      this.parentDiscountForm.get('PlanID')?.clearValidators();
+      this.parentDiscountForm.get('PlanID')?.updateValueAndValidity();
+      this.parentDiscountForm.get('discount')?.clearValidators();
+      this.parentDiscountForm.get('discount')?.updateValueAndValidity();
+      this.parentDiscountForm.patchValue({
         PlanID: 0,
         discount: '0',
         discountType: 'amount'
       });
     } else {
-      this.addStudentOfferForm?.get('planID')?.setValidators([Validators.required]);
-      this.addStudentOfferForm?.get('planID')?.updateValueAndValidity();
-      this.parentDiscountForm?.get('PlanID')?.setValidators([Validators.required]);
-      this.parentDiscountForm?.get('PlanID')?.updateValueAndValidity();
-      this.parentDiscountForm?.get('discount')?.setValidators([Validators.required]);
-      this.parentDiscountForm?.get('discount')?.updateValueAndValidity();
+      this.giveDiscountForm.get('planID')?.setValidators([Validators.required]);
+      this.giveDiscountForm.get('planID')?.updateValueAndValidity();
+      this.parentDiscountForm.get('PlanID')?.setValidators([Validators.required]);
+      this.parentDiscountForm.get('PlanID')?.updateValueAndValidity();
+      this.parentDiscountForm.get('discount')?.setValidators([Validators.required]);
+      this.parentDiscountForm.get('discount')?.updateValueAndValidity();
     }
   }
 
@@ -253,7 +239,6 @@ export class AddDiscountComponent implements OnInit, OnDestroy {
   }
 
   openDiscountModal() {
-    this.resetGiveDiscountForm();
     this.getAgeGroupsList();
     $('#giveDiscount').modal('show');
   }
@@ -327,122 +312,49 @@ export class AddDiscountComponent implements OnInit, OnDestroy {
       });
   }
 
-  onStudentAgeGroupChange(event: any) {
-    if (event) {
-      const ageGroupId = event.value !== undefined ? event.value : event;
-      this.getPlanList(ageGroupId);
-      this.addStudentOfferForm.patchValue({ planID: null });
-    } else {
-      this.frontendPlanList = [];
-      this.addStudentOfferForm.patchValue({ planID: null });
-    }
-  }
-
-  addStudentToOffer() {
-    if (this.isExternalBilling) {
-      this.addStudentOfferForm.get('planID')?.clearValidators();
-      this.addStudentOfferForm.get('planID')?.updateValueAndValidity();
-    } else {
-      this.addStudentOfferForm.get('planID')?.setValidators([Validators.required]);
-      this.addStudentOfferForm.get('planID')?.updateValueAndValidity();
-    }
-
-    if (this.addStudentOfferForm.invalid) {
-      this.addStudentOfferForm.markAllAsTouched();
-      return;
-    }
-
-    const formVal = this.addStudentOfferForm.value;
-    const selectedAgeGroup = this.ageGroupList.find(
-      (x: any) => x.value === formVal.ageGroupID
-    );
-    const selectedPlan = this.frontendPlanList?.find(
-      (x: any) => x.id === formVal.planID
-    );
-
-    this.offerStudents.push({
-      studentName: formVal.studentName?.trim(),
-      ageGroupID: formVal.ageGroupID,
-      ageGroupLabel: selectedAgeGroup ? selectedAgeGroup.label : '',
-      planID: this.isExternalBilling ? null : formVal.planID,
-      planName: selectedPlan
-        ? selectedPlan.planName
-        : this.isExternalBilling
-        ? 'N/A'
-        : '',
-      tempOrderNumber: this.generateTempOrderNumber(),
-    });
-
-    this.addStudentOfferForm.reset();
-  }
-
-  removeStudentFromOffer(index: number) {
-    this.offerStudents.splice(index, 1);
-  }
-
   sendDiscountFormToParent() {
-    if (
-      this.offerStudents.length === 0 &&
-      this.addStudentOfferForm.get('studentName')?.value
-    ) {
-      this.addStudentToOffer();
-    }
-
-    if (this.giveDiscountForm.invalid) {
-      this.giveDiscountForm.markAllAsTouched();
-      return;
-    }
-
-    if (this.offerStudents.length === 0) {
-      this.toastr.warning('Please add at least one student.');
-      this.addStudentOfferForm.markAllAsTouched();
-      return;
-    }
-
-    this.spinner.show();
-    const parentVal = this.giveDiscountForm.value;
-    const firstStudent = this.offerStudents[0];
-
-    const payload = {
-      name: parentVal.name?.trim(),
-      email: parentVal.email?.trim(),
-      centreID: this.centreID,
-      tempOrderNumber:
-        firstStudent.tempOrderNumber || this.generateTempOrderNumber(),
-      ageGroup: firstStudent.ageGroupID,
-      planID: firstStudent.planID || 0,
-      students: this.offerStudents.map((s) => ({
-        name: s.studentName,
-        ageGroup: s.ageGroupID,
-        planID: s.planID || 0,
-        tempOrderNumber: s.tempOrderNumber || this.generateTempOrderNumber(),
-      })),
-    };
-
-    this.discountService
-      .sendDiscountFormMail(payload)
-      .subscribe({
-        next: (response: any) => {
-          setTimeout(() => {
-            this.spinner.hide();
-          }, 100);
-          if (response.message == 'Success') {
-            $('#giveDiscount').modal('hide');
-            this.toastr.success(
-              this.isExternalBilling
-                ? 'Enrollment invite sent successfully.'
-                : 'Discount form email send successfully.'
-            );
-            this.resetGiveDiscountForm();
-          } else {
-            this.toastr.error(response.message || 'Failed to send offer email.');
-          }
-        },
-        error: () => {
-          this.spinner.hide();
-          this.toastr.error('Failed to send offer email.');
-        }
+    if (this.isExternalBilling) {
+      this.giveDiscountForm.patchValue({
+        planID: this.giveDiscountForm.value.planID || 0,
       });
+    }
+
+    if (this.giveDiscountForm.valid) {
+      this.spinner.show();
+      this.giveDiscountForm.patchValue({
+        name: this.giveDiscountForm.value.name?.trim(),
+        email: this.giveDiscountForm.value.email?.trim(),
+        centreID: this.centreID,
+        tempOrderNumber: this.generateTempOrderNumber(),
+      });
+
+      this.discountService
+        .sendDiscountFormMail(this.giveDiscountForm.value)
+        .subscribe({
+          next: (response: any) => {
+            setTimeout(() => {
+              this.spinner.hide();
+            }, 100);
+            if (response.message == 'Success') {
+              $('#giveDiscount').modal('hide');
+              this.toastr.success(
+                this.isExternalBilling
+                  ? 'Enrollment invite sent successfully.'
+                  : 'Discount form email send successfully.'
+              );
+              this.resetGiveDiscountForm();
+            } else {
+              this.toastr.error(response.message || 'Failed to send offer email.');
+            }
+          },
+          error: () => {
+            this.spinner.hide();
+            this.toastr.error('Failed to send offer email.');
+          }
+        });
+    } else {
+      this.giveDiscountForm.markAllAsTouched();
+    }
   }
 
   getCookieData() {
@@ -722,9 +634,6 @@ export class AddDiscountComponent implements OnInit, OnDestroy {
 
   resetGiveDiscountForm() {
     this.giveDiscountForm.reset();
-    this.addStudentOfferForm?.reset();
-    this.offerStudents = [];
-    this.frontendPlanList = [];
   }
 
   async getPlanAccToAgeGroup(event: any) {
