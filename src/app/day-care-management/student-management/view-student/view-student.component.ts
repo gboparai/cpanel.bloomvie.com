@@ -357,6 +357,10 @@ export class ViewStudentComponent implements OnInit {
     }
   }
 
+  navigateToAddStudent() {
+    this.router.navigate(['/student-enrollment']);
+  }
+
   sendMailToParentAndTeacherForPassword(studentRecord: any) {
     this.spinner.show();
 

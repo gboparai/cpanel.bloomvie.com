@@ -616,7 +616,8 @@ export class SidebarComponent implements OnInit {
     offerChild.menuUrl = '/special-offer';
     offerChild.MenuUrl = '/special-offer';
 
-    const childList = [viewStudentChild, addStudentChild, offerChild];
+    // Removed addStudentChild per requirement: just keep students and offers/enrollment invites
+    const childList = [viewStudentChild, offerChild];
 
     if (studentMgmtMenu) {
       studentMgmtMenu.value = 'Student Management';
