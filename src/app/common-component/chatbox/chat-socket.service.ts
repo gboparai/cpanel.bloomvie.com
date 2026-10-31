@@ -36,7 +36,11 @@ export class ChatSocketService {
     };
     if (!this.loginUserId) return;
     this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl(`${this.rootUrl.slice(0, -3)}chatHub?userId=${this.loginUserId}`, {
+      .withUrl(`${this.rootUrl.slice(0, -3)}chatHub`, {
+        accessTokenFactory: () => {
+          const userInfo = this.cookie.get('UserInfo');
+          return userInfo ? JSON.parse(userInfo).token ?? '' : '';
+        },
         skipNegotiation: true,
         transport: signalR.HttpTransportType.WebSockets,
       })
@@ -49,6 +53,7 @@ export class ChatSocketService {
       this.addReceiveMessageListener();
       this.addSeenMeesageListener();
       this.addClientStatusChangeListener();
+      this.fetchActiveUsers();
     })
       .catch((err) => console.error('Error starting SignalR connection:', err));
   }
@@ -85,7 +90,14 @@ export class ChatSocketService {
     if (this.hubConnection) {
       this.hubConnection.invoke('SendMessageToGroup', messagePayload).catch((err) => console.error('Error sending message:', err));
     }
+  }
 
+  public sendClassroomMessage(messagePayload: any): Promise<void> {
+    if (!this.hubConnection || this.hubConnection.state !== signalR.HubConnectionState.Connected) {
+      return Promise.reject(new Error('The chat connection is not available.'));
+    }
+
+    return this.hubConnection.invoke('SendClassroomMessage', messagePayload);
   }
 
   public addReceiveMessageListener(): void {
@@ -111,7 +123,11 @@ export class ChatSocketService {
   }
 
   public fetchActiveUsers(): void {
-    this.hubConnection?.invoke('NotifyUserStatusChange').catch(err => console.error(err));
+    if (this.hubConnection?.state !== signalR.HubConnectionState.Connected) {
+      return;
+    }
+
+    this.hubConnection.invoke('NotifyUserStatusChange').catch(err => console.error(err));
   }
 
 
@@ -132,6 +148,45 @@ export class ChatSocketService {
 
   bindClients(loginUserId: number, centreId: number): Observable<any> {
     return this.http.get<any>(this.rootUrl + '/BroadCast/bindList', { params: { loginUserId, centreId } });
+  }
+
+  classroomThreads(classId?: number, studentId?: number): Observable<any> {
+    let params = new HttpParams();
+    if (classId !== undefined) {
+      params = params.set('classId', classId);
+    }
+    if (studentId !== undefined) {
+      params = params.set('studentId', studentId);
+    }
+    return this.http.get<any>(this.rootUrl + '/BroadCast/classroomThreads', { params });
+  }
+
+  loadClassroomChat(
+    studentId: number,
+    isAdminOnly: boolean,
+    pageIndex: number,
+    pageSize: number,
+    regionHours: number,
+    regionMinutes: number
+  ): Observable<any> {
+    return this.http.get<any>(this.rootUrl + '/BroadCast/loadClassroomChat', {
+      params: {
+        studentId,
+        isAdminOnly,
+        pageIndex,
+        pageSize,
+        regionHours,
+        regionMinutes,
+      },
+    });
+  }
+
+  markClassroomThreadRead(studentId: number, isAdminOnly: boolean): Observable<any> {
+    return this.http.post<any>(
+      this.rootUrl + '/BroadCast/markClassroomThreadRead',
+      null,
+      { params: { studentId, isAdminOnly } }
+    );
   }
 
   loadChat(

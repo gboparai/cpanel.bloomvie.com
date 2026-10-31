@@ -14,6 +14,9 @@
     list-style: none;
     margin: 0;
     padding: 0;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
   }
 
   .messaging-member__avatar img {
@@ -673,26 +676,76 @@ ul li h5
   to { opacity: 1; transform: scale(1); }
 }
 /* Container for chat item - clear floats */
-li {
+.chat__list-messages > li {
   clear: both;
   margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
 }
 
-/* Timestamp styling centered */
+.chat__message-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+}
+
 .chat__time {
   font-size: 0.75rem;
   color: #999;
+  line-height: 1;
+}
+
+.chat__metadata .chat__time {
+  align-self: auto;
+  padding: 0;
+}
+
+.chat__metadata {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 3px;
+}
+
+.chat__metadata--you {
+  align-self: flex-start;
+  padding-left: 8px;
+}
+
+.chat__metadata--me {
+  align-self: flex-end;
+  padding-right: 8px;
+}
+
+.chat__date-separator {
+  align-self: center;
+  margin: 12px 0;
+  padding: 5px 12px;
+  border-radius: 12px;
+  background: #f3e8f2;
+  color: #666;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.chat__sender-name {
+  display: block;
+  color: #333;
+  font-size: 0.8rem;
+  font-weight: 700;
   margin-bottom: 4px;
-  text-align: center;
-  clear: both;
 }
 
 /* Receiver bubble - left aligned */
 .chat__bubble--you {
   background-color: #e5e5ea;
   color: #000;
-  float: left;
+  align-self: flex-start;
   clear: both;
+  float: none;
   padding: 10px 14px;
   border-radius: 18px 18px 18px 0;
   max-width: 70%;
@@ -703,13 +756,45 @@ li {
 .chat__bubble--me {
   background-color: #0b93f6;
   color: white;
-  float: right;
+  align-self: flex-end;
   clear: both;
+  float: none;
   padding: 10px 14px;
   border-radius: 18px 18px 0 18px;
   max-width: 70%;
   word-wrap: break-word;
   text-align: left; /* so text doesn’t get weird on right */
+}
+
+.check-msg-seen {
+  display: inline-flex;
+  align-items: center;
+  align-self: auto;
+  gap: 3px;
+  font-size: 0.7rem;
+  line-height: 1;
+  text-align: left;
+}
+
+.chat__metadata .check-msg-seen {
+  align-self: auto;
+}
+
+.chat__metadata .check-msg-seen img {
+  display: block;
+  width: 14px;
+  height: 14px;
+  margin: 0;
+  vertical-align: middle;
+}
+
+.check-msg-seen img {
+  width: 14px;
+  margin: 0;
+}
+
+.check-msg-seen img.chat__check--read {
+  filter: brightness(0) saturate(100%) invert(43%) sepia(80%) saturate(470%) hue-rotate(86deg) brightness(92%) contrast(88%);
 }
 
 /* Receiver attachments aligned left */
@@ -783,4 +868,3 @@ li::after {
   vertical-align: middle;
   margin-right: 4px;
 }
-

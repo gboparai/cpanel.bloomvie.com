@@ -64,9 +64,19 @@
             <div class="chat-member__details">
               <span class="chat-member__name"
                 [innerText]="receiverData.name"></span>
-              <span [ngClass]="{'hide':receiverData.isGroup}"
+              <span [ngClass]="{'hide':receiverData.isGroup || receiverData.isStudentThread}"
                 class="chat-member__status"
                 [innerText]="receiverData.isOnline?'Online':'Offline'"></span>
+              <span [ngClass]="{'hide':!receiverData.isStudentThread}"
+                class="chat-member__status">
+                {{
+                  receiverData.isAdminOnly
+                    ? (receiverData.isParent ? 'Private conversation' : 'Private student conversation with daycare admin')
+                    : receiverData.isParent
+                      ? (receiverData.className || 'Classroom')
+                      : 'Student conversation shared with classroom teachers'
+                }}
+              </span>
               <span [ngClass]="{'hide':!receiverData.isGroup}"
                 class="chat-member__status">Total Members:
                 {{groupData.groupMembers.length}}</span>
@@ -110,7 +120,8 @@
         [infiniteScrollDisabled]="false" [scrollWindow]="false">
         <ul class="chat__list-messages">
           <!-- <li *ngFor="let chat of chatList">
-            <div *ngIf="chat.type === 'receiver'; else senderMessage">
+            <div *ngIf="chat.type === 'receiver'; else senderMessage"
+              class="chat__message-group chat__message-group--you">
             
               <div [ngClass]="{'hide':!chat.data.message}" class="chat__time">{{ chat.data.timestamp | date: 'short' }}
               </div>
@@ -216,16 +227,19 @@
           </li> -->
 
           <!-- Added on 12/08/25 -->
-          <li *ngFor="let chat of chatList">
+          <li *ngFor="let chat of chatList; let i = index">
+            <div *ngIf="shouldShowDateSeparator(i)" class="chat__date-separator">
+              {{ getDateSeparatorLabel(chat.data.timestamp) }}
+            </div>
             <div *ngIf="chat.type === 'receiver'; else senderMessage">
-              <!-- Receiver timestamp -->
-              <div [ngClass]="{'hide': !chat.data.message}" class="chat__time">
-                {{ chat.data.timestamp | date: 'short' }}
-              </div>
               <!-- Receiver text -->
               <div [ngClass]="{'hide': !chat.data.message}"
                 class="chat__bubble chat__bubble--you">
-                {{ chat.data.message }}
+                <span *ngIf="receiverData.isStudentThread && chat.data.senderName"
+                  class="chat__sender-name">
+                  {{ chat.data.senderName }}
+                </span>
+                <span>{{ chat.data.message }}</span>
               </div>
               <!-- Receiver attachments -->
               <ng-container *ngFor="let file of chat.data.chatFiles">
@@ -450,16 +464,13 @@
 
                 </ng-container>
               </ng-container>
+              <div *ngIf="chat.data.timestamp" class="chat__metadata chat__metadata--you">
+                <span class="chat__time">{{ getMessageTime(chat.data.timestamp) }}</span>
+              </div>
             </div>
 
             <!-- Sender -->
             <ng-template #senderMessage>
-              <!-- Sender timestamp -->
-              <div *ngIf="chat.data.timestamp"
-                [ngClass]="{'hide': !chat.data.message}" class="chat__time">
-                {{ chat.data.timestamp | date: 'short' }}
-              </div>
-
               <!-- Sender text -->
               <div [ngClass]="{'hide': !chat.data.message}"
                 class="chat__bubble chat__bubble--me">
@@ -689,17 +700,13 @@
                 </div>
               </div>
 
-              <!-- Status -->
-              <div class="check-msg-seen"
-                *ngIf="!chat.data.isRead && !receiverData.isGroup">
-                <img src="assets/img/double-check.png" alt="Delivered"
-                  style="filter: brightness(0) invert(0);">
-                <span>Delivered</span>
-              </div>
-              <div class="check-msg-seen"
-                *ngIf="chat.data.isRead && !receiverData.isGroup">
-                <img src="assets/img/double-check.png" alt="Seen">
-                <span>Seen</span>
+              <div *ngIf="chat.data.timestamp" class="chat__metadata chat__metadata--me">
+                <span class="chat__time">{{ getMessageTime(chat.data.timestamp) }}</span>
+                <span class="check-msg-seen" *ngIf="!receiverData.isGroup">
+                  <img src="assets/img/double-check.png"
+                    [alt]="chat.data.isRead ? 'Seen' : 'Delivered'"
+                    [class.chat__check--read]="chat.data.isRead">
+                </span>
               </div>
             </ng-template>
 
