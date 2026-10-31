@@ -11,8 +11,11 @@
                   class="col-12 col-md-4 col-lg-5 col-xl-3 px-0 messages-page__list-scroll"
                 >
                   <div class="messages-page__header mb-0 px-4 pt-3 pb-3">
-                    <span class="messages-page__title">Chats</span>
+                    <span class="messages-page__title">
+                      {{ isClassroomChat ? "Classroom conversations" : "Chats" }}
+                    </span>
                     <a
+                      *ngIf="!isClassroomChat"
                       (click)="
                         selectedGroupMembers.length > 0
                           ? addGroup()
@@ -24,6 +27,18 @@
                     >
                   </div>
                   <div class="messages-page__search mb-0 px-3 pb-3 ps-0">
+                    <select
+                      *ngIf="canFilterClassrooms"
+                      [(ngModel)]="selectedClassId"
+                      (ngModelChange)="bindClients()"
+                      class="form-select mb-2"
+                      aria-label="Filter chats by classroom"
+                    >
+                      <option [ngValue]="null">All classrooms</option>
+                      <option *ngFor="let classroom of classroomClasses" [ngValue]="classroom.id">
+                        {{ classroom.name }}
+                      </option>
+                    </select>
                     <div class="custom-form__search-wrapper">
                       <input
                         [(ngModel)]="searchTerm"
@@ -119,9 +134,18 @@
                             class="messaging-member__name"
                             [innerText]="client.name"
                           ></span>
-                          <span class="role-type" *ngIf="client.roleType">{{
+                          <span class="role-type" *ngIf="client.roleType && !client.isStudentThread">{{
                             client.roleType
                           }}</span>
+                          <span class="role-type" *ngIf="client.isStudentThread">
+                            {{
+                              client.isAdminOnly
+                                ? (userRoleID === 5 ? "Private chat with daycare admin" : "Private conversation with daycare admin")
+                                : userRoleID === 5
+                                  ? client.className || "Classroom"
+                                  : client.className || "Classroom"
+                            }}
+                          </span>
                         </div>
                         <!-- <span class="messaging-member__message" [innerText]="client.lastMessage"></span> -->
                         <span class="messaging-member__message">

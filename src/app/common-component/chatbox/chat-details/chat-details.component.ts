@@ -17,6 +17,7 @@ import { serialize } from 'v8';
 import { CommonService } from '../../common.service';
 import imageCompression from 'browser-image-compression';
 import { TimeFormatAmPmPipe } from '../../../bloomvie-management/dc-appointments-list/time-format.pipe';
+import { Observable } from 'rxjs';
 declare var $: any;
 
 
@@ -89,9 +90,6 @@ export class ChatDetailsComponent implements OnInit {
     private commonService: CommonService) { }
 
   ngOnInit(): void {
-    debugger
-
-
     this.listenMessageSeen();
     this.receiverData['name'] = 'Unknown User';
   }
@@ -101,7 +99,11 @@ export class ChatDetailsComponent implements OnInit {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['receiverData']) {
       if (this.receiverData && Object.keys(this.receiverData).length > 0) {
-        this.chatGroupId = this.receiverData.isGroup ? 'GROUP-' + this.receiverData.id : '';
+        this.chatGroupId = this.receiverData.isStudentThread
+          ? this.receiverData.threadId
+          : this.receiverData.isGroup
+          ? 'GROUP-' + this.receiverData.id
+          : '';
         this.resetPageData();
         this.loadData();
         if (this.receiverData.isGroup) {
@@ -1037,6 +1039,84 @@ export class ChatDetailsComponent implements OnInit {
     this.pageIndex = 1;
   }
 
+  private getMessageDateKey(timestamp: string | Date | null | undefined): string | null {
+    if (!timestamp) {
+      return null;
+    }
+
+    if (timestamp instanceof Date) {
+      return this.getCalendarDateKey(timestamp);
+    }
+
+    const value = String(timestamp);
+    if (/^\d{4}-\d{2}-\d{2}/.test(value)) {
+      return value.substring(0, 10);
+    }
+
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) {
+      return null;
+    }
+
+    return this.getCalendarDateKey(date);
+  }
+
+  private getCalendarDateKey(date: Date): string {
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${date.getFullYear()}-${month}-${day}`;
+  }
+
+  shouldShowDateSeparator(index: number): boolean {
+    const dateKey = this.getMessageDateKey(this.chatList[index]?.data?.timestamp);
+    if (!dateKey) {
+      return false;
+    }
+    if (index === 0) {
+      return true;
+    }
+
+    return dateKey !== this.getMessageDateKey(this.chatList[index - 1]?.data?.timestamp);
+  }
+
+  getDateSeparatorLabel(timestamp: string | Date): string {
+    const dateKey = this.getMessageDateKey(timestamp);
+    if (!dateKey) {
+      return '';
+    }
+
+    const today = new Date();
+    const yesterday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1);
+
+    if (dateKey === this.getCalendarDateKey(today)) {
+      return 'Today';
+    }
+    if (dateKey === this.getCalendarDateKey(yesterday)) {
+      return 'Yesterday';
+    }
+
+    const [year, month, day] = dateKey.split('-').map(Number);
+    return new Date(year, month - 1, day).toLocaleDateString(undefined, {
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric',
+    });
+  }
+
+  getMessageTime(timestamp: string | Date): string {
+    if (!timestamp) {
+      return '';
+    }
+    if (typeof timestamp === 'string' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(timestamp)) {
+      return timestamp.substring(11, 16);
+    }
+
+    const date = timestamp instanceof Date ? timestamp : new Date(timestamp);
+    return Number.isNaN(date.getTime())
+      ? ''
+      : date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  }
+
   toggleEmojiPicker(): void {
     this.showEmojiPicker = !this.showEmojiPicker;
   }
@@ -1047,6 +1127,50 @@ export class ChatDetailsComponent implements OnInit {
   }
 
   toggleLoading = () => this.isLoading = !this.isLoading;
+
+  private getHistoryRequest(pageIndex: number, regionHours: number, regionMinutes: number): Observable<any> | null {
+    if (this.receiverData.isStudentThread) {
+      const studentId = Number(this.receiverData.studentId);
+      if (!Number.isSafeInteger(studentId) || studentId <= 0) return null;
+
+      return this.chatService.loadClassroomChat(
+        studentId,
+        Boolean(this.receiverData.isAdminOnly),
+        pageIndex,
+        this.pageSize,
+        regionHours,
+        regionMinutes
+      );
+    }
+
+    if (this.receiverData.isGroup) {
+      const groupId = Number(this.receiverData.id);
+      if (!Number.isSafeInteger(groupId) || groupId <= 0) return null;
+
+      return this.chatService.loadChat(
+        this.senderId,
+        0,
+        this.chatGroupId,
+        pageIndex,
+        this.pageSize,
+        regionHours,
+        regionMinutes
+      );
+    }
+
+    const receiverId = Number(this.receiverData.id);
+    if (!Number.isSafeInteger(receiverId) || receiverId <= 0) return null;
+
+    return this.chatService.loadChat(
+      this.senderId,
+      receiverId,
+      this.chatGroupId,
+      pageIndex,
+      this.pageSize,
+      regionHours,
+      regionMinutes
+    );
+  }
 
   scrollToBottom(): void {
     const container = this.scrollContainer.nativeElement;
@@ -1098,24 +1222,23 @@ export class ChatDetailsComponent implements OnInit {
 
   //Added on 12/08/25
   loadData = (): void => {
-    this.toggleLoading();
-
-
-
-    let region = this.commonService.regionResponseSignal();
+    const region = this.commonService.regionResponseSignal();
     // if (region.offsetString != '') {
     //   this.regionResponse = region;
     // }
-    debugger
-    this.chatService.loadChat(
-      this.senderId,
-      this.receiverData.id,
-      this.chatGroupId,
+    const request = this.getHistoryRequest(
       this.pageIndex,
-      this.pageSize,
       region.offsetHours,
       region.offsetMinutes
-    ).subscribe({
+    );
+    if (!request) {
+      this.chatList = [];
+      this.isLoading = false;
+      this.isReachedLast = true;
+      return;
+    }
+    this.isLoading = true;
+    request.subscribe({
       next: async (response) => {
         if (response.message === 'Success') {
           const chatList = response.result.sort((a: any, b: any) => {
@@ -1148,8 +1271,9 @@ export class ChatDetailsComponent implements OnInit {
       },
       error: (err) => {
         this.toastr.error(err.message);
+        this.isLoading = false;
       },
-      complete: () => this.toggleLoading()
+      complete: () => this.isLoading = false
     });
   }
 
@@ -1180,7 +1304,15 @@ export class ChatDetailsComponent implements OnInit {
       '.pptx': 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
       '.txt': 'text/plain'
     };
-    return map[ext.toLowerCase()] || 'application/octet-stream';
+    const normalizedExtension = ext.trim().toLowerCase();
+    if (normalizedExtension.includes('/')) {
+      return normalizedExtension;
+    }
+
+    const extension = normalizedExtension.startsWith('.')
+      ? normalizedExtension
+      : `.${normalizedExtension}`;
+    return map[extension] || 'application/octet-stream';
   }
 
   ConvertS3File(base64: string, mimeType: string = 'application/octet-stream') {
@@ -1270,16 +1402,20 @@ export class ChatDetailsComponent implements OnInit {
 
   appendData = () => {
     if (this.isLoading) return;
-    this.toggleLoading();
     const container = this.scrollContainer.nativeElement;
     const prevScrollHeight = container.scrollHeight;
-    let region = this.commonService.regionResponseSignal();
-    if (region.offsetString != '') {
-      this.regionResponse = region;
+    const region = this.commonService.regionResponseSignal();
+    const request = this.getHistoryRequest(
+      this.pageIndex,
+      region.offsetHours,
+      region.offsetMinutes
+    );
+    if (!request) {
+      this.isReachedLast = true;
+      return;
     }
-
-    this.chatService.loadChat(this.senderId, this.receiverData.id, this.chatGroupId, this.pageIndex, this.pageSize, this.regionResponse.offsetHours,
-      this.regionResponse.offsetMinutes).subscribe({
+    this.isLoading = true;
+    request.subscribe({
         next: async (response) => {
           if (response.message === 'Success') {
             const newChats = response.result.sort((a: any, b: any) => {
@@ -1312,8 +1448,9 @@ export class ChatDetailsComponent implements OnInit {
         },
         error: (err) => {
           this.toastr.error(err.message);
+          this.isLoading = false;
         },
-        complete: () => this.toggleLoading()
+        complete: () => this.isLoading = false
       });
   }
 
@@ -1359,7 +1496,7 @@ export class ChatDetailsComponent implements OnInit {
 
 
 
-  sendMessage(): void {
+  async sendMessage(): Promise<void> {
 
     if ((this.messageToSend.trim() || this.uploadedFiles.length) && !this.inProcessFileUploading()) {
 
@@ -1401,7 +1538,19 @@ export class ChatDetailsComponent implements OnInit {
 
 
       console.log('Sending message payload:', payload);
-      if (this.receiverData.isGroup) {
+      if (this.receiverData.isStudentThread) {
+        try {
+          await this.chatService.sendClassroomMessage({
+            studentId: this.receiverData.studentId,
+            isAdminOnly: this.receiverData.isAdminOnly,
+            message: this.messageToSend,
+            chatFiles: this.uploadedFiles,
+          });
+        } catch (error) {
+          this.toastr.error('Message could not be sent. Please try again.');
+          return;
+        }
+      } else if (this.receiverData.isGroup) {
         this.chatService.sendGroupMessage(payload);
       } else {
         this.chatService.sendMessage(payload);

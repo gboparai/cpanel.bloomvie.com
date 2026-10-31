@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, effect } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { BreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
 import io from 'socket.io-client';
@@ -16,6 +16,7 @@ import * as FileSaver from 'file-saver';
 import { json } from 'stream/consumers';
 import cli from '@angular/cli';
 import { SkeletonLoaderComponent } from '../skeleton-loader/skeleton-loader.component';
+import { HeaderServiceService } from '../../layout/header/header-service.service';
 
 const SOCKET_ENDPOINT = 'localhost:3000';
 @Component({
@@ -44,6 +45,10 @@ export class ChatboxComponent implements OnInit, OnDestroy {
   public activeUsers: string[] = [];
   public isAddGroup: boolean = false;
   public selectedGroupMembers: number[] = [];
+  public selectedClassId: number | null = null;
+  public currentStudentId: number | null = null;
+  public classroomClasses: { id: number; name: string }[] = [];
+  private isCurrentThreadExplicitlyOpened = false;
   public readonly baseUrl: string = environment.apiUrl.slice(0, -3);
   userRoleID: number = 0;
   centreId: number = 0;
@@ -51,8 +56,24 @@ export class ChatboxComponent implements OnInit, OnDestroy {
     private chatService: ChatSocketService,
     private cookie: CookieService,
     private spinner: NgxSpinnerService,
-    private toastr: ToastrService
-  ) { }
+    private toastr: ToastrService,
+    private headerService: HeaderServiceService
+  ) {
+    let profileVersion = this.headerService.switchProfile();
+    effect(() => {
+      const nextProfileVersion = this.headerService.switchProfile();
+      if (nextProfileVersion !== profileVersion) {
+        profileVersion = nextProfileVersion;
+        if (this.userRoleID === 5) {
+          const studentId = Number.parseInt(this.cookie.get('StudentID'), 10);
+          this.currentStudentId = Number.isFinite(studentId) && studentId > 0
+            ? studentId
+            : null;
+          this.bindClients();
+        }
+      }
+    });
+  }
   skeletonShow = 'Skelton';
 
   ngOnInit(): void {
@@ -60,7 +81,14 @@ export class ChatboxComponent implements OnInit, OnDestroy {
       this.senderId = parseInt(this.cookie.get('UserId'));
 
       //Added on 12/08/25
-      this.userRoleID = parseInt(this.cookie.get('UserRoleId'));
+      const roleId = this.cookie.get('userRoleID') || this.cookie.get('UserRoleId');
+      this.userRoleID = Number.parseInt(roleId, 10) || 0;
+      if (this.userRoleID === 5) {
+        const studentId = Number.parseInt(this.cookie.get('StudentID'), 10);
+        this.currentStudentId = Number.isFinite(studentId) && studentId > 0
+          ? studentId
+          : null;
+      }
       if (this.userRoleID == 8) {
         this.centreId = parseInt(this.cookie.get('CentreID'));
       }
@@ -83,8 +111,18 @@ export class ChatboxComponent implements OnInit, OnDestroy {
 
   get filteredClientList(): any[] {
     return this.clientList.filter((x) =>
-      x.name.toLocaleLowerCase().includes(this.searchTerm.toLocaleLowerCase())
+      (x.name || '').toLocaleLowerCase().includes(this.searchTerm.toLocaleLowerCase()) &&
+      (this.userRoleID !== 5 || x.studentId === this.currentStudentId) &&
+      (this.selectedClassId === null || x.classId === this.selectedClassId)
     );
+  }
+
+  get isClassroomChat(): boolean {
+    return [3, 4, 5, 8].includes(this.userRoleID);
+  }
+
+  get canFilterClassrooms(): boolean {
+    return [3, 4, 8].includes(this.userRoleID);
   }
 
   receiveFromChild(event: { type: string; data: any }) {
@@ -190,19 +228,50 @@ export class ChatboxComponent implements OnInit, OnDestroy {
     }
     //End
 
-    this.chatService.bindClients(this.senderId, Number(centreId)).subscribe({
+    const request = this.isClassroomChat
+      ? this.chatService.classroomThreads(
+          this.selectedClassId ?? undefined,
+          this.userRoleID === 5 ? this.currentStudentId ?? undefined : undefined
+        )
+      : this.chatService.bindClients(this.senderId, Number(centreId));
+    request.subscribe({
       next: (response) => {
         if (response.message === 'Success') {
-          this.clientList = response.result;
-          this.roleType = response.result.roleType;
-          if (canswitch) {
-            this.onClientSwitch(response.result[0]);
-          } else {
-            const switchedUser = response.result.find(
-              (x: any) => x.id === this.receiverData.id
+          this.clientList = (response.result ?? []).map((thread: any) => ({
+            ...thread,
+            name: this.userRoleID === 5
+              ? thread.isAdminOnly
+                ? thread.adminName || 'Daycare admin'
+                : 'Teachers'
+              : thread.name,
+            isParent: this.userRoleID === 5,
+          }));
+          this.roleType = response.result?.roleType;
+          this.classroomClasses = this.canFilterClassrooms
+            ? this.clientList
+                .filter((thread: any) => thread.classId != null)
+                .reduce((classes: { id: number; name: string }[], thread: any) => {
+                  if (!classes.some(item => item.id === thread.classId)) {
+                    classes.push({ id: thread.classId, name: thread.className || 'Classroom' });
+                  }
+                  return classes;
+                }, [])
+            : [];
+          if (canswitch && this.clientList.length) {
+            const initialThread = this.userRoleID === 5
+              ? this.clientList.find(thread => thread.studentId === this.currentStudentId)
+              : this.clientList[0];
+            if (initialThread) this.onClientSwitch(initialThread, false);
+          } else if (!canswitch) {
+            const switchedUser = this.clientList.find(
+              (x: any) => x.threadId === this.receiverData.threadId || x.id === this.receiverData.id
             );
-            this.onClientSwitch(switchedUser);
+            if (switchedUser) this.onClientSwitch(switchedUser, false);
           }
+        } else {
+          this.clientList = [];
+          this.classroomClasses = [];
+          this.receiverData = {};
         }
       },
       error: (err) => {
@@ -227,7 +296,7 @@ export class ChatboxComponent implements OnInit, OnDestroy {
     this.chatService.activeUsers$.subscribe((users) => {
       this.activeUsers = users;
       this.receiverData['isOnline'] = this.activeUsers.includes(
-        this.receiverData.id.toString()
+        this.receiverData.id?.toString()
       );
     });
   }
@@ -236,11 +305,16 @@ export class ChatboxComponent implements OnInit, OnDestroy {
   private listenForMessages(): void {
     this.chatService.messageReceived$.subscribe((message: any) => {
       const isGroupMessage = message.data.chatRoomId?.includes('G');
+      const threadId = message.data.chatRoomId;
+      const isClassroomThread = /^(STUDENT|ADMIN)-\d+$/.test(threadId || '');
       let isMessageForCurrentUser = false;
 
       const { receiverId, senderId } = message.data;
       let affectedClient;
-      if (isGroupMessage) {
+      if (isClassroomThread) {
+        affectedClient = this.clientList.find((x) => x.threadId === threadId);
+        isMessageForCurrentUser = this.receiverData.threadId === threadId;
+      } else if (isGroupMessage) {
         const groupId = parseInt(message.data.chatRoomId.split('-')[1]);
         affectedClient = this.clientList.find(
           (x) => x.id === groupId && x.isGroup
@@ -260,14 +334,17 @@ export class ChatboxComponent implements OnInit, OnDestroy {
         if (isGroupMessage && senderId === this.senderId) {
           message['type'] = 'sender';
         }
-        if (senderId === this.receiverData.receiverId && !isGroupMessage) {
+        if (senderId === this.receiverData.receiverId && !isGroupMessage && !isClassroomThread) {
           this.markMessagesAsRead();
+        }
+        if (isClassroomThread && this.isCurrentThreadExplicitlyOpened) {
+          this.markClassroomThreadRead(this.receiverData);
         }
         this.newChat = message;
       }
       if (affectedClient) {
         if (!isMessageForCurrentUser) {
-          affectedClient.unreadMessageCount += 1;
+          affectedClient.unreadMessageCount = (affectedClient.unreadMessageCount ?? 0) + 1;
         }
         affectedClient.lastMessage = message.data.message;
         affectedClient.lastMessageTimestamp = message.data.timestamp;
@@ -289,25 +366,42 @@ export class ChatboxComponent implements OnInit, OnDestroy {
   }
 
   updateClientLists(clientId: string, updates: Partial<any>) {
-    const client = this.clientList.find((x) => x.id === clientId);
+    const client = this.clientList.find((x) =>
+      x.isStudentThread ? x.threadId === clientId : x.id === clientId
+    );
     if (client) {
       Object.assign(client, updates);
     }
   }
 
-  onClientSwitch(client: any) {
+  onClientSwitch(client: any, markAsRead: boolean = true) {
     this.receiverData = client;
-    this.receiverData['isOnline'] = this.activeUsers.includes(
-      this.receiverData.id.toString()
-    );
+    this.isCurrentThreadExplicitlyOpened = markAsRead;
+    this.receiverData['isOnline'] = !client.isStudentThread &&
+      client.id != null &&
+      this.activeUsers.includes(client.id.toString());
     if (client.isGroup)
       this.receiverData['clientList'] = this.clientList.filter(
         (x) => !x.isGroup
       );
     this.chatService.tempClientData = client;
-    if (client.unreadMessageCount) {
+    if (client.isStudentThread && markAsRead) {
+      this.markClassroomThreadRead(client);
+    } else if (markAsRead && client.unreadMessageCount) {
       this.markMessagesAsRead();
-      this.updateClientLists(client.id, { unreadMessageCount: 0 });
+      this.updateClientLists(
+        client.id,
+        { unreadMessageCount: 0 }
+      );
     }
+  }
+
+  private markClassroomThreadRead(thread: any): void {
+    this.chatService
+      .markClassroomThreadRead(thread.studentId, !!thread.isAdminOnly)
+      .subscribe({
+        next: () => this.updateClientLists(thread.threadId, { unreadMessageCount: 0 }),
+        error: (err) => this.toastr.error(err.message || 'Unable to mark the conversation as read.'),
+      });
   }
 }

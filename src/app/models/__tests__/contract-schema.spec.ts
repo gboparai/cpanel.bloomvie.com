@@ -257,7 +257,7 @@ describe('OpenAPI Contract & Schema Validation Tests (cpanel.bloomvie.com)', () 
       startTime: '08:00:00',
       endTime: '12:00:00',
       centreID: 101,
-      days: [{ dayID: 1, dayName: 'Monday' }],
+      days: [{ dayID: 1 }],
     };
     expect(section.classID).toBe(10);
     expect(section.days?.length).toBe(1);
@@ -276,7 +276,7 @@ describe('OpenAPI Contract & Schema Validation Tests (cpanel.bloomvie.com)', () 
       id: 12,
       note: 'Slept peacefully',
     };
-    expect(nap.id).toBe(12);
+    expect(nap['id']).toBe(12);
   });
 
   it('validates Parent & Bookkeeping domain models (ClearStudentPaymentItem, ChildDailyRoutineItem)', () => {
@@ -306,7 +306,7 @@ describe('OpenAPI Contract & Schema Validation Tests (cpanel.bloomvie.com)', () 
       centreID: 101,
       isAccept: true,
     };
-    expect(tocJob.jobPostingID).toBe(12);
+    expect(tocJob['jobPostingID']).toBe(12);
 
     const plan: SubscriptionPlanItem = {
       id: 1,
@@ -324,16 +324,18 @@ describe('OpenAPI Contract & Schema Validation Tests (cpanel.bloomvie.com)', () 
 
     const role: UserRoleItem = {
       id: 3,
-      roleName: 'Teacher',
+      userRole: 'Teacher',
     };
-    expect(role.roleName).toBe('Teacher');
+    expect(role.userRole).toBe('Teacher');
 
     const ageGroup: MasterAgeGroupItem = {
       id: 2,
       groupName: 'Toddler',
-      minAgeMonth: 12,
-      maxAgeMonth: 24,
+      minAge: 12,
+      maxAge: 24,
+      isMonthly: true,
+      isActive: true,
     };
-    expect(ageGroup.groupName).toBe('Toddler');
+    expect(ageGroup['groupName']).toBe('Toddler');
   });
 });
