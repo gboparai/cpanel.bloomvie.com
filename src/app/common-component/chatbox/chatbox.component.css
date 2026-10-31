@@ -69,7 +69,12 @@
     border-radius: 13px
 }
 
-.custom-form__search-wrapper,
+.custom-form__search-wrapper {
+    width: 100%;
+    height: auto;
+    position: relative
+}
+
 .custom-form__send-wrapper {
     width: 100%;
     height: 100%;
@@ -142,10 +147,11 @@
 
 .custom-form__search-submit {
     position: absolute;
-    top: 0;
+    top: 50%;
     right: 0;
     height: 100%;
     width: 3.5rem;
+    transform: translateY(-50%);
     cursor: pointer;
     background-color: transparent;
     border: none;
