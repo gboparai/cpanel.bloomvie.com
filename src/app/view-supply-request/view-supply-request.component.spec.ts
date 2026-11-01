@@ -115,7 +115,8 @@ describe('ViewSupplyRequestComponent', () => {
   });
 
   describe('getSupplyList & Filtering', () => {
-    xit('should fetch supply requests and populate SupplyList', async () => {
+    it('should fetch supply requests and populate SupplyList', async () => {
+      component.UserId = '101';
       await component.getSupplyList('pending');
 
       expect(mockSupplyService.getSuuplyRequest).toHaveBeenCalledWith('101', 'pending');
@@ -164,10 +165,11 @@ describe('ViewSupplyRequestComponent', () => {
       expect(modalSpy).toHaveBeenCalledWith('show');
     });
 
-    xit('should approve supply item and refresh list', () => {
+    it('should approve supply item and refresh list', () => {
       mockSupplyService.approveOrRejectSupplyRequest.and.returnValue(of({
         message: 'Item Approved'
       }));
+      component.UserId = '101';
       spyOn(component, 'getSupplyList');
 
       component.approveSupply(1, 99);
@@ -231,7 +233,8 @@ describe('ViewSupplyRequestComponent', () => {
       expect(component.getSupplyList).toHaveBeenCalledWith('pending');
     });
 
-    xit('should review and approve purchase in purchaseItemSubmit', () => {
+    it('should review and approve purchase in purchaseItemSubmit', () => {
+      component.fileInput = { nativeElement: { value: 'test' } } as any;
       component.selectedItemId = 55;
       component.purchasedForm.patchValue({
         expenseType: 1,

@@ -245,8 +245,7 @@ describe('DaycareQuestionnaireComponent', () => {
       expect(mockToastr.success).toHaveBeenCalledWith('Section Activated Successfully');
     });
 
-    // BUG DISCOVERED: GetSectionByIDAndCentreID relies on CentreID which might be undefined depending on lifecycle hooks in the test environment, skipped test for code health improvement task to not introduce logic changes.
-    xit('should fetch section by ID and patch edit form in GetSectionByIDAndCentreID', () => {
+    it('should fetch section by ID and patch edit form in GetSectionByIDAndCentreID', async () => {
       mockCustomService.GetSectionByIDAndCentreID.and.returnValue(of({
         message: 'Success',
         result: {
