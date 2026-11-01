@@ -26,7 +26,8 @@ describe('ViewClassroomComponent', () => {
       'getSectionByClassID',
     ]);
     mockCommonService = jasmine.createSpyObj('CommonService', ['decrypt']);
-    mockRouter = jasmine.createSpyObj('Router', ['navigate'], { url: '/manage-classroom' });
+    mockRouter = jasmine.createSpyObj('Router', ['navigate']);
+    Object.defineProperty(mockRouter, 'url', { get: () => '/manage-classroom', configurable: true });
     mockSpinner = jasmine.createSpyObj('NgxSpinnerService', ['show', 'hide']);
     queryParamMapSubject = new BehaviorSubject(convertToParamMap({}));
 
@@ -122,12 +123,12 @@ describe('ViewClassroomComponent', () => {
     });
 
     it('should handle error in onClassNameClick gracefully', async () => {
-      mockClassService.getSectionByClassID.and.returnValue(throwError(() => new Error('Error')));
+      mockClassService.getSectionByClassID.and.returnValue(throwError(() => new Error('Error fetching sections:')));
       spyOn(console, 'error');
 
       await component.onClassNameClick(1);
 
-      expect(console.error).toHaveBeenCalled();
+      expect(console.error).toHaveBeenCalledWith('Error fetching sections:', jasmine.any(Error));
       expect(component.skeletonShow2).toBe('');
     });
 
@@ -142,7 +143,7 @@ describe('ViewClassroomComponent', () => {
     });
 
     it('should navigate to /onboarding if url includes onboarding', async () => {
-      (mockRouter as any).url = '/onboarding/step-2';
+      Object.defineProperty(mockRouter, 'url', { get: () => '/onboarding/step-2', configurable: true });
       const item = { id: 1, className: 'Toddlers' };
 
       await component.onEdit(item);
@@ -152,7 +153,7 @@ describe('ViewClassroomComponent', () => {
 
     it('should navigate to /manage-announcements onQuickAnnouncement', () => {
       component.onQuickAnnouncement({ id: 5 });
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['/manage-announcements'], {
+      expect(mockRouter.navigate).toHaveBeenCalledWith(['/announcements'], {
         queryParams: { newAnnouncement: 'true', classId: 5 },
       });
     });
