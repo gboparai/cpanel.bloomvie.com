@@ -722,51 +722,6 @@ export class ChildRoutineComponent {
     });
   }
 
-  //Added by Arshdeep on 06/03/25
-  // populateForm() {
-  //   if (!this.myControlForm) {
-  //     this.myControlForm = this.fb.group({});
-  //   }
-
-  //   this.fields.forEach((fieldGroup) => {
-  //     fieldGroup.fields.forEach((field: any) => {
-  //       if (!this.myControlForm.contains(field.name)) {
-  //         if (field.controlType === 'checkbox') {
-  //           // Initialize FormArray for checkboxes
-  //           const formArray = this.fb.array([]);
-
-  //           // Check if any value was previously selected and patch it
-  //           this.answersOfControlRecord.forEach((item: any) => {
-  //             item.forEach((AnswerControlLabel: any) => {
-  //               if (field.id === AnswerControlLabel.controlLabelID && AnswerControlLabel.answer !== "") {
-  //                 formArray.push(new FormControl(AnswerControlLabel.answer));
-  //               }
-  //             });
-  //           });
-
-  //           this.myControlForm.addControl(field.name, formArray);
-
-  //         } else {
-  //           let matchFound = false;
-  //           this.answersOfControlRecord.forEach((item: any) => {
-  //             item.forEach((AnswerControlLabel: any) => {
-  //               if (field.id === AnswerControlLabel.controlLabelID && AnswerControlLabel.answer !== "") {
-  //                 this.myControlForm.addControl(field.name, new FormControl(AnswerControlLabel.answer));
-  //                 matchFound = true;
-  //                 return;
-  //               }
-  //             });
-  //             if (matchFound) return;
-  //           });
-  //           if (!matchFound) {
-  //             this.myControlForm.addControl(field.name, new FormControl(''));
-  //           }
-  //         }
-  //       }
-  //     });
-  //   });
-  // }
-
   // Commented on 06/03/25
   // onCheckboxChange(event: any, value: string, controlName: string) {
   //   const formArray: FormArray = this.myControlForm.get(controlName) as FormArray;
