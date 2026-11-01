@@ -898,28 +898,6 @@ export class ManageClassroomComponent {
 
   // }
 
-  // const checkbox = event.target as HTMLInputElement;
-  // const dayID = +checkbox.value;
-  // const section = this.classForm.get('classSlot') as FormArray;
-  // const days = section.at(sectionIndex).get('days') as FormArray;
-
-  // if (checkbox.checked) {
-  //   if (!days.controls.some((control) => control.value.dayID === dayID)) {
-  //     days.push(
-  //       this.fb.group({
-  //         dayID: dayID,
-  //       })
-  //     );
-  //   }
-  // } else {
-  //   const index = days.controls.findIndex(
-  //     (ctrl) => ctrl.value.dayID === dayID
-  //   );
-  //   if (index !== -1) {
-  //     days.removeAt(index);
-  //   }
-  // }
-
   // isDaySelected(sectionIndex: number, dayID: number): boolean {
   //   const daysFormArray = (this.classForm.get('classSlot') as FormArray)
   //     .at(sectionIndex)
