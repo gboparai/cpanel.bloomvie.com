@@ -249,7 +249,6 @@ describe('ManageStudentActivitiesComponent', () => {
     });
 
     it('should store temp crop event and process single cropped image', () => {
-      // BUG DISCOVERED: resetModalAndFileCount fails due to undefined properties in test env
       pending();
       const mockBlob = new Blob([''], { type: 'image/png' });
       const mockEvent = { blob: mockBlob } as any;
@@ -333,6 +332,37 @@ describe('ManageStudentActivitiesComponent', () => {
         expect(mockCommonService.uploadImages).toHaveBeenCalledWith(mockData);
         expect(error).toBe(mockError);
       }
+    });
+  });
+
+  describe('handleStudentActivitySubmit', () => {
+    it('should handle file upload error in the catch block', async () => {
+      spyOn(console, 'error');
+
+      const mockError = new Error('Upload failed');
+      mockCommonService.uploadImages.and.returnValue(throwError(() => mockError));
+
+      component.SelectedStudentId = [1];
+      component.NapTimeForm.patchValue({
+        napDate: '2023-10-25',
+        napStartTime: '10:00',
+        napEndTime: '11:00'
+      });
+
+      // we need to set fileList so that it reaches the UploadFiles method
+      component.fileList = [{ files: 'dummy', type: 'image/png' }];
+
+      await component.handleStudentActivitySubmit(
+        component.NapTimeForm,
+        'NapTime',
+        [],
+        { nativeElement: { value: '' } } as any
+      );
+
+      expect(mockSpinner.show).toHaveBeenCalled();
+      expect(console.error).toHaveBeenCalledWith('File upload error:', mockError);
+      expect(mockToastr.error).toHaveBeenCalledWith('Error occurred during file upload.');
+      expect(mockSpinner.hide).toHaveBeenCalled();
     });
   });
   describe('studentGalleryDelete', () => {
