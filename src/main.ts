@@ -8,7 +8,7 @@ import { AppService } from './app/app.service';
 import { authInterceptor } from './app/auth/auth.interceptor';
 import { APP_INITIALIZER, importProvidersFrom } from '@angular/core';
 
-function appInitFactory(authService: AppService) {
+export function appInitFactory(authService: AppService) {
   return () => authService.initAuth();
 }
 
