@@ -723,33 +723,6 @@ export class DaycareQuestionnaireComponent {
       }, (e) => { })
     }
   }
-  // ActiveInActiveSections(sectionId: any, event: any) {
-  //   // if uncheck means wants to inactive
-
-  //   if (!event.target.checked) {
-  //     let model = {
-  //       sectionId: sectionId,
-  //       wantToActive: false
-  //     }
-  //     this._customService.ActiveInActiveSections(model).subscribe((data) => {
-  //       if (data.message === "Section InActivated Successfully") {
-  //         this.toastr.success("Section Deactivated Successfully");
-  //       }
-  //     }, (e) => { })
-  //   }
-  //   else {
-  //     let model = {
-  //       sectionId: sectionId,
-  //       wantToActive: true
-  //     }
-  //     this._customService.ActiveInActiveSections(model).subscribe((data) => {
-  //       if (data.message === "Section Activated Successfully") {
-  //         this.toastr.success("Section Activated Successfully");
-  //       }
-  //     }, (e) => { })
-  //   }
-
-  // }
   async CopyIsMasterTrueSections() {
     try {
       const data = await this._customService
