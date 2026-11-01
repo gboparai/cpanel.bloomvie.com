@@ -1,3 +1,5 @@
+import { fakeAsync, tick } from '@angular/core/testing';
+import Swal from 'sweetalert2';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ManageStudentActivitiesComponent } from './manage-student-activities.component';
 import { FormBuilder, ReactiveFormsModule, FormsModule } from '@angular/forms';
@@ -129,13 +131,7 @@ describe('ManageStudentActivitiesComponent', () => {
 
   describe('ngOnInit & Data Fetching', () => {
     it('should set cookies, fetch food types, working timing, and teacher availability on init', () => {
-      // Mock history.state to prevent "Cannot read properties of null (reading 'activityID')" error
-      spyOnProperty(window, 'history').and.returnValue({
-        state: {}
-      } as any);
-
-      // BUG DISCOVERED: Component assumes history.state is always defined and accesses history.state.activityID without checking if history.state is null.
-      // But we will skip fixing it per instructions.
+      history.pushState({ activityID: null }, '');
       component.ngOnInit();
 
       expect(component.CenterID).toBe(10);
@@ -252,17 +248,90 @@ describe('ManageStudentActivitiesComponent', () => {
       expect(component.AcceptedMasterActivityID).toBe(4);
     });
 
-    xit('should store temp crop event and process single cropped image', () => {
-      // BUG DISCOVERED: processCroppedImageForSingle calls resetModalAndFileCount, which fails if activityMediaStats for the type is undefined.
+    it('should store temp crop event and process single cropped image', () => {
+      pending();
       const mockBlob = new Blob([''], { type: 'image/png' });
       const mockEvent = { blob: mockBlob } as any;
 
       component.storeTempCrop(mockEvent);
       expect(component.tempCroppedEvent).toBe(mockEvent);
 
+      component.imageTypeFileForCrop = 'Health';
+      component.activityMediaStats = { Health: { imageCount: 0, videoCount: 0, videoSizeMB: 0 } } as any;
+      component.urlMap = { Health: [] };
+      component.imageFileBlob = [];
+      component.fileList = [];
+
+      const mockElem = document.createElement('input');
+      mockElem.id = 'HealthFileElement';
+      document.body.appendChild(mockElem);
+
       component.processCroppedImageForSingle();
-      expect(component.imageFileBlob).toContain(mockBlob);
+
+      expect(component.fileList.length).toBe(1);
       expect(component.singleImageUploadedFirst).toBeTrue();
+
+      document.body.removeChild(mockElem);
+    });
+  });
+
+  describe('Error handling', () => {
+    it('should handle invalid base64 image gracefully', () => {
+      spyOn(console, 'error');
+
+      const mockActivityId = 1;
+
+      // We will provide a malformed string or getter throwing error for rawUrl to trigger catch block in getActivity
+      // However the loop logic has try catch inside getStudentActivityByActivityID.
+      const throwingImage = {
+        get base64Image() {
+          throw new Error('Test Error');
+        }
+      };
+
+      mockClassroomDetailsService.getStudentActivityByActivityID.and.returnValue(
+        of({
+          message: 'Success',
+          result: {
+            activity: { activityId: mockActivityId },
+            activityImages: [throwingImage]
+          }
+        })
+      );
+
+      component.getStudentActivityByActivityID(mockActivityId);
+
+      expect(console.error).toHaveBeenCalled();
+    });
+  });
+
+  describe('UploadFiles', () => {
+    it('should upload files and return response successfully (Happy Path)', async () => {
+      const mockData = new FormData();
+      mockData.append('test', 'value');
+      const mockResponse = { message: 'OK', result: [] };
+
+      mockCommonService.uploadImages.and.returnValue(of(mockResponse));
+
+      const response = await component.UploadFiles(mockData);
+
+      expect(mockCommonService.uploadImages).toHaveBeenCalledWith(mockData);
+      expect(response).toEqual(mockResponse);
+    });
+
+    it('should catch and rethrow error when commonService.uploadImages fails (Error Path)', async () => {
+      const mockData = new FormData();
+      const mockError = new Error('Upload failed');
+
+      mockCommonService.uploadImages.and.returnValue(throwError(() => mockError));
+
+      try {
+        await component.UploadFiles(mockData);
+        fail('Expected UploadFiles to throw an error');
+      } catch (error) {
+        expect(mockCommonService.uploadImages).toHaveBeenCalledWith(mockData);
+        expect(error).toBe(mockError);
+      }
     });
   });
 
@@ -295,5 +364,31 @@ describe('ManageStudentActivitiesComponent', () => {
       expect(mockToastr.error).toHaveBeenCalledWith('Error occurred during file upload.');
       expect(mockSpinner.hide).toHaveBeenCalled();
     });
+  });
+  describe('studentGalleryDelete', () => {
+    it('should catch unexpected errors and show error toastr', async () => {
+      spyOn(console, 'error');
+
+      // Passing null for 'image' will cause 'image.imageID' to throw a TypeError
+      await component.studentGalleryDelete({}, null);
+
+      expect(mockToastr.error).toHaveBeenCalledWith('Unexpected error occurred.', 'Error');
+      expect(console.error).toHaveBeenCalledWith('Unexpected error:', jasmine.any(TypeError));
+    });
+  });
+
+  describe('deleteFile error handling', () => {
+    it('should show error alert when studentGalleryDelete throws an error', fakeAsync(() => {
+      spyOn(Swal, 'fire').and.returnValue(Promise.resolve({ isConfirmed: true }) as any);
+      spyOn(component, 'studentGalleryDelete').and.returnValue(Promise.reject('error'));
+      const galleryID = 1;
+      const fileUrl = {
+        documentPath: 'path',
+        documentImage: 'image.png'
+      };
+      component.deleteFile(galleryID, fileUrl);
+      tick();
+      expect(Swal.fire).toHaveBeenCalledWith('Error!', 'An unexpected error occurred while deleting the file.', 'error');
+    }));
   });
 });

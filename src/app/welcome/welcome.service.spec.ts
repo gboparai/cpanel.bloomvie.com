@@ -25,10 +25,19 @@ describe('WelcomeService', () => {
   });
 
   describe('HTTP Methods (Success & Error Paths)', () => {
-    // BUG DISCOVERED: getAllUserRoles passes userRoleID directly as the second argument to `http.get`, which overrides the HttpOptions object. This throws compilation/runtime typing errors natively in Angular if the payload isn't structured as `{ params: ... }` or similar.
-    xit('should call getAllUserRoles and handle success', () => {
+    it('should call getAllUserRoles and handle success', () => {
       let response: any;
       service.getAllUserRoles(1).subscribe(res => response = res);
+      const req = httpTestingController.expectOne(`${environment.apiUrl}/User/getAllUserRoles?userRoleID=1`);
+      expect(req.request.method).toBe('GET');
+      const mockResponse = { data: 'test' };
+      req.flush(mockResponse);
+      expect(response).toEqual(mockResponse);
+    });
+
+    it('should call getAllUserRoles without parameters and handle success', () => {
+      let response: any;
+      service.getAllUserRoles().subscribe(res => response = res);
       const req = httpTestingController.expectOne(`${environment.apiUrl}/User/getAllUserRoles`);
       expect(req.request.method).toBe('GET');
       const mockResponse = { data: 'test' };

@@ -116,6 +116,17 @@ describe('DayCareSettingsComponent', () => {
       expect(mockToastr.error).toHaveBeenCalledWith('Failed to load');
     });
 
+    it('should handle getAllActivites22 error gracefully', async () => {
+      mockDaycareService.getAllActivites.and.returnValue(
+        throwError(() => new Error('API Error'))
+      );
+
+      await component.getAllActivites22();
+
+      // Since console.error is commented out, we verify that it just handles the error silently
+      expect(component.activitiesList).toEqual([]);
+    });
+
     it('should populate FacilityList on successful getAllFacility', async () => {
       await component.getAllFacility();
       expect(component.FacilityList.length).toBe(1);

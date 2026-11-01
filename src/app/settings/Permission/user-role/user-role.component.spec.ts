@@ -6,7 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { CookieService } from 'ngx-cookie-service';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { of } from 'rxjs';
+import { of, Observable } from 'rxjs';
 import Swal from 'sweetalert2';
 
 describe('UserRoleComponent', () => {
@@ -258,6 +258,34 @@ describe('UserRoleComponent', () => {
         Activate: true,
       });
       expect(component.checkBoxState[1].bloomvie).toBeTrue();
+    });
+
+    it('should handle error if userRoleRelation subscription throws an error', () => {
+      spyOn(console, 'error');
+
+      const errorResponse = new Error('HTTP error');
+      mockUserRoleService.userRoleRelation.and.returnValue(
+        new Observable(subscriber => {
+          subscriber.error(errorResponse);
+        })
+      );
+
+      const event = { target: { checked: true } };
+      component.userRoleRelation(event, 1, 'Bloomvie');
+
+      expect(console.error).toHaveBeenCalledWith('Error saving user role relation', errorResponse);
+    });
+
+    it('should handle error in catch block if an exception is thrown', () => {
+      spyOn(console, 'error');
+
+      const event = null; // This will throw an error when event.target is accessed
+      component.userRoleRelation(event, 1, 'Bloomvie');
+
+      expect(console.error).toHaveBeenCalled();
+      const calls = (console.error as jasmine.Spy).calls.all();
+      expect(calls[0].args[0]).toBe('Error in userRoleRelation');
+      expect(calls[0].args[1]).toBeInstanceOf(TypeError);
     });
   });
 });
