@@ -1,3 +1,5 @@
+import { fakeAsync, tick } from '@angular/core/testing';
+import Swal from 'sweetalert2';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ManageStudentActivitiesComponent } from './manage-student-activities.component';
 import { FormBuilder, ReactiveFormsModule, FormsModule } from '@angular/forms';
@@ -256,5 +258,20 @@ describe('ManageStudentActivitiesComponent', () => {
       expect(component.imageFileBlob).toContain(mockBlob);
       expect(component.singleImageUploadedFirst).toBeTrue();
     });
+  });
+
+  describe('deleteFile error handling', () => {
+    it('should show error alert when studentGalleryDelete throws an error', fakeAsync(() => {
+      spyOn(Swal, 'fire').and.returnValue(Promise.resolve({ isConfirmed: true }) as any);
+      spyOn(component, 'studentGalleryDelete').and.returnValue(Promise.reject('error'));
+      const galleryID = 1;
+      const fileUrl = {
+        documentPath: 'path',
+        documentImage: 'image.png'
+      };
+      component.deleteFile(galleryID, fileUrl);
+      tick();
+      expect(Swal.fire).toHaveBeenCalledWith('Error!', 'An unexpected error occurred while deleting the file.', 'error');
+    }));
   });
 });
