@@ -67,48 +67,6 @@ export class AppService {
   }
 
 
-  
-  // initAccessToken(): Promise<void> {
-   
-  //   let userInfo = this.cookie.check('UserInfo') ? this.cookie.get('UserInfo') : null;
-  //   if(!userInfo){
-  //     return Promise.resolve();
-  //   }
-
-  //   let userInfoJson = JSON.parse(userInfo);
-
-  //   let accessToken = userInfoJson.token;
-  //   let refreshToken = userInfoJson.refreshToken;
-
-  //   if(!accessToken || !refreshToken) {
-  //     console.warn('token not found');
-  //     return Promise.resolve();
-  //   }
-
-  //   return new Promise((resolve, reject) => {
-  //     this.loginService.generateNewAccessToken(accessToken,refreshToken).subscribe({
-  //       next: (response) => {
-  //         if(response.message='Access token is still valid.'){
-
-  //         }
-  //         else if(response.message == 'Success'){
-  //           alert('enetered')
-  //           const jwtToken = response.token;
-  //           userInfoJson.result.token = jwtToken;
-  //           userInfoJson.token = jwtToken;
-  //           const convertToString  = JSON.stringify(userInfoJson);
-  //           this.cookie.set('UserInfo',convertToString);
-  //         }
-  //        console.log('Wokring',response);
-  //        resolve();
-  //       },
-  //       error: (err) => {
-  //         console.error('Token generation failed', err);
-  //         resolve(); 
-  //       },
-  //     });
-  //   });
-  // }
   private dataSource = new Subject<any>();
   data$ = this.dataSource.asObservable();
 
