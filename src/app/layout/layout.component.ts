@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
-  ActivatedRoute,
   RouterLink,
   RouterModule,
   RouterOutlet,
@@ -10,9 +9,6 @@ import { SidebarComponent } from './sidebar/sidebar.component';
 import { ChatSocketService } from '../common-component/chatbox/chat-socket.service';
 import { CommonModule } from '@angular/common';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { CookieService } from 'ngx-cookie-service';
-import { CommonService } from '../common-component/common.service';
-import { LoginService } from '../login/login.service';
 
 @Component({
   selector: 'app-layout',
@@ -40,36 +36,10 @@ export class LayoutComponent implements OnInit, OnDestroy {
 
   constructor(
     private chatService: ChatSocketService,
-    private spinner: NgxSpinnerService,
-    private route: ActivatedRoute,
-    private cookie: CookieService,
-    private commonService: CommonService
+    private spinner: NgxSpinnerService
   ) {}
 
   ngOnInit(): void {
-    // let token: any;
-    // this.route.queryParams.subscribe((params: any) => {
-    //   token = params['urlToken'];
-    //   if (token) {
-    //     this.commonService.TokenMatchQueryParam(token).subscribe({
-    //       next: (response) => {
-    //         const data = response;
-    //         const jwtToken = response.token;
-    //         if (jwtToken) {
-    //           data.result['token'] = jwtToken;
-    //           let userInfo = JSON.stringify(data);
-    //           this.cookie.set('UserInfo', userInfo);
-    //         }
-    //         if (data) {
-    //           this.cookie.set('CentreID', data.result.centreID);
-    //           this.cookie.set('UserId', data.result.id);
-    //           this.cookie.set('UserRoleId', data.result.userRoleID);
-    //           this.cookie.set('email', data.result.email);
-    //         }
-    //       },
-    //     });
-    //   }
-    // });
     this.startChat();
   }
 
