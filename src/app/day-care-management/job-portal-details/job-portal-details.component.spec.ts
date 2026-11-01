@@ -87,14 +87,15 @@ describe('JobPortalDetailsComponent', () => {
     });
 
     it('should handle getAllJobPostings error gracefully', async () => {
+      const error = new Error('Error fetching jobs');
       mockJobPostingService.getAllJobPostings.and.returnValue(
-        throwError(() => new Error('Error fetching jobs')) as any
+        throwError(() => error) as any
       );
       spyOn(console, 'error');
 
       await component.getAllJobPostings('active');
 
-      expect(console.error).toHaveBeenCalled();
+      expect(console.error).toHaveBeenCalledWith('Error while fetching job postings:', error);
       expect(component.skeletonShow).toBe('');
     });
   });
