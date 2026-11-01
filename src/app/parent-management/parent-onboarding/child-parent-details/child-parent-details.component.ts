@@ -774,38 +774,6 @@ export class ChildParentDetailsComponent {
   }
 
   createMultipleInputs(type: string, container: HTMLElement): void {
-    // Create an example input for demonstration purposes
-    // const label = document.createElement('label');
-    // label.textContent = `Enter options for ${type === 'radio' ? 'Radio Buttons' : 'Checkboxes'}`;
-    // container.appendChild(label);
-    // const optionsInput = document.createElement('input');
-    // optionsInput.type = 'text';
-    // optionsInput.placeholder = 'Option1, Option2, ...';
-    // optionsInput.classList.add('form-control');
-    // container.appendChild(optionsInput);
-    // Create a button to generate the radio buttons or checkboxes
-    // const generateButton = document.createElement('button');
-    // generateButton.textContent = 'Generate';
-    // generateButton.classList.add('btn', 'btn-primary');
-    // // Add margin-top of 10px to the generate button
-    // generateButton.style.marginTop = '10px';
-    //container.appendChild(generateButton);
-    // generateButton.addEventListener('click', () => {
-    //   const options = optionsInput.value.split(',').map(option => option.trim());
-    //   container.innerHTML = ''; // Clear input field
-    //   options.forEach(option => {
-    //     const input = document.createElement('input');
-    //     input.type = type; // radio or checkbox
-    //     input.name = 'dynamic-input'; // Group name for radio buttons
-    //     input.style.marginRight = '5px'; // Add margin-right of 5px
-    //     const optionLabel = document.createElement('label');
-    //     optionLabel.textContent = option;
-    //     optionLabel.style.marginRight = '5px'; // Add margin-right of 5px to label
-    //     // Append the input and label to the container
-    //     container.appendChild(input);
-    //     container.appendChild(optionLabel);
-    //   });
-    // });
   }
 
   // sahib added on 14/10/2024
