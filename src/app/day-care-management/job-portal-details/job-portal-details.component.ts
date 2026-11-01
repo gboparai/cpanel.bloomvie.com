@@ -16,6 +16,7 @@ import { ToastrService } from 'ngx-toastr';
 import { environment } from '../../../environments/environment';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { SkeletonLoaderComponent } from "../../common-component/skeleton-loader/skeleton-loader.component";
+import { firstValueFrom } from 'rxjs';
 declare var $: any;
 @Component({
   selector: 'app-job-portal-details',
@@ -70,9 +71,9 @@ export class JobPortalDetailsComponent {
 
         this.skeletonShow = 'Skelton';
 
-      const data = await this.jobPostingDetailService
-        .getAllJobPostings(this.dayCare, Status)
-        .toPromise();
+      const data = await firstValueFrom(
+        this.jobPostingDetailService.getAllJobPostings(this.dayCare, Status)
+      );
       
 
       if (data.message === 'OK') {
