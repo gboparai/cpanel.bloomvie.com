@@ -126,26 +126,6 @@ export class ViewSupplyRequestComponent {
     this.activeRoute = this.router.url;
     this.getAllExpenseTypes();
   }
-  // getSupplyList(status:string) {
-  //   this.spinner.show();
-  //   this.SupplyList=[];
-  //   if(status == 'accepted')
-  //   {
-  //     this.HideActionButton = true;
-  //   }else{
-  //     this.HideActionButton = false;
-  //   }
-  //   this.supplyServie.getSuuplyRequest(this.UserId,status).subscribe((data: any) => {
-  //     if (data.message == "OK") {
-  //       this.SupplyList = data.result;
-  //       this.spinner.hide();
-  //     }
-  //   }, (error) => {
-  //     console.error("Error fetching supply request:", error);
-  //     this.spinner.hide();
-
-  //   });
-  // }
 
   ////not in use yet
   get referralLinks(): FormArray {
