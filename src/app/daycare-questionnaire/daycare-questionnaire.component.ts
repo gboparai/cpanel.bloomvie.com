@@ -413,39 +413,6 @@ export class DaycareQuestionnaireComponent {
   //   }
   // }
 
-
-
-  // onSubmit() {
-  //   const formValue = this.myControlForm.value;
-
-  //   // Map through fields to create submittedData
-  //   const submittedData = this.fields.map(field => {
-  //     const fieldValue = formValue[field.name];
-  //     return {
-  //       controlLabelId: field.id,
-  //       value: Array.isArray(fieldValue) ? fieldValue : fieldValue || ''  // Handles both arrays and single values
-  //     };
-  //   });
-
-  //   // Set the data model for submission
-  //   const model = submittedData;
-
-  //   // Call service to submit data
-  //   this._customService.SubmitControlFieldAnswers(model).subscribe(
-  //     (response) => {
-  //       if (response.message === "Success") {
-  //         this.toastr.success('Data submitted successfully');
-  //       }
-  //     },
-  //     (error) => {
-
-  //     }
-  //   );
-
-  //   // Log the final formatted data
-
-  // }
-
   onSubmit() {
     const formValue = this.myControlForm.value;
 
