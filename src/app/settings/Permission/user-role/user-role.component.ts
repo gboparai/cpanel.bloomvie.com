@@ -215,10 +215,10 @@ export class UserRoleComponent {
           this.checkBoxState[roleID].bloomvie = event.target.checked;
         }
       }, (e) => {
-        
+        console.error('Error saving user role relation', e);
       })
     } catch (e) {
-      
+      console.error('Error in userRoleRelation', e);
     }
 
   }
