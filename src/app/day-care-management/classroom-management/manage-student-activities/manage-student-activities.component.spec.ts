@@ -129,6 +129,7 @@ describe('ManageStudentActivitiesComponent', () => {
 
   describe('ngOnInit & Data Fetching', () => {
     it('should set cookies, fetch food types, working timing, and teacher availability on init', () => {
+      history.pushState({ activityID: null }, '');
       component.ngOnInit();
 
       expect(component.CenterID).toBe(10);
@@ -252,9 +253,52 @@ describe('ManageStudentActivitiesComponent', () => {
       component.storeTempCrop(mockEvent);
       expect(component.tempCroppedEvent).toBe(mockEvent);
 
+      component.imageTypeFileForCrop = 'Health';
+      component.activityMediaStats = { Health: { imageCount: 0, videoCount: 0, videoSizeMB: 0 } } as any;
+      component.urlMap = { Health: [] };
+      component.imageFileBlob = [];
+      component.fileList = [];
+
+      const mockElem = document.createElement('input');
+      mockElem.id = 'HealthFileElement';
+      document.body.appendChild(mockElem);
+
       component.processCroppedImageForSingle();
-      expect(component.imageFileBlob).toContain(mockBlob);
+
+      expect(component.fileList.length).toBe(1);
       expect(component.singleImageUploadedFirst).toBeTrue();
+
+      document.body.removeChild(mockElem);
+    });
+  });
+
+  describe('Error handling', () => {
+    it('should handle invalid base64 image gracefully', () => {
+      spyOn(console, 'error');
+
+      const mockActivityId = 1;
+
+      // We will provide a malformed string or getter throwing error for rawUrl to trigger catch block in getActivity
+      // However the loop logic has try catch inside getStudentActivityByActivityID.
+      const throwingImage = {
+        get base64Image() {
+          throw new Error('Test Error');
+        }
+      };
+
+      mockClassroomDetailsService.getStudentActivityByActivityID.and.returnValue(
+        of({
+          message: 'Success',
+          result: {
+            activity: { activityId: mockActivityId },
+            activityImages: [throwingImage]
+          }
+        })
+      );
+
+      component.getStudentActivityByActivityID(mockActivityId);
+
+      expect(console.error).toHaveBeenCalled();
     });
   });
 });

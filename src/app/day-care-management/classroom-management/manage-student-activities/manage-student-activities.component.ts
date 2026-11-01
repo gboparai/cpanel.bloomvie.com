@@ -991,9 +991,8 @@ export class ManageStudentActivitiesComponent {
           this.activity.imageEdit = [];
 
           for (const image of response.result.activityImages || []) {
-            const rawUrl = image?.base64Image;
-
             try {
+              const rawUrl = image?.base64Image;
 
               if (typeof rawUrl === 'string' && (rawUrl.startsWith('data:image') || rawUrl.startsWith('data:video'))) {
                 const fileStartWith = rawUrl.startsWith('data:image') ? 'data:image' : 'data:video';
@@ -1020,7 +1019,7 @@ export class ManageStudentActivitiesComponent {
                 console.warn('Skipping invalid base64:', rawUrl);
               }
             } catch (err) {
-              console.error('Error handling base64 image:', rawUrl, err);
+              console.error('Error handling base64 image:', image, err);
             }
           }
 
