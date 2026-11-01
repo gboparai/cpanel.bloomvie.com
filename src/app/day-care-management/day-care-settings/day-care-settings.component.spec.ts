@@ -121,6 +121,15 @@ describe('DayCareSettingsComponent', () => {
       expect(component.FacilityList.length).toBe(1);
       expect(component.FacilityList[0].facilityID).toBe(4);
     });
+
+    it('should handle getAllFacility error gracefully', async () => {
+      mockDaycareService.getAllFacility.and.returnValue(
+        throwError(() => new Error('Failed to load facilities'))
+      );
+      component.FacilityList = [];
+      await component.getAllFacility();
+      expect(component.FacilityList.length).toBe(0);
+    });
   });
 
   describe('Checkbox Selection Handlers', () => {
