@@ -15,10 +15,12 @@ import { ProfileService } from '../../../common-component/profile/profile.servic
 import { SkeletonLoaderComponent } from "../../../common-component/skeleton-loader/skeleton-loader.component";
 declare var $: any;
 
+import { forwardRef } from '@angular/core';
+
 @Component({
   selector: 'app-subscription-details',
   standalone: true,
-  imports: [NgFor, SubscriptionPlansComponent, NgIf, NgxPaginationModule, BreadcrumbComponent, ProfileComponent, SkeletonLoaderComponent], // Only standalone components, directives, pipes, or NgModules here
+  imports: [NgFor, forwardRef(() => SubscriptionPlansComponent), NgIf, NgxPaginationModule, BreadcrumbComponent, ProfileComponent, SkeletonLoaderComponent], // Only standalone components, directives, pipes, or NgModules here
   providers: [ProfileService], // Services should go in the providers array
   templateUrl: './subscription-details.component.html',
   styleUrls: ['./subscription-details.component.css', '../../../common-component/profile/profile.component.css'],

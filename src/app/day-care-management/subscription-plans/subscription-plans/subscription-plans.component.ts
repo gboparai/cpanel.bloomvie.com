@@ -5,6 +5,7 @@ import {
   OnInit,
   Output,
   SimpleChanges,
+  forwardRef,
 } from '@angular/core';
 import { SubscriptionDetailsComponent } from '../subscription-details/subscription-details.component';
 import { SubscriptionFeaturesService } from '../subscription-features/subscription-features.service';
@@ -42,7 +43,7 @@ declare var $: any;
   selector: 'app-subscription-plans',
   standalone: true,
   imports: [
-    SubscriptionDetailsComponent,
+    forwardRef(() => SubscriptionDetailsComponent),
     ReactiveFormsModule,
     BreadcrumbComponent,
     ProfileComponent,
@@ -71,13 +72,13 @@ export class SubscriptionPlansComponent implements OnInit {
   lastSelectedEnrollmentFeature: any;
   strikeOnEnrollmentType: boolean = false;
   @Output() formSubmitted = new EventEmitter<void>();
-  @ViewChild(SubscriptionDetailsComponent) childComponent:
+  @ViewChild(forwardRef(() => SubscriptionDetailsComponent)) childComponent:
     | SubscriptionDetailsComponent
     | undefined;
 
   @Output() featureChanged = new EventEmitter<any>();
 
-  @ViewChild(SubscriptionDetailsComponent)
+  @ViewChild(forwardRef(() => SubscriptionDetailsComponent))
   subscriptionDetailsComponent!: SubscriptionDetailsComponent;
   selectedFeatures: any[] = [];
   currentPage = 1;
