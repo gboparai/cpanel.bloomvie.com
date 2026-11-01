@@ -442,20 +442,6 @@ export class ViewSupplyRequestComponent {
     }
   }
 
-  // async imageInput(image: any) {
-  //   const target: any = image.target as HTMLInputElement;
-  //   const selectedFiles = target.files;
-
-  //   if (!selectedFiles) {
-  //     console.error('No file selected');
-  //     return;
-  //   }
-  //   const formdata = new FormData();
-  //   formdata.append('files', selectedFiles[0], selectedFiles[0].name);
-  //   formdata.append('type', 'CapitolExpenses');
-  //   this.UploadFiles(formdata);
-  // }
-
   async UploadFiles(data: any): Promise<any> {
     try {
       const response = await this.commonService.uploadImages(data).toPromise();
