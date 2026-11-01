@@ -262,6 +262,35 @@ describe('ManageStudentActivitiesComponent', () => {
     });
   });
 
+  describe('UploadFiles', () => {
+    it('should upload files and return response successfully (Happy Path)', async () => {
+      const mockData = new FormData();
+      mockData.append('test', 'value');
+      const mockResponse = { message: 'OK', result: [] };
+
+      mockCommonService.uploadImages.and.returnValue(of(mockResponse));
+
+      const response = await component.UploadFiles(mockData);
+
+      expect(mockCommonService.uploadImages).toHaveBeenCalledWith(mockData);
+      expect(response).toEqual(mockResponse);
+    });
+
+    it('should catch and rethrow error when commonService.uploadImages fails (Error Path)', async () => {
+      const mockData = new FormData();
+      const mockError = new Error('Upload failed');
+
+      mockCommonService.uploadImages.and.returnValue(throwError(() => mockError));
+
+      try {
+        await component.UploadFiles(mockData);
+        fail('Expected UploadFiles to throw an error');
+      } catch (error) {
+        expect(mockCommonService.uploadImages).toHaveBeenCalledWith(mockData);
+        expect(error).toBe(mockError);
+      }
+    });
+  });
   describe('studentGalleryDelete', () => {
     it('should catch unexpected errors and show error toastr', async () => {
       spyOn(console, 'error');
