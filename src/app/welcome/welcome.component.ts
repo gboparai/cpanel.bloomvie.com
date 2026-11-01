@@ -183,16 +183,7 @@ export class WelcomeComponent {
       }
     });
 
-    // const UserInfo = this.cookieService.get('UserInfo');
     this.daycareName = this.cookieService.get('CentreName');
-
-    // Check if UserInfo exists before parsing
-    // if (UserInfo) {
-    //   const parsedInfo = JSON.parse(UserInfo);
-    //   this.UserId = this.cookieService.get('UserId') || parsedInfo.result.id;
-    //   this.CentreID = this.cookieService.get('CentreID');
-    //   this.UserRoleId = parsedInfo.result.userRoleID;
-    // }
   }
 
   async getCentreIDByStudentID() {
