@@ -120,8 +120,9 @@ describe('ChatDetailsComponent', () => {
       .toBe('Taylor Jones');
     expect(fixture.nativeElement.querySelector('.chat-member__name').textContent.trim())
       .toBe('Teachers');
-    expect(fixture.nativeElement.querySelector('.chat-member__status').textContent.trim())
-      .toBe('Busy Bees');
+    const statuses: HTMLElement[] = Array.from(fixture.nativeElement.querySelectorAll('.chat-member__status'));
+    const visibleStatus = statuses.find(el => !el.classList.contains('hide'));
+    expect(visibleStatus?.textContent?.trim()).toBe('Busy Bees');
   });
 
   describe('ngOnInit', () => {

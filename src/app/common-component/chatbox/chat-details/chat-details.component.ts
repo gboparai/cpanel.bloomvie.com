@@ -1039,26 +1039,36 @@ export class ChatDetailsComponent implements OnInit {
     this.pageIndex = 1;
   }
 
-  private getMessageDateKey(timestamp: string | Date | null | undefined): string | null {
+  private parseChatTimestamp(timestamp: string | Date | null | undefined): Date | null {
     if (!timestamp) {
       return null;
     }
-
     if (timestamp instanceof Date) {
-      return this.getCalendarDateKey(timestamp);
+      return timestamp;
     }
-
-    const value = String(timestamp);
-    if (/^\d{4}-\d{2}-\d{2}/.test(value)) {
-      return value.substring(0, 10);
+    const s = String(timestamp).trim();
+    if (s.endsWith('Z') || /[+-]\d{2}:?\d{2}$/.test(s)) {
+      const d = new Date(s);
+      return Number.isNaN(d.getTime()) ? null : d;
     }
+    if (s.includes('T')) {
+      const d = new Date(s + 'Z');
+      if (!Number.isNaN(d.getTime())) {
+        return d;
+      }
+    }
+    const d = new Date(s.replace(' ', 'T'));
+    return Number.isNaN(d.getTime()) ? new Date(s) : d;
+  }
 
-    const date = new Date(value);
-    if (Number.isNaN(date.getTime())) {
+  private getMessageDateKey(timestamp: string | Date | null | undefined): string | null {
+    const d = this.parseChatTimestamp(timestamp);
+    if (!d) {
       return null;
     }
-
-    return this.getCalendarDateKey(date);
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${d.getFullYear()}-${month}-${day}`;
   }
 
   private getCalendarDateKey(date: Date): string {
@@ -1104,17 +1114,13 @@ export class ChatDetailsComponent implements OnInit {
   }
 
   getMessageTime(timestamp: string | Date): string {
-    if (!timestamp) {
+    const d = this.parseChatTimestamp(timestamp);
+    if (!d) {
       return '';
     }
-    if (typeof timestamp === 'string' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(timestamp)) {
-      return timestamp.substring(11, 16);
-    }
-
-    const date = timestamp instanceof Date ? timestamp : new Date(timestamp);
-    return Number.isNaN(date.getTime())
-      ? ''
-      : date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const hours = String(d.getHours()).padStart(2, '0');
+    const minutes = String(d.getMinutes()).padStart(2, '0');
+    return `${hours}:${minutes}`;
   }
 
   toggleEmojiPicker(): void {
