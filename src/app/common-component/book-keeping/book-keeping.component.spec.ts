@@ -126,8 +126,10 @@ describe('BookKeepingComponent', () => {
 
   describe('getS3FileName and base64ToBlob', () => {
     it('should extract filename correctly from S3 url', () => {
-      const name = component.getS3FileName('https://bucket.s3.com/folder/invoice123.pdf');
-      expect(name).toBe('invoice123.pdf');
+      spyOn(URL, 'createObjectURL').and.returnValue('blob:http://localhost/invoice123');
+      const base64Data = btoa('test-file-content');
+      const name = component.getS3FileName(base64Data);
+      expect(name).toBe('blob:http://localhost/invoice123');
     });
 
     it('should convert base64 to Blob', () => {
@@ -159,9 +161,11 @@ describe('BookKeepingComponent', () => {
     });
 
     it('should call window.open in downloadFile', () => {
-      const spy = spyOn(window, 'open').and.callFake(() => null);
+      const dummyAnchor = document.createElement('a');
+      spyOn(dummyAnchor, 'click');
+      spyOn(document, 'createElement').and.returnValue(dummyAnchor);
       component.downloadFile('http://example.com/file.pdf');
-      expect(spy).toHaveBeenCalledWith('http://example.com/file.pdf', '_blank');
+      expect(dummyAnchor.click).toHaveBeenCalled();
     });
   });
 });

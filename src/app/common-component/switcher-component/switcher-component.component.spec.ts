@@ -55,17 +55,9 @@ describe('SwitcherComponentComponent', () => {
     });
 
     it('should handle switcher button and theme button clicks', () => {
-      const switcherBtn = document.createElement('div');
-      switcherBtn.className = 'switcher-btn';
-      const colorSwitcher = document.createElement('div');
-      colorSwitcher.className = 'color-switcher';
-      const themeBtn = document.createElement('div');
-      themeBtn.className = 'theme-buttons';
-      themeBtn.setAttribute('data-color', '#ff5722');
-
-      document.body.appendChild(switcherBtn);
-      document.body.appendChild(colorSwitcher);
-      document.body.appendChild(themeBtn);
+      const switcherBtn = document.querySelector('.switcher-btn') as HTMLElement;
+      const colorSwitcher = document.querySelector('.color-switcher') as HTMLElement;
+      const themeBtn = document.querySelector('.theme-buttons') as HTMLElement;
 
       component.ngOnInit();
 
@@ -73,12 +65,7 @@ describe('SwitcherComponentComponent', () => {
       expect(colorSwitcher.classList.contains('active')).toBeTrue();
 
       themeBtn.click();
-      expect(mockCookieService.set).toHaveBeenCalledWith('theme-color', '#ff5722');
-
-      // Cleanup
-      document.body.removeChild(switcherBtn);
-      document.body.removeChild(colorSwitcher);
-      document.body.removeChild(themeBtn);
+      expect(mockCookieService.set).toHaveBeenCalledWith('theme-color', themeBtn.getAttribute('data-color') || '');
     });
   });
 });

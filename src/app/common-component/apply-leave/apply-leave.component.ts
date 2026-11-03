@@ -599,7 +599,7 @@ export class ApplyLeaveComponent {
   getDisabledDates(): Date[] {
     const disabledDates: Date[] = [];
 
-    this.leaveList.forEach((leave: any) => {
+    (this.leaveList || []).forEach((leave: any) => {
       const start = new Date(leave.startDate);
       const end = new Date(leave.endDate);
 
@@ -1166,7 +1166,7 @@ export class ApplyLeaveComponent {
     this.classroomDetailsService
       .getCentreWorkingDaysByCentreID(this.daycareCentreId)
       .subscribe((item: any) => {
-        if (item.message == 'Success') {
+        if (item?.message == 'Success' && item.result) {
           let keys = Object.keys(item.result);
           keys.forEach((element: any) => {
             this.workTiming[element] = item.result[element];

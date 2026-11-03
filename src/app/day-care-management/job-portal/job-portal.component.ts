@@ -331,7 +331,7 @@ export class JobPortalComponent {
             this.cdr.detectChanges();
             this.resetForm();
             // this.JobPortalDetailsComponent.getAllJobPostings('expired');
-            this.JobPortalDetailsComponent.getAllJobPostings('active');
+            this.JobPortalDetailsComponent?.getAllJobPostings?.('active');
           },
           error: () => this.toastr.error('Error updating data'),
           complete: () => this.spinner.hide(),

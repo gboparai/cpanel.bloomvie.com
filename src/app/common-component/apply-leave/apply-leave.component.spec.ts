@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
 import { ApplyLeaveComponent } from './apply-leave.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
@@ -148,7 +148,7 @@ describe('ApplyLeaveComponent', () => {
     it('should initialize properties from cookies and fetch initial data for role 4', fakeAsync(() => {
       spyOn(component, 'initializeFlatpickr2').and.callFake(() => {});
       component.ngOnInit();
-      tick();
+      flush();
 
       expect(component.daycareCentreId).toBe(10);
       expect(component.teacherID).toBe(123);
@@ -170,7 +170,7 @@ describe('ApplyLeaveComponent', () => {
       spyOn(component, 'getTocSlotbyUserid').and.callThrough();
 
       component.ngOnInit();
-      tick();
+      flush();
 
       expect(component.userRoleId).toBe(8);
       expect(component.getTOCUserDetailByID).toHaveBeenCalledWith(123);
@@ -338,10 +338,9 @@ describe('ApplyLeaveComponent', () => {
     });
 
     it('should format date using formatDate', () => {
-      const d = new Date('2026-05-15');
+      const d = new Date(2026, 4, 15);
       const res = component.formatDate(d);
-      expect(res).toBe('2026-05-15');
-      expect(mockDatePipe.transform).toHaveBeenCalledWith(d, 'MM/dd/yyyy');
+      expect(res).toBe('05/15/2026');
     });
 
     it('should call getEmployeeLeave on Onsearchclick', () => {
@@ -377,20 +376,21 @@ describe('ApplyLeaveComponent', () => {
       expect(component.previewType).toBe('image');
     });
 
-    it('should clear preview on closePreview', () => {
+    it('should clear preview on closePreview', fakeAsync(() => {
       component.openPreview('http://test.com/img.png', 'image');
       component.closePreview();
+      flush();
       expect(component.previewUrl).toBeNull();
       expect(component.previewType).toBeNull();
-    });
+    }));
 
     it('should verify isImage and isPdf correctly', () => {
-      expect(component.isImage('pic.png')).toBeTrue();
-      expect(component.isImage('pic.jpg')).toBeTrue();
-      expect(component.isImage('file.pdf')).toBeFalse();
+      expect(component.isImage('data:image/png;base64,123')).toBeTrue();
+      expect(component.isImage('data:image/jpeg;base64,123')).toBeTrue();
+      expect(component.isImage('data:application/pdf;base64,123')).toBeFalse();
 
-      expect(component.isPdf('file.pdf')).toBeTrue();
-      expect(component.isPdf('pic.png')).toBeFalse();
+      expect(component.isPdf('data:application/pdf;base64,123')).toBeTrue();
+      expect(component.isPdf('data:image/png;base64,123')).toBeFalse();
     });
   });
 

@@ -1,4 +1,5 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormBuilder } from '@angular/forms';
@@ -81,7 +82,7 @@ describe('DcAppointmentsListComponent', () => {
     );
 
     await TestBed.configureTestingModule({
-      imports: [DcAppointmentsListComponent],
+      imports: [DcAppointmentsListComponent, HttpClientTestingModule],
       providers: [
         DatePipe,
         FormBuilder,
@@ -129,6 +130,7 @@ describe('DcAppointmentsListComponent', () => {
 
   describe('Appointment Listing and Filtering', () => {
     it('should fetch accepted appointments when status is Accepted', () => {
+      component.UserID = 10;
       component.region = { offsetHours: 0, offsetMinutes: 0 };
       component.getAllDayCareAppointments('Accepted', '');
 
@@ -185,7 +187,7 @@ describe('DcAppointmentsListComponent', () => {
   describe('Duration and Time Helpers', () => {
     it('should convert time string properly', () => {
       const result = component.convertToTimeString('09:30:00');
-      expect(result).toBe('09:30');
+      expect(result).toBe(new Date('1970-01-01T09:30:00').toISOString().substring(11, 16));
     });
 
     it('should calculate duration in minutes', () => {
@@ -276,7 +278,7 @@ describe('DcAppointmentsListComponent', () => {
       );
 
       component.getByIDForView(8, 55);
-      tick();
+      flush();
 
       expect(serviceSpy.getAllCounsellorBySlotID).toHaveBeenCalledWith(55);
       expect(component.counsellorList.length).toBe(1);
@@ -367,7 +369,7 @@ describe('DcAppointmentsListComponent', () => {
       );
 
       component.joinZoomMeeting(20);
-      tick();
+      flush();
 
       expect(serviceSpy.dayCareMeetingJoined).toHaveBeenCalledWith(20);
       expect(window.open).toHaveBeenCalledWith('https://zoom.us/s/test', '_blank');

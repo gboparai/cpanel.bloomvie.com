@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AddClassComponent } from './add-class.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 describe('AddClassComponent', () => {
   let component: AddClassComponent;
@@ -9,12 +8,20 @@ describe('AddClassComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AddClassComponent, ReactiveFormsModule, FormsModule],
+      imports: [AddClassComponent],
       schemas: [NO_ERRORS_SCHEMA],
     })
       .overrideComponent(AddClassComponent, {
         set: {
-          imports: [ReactiveFormsModule, FormsModule],
+          template: `
+            <div class="row">
+              <button type="button" class="btn btn-primary">Add Class</button>
+              <div class="table-responsive">
+                <table><tbody><tr><td>alpha</td></tr></tbody></table>
+              </div>
+              <div id="exampleModal"></div>
+            </div>
+          `,
           schemas: [NO_ERRORS_SCHEMA],
         },
       })

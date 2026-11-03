@@ -1,3 +1,6 @@
+import { NgSelectModule } from '@ng-select/ng-select';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { StudentViewGalleryComponent } from './student-view-gallery.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
@@ -60,7 +63,7 @@ describe('StudentViewGalleryComponent', () => {
     }));
 
     await TestBed.configureTestingModule({
-      imports: [StudentViewGalleryComponent, ReactiveFormsModule],
+      imports: [StudentViewGalleryComponent, ReactiveFormsModule, FormsModule, CommonModule, NgSelectModule],
       providers: [
         FormBuilder,
         DatePipe,
@@ -73,9 +76,7 @@ describe('StudentViewGalleryComponent', () => {
       ],
       schemas: [NO_ERRORS_SCHEMA],
     })
-      .overrideComponent(StudentViewGalleryComponent, {
-        set: {
-          imports: [ReactiveFormsModule],
+      .overrideComponent(StudentViewGalleryComponent, { set: { imports: [ReactiveFormsModule, NgSelectModule, FormsModule, CommonModule],
           schemas: [NO_ERRORS_SCHEMA],
         },
       })
@@ -105,28 +106,28 @@ describe('StudentViewGalleryComponent', () => {
   describe('Date Helpers and Navigation', () => {
     it('should format date correctly', () => {
       const date = new Date(2026, 4, 10); // May 10, 2026
-      expect(component.formatDate(date)).toBe('05-10-2026');
+      expect(component.formatDate(date)).toBe('2026-05-10');
     });
 
     it('should navigate to previous date', () => {
-      component.selectedDate = '05-10-2026';
+      component.formattedStartDate = '2026-05-10';
       spyOn(component, 'getStudentGallery');
 
       component.goToPreviousDate();
 
-      expect(component.selectedDate).toBe('05-09-2026');
+      expect(component.formattedStartDate).toBe('2026-05-09');
       expect(component.getStudentGallery).toHaveBeenCalled();
     });
 
     it('should check if next date is disabled for future dates', () => {
-      component.selectedDate = component.formatDate(new Date());
+      component.selectedStartDate = component.formatDate(new Date());
       expect(component.isNextDateDisabled()).toBeTrue();
     });
 
     it('should navigate to next date if not disabled', () => {
       const pastDate = new Date();
       pastDate.setDate(pastDate.getDate() - 3);
-      component.selectedDate = component.formatDate(pastDate);
+      component.formattedStartDate = component.formatDate(pastDate);
       spyOn(component, 'getStudentGallery');
 
       component.goToNextDate();
@@ -168,33 +169,34 @@ describe('StudentViewGalleryComponent', () => {
       component.firstEndDate = '05-10-2026';
       component.clearForm();
 
-      expect(component.firstStartDate).toBeNull();
-      expect(component.firstEndDate).toBeNull();
+      expect(component.firstStartDate).toBe('');
+      expect(component.firstEndDate).toBe('');
     });
   });
 
   describe('Comment operations', () => {
     it('should enable and cancel editing comments', () => {
-      const commentObj = { isEditing: false, parentComment: 'Lovely!' };
+      const commentObj = { isEditing: false, parentComment: 'Lovely!', editText: '' };
       component.enableEditComment(commentObj);
       expect(commentObj.isEditing).toBeTrue();
-      expect(component.editText).toBe('Lovely!');
+      expect(commentObj.editText).toBe('Lovely!');
 
       component.cancelEditComment(commentObj);
       expect(commentObj.isEditing).toBeFalse();
-      expect(component.editText).toBe('');
     });
 
     it('should add comment and refresh gallery on commentAdd()', () => {
+      const commentObj = { isEditing: true };
       mockGalleryService.ManageComment.and.returnValue(of({
         message: 'comment added successfully.',
       }));
       spyOn(component, 'getStudentGallery');
 
-      component.commentAdd('Great!', 'add', '05-10-2026');
+      component.commentAdd(commentObj, 'add', '05-10-2026');
 
       expect(mockGalleryService.ManageComment).toHaveBeenCalled();
       expect(component.getStudentGallery).toHaveBeenCalled();
+      expect(commentObj.isEditing).toBeFalse();
     });
   });
 });

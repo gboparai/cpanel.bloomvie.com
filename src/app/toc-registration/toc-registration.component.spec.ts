@@ -186,9 +186,15 @@ describe('TOCRegistrationComponent', () => {
 
   describe('ngOnInit and Initial State', () => {
     it('should initialize countries and call user and qualification fetch methods', fakeAsync(() => {
-      spyOn(window, 'scrollTo');
+      let scrollSpy: jasmine.Spy;
+      if (jasmine.isSpy(window.scrollTo)) {
+        scrollSpy = window.scrollTo as jasmine.Spy;
+        scrollSpy.calls.reset();
+      } else {
+        scrollSpy = spyOn(window, 'scrollTo');
+      }
       component.ngOnInit();
-      tick(150);
+      tick(500);
 
       expect(component.countries.length).toBe(2);
       expect(component.selectedCountry).toEqual({ id: 1, name: 'Canada', code: 'CA', flag: 'flag_ca' });

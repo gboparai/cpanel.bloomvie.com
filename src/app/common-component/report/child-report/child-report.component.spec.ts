@@ -124,11 +124,10 @@ describe('ChildReportComponent', () => {
   });
 
   describe('Date helpers', () => {
-    it('should format date using DatePipe', () => {
-      const d = new Date('2026-05-15');
+    it('should format date using formatDate', () => {
+      const d = new Date('2026-05-15T00:00:00.000Z');
       const res = component.formatDate(d);
-      expect(res).toBe('05/15/2026');
-      expect(mockDatePipe.transform).toHaveBeenCalledWith(d, 'MM/dd/yyyy');
+      expect(res).toBe('2026-05-15');
     });
 
     it('should verify isWithinLast7Days', () => {
@@ -140,21 +139,20 @@ describe('ChildReportComponent', () => {
     });
 
     it('should check isNextDateDisabled correctly when current date is selected', () => {
-      component.CurrentDate = new Date();
-      component.selectedDate = new Date();
+      component.selectedStartDate = component.formatDate(new Date());
       expect(component.isNextDateDisabled()).toBeTrue();
     });
   });
 
   describe('Media and Activity helpers', () => {
-    it('should detect video extensions with isVideo', () => {
-      expect(component.isVideo('sample.mp4')).toBeTrue();
-      expect(component.isVideo('sample.mov')).toBeTrue();
-      expect(component.isVideo('sample.jpg')).toBeFalse();
+    it('should detect video with isVideo', () => {
+      expect(component.isVideo({ type: 'video' })).toBeTrue();
+      expect(component.isVideo({ type: 'image' })).toBeFalse();
+      expect(component.isVideo(null)).toBeFalse();
     });
 
     it('should slice first two images with getFirstTwoImages', () => {
-      const item = { studentActivityImages: ['img1.jpg', 'img2.jpg', 'img3.jpg'] };
+      const item = { incidentImage: 'img1.jpg,img2.jpg,img3.jpg' };
       const res = component.getFirstTwoImages(item);
       expect(res.length).toBe(2);
       expect(res).toEqual(['img1.jpg', 'img2.jpg']);
@@ -199,8 +197,9 @@ describe('ChildReportComponent', () => {
   describe('TrackBy functions', () => {
     it('should return appropriate trackBy values', () => {
       expect(component.trackByIndex(2, {})).toBe(2);
-      expect(component.trackByDay(1, { day: 'Monday' })).toBe('Monday');
-      expect(component.trackByItem(1, { id: 99 })).toBe(99);
+      expect(component.trackByDay(1, 'Monday')).toBe('Monday');
+      const item = { id: 99 };
+      expect(component.trackByItem(1, item)).toBe(item);
       expect(component.trackByDate(1, { date: '2026-05-15' })).toBe('2026-05-15');
     });
   });

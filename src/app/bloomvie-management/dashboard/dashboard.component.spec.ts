@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA, signal, ElementRef } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 import { of, throwError } from 'rxjs';
 import { DashboardComponent } from './dashboard.component';
@@ -125,6 +125,7 @@ describe('DashboardComponent', () => {
         { provide: CommonService, useValue: commonServiceSpy },
         { provide: DomSanitizer, useValue: sanitizerSpy },
         { provide: Router, useValue: routerSpy },
+        { provide: ActivatedRoute, useValue: { queryParams: of({}), snapshot: { queryParams: {} } } },
       ],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();

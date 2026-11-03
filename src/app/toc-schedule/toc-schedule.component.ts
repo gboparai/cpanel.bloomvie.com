@@ -96,7 +96,7 @@ export class TocScheduleComponent implements OnInit {
   IsEditableSlot: boolean = false;
   editRowIndex: number = 0;
   EventDetail: any;
-  StatusList: any;
+  StatusList: any = [];
   IsAddMoreSlots: boolean = false;
   // availableDays: any;
   availableDays: string[] = [];
@@ -267,6 +267,7 @@ export class TocScheduleComponent implements OnInit {
   }
 
   filterStatus(StatusId: any): string | null {
+    if (!this.StatusList || !Array.isArray(this.StatusList)) return null;
     const status = this.StatusList.find(
       (data: { id: any }) => data.id === StatusId
     );
@@ -346,7 +347,7 @@ export class TocScheduleComponent implements OnInit {
   //Added on 11/02/25
   UpdateWorkingDays() {
      ;
-    if (this.TOCUserDetailForDays.workingDays) {
+    if (this.TOCUserDetailForDays && this.TOCUserDetailForDays.workingDays) {
       const daysOfWeekMapping: { [key: string]: string } = {
         // 0: 'Sunday',
         1: 'Monday',
@@ -441,7 +442,7 @@ export class TocScheduleComponent implements OnInit {
         .map((id: number) => daysOfWeekMapping1[id])
         .filter((day: string | undefined) => day)
         .join(', ');
-    } else {
+    } else if (this.TOCUserDetailForDays) {
       this.TOCUserDetailForDays.workingDaysNames = 'No working days listed';
     }
   }
@@ -1147,6 +1148,9 @@ export class TocScheduleComponent implements OnInit {
 
   generateUniqueDays(): void {
      ;
+    if (!this.TOCUserDetailForDays?.partTimeStartDate || !this.TOCUserDetailForDays?.partTimeEndDate) {
+      return;
+    }
     this.startDate = new Date(this.TOCUserDetailForDays.partTimeStartDate);
     this.endDate = new Date(this.TOCUserDetailForDays.partTimeEndDate);
     if (this.startDate && this.endDate) {

@@ -54,6 +54,12 @@ describe('StudentMediaRequestComponent (parent-media-request)', () => {
     });
 
     modalSpy = jasmine.createSpy('modal');
+    const origGetElementById = document.getElementById.bind(document);
+    spyOn(document, 'getElementById').and.callFake((id: string) => {
+      const el = origGetElementById(id) || document.createElement('div');
+      (el as any).modal = modalSpy;
+      return el;
+    });
     (window as any).$ = jasmine.createSpy('$').and.returnValue({
       modal: modalSpy,
     });

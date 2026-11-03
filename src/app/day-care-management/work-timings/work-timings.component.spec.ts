@@ -43,12 +43,27 @@ describe('WorkTimingsComponent', () => {
     mockCommonService = jasmine.createSpyObj('CommonService', ['decrypt', 'manageDaycareOnBoarding']);
     mockManageDaycareService = jasmine.createSpyObj('ManageDaycareService', ['getDayCareByCentreAdminID']);
 
+    const mockJQuery: any = {
+      modal: jasmine.createSpy('modal'),
+      parent: jasmine.createSpy('parent').and.returnValue({
+        removeClass: jasmine.createSpy('removeClass'),
+        addClass: jasmine.createSpy('addClass'),
+      }),
+      removeClass: jasmine.createSpy('removeClass'),
+      addClass: jasmine.createSpy('addClass'),
+      toArray: jasmine.createSpy('toArray').and.returnValue([]),
+    };
+    (window as any).$ = jasmine.createSpy('$').and.returnValue(mockJQuery);
+
     mockCookie.get.and.callFake((key: string) => {
       if (key === 'CentreID') return '10';
       if (key === 'UserId') return '5';
       return '';
     });
     mockCookie.check.and.returnValue(true);
+    mockCommonService.manageDaycareOnBoarding.and.returnValue(of({ message: 'Success' }));
+    mockWorkTimingsService.manageSeasonalBreaks.and.returnValue(of({ message: 'Success' }));
+    mockWorkTimingsService.activeInactiveHolidays.and.returnValue(of({ message: 'Success' }));
 
     mockWorkTimingsService.getCentreWorkingDaysByCentreID.and.returnValue(of({
       message: 'Success',
@@ -127,7 +142,7 @@ describe('WorkTimingsComponent', () => {
 
     it('should load timings, holidays, and seasonal breaks on ngOnInit', fakeAsync(() => {
       component.ngOnInit();
-      tick();
+      tick(500);
 
       expect(mockWorkTimingsService.getCentreWorkingDaysByCentreID).toHaveBeenCalledWith(10);
       expect(mockWorkTimingsService.getCentreHolidayList).toHaveBeenCalledWith(10);
@@ -137,13 +152,16 @@ describe('WorkTimingsComponent', () => {
 
   describe('Working days selection and timings', () => {
     it('should enable and disable input with time in enableInputWithTime', () => {
-      const eventChecked = { target: { checked: true } };
+      const dummySpan = { classList: { remove: jasmine.createSpy('remove'), add: jasmine.createSpy('add') } };
+      const eventChecked = { target: { checked: true, parentNode: dummySpan } };
       component.enableInputWithTime(eventChecked, 'mon');
-      expect(component.isMonday).toBeFalse();
+      expect(component.ClientWorkingDaysForm.get('monStartTime')?.value).toBe('09:00');
+      expect(dummySpan.classList.remove).toHaveBeenCalledWith('uncheck');
 
-      const eventUnchecked = { target: { checked: false } };
+      const eventUnchecked = { target: { checked: false, parentNode: dummySpan } };
       component.enableInputWithTime(eventUnchecked, 'mon');
-      expect(component.isMonday).toBeTrue();
+      expect(component.ClientWorkingDaysForm.get('monStartTime')?.value).toBe('');
+      expect(dummySpan.classList.add).toHaveBeenCalledWith('uncheck');
     });
 
     it('should submit working days form in onSubmit', async () => {
@@ -226,8 +244,8 @@ describe('WorkTimingsComponent', () => {
 
   describe('Date Helpers', () => {
     it('should format date with ordinal correctly', () => {
-      const result = component.formatDateWithOrdinal('2026-01-01');
-      expect(result).toBe('January 1st, 2026');
+      const result = component.formatDateWithOrdinal('2026/01/01');
+      expect(result).toBe('1st January');
     });
 
     it('should check if holiday is expired', () => {

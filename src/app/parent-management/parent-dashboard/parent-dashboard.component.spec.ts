@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { of, throwError } from 'rxjs';
 import { Router } from '@angular/router';
-import { DatePipe } from '@angular/common';
+import { DatePipe, CommonModule } from '@angular/common';
 import { ParentDashboardComponent } from './parent-dashboard.component';
 import { CookieService } from 'ngx-cookie-service';
 import { ParentDashboardService } from './parent-dashboard.service';
@@ -224,7 +224,7 @@ describe('ParentDashboardComponent', () => {
       ]
     })
     .overrideComponent(ParentDashboardComponent, {
-      set: { imports: [ReactiveFormsModule], schemas: [NO_ERRORS_SCHEMA] }
+      set: { imports: [ReactiveFormsModule, FormsModule, CommonModule, DatePipe], schemas: [NO_ERRORS_SCHEMA] }
     })
     .compileComponents();
 
@@ -430,6 +430,7 @@ describe('ParentDashboardComponent', () => {
     });
 
     it('should fetch all students for parent and retrieve plan detail', async () => {
+      component.loginUserId = '101';
       await component.getAllStudentsForParent();
       expect(mockHeaderService.getAllStudentsByParentID).toHaveBeenCalledWith('101');
       expect(mockHeaderService.CheckStudentSubscriptionPayment).toHaveBeenCalled();

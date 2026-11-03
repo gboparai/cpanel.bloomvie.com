@@ -135,7 +135,7 @@ export class AssignUserPermissionComponent {
       if (data.message === 'OK') {
         this.EmployeeRoleList = data.result;
 
-        this.totalCount = this.EmployeeRoleList.length || 0;
+        this.totalCount = this.EmployeeRoleList?.length || 0;
         //sorting:
         this.sortEmployeeRoleList();
       } else {
@@ -158,8 +158,8 @@ export class AssignUserPermissionComponent {
     if (finaluserRoleId == 0 && finalisActive == null) {
       this.service.getEmployeeRole(0, '').subscribe({
         next: (roles) => {
-          this.EmployeeRoleList = roles.result || roles;
-          this.totalCount = this.EmployeeRoleList.length || 0;
+          this.EmployeeRoleList = roles?.result || roles || [];
+          this.totalCount = this.EmployeeRoleList?.length || 0;
           // this.toastr.success('All employee roles fetched successfully!');
           this.sortEmployeeRoleList();
         },
@@ -176,7 +176,7 @@ export class AssignUserPermissionComponent {
       this.service.getEmployeeRole(finaluserRoleId, finalisActive).subscribe({
         next: (roles) => {
           
-          this.EmployeeRoleList = roles.result;
+          this.EmployeeRoleList = roles?.result || roles || [];
           this.totalCount = this.EmployeeRoleList.length || 0;
           // this.toastr.success('Employee roles fetched successfully!');
         },

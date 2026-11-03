@@ -1,3 +1,6 @@
+import { NgSelectModule } from '@ng-select/ng-select';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { TeacherAreaOfExpertiseComponent } from './teacher-area-of-expertise.component';
 import { TeacherAreaOfExpertiseService } from './teacher-area-of-expertise.service';
@@ -45,9 +48,7 @@ describe('TeacherAreaOfExpertiseComponent', () => {
       ],
       schemas: [NO_ERRORS_SCHEMA],
     })
-      .overrideComponent(TeacherAreaOfExpertiseComponent, {
-        set: {
-          imports: [ReactiveFormsModule],
+      .overrideComponent(TeacherAreaOfExpertiseComponent, { set: { imports: [ReactiveFormsModule, NgSelectModule, FormsModule, CommonModule],
           schemas: [NO_ERRORS_SCHEMA],
         },
       })

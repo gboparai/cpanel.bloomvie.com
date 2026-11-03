@@ -267,10 +267,12 @@ export class WorkTimingsComponent implements OnInit, AfterViewInit {
     const isChecked = e.target.checked;
     const daySpan = e.target.parentNode;
 
-    if (isChecked) {
-      daySpan.classList.remove('uncheck');
-    } else {
-      daySpan.classList.add('uncheck');
+    if (daySpan && daySpan.classList) {
+      if (isChecked) {
+        daySpan.classList.remove('uncheck');
+      } else {
+        daySpan.classList.add('uncheck');
+      }
     }
 
     const cnameStart = this.ClientWorkingDaysForm.get(
@@ -464,8 +466,12 @@ export class WorkTimingsComponent implements OnInit, AfterViewInit {
             var weekList = ['sun', 'mon', 'tues', 'wed', 'thu', 'fri', 'sat'];
             weekList.forEach((element) => {
               if (data[element] === true) {
-                const parentSpan = $(`input[name='${element}']`).parent();
-                parentSpan.removeClass('uncheck');
+                if (typeof $ === 'function') {
+                  try {
+                    const parentSpan = $(`input[name='${element}']`)?.parent?.();
+                    parentSpan?.removeClass?.('uncheck');
+                  } catch (e) {}
+                }
               }
             });
           } else {
@@ -700,10 +706,14 @@ export class WorkTimingsComponent implements OnInit, AfterViewInit {
         to: to,
       };
     });
-    for (let i = 0; i < this.dateInputs.length; i++) {
-      if (i !== 2) {
-        const flatpickrInstance = this.dateInputs[i]._flatpickr;
-        flatpickrInstance.set('disable', selectedDateRangeArray);
+    if (this.dateInputs && this.dateInputs.length) {
+      for (let i = 0; i < this.dateInputs.length; i++) {
+        if (i !== 2) {
+          const flatpickrInstance = this.dateInputs[i]._flatpickr;
+          if (flatpickrInstance && flatpickrInstance.set) {
+            flatpickrInstance.set('disable', selectedDateRangeArray);
+          }
+        }
       }
     }
   }

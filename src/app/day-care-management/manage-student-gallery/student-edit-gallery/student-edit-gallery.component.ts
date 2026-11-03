@@ -400,14 +400,18 @@ export class StudentEditGalleryComponent {
             this.getStudentGallery();
             this.getStudentGallery();
             this.spinner.hide();
-            comment.isEditing = false;
+            if (comment && typeof comment === 'object') {
+              comment.isEditing = false;
+            }
           } else if (response.message === 'comment updated successfully.') {
             this.newCommentText = '';
             // this.startDate = commentAddDate
             // this.endDate = this.formattedEndDate
             this.getStudentGallery();
             this.spinner.hide();
-            comment.isEditing = false;
+            if (comment && typeof comment === 'object') {
+              comment.isEditing = false;
+            }
           }
           else {
             console.error('error add comment', response.message);

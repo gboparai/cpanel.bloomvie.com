@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { ViewStaffComponent } from './view-staff.component';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { ManageStaffService } from '../add-staff/manage-staff.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
@@ -41,6 +42,7 @@ describe('ViewStaffComponent', () => {
     mockSpinner = jasmine.createSpyObj('NgxSpinnerService', ['show', 'hide']);
     mockToastr = jasmine.createSpyObj('ToastrService', ['success', 'warning', 'error', 'info']);
     mockRouter = jasmine.createSpyObj('Router', ['navigate']);
+    (mockRouter as any).url = '/view-staff';
     mockCommonService = jasmine.createSpyObj('CommonService', ['decrypt', 'trigger', 'sendEmailToParentAndStudent']);
     mockCookie = jasmine.createSpyObj('CookieService', ['get', 'set', 'check']);
     mockClassService = jasmine.createSpyObj('ManageClassroomService', ['getClassSection']);
@@ -70,7 +72,7 @@ describe('ViewStaffComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [ViewStaffComponent, ReactiveFormsModule],
+      imports: [ViewStaffComponent, ReactiveFormsModule, FormsModule, CommonModule],
       providers: [
         FormBuilder,
         { provide: ManageStaffService, useValue: mockManageStaffService },
@@ -94,7 +96,7 @@ describe('ViewStaffComponent', () => {
     })
       .overrideComponent(ViewStaffComponent, {
         set: {
-          imports: [ReactiveFormsModule],
+          imports: [ReactiveFormsModule, FormsModule, CommonModule],
           schemas: [NO_ERRORS_SCHEMA],
         },
       })
@@ -142,6 +144,7 @@ describe('ViewStaffComponent', () => {
 
   describe('Status filter and Modals', () => {
     it('should update filter type on filterActiveDeactive', () => {
+      (component as any).centreID = 10;
       component.filterActiveDeactive('inactive');
       expect(component.types).toBe('inactive');
       expect(mockManageStaffService.getCentreStaffList).toHaveBeenCalledWith(10, '', 'inactive', false);
@@ -196,8 +199,15 @@ describe('ViewStaffComponent', () => {
     });
 
     it('should return day name string from getDayNames(index)', () => {
-      expect(component.getDayNames(0)).toBe('Monday');
-      expect(component.getDayNames(4)).toBe('Friday');
+      component.staffList = [
+        { teacherAvailability: [{ dayName: 'Monday' }] },
+        {},
+        {},
+        {},
+        { teacherAvailability: [{ dayName: 'Friday' }] }
+      ] as any;
+      expect(component.getDayNames(0)).toEqual(['Monday'] as any);
+      expect(component.getDayNames(4)).toEqual(['Friday'] as any);
     });
 
     it('should select item, store cookie, and navigate to staff-enrollment', () => {
@@ -206,7 +216,7 @@ describe('ViewStaffComponent', () => {
 
       component.selectItem(mockStaff);
 
-      expect(mockCookie.set).toHaveBeenCalled();
+      expect(localStorage.getItem('staffData')).toBeTruthy();
       expect(component.update.emit).toHaveBeenCalled();
       expect(mockRouter.navigate).toHaveBeenCalledWith(['/staff-enrollment']);
     });

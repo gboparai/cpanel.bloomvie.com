@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA, signal } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -127,7 +128,7 @@ describe('TeachersDashboardComponent', () => {
       ]
     })
     .overrideComponent(TeachersDashboardComponent, {
-      set: { imports: [], schemas: [NO_ERRORS_SCHEMA] }
+      set: { template: '<div>Dashboard Mock</div>', imports: [CommonModule], schemas: [NO_ERRORS_SCHEMA] }
     })
     .compileComponents();
 
@@ -152,7 +153,7 @@ describe('TeachersDashboardComponent', () => {
   describe('getAllHolidayList', () => {
     it('should set holidayList on success', () => {
       component.getAllHolidayList();
-      expect(mockWorkTimingService.getCentreHolidayList).toHaveBeenCalledWith(10 as any);
+      expect(mockWorkTimingService.getCentreHolidayList).toHaveBeenCalledWith('10' as any);
       expect(component.holidayList.length).toBe(1);
       expect(component.skeletonShowCalenderCard).toBe('');
     });
@@ -282,16 +283,18 @@ describe('TeachersDashboardComponent', () => {
       mockOnboardingService.onboardingState.and.returnValue({
         stripeOnboardingUrl: 'https://connect.stripe.com/setup'
       });
-      spyOnProperty(window, 'location', 'get').and.returnValue({ href: '' } as any);
+      spyOn(component, 'redirectTo');
 
       component.navigateToStripeOnboarding();
       expect(mockOnboardingService.getAccountDetails).not.toHaveBeenCalled();
+      expect(component.redirectTo).toHaveBeenCalledWith('https://connect.stripe.com/setup');
     });
 
     it('should fetch account details and set url if stripeUrl is empty', () => {
       mockOnboardingService.onboardingState.and.returnValue({
         stripeOnboardingUrl: ''
       });
+      spyOn(component, 'redirectTo');
       component.userID = '55';
 
       component.navigateToStripeOnboarding();
@@ -299,6 +302,7 @@ describe('TeachersDashboardComponent', () => {
       expect(mockSpinner.show).toHaveBeenCalled();
       expect(mockOnboardingService.getAccountDetails).toHaveBeenCalledWith(55, '');
       expect(mockSpinner.hide).toHaveBeenCalled();
+      expect(component.redirectTo).toHaveBeenCalledWith('https://stripe.com/onboard');
     });
 
     it('should handle error when fetching account details fails', () => {

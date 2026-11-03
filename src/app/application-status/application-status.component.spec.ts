@@ -1,3 +1,6 @@
+import { NgSelectModule } from '@ng-select/ng-select';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { ApplicationStatusComponent } from './application-status.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
@@ -83,7 +86,7 @@ describe('ApplicationStatusComponent', () => {
     mockAppSettingsService.GetNofications.and.returnValue(of({ message: 'ok', result: [] }));
 
     await TestBed.configureTestingModule({
-      imports: [ApplicationStatusComponent, ReactiveFormsModule],
+      imports: [ApplicationStatusComponent, ReactiveFormsModule, FormsModule, CommonModule, NgSelectModule],
       providers: [
         FormBuilder,
         { provide: ApplicationServiceService, useValue: mockAppService },
@@ -98,9 +101,7 @@ describe('ApplicationStatusComponent', () => {
       ],
       schemas: [NO_ERRORS_SCHEMA],
     })
-      .overrideComponent(ApplicationStatusComponent, {
-        set: {
-          imports: [ReactiveFormsModule],
+      .overrideComponent(ApplicationStatusComponent, { set: { imports: [ReactiveFormsModule, NgSelectModule, FormsModule, CommonModule],
           schemas: [NO_ERRORS_SCHEMA],
         },
       })
@@ -108,6 +109,8 @@ describe('ApplicationStatusComponent', () => {
 
     fixture = TestBed.createComponent(ApplicationStatusComponent);
     component = fixture.componentInstance;
+    component.regionResponse = mockCommonService.regionResponseSignal();
+    component.UserID = 50;
   });
 
   it('should create the ApplicationStatusComponent', () => {

@@ -858,7 +858,9 @@ export class StudentViewGalleryComponent {
             // this.endDate = this.formattedEndDate
             this.getStudentGallery();
             this.spinner.hide();
-            comment.isEditing = false;
+            if (comment && typeof comment === 'object') {
+              comment.isEditing = false;
+            }
 
           } else if (response.message === 'comment updated successfully.') {
             this.newCommentTexts = {};
@@ -869,7 +871,9 @@ export class StudentViewGalleryComponent {
             this.selectedEndDate = '';
             this.getStudentGallery();
             this.spinner.hide();
-            comment.isEditing = false;
+            if (comment && typeof comment === 'object') {
+              comment.isEditing = false;
+            }
           }
           else {
             console.error('error add comment', response.message);

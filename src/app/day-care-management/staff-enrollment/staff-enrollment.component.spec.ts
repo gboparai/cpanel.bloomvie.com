@@ -13,6 +13,7 @@ describe('StaffEnrollmentComponent', () => {
     })
       .overrideComponent(StaffEnrollmentComponent, {
         set: {
+          imports: [],
           schemas: [NO_ERRORS_SCHEMA],
         },
       })

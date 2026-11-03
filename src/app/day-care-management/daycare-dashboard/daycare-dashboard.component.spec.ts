@@ -1,3 +1,4 @@
+import { NgxPaginationModule } from 'ngx-pagination';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DaycareDashboardComponent } from './daycare-dashboard.component';
 import { FormBuilder, ReactiveFormsModule, FormsModule } from '@angular/forms';
@@ -5,7 +6,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
-import { DatePipe } from '@angular/common';
+import { DatePipe, CommonModule } from '@angular/common';
 import { NO_ERRORS_SCHEMA, signal } from '@angular/core';
 import { of, throwError } from 'rxjs';
 import Swal from 'sweetalert2';
@@ -208,9 +209,7 @@ describe('DaycareDashboardComponent', () => {
       ],
       schemas: [NO_ERRORS_SCHEMA],
     })
-      .overrideComponent(DaycareDashboardComponent, {
-        set: {
-          imports: [ReactiveFormsModule, FormsModule],
+      .overrideComponent(DaycareDashboardComponent, { set: { imports: [ReactiveFormsModule, FormsModule, CommonModule, DatePipe, NgxPaginationModule],
           schemas: [NO_ERRORS_SCHEMA],
         },
       })
@@ -269,6 +268,7 @@ describe('DaycareDashboardComponent', () => {
     });
 
     it('should execute AcceptOrRejectTermsAndCondition and update cookies', () => {
+      component.UserID = '101';
       mockCommonService.AcceptOrRejectTermsAndCondition.and.returnValue(
         of({ message: 'Success', activity: 'Accepted' })
       );
@@ -347,6 +347,7 @@ describe('DaycareDashboardComponent', () => {
       );
       mockCommonService.convertS3File.and.callFake((path: string) => `https://s3.com/${path}`);
 
+      component.DayCareId = 10;
       component.getByIDForView(99);
 
       expect(mockTocViewService.getAppliedJobTOByID).toHaveBeenCalledWith(99, 10);

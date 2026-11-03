@@ -2,7 +2,8 @@ import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testin
 import { ManageQualificationComponent } from './manage-qualification.component';
 import { CommonService } from '../../common-component/common.service';
 import { UserRoleService } from '../Permission/user-role/user-role.service';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { CookieService } from 'ngx-cookie-service';
@@ -48,7 +49,7 @@ describe('ManageQualificationComponent', () => {
     );
 
     await TestBed.configureTestingModule({
-      imports: [ManageQualificationComponent, ReactiveFormsModule],
+      imports: [ManageQualificationComponent, ReactiveFormsModule, FormsModule, CommonModule],
       providers: [
         FormBuilder,
         { provide: CommonService, useValue: mockCommonService },
@@ -61,7 +62,7 @@ describe('ManageQualificationComponent', () => {
     })
       .overrideComponent(ManageQualificationComponent, {
         set: {
-          imports: [ReactiveFormsModule],
+          imports: [ReactiveFormsModule, FormsModule, CommonModule],
           schemas: [NO_ERRORS_SCHEMA],
         },
       })

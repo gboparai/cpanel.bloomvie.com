@@ -78,6 +78,8 @@ describe('AllJobPostingPlansComponent', () => {
 
     fixture = TestBed.createComponent(AllJobPostingPlansComponent);
     component = fixture.componentInstance;
+    component.DaycareID = '15';
+    component.UserID = 42;
   });
 
   it('should create the AllJobPostingPlansComponent', () => {

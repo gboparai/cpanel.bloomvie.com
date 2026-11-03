@@ -1,3 +1,5 @@
+import { NgxPaginationModule } from 'ngx-pagination';
+import { CommonModule, DatePipe } from '@angular/common';
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { ManageStaffComponent } from './manage-staff.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
@@ -9,7 +11,6 @@ import { ActivatedRoute } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { CommonService } from '../../../common-component/common.service';
 import { OnboardingService } from '../../../onboarding/onboarding.service';
-import { DatePipe } from '@angular/common';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { of, throwError } from 'rxjs';
 
@@ -39,7 +40,8 @@ describe('ManageStaffComponent', () => {
       'uploadBulkStaff',
     ]);
     mockCookie = jasmine.createSpyObj('CookieService', ['get', 'check']);
-    mockCommonService = jasmine.createSpyObj('CommonService', ['decrypt', 'manageDaycareOnBoarding']);
+    mockCommonService = jasmine.createSpyObj('CommonService', ['decrypt', 'manageDaycareOnBoarding', 'getMasterAllQualifications', 'trigger']);
+    mockCommonService.getMasterAllQualifications.and.returnValue(of({ message: 'OK', result: [{ id: 1, name: 'ECE' }] }));
 
     mockCookie.get.and.callFake((key: string) => {
       if (key === 'UserId') return '10';
@@ -72,6 +74,10 @@ describe('ManageStaffComponent', () => {
       message: 'OK',
       result: [{ id: 1, name: 'ECE' }],
     }));
+    mockManageStaffService.getRoleSpecializationList.and.returnValue(of({
+      message: 'Success',
+      result: [{ id: 1, name: 'Infant care' }],
+    }));
     mockManageStaffService.getDayCare.and.returnValue(of({
       message: 'Success',
       result: [{ id: 5, centreName: 'My Daycare' }],
@@ -82,6 +88,12 @@ describe('ManageStaffComponent', () => {
       handleNext: jasmine.createSpy('handleNext'),
       getCurrentTab: jasmine.createSpy('getCurrentTab'),
     };
+
+    (window as any).$ = jasmine.createSpy('$').and.returnValue({
+      modal: jasmine.createSpy('modal'),
+      prop: jasmine.createSpy('prop'),
+      val: jasmine.createSpy('val').and.returnValue(''),
+    });
 
     await TestBed.configureTestingModule({
       imports: [ManageStaffComponent, ReactiveFormsModule],
@@ -106,9 +118,7 @@ describe('ManageStaffComponent', () => {
       ],
       schemas: [NO_ERRORS_SCHEMA],
     })
-      .overrideComponent(ManageStaffComponent, {
-        set: {
-          imports: [ReactiveFormsModule],
+      .overrideComponent(ManageStaffComponent, { set: { imports: [ReactiveFormsModule, NgxPaginationModule, CommonModule, DatePipe],
           schemas: [NO_ERRORS_SCHEMA],
         },
       })
@@ -116,7 +126,12 @@ describe('ManageStaffComponent', () => {
 
     fixture = TestBed.createComponent(ManageStaffComponent);
     component = fixture.componentInstance;
+    component.childComponent = {
+      getStaffList: jasmine.createSpy('getStaffList'),
+    } as any;
+    component.displayDayCareTiming = [{ startTime: '08:00:00', endTime: '18:00:00' }];
     spyOn(component, 'InitDatePicker').and.stub();
+    spyOn(component, 'enableAllDates').and.stub();
   });
 
   it('should create ManageStaffComponent', () => {
@@ -138,7 +153,7 @@ describe('ManageStaffComponent', () => {
       expect(mockUserRoleService.getAllUserRoles).toHaveBeenCalled();
       expect(mockManageStaffService.getAllDays).toHaveBeenCalled();
       expect(mockManageStaffService.getCentreWorkingDaysByCentreID).toHaveBeenCalled();
-      expect(mockManageStaffService.getMasterQualification).toHaveBeenCalled();
+      expect(mockCommonService.getMasterAllQualifications).toHaveBeenCalled();
     }));
   });
 
@@ -162,6 +177,11 @@ describe('ManageStaffComponent', () => {
 
       component.ValidateStartTime(0);
       expect(component.greaterTimeValidationForStartTime).toBeTrue();
+
+      group.patchValue({
+        startTime: '10:00',
+        endTime: '09:00',
+      });
 
       component.ValidateEndTime(0);
       expect(component.greaterTimeValidationForEndTime).toBeTrue();
@@ -205,6 +225,7 @@ describe('ManageStaffComponent', () => {
         firstName: 'Jane',
         email: 'jane@daycare.com',
         joiningDate: '01/01/2026',
+        wages: '25',
       });
       component.addTeacherAvailabilty();
       component.teacherAvailabilityList.at(0).patchValue({
@@ -232,6 +253,7 @@ describe('ManageStaffComponent', () => {
         firstName: 'Jane',
         email: 'jane@daycare.com',
         joiningDate: '01/01/2026',
+        wages: '25',
       });
       component.addTeacherAvailabilty();
       component.teacherAvailabilityList.at(0).patchValue({

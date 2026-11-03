@@ -41,7 +41,7 @@ export class MyAttendanceComponent {
   Contentsize: number = 5;
   calendarOptions: any;
   userID: string | undefined;
-  attendanceList: any;
+  attendanceList: any = [];
   StartDate: string | null = null;
   EndDate: string | null = null;
   startDateInstance: any;

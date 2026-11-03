@@ -246,7 +246,11 @@ export class StudentMediaRequestComponent {
     if (this.planInformation) {
 
       this.resetData();
-      (document.getElementById('activate-plan') as any)?.modal('hide');
+      if (typeof (window as any).$ === 'function') {
+        (window as any).$('#activate-plan')?.modal?.('hide');
+      } else {
+        (document.getElementById('activate-plan') as any)?.modal?.('hide');
+      }
     }
   }
 

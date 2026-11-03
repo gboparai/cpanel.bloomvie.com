@@ -19,11 +19,7 @@ import { SkeletonLoaderComponent } from "../../common-component/skeleton-loader/
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink, RouterOutlet, BreadcrumbComponent, SkeletonLoaderComponent],
   templateUrl: './manage-master-leave.component.html',
-  styleUrl: './manage-master-leave.component.css',
-  providers: [
-    { provide: ToastrService, useClass: ToastrService },
-    { provide: ToastNoAnimation, useClass: ToastNoAnimation }
-  ]
+  styleUrl: './manage-master-leave.component.css'
 })
 export class ManageMasterLeaveComponent {
   @Output() leaveTypeRefresh = new EventEmitter<void>();

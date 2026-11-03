@@ -1474,9 +1474,11 @@ export class LoginComponent implements OnInit {
       }
 
       //Added on 01/04/25
-      this.filteredDayNameAfterAdded =
-        this.filteredGroupedTimeSlots2[0].dayName;
-      this.filteredWeekAfterAdded = this.filteredGroupedTimeSlots2[0].week;
+      if (this.filteredGroupedTimeSlots2 && this.filteredGroupedTimeSlots2.length > 0) {
+        this.filteredDayNameAfterAdded =
+          this.filteredGroupedTimeSlots2[0].dayName;
+        this.filteredWeekAfterAdded = this.filteredGroupedTimeSlots2[0].week;
+      }
 
       // this.filteredGroupedTimeSlots2 = this.groupedTimeSlots[incrementedWeek]?.filter(slot => slot.dayName === selectedDay) || [];=
       this.isFilteredNotNull =

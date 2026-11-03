@@ -1,3 +1,5 @@
+import { NgxPaginationModule } from 'ngx-pagination';
+import { CommonModule } from '@angular/common';
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { AddMasterActivityComponent } from './add-master-activity.component';
 import { AddMasterActivityService } from './add-master-activity.service';
@@ -51,9 +53,7 @@ describe('AddMasterActivityComponent', () => {
       ],
       schemas: [NO_ERRORS_SCHEMA],
     })
-      .overrideComponent(AddMasterActivityComponent, {
-        set: {
-          imports: [ReactiveFormsModule],
+      .overrideComponent(AddMasterActivityComponent, { set: { imports: [ReactiveFormsModule, NgxPaginationModule, CommonModule],
           schemas: [NO_ERRORS_SCHEMA],
         },
       })

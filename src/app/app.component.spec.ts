@@ -125,9 +125,7 @@ describe('AppComponent', () => {
 
   describe('ngAfterViewInit and hidePreloader', () => {
     it('should fade out and hide preloader when preloader element exists', fakeAsync(() => {
-      const preloader = document.createElement('div');
-      preloader.id = 'preloader';
-      document.body.appendChild(preloader);
+      const preloader = document.getElementById('preloader') as HTMLElement;
 
       component.ngAfterViewInit();
       tick(500);
@@ -137,15 +135,20 @@ describe('AppComponent', () => {
 
       tick(500);
       expect(preloader.style.display).toBe('none');
-
-      document.body.removeChild(preloader);
     }));
 
     it('should handle missing preloader element gracefully', fakeAsync(() => {
+      const existing = document.getElementById('preloader');
+      if (existing) {
+        existing.id = 'preloader-temp';
+      }
       spyOn(console, 'warn');
       component.ngAfterViewInit();
       tick(1000);
       expect(console.warn).toHaveBeenCalledWith('Preloader element not found!');
+      if (existing) {
+        existing.id = 'preloader';
+      }
     }));
   });
 });

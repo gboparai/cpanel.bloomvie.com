@@ -1,3 +1,6 @@
+import { NgSelectModule } from '@ng-select/ng-select';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { StudentEditGalleryComponent } from './student-edit-gallery.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
@@ -53,7 +56,7 @@ describe('StudentEditGalleryComponent', () => {
     mockGalleryService.getParentDetails.and.returnValue(of({ message: 'Success', result: { fatherName: 'Bob' } }));
 
     await TestBed.configureTestingModule({
-      imports: [StudentEditGalleryComponent, ReactiveFormsModule],
+      imports: [StudentEditGalleryComponent, ReactiveFormsModule, FormsModule, CommonModule, NgSelectModule],
       providers: [
         FormBuilder,
         DatePipe,
@@ -66,9 +69,7 @@ describe('StudentEditGalleryComponent', () => {
       ],
       schemas: [NO_ERRORS_SCHEMA],
     })
-      .overrideComponent(StudentEditGalleryComponent, {
-        set: {
-          imports: [ReactiveFormsModule],
+      .overrideComponent(StudentEditGalleryComponent, { set: { imports: [ReactiveFormsModule, NgSelectModule, FormsModule, CommonModule],
           schemas: [NO_ERRORS_SCHEMA],
         },
       })
@@ -231,9 +232,10 @@ describe('StudentEditGalleryComponent', () => {
       mockGalleryService.ManageComment.and.returnValue(of({ message: 'comment added successfully.' }));
       spyOn(component, 'getStudentGallery');
 
-      component.commentAdd('Well done!', 'add', '2026-03-01');
+      component.commentAdd(commentItem, 'add', '2026-03-01');
 
-      expect(mockGalleryService.ManageComment).toHaveBeenCalledWith(25, 'Well done!', 'add', '2026-03-01', 'teacher');
+      expect(mockGalleryService.ManageComment).toHaveBeenCalledWith(25, commentItem, 'add', '2026-03-01', 'teacher');
+      expect(commentItem.isEditing).toBeFalse();
       expect(component.getStudentGallery).toHaveBeenCalled();
     });
 

@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { LoginComponent } from './login.component';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { NgSelectModule } from '@ng-select/ng-select';
 import { LoginService } from './login.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -54,7 +56,7 @@ describe('LoginComponent', () => {
     });
 
     await TestBed.configureTestingModule({
-      imports: [LoginComponent, ReactiveFormsModule],
+      imports: [LoginComponent, ReactiveFormsModule, FormsModule, CommonModule, NgSelectModule],
       providers: [
         FormBuilder,
         DatePipe,
@@ -82,7 +84,7 @@ describe('LoginComponent', () => {
     })
       .overrideComponent(LoginComponent, {
         set: {
-          imports: [ReactiveFormsModule],
+          imports: [ReactiveFormsModule, FormsModule, CommonModule, NgSelectModule],
           schemas: [NO_ERRORS_SCHEMA],
         },
       })

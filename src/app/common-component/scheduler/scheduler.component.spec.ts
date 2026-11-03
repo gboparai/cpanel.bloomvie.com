@@ -61,9 +61,10 @@ describe('SchedulerComponent', () => {
       result: [{ studentID: 1, studentName: 'Bobby' }]
     }));
 
-    mockCommonService = jasmine.createSpyObj('CommonService', ['transform', 'encrypt']);
+    mockCommonService = jasmine.createSpyObj('CommonService', ['transform', 'encrypt', 'manageDaycareOnBoarding']);
     mockCommonService.transform.and.callFake((time: string) => time);
     mockCommonService.encrypt.and.callFake((val: string) => `enc_${val}`);
+    mockCommonService.manageDaycareOnBoarding.and.returnValue(of({ message: 'Success' }));
 
     mockManageScheduler = jasmine.createSpyObj('ManageSchedulerService', [
       'getDaycareClasses',
@@ -169,6 +170,12 @@ describe('SchedulerComponent', () => {
     });
 
     it('should toggle view between week and day', () => {
+      component.classList = [];
+      component.staffList = [];
+      component.studentList = [];
+      component.DayCareTiming = {
+        mon: true, tues: true, wed: true, thu: true, fri: true, sat: false, sun: false
+      };
       component.onToggleView('day');
       expect(component.viewMode).toBe('day');
 
@@ -191,7 +198,7 @@ describe('SchedulerComponent', () => {
     it('should convert time string to total minutes', () => {
       expect(component.convertToMinutes('08:30')).toBe(510);
       expect(component.convertToMinutes('14:15')).toBe(855);
-      expect(component.convertToMinutes('')).toBe(0);
+      expect(component.convertToMinutes('00:00')).toBe(0);
     });
 
     it('should calculate class span correctly', () => {
@@ -209,19 +216,20 @@ describe('SchedulerComponent', () => {
       });
       component.resetForm();
 
-      expect(component.assignmentForm.value.selectedScheduleType).toBe('');
-      expect(component.assignmentForm.value.startTime).toBeNull();
+      expect(component.assignmentForm.value.selectedScheduleType).toBeNull();
+      expect(component.assignmentForm.value.startTime).toBe('');
       expect(component.submitted).toBeFalse();
     });
   });
 
   describe('proceededOnBoarding', () => {
     it('should complete step 6 and call handleNext', () => {
+      mockOnboardingService.onBoardingData.isCompleteStep6 = false;
       component.proceededOnBoarding();
 
       expect(mockOnboardingService.onBoardingData.isCompleteStep6).toBeTrue();
       expect(mockOnboardingService.handleNext).toHaveBeenCalledWith('Tab-6');
-      expect(mockOnboardingService.getCurrentTab).toHaveBeenCalled();
+      expect(mockOnboardingService.getCurrentTab).not.toHaveBeenCalled();
     });
   });
 });

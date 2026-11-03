@@ -365,20 +365,20 @@ export class ManageStaffComponent implements OnInit {
           //     name: item.userRole,
           //   }));
           if (this.UserRoleID == 3) {
-            this.userRoleList = response.result
+            this.userRoleList = (response?.result || [])
               .filter((role: any) => [4, 9, 10, 11].includes(role.id))
               .map((item: { id: number; userRole: string }) => ({
                 id: item.id,
                 name: item.userRole,
               }));
-            this.tocRoleList = response.result
+            this.tocRoleList = (response?.result || [])
               .filter((role: any) => [4, 8, 9, 10, 11].includes(role.id))
               .map((item: { id: number; userRole: string }) => ({
                 id: item.id,
                 name: item.userRole,
               }));
           } else {
-            this.userRoleList = response.result
+            this.userRoleList = (response?.result || [])
               .filter((role: any) => [6, 9, 10, 11].includes(role.id))
               .map((item: { id: number; userRole: string }) => ({
                 id: item.id,
@@ -749,8 +749,8 @@ export class ManageStaffComponent implements OnInit {
     let TeacherAvailability = this.staffForm.get('teacherAvailability');
     if (data != undefined || data != null) {
       if (
-        data.name.toUpperCase().trim() == 'TEACHER' ||
-        data.name.toUpperCase().trim() == 'TOC'
+        data?.name?.toUpperCase()?.trim() == 'TEACHER' ||
+        data?.name?.toUpperCase()?.trim() == 'TOC'
       ) {
         this.staffForm.patchValue({
           salaryUnit: 'Monthly',
@@ -775,7 +775,7 @@ export class ManageStaffComponent implements OnInit {
           teacherAvailability: [],
         });
         // this.assignmentList = [];
-        if (data.name.toUpperCase().trim() == 'COUNSELLOR') {
+        if (data?.name?.toUpperCase()?.trim() == 'COUNSELLOR') {
           this.isDayCareListActive = true;
           if (!data.isEdit) {
             this.getDayCare('false');

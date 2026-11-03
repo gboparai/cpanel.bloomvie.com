@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
 import { TocViewComponent } from './toc-view.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { TocViewService } from './toc-view.service';
@@ -132,7 +132,8 @@ describe('TocViewComponent', () => {
       spyOn(component, 'getAppliedJobTOCList').and.callThrough();
 
       component.ngOnInit();
-      tick();
+      tick(100);
+      flush();
 
       expect(component.UserID).toBe(101);
       expect(component.CentreID).toBe(5);
@@ -212,6 +213,7 @@ describe('TocViewComponent', () => {
       spyOn(Swal, 'fire').and.returnValue(Promise.resolve({ isConfirmed: true } as any));
       spyOn(component, 'ApprovedReject');
 
+      component.UserID = 101;
       component.tocApproveReject(10, 'Pending', 20);
       tick(600);
 

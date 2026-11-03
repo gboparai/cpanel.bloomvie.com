@@ -169,9 +169,10 @@ describe('UserPermissionComponent', () => {
       component.AssignPermission();
 
       expect(mockSpinner.show).toHaveBeenCalled();
-      expect(mockUserPermissionService.assignRolePermissionToUser).toHaveBeenCalledWith(
-        component.Permission.value
-      );
+      expect(mockUserPermissionService.assignRolePermissionToUser).toHaveBeenCalledWith({
+        RoleID: 10,
+        UserID: 5
+      });
       expect(mockSpinner.hide).toHaveBeenCalled();
       expect(component.BindUserTypePermission).toHaveBeenCalledWith('');
     });

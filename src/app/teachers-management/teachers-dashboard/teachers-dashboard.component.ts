@@ -452,12 +452,16 @@ export class TeachersDashboardComponent implements OnInit {
     });
   }
 
+  redirectTo(url: string) {
+    window.location.href = url;
+  }
+
   navigateToStripeOnboarding() {
     const stripeUrl =
       this.onBoardingService.onboardingState().stripeOnboardingUrl;
 
     if (stripeUrl && stripeUrl.trim() !== '') {
-      window.location.href = stripeUrl;
+      this.redirectTo(stripeUrl);
     } else {
       // URL is empty — fetch a fresh onboarding link before navigating
       this.spinner.show();
@@ -468,7 +472,7 @@ export class TeachersDashboardComponent implements OnInit {
           const freshUrl = response?.result?.onBoardingUrl;
           if (freshUrl && freshUrl.trim() !== '') {
             this.onBoardingService.stripeOnboardingUrl.set(freshUrl);
-            window.location.href = freshUrl;
+            this.redirectTo(freshUrl);
           } else {
             Swal.fire(
               'Unable to load Stripe setup',

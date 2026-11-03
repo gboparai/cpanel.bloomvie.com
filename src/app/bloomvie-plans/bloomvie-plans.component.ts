@@ -161,10 +161,13 @@ export class BloomviePlansComponent implements OnInit {
 
     if (this.enc_type) {
       let params = `Userid=${this.encParam}&daycareType=${encType}&planid=${encPlanId}&enc_expiry=${encType}`;
-      window.location.href = this.frontEndWebUrl + 'payment-details?' + params;
+      this.redirectTo(this.frontEndWebUrl + 'payment-details?' + params);
     } else {
       let params = `Userid=${this.encParam}&daycareType=${daycareType}&planid=${encPlanId}&enc_type=${encNewType}`;
-      window.location.href = this.frontEndWebUrl + 'payment-details?' + params;
+      this.redirectTo(this.frontEndWebUrl + 'payment-details?' + params);
     }
+  }
+  redirectTo(url: string) {
+    window.location.href = url;
   }
 }

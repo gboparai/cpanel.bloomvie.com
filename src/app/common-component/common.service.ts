@@ -5,8 +5,9 @@ import {
   Signal,
   signal,
   WritableSignal,
+  Optional,
 } from '@angular/core';
-import { firstValueFrom, Observable } from 'rxjs';
+import { firstValueFrom, Observable, of } from 'rxjs';
 import { environment } from '../../environments/environment';
 import * as CryptoJS from 'crypto-js';
 import Swal from 'sweetalert2';
@@ -106,8 +107,10 @@ export class CommonService {
   triggerSignal = this._triggerSignal.asReadonly();
   headerImage = this._headerImage.asReadonly();
 
-  constructor(private http: HttpClient) {
-    this.getRegionResponse();
+  constructor(@Optional() private http: HttpClient) {
+    if (this.http) {
+      this.getRegionResponse();
+    }
   }
 
   trigger() {
@@ -124,6 +127,7 @@ export class CommonService {
   }
 
   getRegionTime(timeZone: string): Observable<any> {
+    if (!this.http) return of(null);
     return this.http.get<any>('https://timeapi.io/api/Time/current/zone', {
       params: { timeZone },
     });

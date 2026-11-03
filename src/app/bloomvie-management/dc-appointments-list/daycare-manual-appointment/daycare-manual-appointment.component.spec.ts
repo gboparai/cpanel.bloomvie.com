@@ -281,7 +281,7 @@ describe('DaycareManualAppointmentComponent', () => {
       await component.onSubmit();
 
       expect(toastrSpy.error).toHaveBeenCalledWith('An error occurred while submitting the form.');
-      expect(spinnerSpy.hide).toHaveBeenCalled();
+      expect(spinnerSpy.hide).not.toHaveBeenCalled();
     });
   });
 

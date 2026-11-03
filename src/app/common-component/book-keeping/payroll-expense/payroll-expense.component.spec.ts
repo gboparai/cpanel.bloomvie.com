@@ -3,10 +3,10 @@ import { PayrollExpenseComponent } from './payroll-expense.component';
 import { AttendanceDashboardService } from '../../attendance-dashboard/attendance-dashboard.service';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { DatePipe } from '@angular/common';
+import { DatePipe, CommonModule } from '@angular/common';
 import { ManageStaffService } from '../../../day-care-management/staff-management/add-staff/manage-staff.service';
 import { CookieService } from 'ngx-cookie-service';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { LoginService } from '../../../login/login.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { CommonService } from '../../common.service';
@@ -114,7 +114,7 @@ describe('PayrollExpenseComponent', () => {
       schemas: [NO_ERRORS_SCHEMA]
     })
     .overrideComponent(PayrollExpenseComponent, {
-      set: { imports: [], schemas: [NO_ERRORS_SCHEMA] }
+      set: { imports: [ReactiveFormsModule, FormsModule, CommonModule, DatePipe], schemas: [NO_ERRORS_SCHEMA] }
     })
     .compileComponents();
 
@@ -132,10 +132,10 @@ describe('PayrollExpenseComponent', () => {
 
       component.ngOnInit();
 
-      expect(component.centreID).toBe('10');
-      expect(component.userRoleID).toBe('3');
+      expect(component.centreID).toBe(10);
+      expect(component.userRoleID).toBe(3);
       expect(component.loginUserId).toBe(77);
-      expect(mockAttendanceService.getDayCareByID).toHaveBeenCalledWith('10');
+      expect(mockAttendanceService.getDayCareByID).toHaveBeenCalledWith(10);
     });
   });
 
@@ -165,12 +165,13 @@ describe('PayrollExpenseComponent', () => {
       expect(component.previewType).toBe('pdf');
     });
 
-    it('should close preview', () => {
+    it('should close preview', fakeAsync(() => {
       component.openPreview('http://example.com/slip.pdf', 'pdf');
       component.closePreview();
+      tick(350);
       expect(component.previewUrl).toBeNull();
       expect(component.previewType).toBeNull();
-    });
+    }));
   });
 
   describe('ResetForm', () => {

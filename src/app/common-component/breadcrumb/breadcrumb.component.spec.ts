@@ -76,12 +76,12 @@ describe('BreadcrumbComponent', () => {
   });
 
   describe('getBreadcrumbCookies', () => {
-    it('should replace Special Offers or Discount Details with Offers if external billing is true', () => {
+    it('should replace Special Offers or Discount Details with Enrollment Invites if external billing is true', () => {
       spyOn(localStorage, 'getItem').and.callFake((key: string) => key === 'isExternalBilling' ? 'true' : null);
       mockCookieService.get.and.callFake((key: string) => key === 'Component' ? 'Special Offers' : '');
 
       component.getBreadcrumbCookies();
-      expect(component.Component).toBe('Offers');
+      expect(component.Component).toBe('Enrollment Invites');
     });
 
     it('should keep component name if external billing is false', () => {

@@ -1,3 +1,6 @@
+import { NgSelectModule } from '@ng-select/ng-select';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { TransferStaffComponent } from './transfer-staff.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
@@ -72,7 +75,7 @@ describe('TransferStaffComponent', () => {
     });
 
     await TestBed.configureTestingModule({
-      imports: [TransferStaffComponent, ReactiveFormsModule],
+      imports: [TransferStaffComponent, ReactiveFormsModule, FormsModule, CommonModule, NgSelectModule],
       providers: [
         FormBuilder,
         { provide: ManageStaffService, useValue: mockManageStaffService },
@@ -95,9 +98,7 @@ describe('TransferStaffComponent', () => {
       ],
       schemas: [NO_ERRORS_SCHEMA],
     })
-      .overrideComponent(TransferStaffComponent, {
-        set: {
-          imports: [ReactiveFormsModule],
+      .overrideComponent(TransferStaffComponent, { set: { imports: [ReactiveFormsModule, NgSelectModule, FormsModule, CommonModule],
           schemas: [NO_ERRORS_SCHEMA],
         },
       })

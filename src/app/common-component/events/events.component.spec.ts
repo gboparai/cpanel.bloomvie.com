@@ -1,8 +1,10 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import Swal from 'sweetalert2';
+import { CommonModule, DatePipe } from '@angular/common';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { EventsComponent } from './events.component';
 import { CommonService } from '../common.service';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ViewStudentEnrollmentService } from '../../day-care-management/student-management/view-student-enrollment/view-student-enrollment.service';
 import { ToastrService } from 'ngx-toastr';
 import { CookieService } from 'ngx-cookie-service';
@@ -31,12 +33,12 @@ describe('EventsComponent', () => {
       'manageDaycareCentreEventManagment',
       'getEventsByDayCareId'
     ]);
-    mockCommonService.deleteEvent.and.returnValue(of({ message: 'OK' }));
+    mockCommonService.deleteEvent.and.returnValue(of({ message: 'OK', activity: 'Event deleted successfully.' }));
     mockCommonService.getMasterEvent.and.returnValue(of({
       message: 'OK',
       result: [{ eventTypeID: 1, eventTypeName: 'Holiday' }]
     }));
-    mockCommonService.manageDaycareCentreEventManagment.and.returnValue(of({ message: 'OK' }));
+    mockCommonService.manageDaycareCentreEventManagment.and.returnValue(of({ message: 'OK', activity: 'Event created successfully!' }));
     mockCommonService.getEventsByDayCareId.and.returnValue(of({
       message: 'OK',
       result: [
@@ -74,7 +76,7 @@ describe('EventsComponent', () => {
       schemas: [NO_ERRORS_SCHEMA]
     })
     .overrideComponent(EventsComponent, {
-      set: { imports: [], schemas: [NO_ERRORS_SCHEMA] }
+      set: { imports: [ReactiveFormsModule, FormsModule, CommonModule, DatePipe], schemas: [NO_ERRORS_SCHEMA] }
     })
     .compileComponents();
 
@@ -110,7 +112,7 @@ describe('EventsComponent', () => {
       });
       component.resetForm();
 
-      expect(component.eventForm.value.eventName).toBeNull();
+      expect(component.eventForm.value.eventName).toBeFalsy();
       expect(component.IsEdit).toBeFalse();
       expect(component.selectedLabel).toBe('Select One');
     });
@@ -155,15 +157,17 @@ describe('EventsComponent', () => {
   });
 
   describe('deleteEvent', () => {
-    it('should call commonService to delete event and reload events', () => {
+    it('should call commonService to delete event and reload events', fakeAsync(() => {
       component.DayCareId = '10';
+      spyOn(Swal, 'fire').and.returnValue(Promise.resolve({ isConfirmed: true } as any));
       spyOn(component, 'getEventsByDayCareId').and.resolveTo();
 
       component.deleteEvent(5);
+      tick();
 
       expect(mockCommonService.deleteEvent).toHaveBeenCalledWith(5, '10');
       expect(mockToastr.success).toHaveBeenCalledWith('Event deleted successfully.');
       expect(component.getEventsByDayCareId).toHaveBeenCalledWith('10');
-    });
+    }));
   });
 });

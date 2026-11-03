@@ -351,7 +351,7 @@
           </div>
         </div>
         <div class="pdf-container">
-          <iframe [src]="teacherid ? filePath : ''" width="100%" height="500px" frameborder="0" type="application/pdf">
+          <iframe *ngIf="teacherid && filePath" [src]="filePath" width="100%" height="500px" frameborder="0" type="application/pdf">
           </iframe>
         </div>
 

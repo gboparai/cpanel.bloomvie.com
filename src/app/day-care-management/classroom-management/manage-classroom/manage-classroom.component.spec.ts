@@ -287,7 +287,7 @@ describe('ManageClassroomComponent', () => {
         of({ message: 'duplicate classroom' })
       );
 
-      component.onClassDuplicateCheck({ target: { value: 'Room A' } });
+      component.onClassDuplicateCheck({ target: { value: 'RoomA' } });
 
       expect(component.isClassroomDuplicate).toBeTrue();
       expect(component.classForm.value.className).toBe('');

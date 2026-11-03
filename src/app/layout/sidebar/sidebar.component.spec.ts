@@ -195,7 +195,7 @@ describe('SidebarComponent', () => {
 
       expect(filtered.length).toBe(2);
       expect(filtered[0].value).toBe('Manage Daycare');
-      expect(filtered[1].value).toBe('Offers');
+      expect(filtered[1].value).toBe('Enrollment Invites');
     });
   });
 

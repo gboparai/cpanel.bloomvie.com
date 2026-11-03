@@ -37,7 +37,11 @@ describe('ViewStudentComponent', () => {
     ]);
     mockToastr = jasmine.createSpyObj('ToastrService', ['success', 'warning', 'error', 'info']);
     mockCookie = jasmine.createSpyObj('CookieService', ['get', 'set', 'check']);
-    mockRouter = jasmine.createSpyObj('Router', ['navigate']);
+    mockRouter = jasmine.createSpyObj('Router', ['navigate', 'createUrlTree', 'serializeUrl']);
+    (mockRouter as any).events = of();
+    (mockRouter as any).url = '/';
+    mockRouter.createUrlTree.and.returnValue({} as any);
+    mockRouter.serializeUrl.and.returnValue('');
 
     mockCookie.get.and.callFake((key: string) => {
       if (key === 'CentreID') return '10';
@@ -159,17 +163,17 @@ describe('ViewStudentComponent', () => {
   });
 
   describe('Active/Inactive toggle and Actions', () => {
-    it('should toggle student status with Swal confirmation', async () => {
+    it('should toggle student status with Swal confirmation', fakeAsync(() => {
       spyOn(Swal, 'fire').and.returnValue(Promise.resolve({ isConfirmed: true } as any));
-      mockManageStudentService.activeInactiveEnrolledStudent.and.returnValue(of({ message: 'Success' }));
-      const event = { target: { checked: false } };
+      mockManageStudentService.activeInactiveEnrolledStudent.and.returnValue(of({ message: 'Success', activity: 'Status updated' }));
+      const event = { checked: false };
 
       component.activeInactive(15, event);
-      await fixture.whenStable();
+      tick(250);
 
       expect(mockManageStudentService.activeInactiveEnrolledStudent).toHaveBeenCalledWith(15);
-      expect(mockManageStudentService.getDaycareStudentList).toHaveBeenCalled();
-    });
+      expect(mockToastr.success).toHaveBeenCalledWith('Status updated');
+    }));
 
     it('should send email to parent and teacher for password', () => {
       mockManageStudentService.sendMailToParentAndTeacherForPassword.and.returnValue(of({
@@ -177,15 +181,15 @@ describe('ViewStudentComponent', () => {
         activity: 'Email sent successfully',
       }));
 
-      component.sendMailToParentAndTeacherForPassword({ id: 5 });
+      component.sendMailToParentAndTeacherForPassword({ id: 5, parentList: [{ id: 10 }] });
 
-      expect(mockManageStudentService.sendMailToParentAndTeacherForPassword).toHaveBeenCalled();
-      expect(mockToastr.success).toHaveBeenCalledWith('Email sent successfully');
+      expect(mockManageStudentService.sendMailToParentAndTeacherForPassword).toHaveBeenCalledWith([10]);
+      expect(mockToastr.success).toHaveBeenCalledWith('Mail Sent Successfully');
     });
 
     it('should open modal and emit parentList in onOpenModal()', () => {
       spyOn(component.parentList, 'emit');
-      component.onOpenModal({ parentInformation: [{ id: 1, name: 'Parent 1' }] });
+      component.onOpenModal({ parentList: [{ id: 1, name: 'Parent 1' }] });
 
       expect(component.parentList.emit).toHaveBeenCalledWith([{ id: 1, name: 'Parent 1' }]);
     });

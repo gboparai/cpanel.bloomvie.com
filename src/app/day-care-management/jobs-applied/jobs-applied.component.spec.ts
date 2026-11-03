@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { JobsAppliedComponent } from './jobs-applied.component';
 import { FormBuilder, ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { JobPortalServiceService } from '../job-portal-details/job-portal-service.service';
 import { ViewStudentEnrollmentService } from '../student-management/view-student-enrollment/view-student-enrollment.service';
 import { ToastrService } from 'ngx-toastr';
@@ -73,7 +74,7 @@ describe('JobsAppliedComponent', () => {
     });
 
     await TestBed.configureTestingModule({
-      imports: [JobsAppliedComponent, ReactiveFormsModule, FormsModule],
+      imports: [JobsAppliedComponent, ReactiveFormsModule, FormsModule, CommonModule],
       providers: [
         FormBuilder,
         { provide: JobPortalServiceService, useValue: mockJobPortalService },
@@ -94,7 +95,7 @@ describe('JobsAppliedComponent', () => {
     })
       .overrideComponent(JobsAppliedComponent, {
         set: {
-          imports: [ReactiveFormsModule, FormsModule],
+          imports: [ReactiveFormsModule, FormsModule, CommonModule],
           schemas: [NO_ERRORS_SCHEMA],
         },
       })
@@ -102,6 +103,9 @@ describe('JobsAppliedComponent', () => {
 
     fixture = TestBed.createComponent(JobsAppliedComponent);
     component = fixture.componentInstance;
+    component.centerID = 10;
+    component.UserID = 101;
+    component.userRoleID = 3;
   });
 
   it('should create JobsAppliedComponent', () => {

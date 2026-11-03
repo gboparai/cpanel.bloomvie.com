@@ -1,6 +1,25 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
 import { ContentManagementComponent } from './content-management.component';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, FormsModule, NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
+import { Directive, forwardRef } from '@angular/core';
+
+@Directive({
+  selector: 'angular-editor, ng-select',
+  standalone: true,
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => MockAngularEditorDirective),
+      multi: true,
+    },
+  ],
+})
+class MockAngularEditorDirective implements ControlValueAccessor {
+  writeValue() {}
+  registerOnChange() {}
+  registerOnTouched() {}
+}
+
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -95,7 +114,7 @@ describe('ContentManagementComponent', () => {
     })
       .overrideComponent(ContentManagementComponent, {
         set: {
-          imports: [ReactiveFormsModule],
+          imports: [ReactiveFormsModule, FormsModule, MockAngularEditorDirective],
           schemas: [NO_ERRORS_SCHEMA],
         },
       })
@@ -170,6 +189,7 @@ describe('ContentManagementComponent', () => {
 
       component.ActiveInactive(10, false, event, {});
       tick();
+      flush();
 
       expect(mockContentService.ActiveInactiveContent).toHaveBeenCalledWith(10, {});
       expect(mockToastr.success).toHaveBeenCalledWith('Menu Activated successfully');

@@ -141,16 +141,20 @@ export class CapitalExpenseComponent {
   }
 
   base64ToBlob(base64: any, mime = 'image/jpeg') {
-    const byteCharacters = atob(base64);
-    const byteArrays = [];
+    try {
+      const byteCharacters = atob(base64);
+      const byteArrays = [];
 
-    for (let offset = 0; offset < byteCharacters.length; offset += 512) {
-      const slice = byteCharacters.slice(offset, offset + 512);
-      const byteNumbers = Array.from(slice).map((char) => char.charCodeAt(0));
-      byteArrays.push(new Uint8Array(byteNumbers));
+      for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+        const slice = byteCharacters.slice(offset, offset + 512);
+        const byteNumbers = Array.from(slice).map((char) => char.charCodeAt(0));
+        byteArrays.push(new Uint8Array(byteNumbers));
+      }
+
+      return new Blob(byteArrays, { type: mime });
+    } catch (e) {
+      return new Blob([], { type: mime });
     }
-
-    return new Blob(byteArrays, { type: mime });
   }
 
   downloadReceipt(item: any) {
@@ -329,7 +333,8 @@ export class CapitalExpenseComponent {
   }
 
   getMimeTypeFromExtension(extension: string): string {
-    switch (extension.toLowerCase()) {
+    const ext = extension.startsWith('.') ? extension.toLowerCase() : '.' + extension.toLowerCase();
+    switch (ext) {
       case '.pdf':
         return 'application/pdf';
       case '.jpg':

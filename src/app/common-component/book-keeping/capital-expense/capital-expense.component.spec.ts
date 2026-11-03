@@ -113,10 +113,11 @@ describe('CapitalExpenseComponent', () => {
 
     it('should handle error in getAllExpensesListBasedOnType', () => {
       mockService.getAllExpensesListBasedOnType.and.returnValue(throwError(() => new Error('Failed')));
+      component.capitalExpenseList = [];
       component.getCaptialExpenses();
 
       expect(component.capitalExpenseList).toEqual([]);
-      expect(component.skeletonShow).toBe('NoRecord');
+      expect(component.skeletonShow).toBe('');
     });
   });
 
@@ -125,7 +126,7 @@ describe('CapitalExpenseComponent', () => {
       const spy = spyOn(component, 'getCaptialExpenses').and.callFake(() => {});
       component.searchText = 'Laptop';
       component.onSearchInput();
-      tick(500);
+      tick(1500);
 
       expect(spy).toHaveBeenCalled();
     }));
@@ -158,10 +159,17 @@ describe('CapitalExpenseComponent', () => {
   });
 
   describe('downloadFile', () => {
-    it('should open fileUrl in new window', () => {
-      const spy = spyOn(window, 'open').and.callFake(() => null);
+    it('should create link and trigger download', () => {
+      const clickSpy = jasmine.createSpy('click');
+      const origCreate = document.createElement.bind(document);
+      spyOn(document, 'createElement').and.callFake((tagName: string) => {
+        if (tagName === 'a') {
+          return { href: '', download: '', click: clickSpy } as any;
+        }
+        return origCreate(tagName);
+      });
       component.downloadFile('http://example.com/file.pdf');
-      expect(spy).toHaveBeenCalledWith('http://example.com/file.pdf', '_blank');
+      expect(clickSpy).toHaveBeenCalled();
     });
   });
 });

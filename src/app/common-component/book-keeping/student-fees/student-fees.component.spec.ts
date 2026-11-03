@@ -39,7 +39,7 @@ describe('StudentFeesComponent', () => {
       'getAllStudentPendingPaymentRecordByDaycareAdminID'
     ]);
     mockStudentFeeService.getStudentsTransactionDetailsByCentreAdminID.and.returnValue(of({
-      message: 'OK',
+      message: 'Success',
       result: [
         {
           studentFeeID: 10,
@@ -51,7 +51,7 @@ describe('StudentFeesComponent', () => {
     }));
     mockStudentFeeService.sendActions.and.returnValue(of({ message: 'Success' }));
     mockStudentFeeService.getAllStudentPendingPaymentRecordByDaycareAdminID.and.returnValue(of({
-      message: 'OK',
+      message: 'Success',
       result: [{ studentID: 1, pendingAmount: 100 }]
     }));
 
@@ -152,7 +152,7 @@ describe('StudentFeesComponent', () => {
       const spy = spyOn(component, 'getAllStudentFeesDetails').and.callFake(() => {});
       component.searchText = 'Tommy';
       component.onSearchInput();
-      tick(500);
+      tick(1500);
 
       expect(spy).toHaveBeenCalled();
     }));
@@ -160,8 +160,9 @@ describe('StudentFeesComponent', () => {
 
   describe('sendActions', () => {
     it('should send required actions on fee record', () => {
-      component.sendActions('Reminder', { planID: 5, senderID: 10, studentID: 2 });
-      expect(mockStudentFeeService.sendActions).toHaveBeenCalledWith('Reminder', 5, 10, 2);
+      component.UserID = 10;
+      component.sendActions('notification', { paymentID: 5, studentID: 2 });
+      expect(mockStudentFeeService.sendActions).toHaveBeenCalledWith('notification', 5, 10, 2);
     });
   });
 
@@ -174,11 +175,12 @@ describe('StudentFeesComponent', () => {
 
   describe('getAllStudentPendingPaymentRecordByDaycareAdminID', () => {
     it('should fetch pending student payment records', () => {
-      component.centreID = 15;
+      component.UserID = 33;
+      component.totalPaidAmount = { nativeElement: { value: '' } } as any;
       component.getAllStudentPendingPaymentRecordByDaycareAdminID();
 
-      expect(mockStudentFeeService.getAllStudentPendingPaymentRecordByDaycareAdminID).toHaveBeenCalledWith(15);
-      expect(component.StudentPendingPaymentRecord.length).toBe(1);
+      expect(mockStudentFeeService.getAllStudentPendingPaymentRecordByDaycareAdminID).toHaveBeenCalledWith(33);
+      expect(component.pendingPaymentStudentList.length).toBe(1);
     });
   });
 });

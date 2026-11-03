@@ -40,10 +40,24 @@ describe('ManageDaycareComponent', () => {
     ]);
     mockSpinner = jasmine.createSpyObj('NgxSpinnerService', ['show', 'hide']);
     mockProfileService = jasmine.createSpyObj('ProfileService', ['GetUserById']);
+    mockProfileService.GetUserById.and.returnValue(
+      of({
+        message: 'Success',
+        result: {
+          id: 5,
+          firstName: 'Jane',
+          middleName: 'M',
+          lastName: 'Doe',
+          email: 'jane@example.com',
+        },
+      } as any)
+    );
     mockManageDaycareService = jasmine.createSpyObj('ManageDaycareService', [
       'getDayCareByCentreAdminID',
       'manageDayCare',
     ]);
+    mockManageDaycareService.getDayCareByCentreAdminID.and.returnValue(of({ message: 'OK', result: [] }));
+    mockManageDaycareService.manageDayCare.and.returnValue(of({ message: 'Success', result: {} }));
     mockToastr = jasmine.createSpyObj('ToastrService', ['success', 'warning', 'error', 'info']);
     mockRouter = jasmine.createSpyObj('Router', ['navigate']);
     mockCookie = jasmine.createSpyObj('CookieService', ['get', 'check']);
@@ -366,7 +380,7 @@ describe('ManageDaycareComponent', () => {
     });
 
     it('should handle callManageDCCApi success during onboarding', fakeAsync(() => {
-      component.adminForm.get('dob').setValue('01/15/1995');
+      component.adminForm.get('dob').setValue('15/01/1995');
       mockManageDaycareService.manageDayCare.and.returnValue(of({
         message: 'Success',
         activity: 'Daycare saved',
@@ -386,7 +400,7 @@ describe('ManageDaycareComponent', () => {
     }));
 
     it('should handle callManageDCCApi error', fakeAsync(() => {
-      component.adminForm.get('dob').setValue('01/15/1995');
+      component.adminForm.get('dob').setValue('15/01/1995');
       mockManageDaycareService.manageDayCare.and.returnValue(throwError(() => ({ message: 'API Failed' })));
 
       component.callManageDCCApi();

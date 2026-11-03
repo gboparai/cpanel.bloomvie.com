@@ -739,6 +739,7 @@ export class TOCRegistrationComponent {
     this.selectedFileEducationalDocument = null;
     this.selectedDayCareIds = [];
     this.NearbyDayCareList = [];
+    this.selectedCountry = this.selectedCountry || this.commonService.getDefaultCountryFlag(1) || { flag: '' };
 
     const fileInput = document.getElementById('formFile') as HTMLInputElement;
     if (fileInput) {
@@ -1177,11 +1178,13 @@ export class TOCRegistrationComponent {
           // }
 
           //Added on 28/01/25
-          const qualificationNamesArray = this.TOCUserDetail.qualificationNames
-            .split(',')
-            .map((name: string) => name.trim()); // Split and trim the names
-          const selectedQualifications = this.QualificationList.filter(
-            (q: { name: string }) => qualificationNamesArray.includes(q.name)
+          const qualificationNamesArray = this.TOCUserDetail?.qualificationNames
+            ? this.TOCUserDetail.qualificationNames
+                .split(',')
+                .map((name: string) => name.trim())
+            : [];
+          const selectedQualifications = (this.QualificationList || []).filter(
+            (q: { name: string }) => qualificationNamesArray.includes(q?.name)
           );
 
           if (selectedQualifications.length > 0) {
@@ -1195,9 +1198,9 @@ export class TOCRegistrationComponent {
             // console.error('No matching qualifications found');
           }
 
-          const documentTypeID = this.TOCUserDetail.uploadedDocumentType[0];
-          const documentType = this.documentTypeList.find(
-            (doc: { id: number }) => doc.id === documentTypeID
+          const documentTypeID = this.TOCUserDetail?.uploadedDocumentType?.[0];
+          const documentType = (this.documentTypeList || []).find(
+            (doc: { id: number }) => doc?.id === documentTypeID
           );
 
           if (documentType) {

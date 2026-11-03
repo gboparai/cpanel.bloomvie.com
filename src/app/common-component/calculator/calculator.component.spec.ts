@@ -120,7 +120,7 @@ describe('CalculatorComponent', () => {
       component.ngOnInit();
       spyOn(component, 'getCalculatorLogic').and.callThrough();
 
-      component.onSelectActivityDurationType({ durationType: 'Weekly' });
+      component.onSelectActivityDurationType({ activityDurationType: 'Weekly' });
 
       expect(component.durationType).toBe('Weekly');
       expect(component.getCalculatorLogic).toHaveBeenCalled();
@@ -158,6 +158,9 @@ describe('CalculatorComponent', () => {
 
   describe('dayCareCentreCalculator', () => {
     it('should submit form when valid and show success toastr', () => {
+      mockCommonService.updateDayCareCentreCalculator.and.returnValue(
+        of({ message: 'DayCare Center Calculator entry updated successfully' })
+      );
       component.ngOnInit();
       component.dayCareCalculatorForm.patchValue({
         dayCareTypeID: '1',
@@ -169,7 +172,7 @@ describe('CalculatorComponent', () => {
       component.dayCareCentreCalculator();
 
       expect(mockCommonService.updateDayCareCentreCalculator).toHaveBeenCalled();
-      expect(mockToastr.success).toHaveBeenCalledWith('Calculater update successfully.');
+      expect(mockToastr.success).toHaveBeenCalledWith('DayCare Center Calculator entry updated successfully');
       expect(mockSpinner.hide).toHaveBeenCalled();
     });
   });

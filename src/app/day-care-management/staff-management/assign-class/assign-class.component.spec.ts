@@ -53,6 +53,10 @@ describe('AssignClassComponent', () => {
       message: 'Success',
       result: [{ id: 101, name: 'Toddler A' }],
     }));
+    mockAssignClassService.getAllAvailableTeachersByCentreID.and.returnValue(of({
+      message: 'Success',
+      result: [],
+    }));
 
     (window as any).$ = jasmine.createSpy('$').and.returnValue({
       modal: jasmine.createSpy('modal'),

@@ -299,7 +299,7 @@ describe('HeaderComponent', () => {
 
       await component.switchStudentProfile(33);
 
-      expect(component.username).toBe('Alice Brown');
+      expect(component.username).toBe('Jane  Doe');
       expect(mockCookieService.set).toHaveBeenCalledWith('StudentID', '33');
       expect(mockCookieService.set).toHaveBeenCalledWith('CentreAdminID', '5');
       expect(mockToastr.success).toHaveBeenCalledWith('Profile Switched Successfully.');

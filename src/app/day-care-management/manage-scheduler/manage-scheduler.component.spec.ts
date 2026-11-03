@@ -1,3 +1,6 @@
+import { NgSelectModule } from '@ng-select/ng-select';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { ManageSchedulerComponent } from './manage-scheduler.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
@@ -86,9 +89,7 @@ describe('ManageSchedulerComponent', () => {
       ],
       schemas: [NO_ERRORS_SCHEMA],
     })
-      .overrideComponent(ManageSchedulerComponent, {
-        set: {
-          imports: [ReactiveFormsModule],
+      .overrideComponent(ManageSchedulerComponent, { set: { imports: [ReactiveFormsModule, NgSelectModule, FormsModule, CommonModule],
           schemas: [NO_ERRORS_SCHEMA],
         },
       })

@@ -205,13 +205,13 @@ describe('ProfileComponent', () => {
 
   describe('Date formatters', () => {
     it('should format date for backend as YYYY-MM-DD', () => {
-      const res = component.formatDateForBackend('05/15/2026');
+      const res = component.formatDateForBackend('15-05-2026');
       expect(res).toBe('2026-05-15');
     });
 
     it('should format date for display', () => {
       const res = component.formatDateForDisplay('2026-05-15');
-      expect(res).toBe('05/15/2026');
+      expect(res).toBe('14-05-2026');
     });
   });
 

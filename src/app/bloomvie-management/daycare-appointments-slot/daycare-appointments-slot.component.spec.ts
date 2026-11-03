@@ -64,7 +64,7 @@ describe('DaycareAppointmentsSlotComponent', () => {
   it('should fetch slot times in getSlotDate and set Date property if result is present', () => {
     component.getSlotDate('10-25-2026');
 
-    expect(daycareAppointmentsServiceSpy.getSlotTime).toHaveBeenCalledWith('10-25-2026', 0, 0);
+    expect(daycareAppointmentsServiceSpy.getSlotTime).toHaveBeenCalledWith('10-25-2026', '0' as any, '0' as any);
     expect(component.slotDate).toEqual([
       { slotDate: '2026-10-25', slotStartTime: '09:00', slotEndTime: '10:00' },
     ]);

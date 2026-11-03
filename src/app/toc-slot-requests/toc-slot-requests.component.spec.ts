@@ -63,6 +63,8 @@ describe('TocSlotRequestsComponent', () => {
 
     fixture = TestBed.createComponent(TocSlotRequestsComponent);
     component = fixture.componentInstance;
+    component.UserID = 101;
+    component.centreID = 5;
   });
 
   it('should create the component', () => {

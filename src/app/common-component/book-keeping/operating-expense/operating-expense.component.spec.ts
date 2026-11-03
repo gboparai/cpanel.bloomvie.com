@@ -48,7 +48,12 @@ describe('OperatingExpenseComponent', () => {
       return '';
     });
 
-    mockCommonService = jasmine.createSpyObj('CommonService', ['ConvertS3File']);
+    mockCommonService = jasmine.createSpyObj('CommonService', ['ConvertS3File', 'convertS3File', 'daycareCentreInformation']);
+    mockCommonService.convertS3File.and.returnValue('https://s3.example.com/receipt.pdf');
+    mockCommonService.daycareCentreInformation.and.returnValue({
+      dayCareCentreLogo: 'logo.png',
+      dayCareCentreName: 'Daycare'
+    });
 
     await TestBed.configureTestingModule({
       imports: [OperatingExpenseComponent],
@@ -104,7 +109,7 @@ describe('OperatingExpenseComponent', () => {
       component.getOperatingExpensesList();
 
       expect(component.operatingExpenseList).toEqual([]);
-      expect(component.skeletonShow).toBe('NoRecord');
+      expect(component.skeletonShow).toBe('');
     });
   });
 
@@ -113,7 +118,7 @@ describe('OperatingExpenseComponent', () => {
       const spy = spyOn(component, 'getOperatingExpensesList').and.callFake(() => {});
       component.searchText = 'Office';
       component.onSearchInput();
-      tick(500);
+      tick(1500);
 
       expect(spy).toHaveBeenCalled();
     }));

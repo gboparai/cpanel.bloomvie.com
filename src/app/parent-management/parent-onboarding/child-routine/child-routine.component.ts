@@ -427,8 +427,7 @@ export class ChildRoutineComponent {
                 .getAllPendingOnboardingStudentByCentreIDAndParentID(
                   this.parentBelongsToCentre,
                   this.login
-                )
-                .subscribe((data: any) => {
+                )?.subscribe((data: any) => {
                   if (data.message == 'Success') {
                     Swal.fire({
                       title: 'Data Saved!',
@@ -441,7 +440,7 @@ export class ChildRoutineComponent {
                     }).then((response: any) => {
                       if (response.isConfirmed) {
                         this.pendingStudentOnboarding = data.result;
-                        $('#PendingOnboardStudent').modal('show');
+                        if (typeof $ === 'function') { ($('#PendingOnboardStudent') as any)?.modal?.('show'); }
                       } else if (response.isDismissed) {
                         this.cookie.set('Component', 'Dashboard');
                         this.router.navigate(['/parent-dashboard']);

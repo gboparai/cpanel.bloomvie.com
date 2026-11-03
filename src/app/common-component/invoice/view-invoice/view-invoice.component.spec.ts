@@ -1,3 +1,4 @@
+import { CommonModule, DatePipe } from '@angular/common';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ViewInvoiceComponent } from './view-invoice.component';
 import { CommonService } from '../../common.service';
@@ -45,7 +46,7 @@ describe('ViewInvoiceComponent', () => {
       schemas: [NO_ERRORS_SCHEMA]
     })
     .overrideComponent(ViewInvoiceComponent, {
-      set: { imports: [], schemas: [NO_ERRORS_SCHEMA] }
+      set: { imports: [CommonModule, DatePipe], schemas: [NO_ERRORS_SCHEMA] }
     })
     .compileComponents();
 

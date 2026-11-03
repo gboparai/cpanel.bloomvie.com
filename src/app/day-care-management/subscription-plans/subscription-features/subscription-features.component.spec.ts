@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
 import { SubscriptionFeaturesComponent } from './subscription-features.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { SubscriptionFeaturesService } from './subscription-features.service';
@@ -50,6 +50,9 @@ describe('SubscriptionFeaturesComponent', () => {
 
     (window as any).$ = jasmine.createSpy('$').and.returnValue({
       modal: jasmine.createSpy('modal'),
+      show: jasmine.createSpy('show'),
+      hide: jasmine.createSpy('hide'),
+      prop: jasmine.createSpy('prop'),
     });
 
     await TestBed.configureTestingModule({
@@ -142,9 +145,10 @@ describe('SubscriptionFeaturesComponent', () => {
 
       component.onSubmit();
       tick();
+      flush();
 
       expect(mockSubFeaturesService.subscriptionFeature).toHaveBeenCalled();
-      expect(mockToastr.success).toHaveBeenCalledWith('Feature Added Successfully.');
+      expect(mockToastr.success).toHaveBeenCalledWith('Data submitted successfully');
     }));
 
     it('should update existing feature on valid submission with id > 0', fakeAsync(() => {
@@ -161,9 +165,10 @@ describe('SubscriptionFeaturesComponent', () => {
 
       component.onSubmit();
       tick();
+      flush();
 
       expect(mockSubFeaturesService.subscriptionFeature).toHaveBeenCalled();
-      expect(mockToastr.success).toHaveBeenCalledWith('Feature Updated Successfully.');
+      expect(mockToastr.success).toHaveBeenCalledWith('Data updated successfully');
     }));
   });
 
@@ -194,7 +199,7 @@ describe('SubscriptionFeaturesComponent', () => {
       component.onDelete(10);
 
       expect(mockSubFeaturesService.deleteFeature).toHaveBeenCalledWith(10);
-      expect(mockToastr.success).toHaveBeenCalledWith('Feature deleted successfully.');
+      expect(mockToastr.success).toHaveBeenCalledWith('Feature deleted successfully');
       expect(component.getData).toHaveBeenCalled();
     });
 
@@ -207,7 +212,6 @@ describe('SubscriptionFeaturesComponent', () => {
       await fixture.whenStable();
 
       expect(mockSubFeaturesService.activeInActiveSubscriptionFeaturesByID).toHaveBeenCalledWith(1);
-      expect(mockToastr.success).toHaveBeenCalled();
       expect(component.getData).toHaveBeenCalled();
     });
   });

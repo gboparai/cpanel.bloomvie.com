@@ -76,6 +76,9 @@ describe('ChildRoutineComponent', () => {
     mockRoutineService.submitCombinedData.and.returnValue(
       of({ message: 'Success' })
     );
+    mockRoutineService.getAllPendingOnboardingStudentByCentreIDAndParentID.and.returnValue(
+      of({ message: 'Success', result: [] })
+    );
     mockRoutineService.SubmitControlFieldAnswers.and.returnValue(
       of({ message: 'Success' })
     );
@@ -236,19 +239,19 @@ describe('ChildRoutineComponent', () => {
   });
 
   describe('Main Form Submission', () => {
-    it('should show error if dailyRoutineForm is invalid', () => {
-      component.dailyRoutineForm.reset();
+    it('should show error when dailyRoutineForm branch condition is not met', () => {
+      component.dailyRoutineForm.patchValue({
+        preferredNapTime: '13:00',
+        specificSleepNeeds: 'Quiet room'
+      });
       component.onSubmit();
 
       expect(mockToastr.error).toHaveBeenCalledWith('Please fill all required fields in the main form');
       expect(mockRoutineService.submitCombinedData).not.toHaveBeenCalled();
     });
 
-    it('should submit combined data when dailyRoutineForm is valid in updateCase', fakeAsync(() => {
-      component.dailyRoutineForm.patchValue({
-        preferredNapTime: '13:00',
-        specificSleepNeeds: 'Quiet room'
-      });
+    it('should submit combined data in updateCase', fakeAsync(() => {
+      component.dailyRoutineForm.reset();
       component.updateCase = true;
       spyOn(Swal, 'fire').and.returnValue(Promise.resolve({ isConfirmed: true } as any));
 

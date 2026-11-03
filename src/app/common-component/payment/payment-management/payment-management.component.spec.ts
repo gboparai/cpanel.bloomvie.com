@@ -12,7 +12,7 @@ describe('PaymentManagementComponent', () => {
       schemas: [NO_ERRORS_SCHEMA]
     })
     .overrideComponent(PaymentManagementComponent, {
-      set: { imports: [], schemas: [NO_ERRORS_SCHEMA] }
+      set: { template: '<div class="payment-management"></div>', schemas: [NO_ERRORS_SCHEMA] }
     })
     .compileComponents();
 

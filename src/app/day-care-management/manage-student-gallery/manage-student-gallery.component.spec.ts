@@ -70,9 +70,9 @@ describe('ManageStudentGalleryComponent', () => {
     component = fixture.componentInstance;
 
     // Mock FileInput ElementRef
-    const dummyInput = document.createElement('input');
-    dummyInput.type = 'file';
-    component.FileInput = new ElementRef(dummyInput);
+    const dummyInput: any = { value: '' };
+    component.FileInput = { nativeElement: dummyInput } as any;
+
   });
 
   it('should create ManageStudentGalleryComponent', () => {

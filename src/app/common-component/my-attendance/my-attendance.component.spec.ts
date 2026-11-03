@@ -3,7 +3,7 @@ import { MyAttendanceComponent } from './my-attendance.component';
 import { MyAttendanceService } from './my-attendance.service';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { DatePipe } from '@angular/common';
+import { DatePipe, CommonModule } from '@angular/common';
 import { CookieService } from 'ngx-cookie-service';
 import { ChangeDetectorRef, NO_ERRORS_SCHEMA } from '@angular/core';
 import { ClassroomDetailsService } from '../../day-care-management/classroom-management/classroom-details/classroom-details.service';
@@ -94,7 +94,7 @@ describe('MyAttendanceComponent', () => {
       schemas: [NO_ERRORS_SCHEMA]
     })
     .overrideComponent(MyAttendanceComponent, {
-      set: { imports: [], schemas: [NO_ERRORS_SCHEMA] }
+      set: { imports: [CommonModule, DatePipe], schemas: [NO_ERRORS_SCHEMA] }
     })
     .compileComponents();
 
@@ -179,17 +179,18 @@ describe('MyAttendanceComponent', () => {
   });
 
   describe('openMapPopup', () => {
-    it('should initialize map when coordinates are valid', () => {
+    it('should initialize map when coordinates are valid', fakeAsync(() => {
       const spy = spyOn(component, 'initMap').and.callFake(() => {});
       component.openMapPopup(-73.9857, 40.7484);
+      tick(150);
 
       expect(component.IsnotLatandLong).toBeFalse();
       expect(spy).toHaveBeenCalledWith(-73.9857, 40.7484);
-    });
+    }));
 
-    it('should set IsnotLatandLong to true when coordinates are 0', () => {
+    it('should set IsnotLatandLong to true when coordinates are null', () => {
       const spy = spyOn(component, 'initMap').and.callFake(() => {});
-      component.openMapPopup(0, 0);
+      component.openMapPopup(null as any, null as any);
 
       expect(component.IsnotLatandLong).toBeTrue();
       expect(spy).not.toHaveBeenCalled();

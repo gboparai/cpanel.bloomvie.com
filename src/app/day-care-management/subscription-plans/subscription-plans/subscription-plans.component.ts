@@ -529,7 +529,7 @@ export class SubscriptionPlansComponent implements OnInit {
       (plan) => plan.planId === selectedPlanID
     );
 
-    selectedPlan.discountPlan.forEach((plan: any, index: any) => {
+    selectedPlan?.discountPlan?.forEach((plan: any, index: any) => {
       if (this.discounts[index]) {
         this.discounts[index].id = plan.id;
         this.discounts[index].value = plan.discount;

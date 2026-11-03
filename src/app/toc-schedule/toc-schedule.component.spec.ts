@@ -263,6 +263,8 @@ describe('TocScheduleComponent', () => {
     });
 
     it('should call deleteTOCUserAvailableSlots for a day', () => {
+      component.UserID = 101;
+      component.centreID = 5;
       mockTocService.deleteTOCUserAvailableSlots.and.returnValue(of({ message: 'ok' }));
       spyOn(component, 'getTOCUserDetailByID');
 

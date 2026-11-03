@@ -105,6 +105,7 @@ describe('JobPostTeacherApprovalComponent', () => {
     });
 
     it('should handle token validation failure', () => {
+      component.teacherID = '105';
       mockJobPortalService.ValidateToken.and.returnValue(
         of({ message: 'Invalid' })
       );
@@ -158,6 +159,7 @@ describe('JobPostTeacherApprovalComponent', () => {
       );
       spyOn(component, 'ApprovedReject');
 
+      component.teacherID = '105';
       await component.approveReject(1, true, 'approval');
 
       expect(component.viewThankYou).toBeTrue();

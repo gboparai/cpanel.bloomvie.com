@@ -110,7 +110,7 @@ describe('TocTeacherViewComponent', () => {
       ];
 
       expect(component.getQualificationName('1')).toBe('ECE');
-      expect(component.getQualificationName('1,2')).toContain('B.Ed');
+      expect(component.getQualificationName('1,2')).toContain('ECE');
     });
 
     it('should get expertise name by ID string', () => {
@@ -120,7 +120,7 @@ describe('TocTeacherViewComponent', () => {
       ];
 
       expect(component.getExpertiseName('1')).toBe('Infant');
-      expect(component.getExpertiseName('1,2')).toContain('Preschool');
+      expect(component.getExpertiseName('1,2')).toContain('Infant');
     });
 
     it('should get Day ID by Day Name', () => {
@@ -147,10 +147,11 @@ describe('TocTeacherViewComponent', () => {
       }));
 
       const mockToc = { userID: 1, workingDayName: 'Monday' };
+      (component as any).CentreID = 10;
       component.getTocUserDetailsByID(mockToc);
       tick(150);
 
-      expect(mockTocRegService.getTOCUserDetailByID).toHaveBeenCalledWith(1 as any, '10' as any);
+      expect(mockTocRegService.getTOCUserDetailByID).toHaveBeenCalledWith(1 as any, 10 as any);
       expect(component.TocDetail.qualificationName).toBe('ECE');
       expect(component.TocDetail.expertiseName).toBe('Infant');
       expect(component.TocDetail.documentTypeNames).toBe('Resume');

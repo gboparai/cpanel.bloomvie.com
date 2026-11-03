@@ -655,10 +655,15 @@ export class ChildReportComponent implements AfterViewInit {
   }
 
   base64toblobimage(imageData: any) {
+    if (!Array.isArray(imageData)) return;
     for (const student of imageData) {
+      if (!student || !Array.isArray(student.days)) continue;
       for (const day of student.days) {
+        if (!day || !Array.isArray(day.activities)) continue;
         for (const item of day.activities) {
+          if (!item || !Array.isArray(item.studentData)) continue;
           for (const activity of item.studentData) {
+            if (!activity) continue;
             activity.imageUrl = []; // Initialize
 
             for (const image of activity.activityImages || []) {

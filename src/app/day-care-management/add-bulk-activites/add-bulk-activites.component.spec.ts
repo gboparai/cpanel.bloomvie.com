@@ -86,7 +86,12 @@ describe('AddBulkActivitesComponent', () => {
     });
 
     (window as any).$ = jasmine.createSpy('$').and.returnValue({
-      modal: jasmine.createSpy('modal'),
+      modal: jasmine.createSpy('modal').and.returnValue({
+        show: jasmine.createSpy('show'),
+        hide: jasmine.createSpy('hide'),
+      }),
+      show: jasmine.createSpy('show'),
+      hide: jasmine.createSpy('hide'),
     });
 
     await TestBed.configureTestingModule({

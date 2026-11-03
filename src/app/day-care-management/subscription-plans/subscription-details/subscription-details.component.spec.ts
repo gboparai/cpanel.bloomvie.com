@@ -69,6 +69,7 @@ describe('SubscriptionDetailsComponent', () => {
 
   describe('ngOnInit and Plan Details', () => {
     it('should read userId and load plan details in ngOnInit', () => {
+      spyOn(component, 'loadPlans');
       component.ngOnInit();
 
       expect(component.userId).toBe('10');

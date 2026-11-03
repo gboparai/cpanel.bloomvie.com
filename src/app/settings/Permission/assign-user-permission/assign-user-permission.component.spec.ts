@@ -1,3 +1,6 @@
+import { NgSelectModule } from '@ng-select/ng-select';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { AssignUserPermissionComponent } from './assign-user-permission.component';
 import { AssignUserPermissionService } from './assign-user-permission.service';
@@ -56,7 +59,7 @@ describe('AssignUserPermissionComponent', () => {
     });
 
     await TestBed.configureTestingModule({
-      imports: [AssignUserPermissionComponent, ReactiveFormsModule],
+      imports: [AssignUserPermissionComponent, ReactiveFormsModule, FormsModule, CommonModule, NgSelectModule],
       providers: [
         { provide: AssignUserPermissionService, useValue: mockService },
         { provide: ToastrService, useValue: mockToastr },
@@ -64,9 +67,7 @@ describe('AssignUserPermissionComponent', () => {
       ],
       schemas: [NO_ERRORS_SCHEMA],
     })
-      .overrideComponent(AssignUserPermissionComponent, {
-        set: {
-          imports: [ReactiveFormsModule],
+      .overrideComponent(AssignUserPermissionComponent, { set: { imports: [ReactiveFormsModule, NgSelectModule, FormsModule, CommonModule],
           schemas: [NO_ERRORS_SCHEMA],
         },
       })

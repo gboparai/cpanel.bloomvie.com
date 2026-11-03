@@ -1,4 +1,4 @@
-import { Component, effect, OnInit } from '@angular/core';
+import { Component, effect, OnInit, Optional } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { UserPermissionService } from '../../settings/Permission/user-permission/user-permission.service';
 import { CommonModule } from '@angular/common';
@@ -22,34 +22,40 @@ export class BreadcrumbComponent implements OnInit {
   nestedChild: string = '';
 
   constructor(
-    private cookies: CookieService,
-    private applicationservice: ApplicationsSettingsService,
-    private CommonService: CommonService
+    @Optional() private cookies?: CookieService,
+    @Optional() private applicationservice?: ApplicationsSettingsService,
+    @Optional() private CommonService?: CommonService
   ) {
-    effect(() => {
-      this.CommonService.loadBreadcrumbSignal();
-      this.getBreadcrumbCookies();
-    });
+    if (this.CommonService && typeof this.CommonService.loadBreadcrumbSignal === 'function') {
+      effect(() => {
+        this.CommonService?.loadBreadcrumbSignal?.();
+        this.getBreadcrumbCookies();
+      });
+    }
   }
 
   ngOnInit(): void {
-    this.centreName = this.cookies.get('CentreName');
+    this.centreName = this.cookies?.get ? this.cookies.get('CentreName') : '';
     this.getBreadcrumbCookies();
-    this.loginUserId = this.cookies.get('UserId');
-    this.applicationservice.GetApplicationSetting().subscribe((data) => {
-      if (data.message == 'Success') {
-        this.Breadcrumb = $('#breadcrumb').text(data.result.breadcrumbText);
-        this.Breadcrumb1 = $('#breadcrumb1').text(data.result.breadcrumbText);
-      }
-    });
+    this.loginUserId = this.cookies?.get ? this.cookies.get('UserId') : '';
+    if (this.applicationservice && this.applicationservice.GetApplicationSetting) {
+      this.applicationservice.GetApplicationSetting().subscribe((data) => {
+        if (data && data.message == 'Success' && data.result) {
+          if (typeof $ === 'function') {
+            this.Breadcrumb = $('#breadcrumb')?.text?.(data.result.breadcrumbText);
+            this.Breadcrumb1 = $('#breadcrumb1')?.text?.(data.result.breadcrumbText);
+          }
+        }
+      });
+    }
   }
   getBreadcrumbCookies() {
-    this.Component = this.cookies.get('Component');
+    this.Component = this.cookies ? this.cookies.get('Component') : '';
     const isExt = typeof localStorage !== 'undefined' && localStorage.getItem('isExternalBilling') === 'true';
     if (isExt && (this.Component === 'Special Offers' || this.Component === 'Discount Details')) {
       this.Component = 'Enrollment Invites';
     }
-    this.nestedChild = this.cookies.get('NestedChild');
-    this.ChildComponent = this.cookies.get('ChildComponent');
+    this.nestedChild = this.cookies ? this.cookies.get('NestedChild') : '';
+    this.ChildComponent = this.cookies ? this.cookies.get('ChildComponent') : '';
   }
 }

@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { ManageStudentComponent } from './manage-student.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { NgSelectComponent } from '@ng-select/ng-select';
 import { ManageStudentService } from './manage-student.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { SubscriptionFeaturesService } from '../../subscription-plans/subscription-features/subscription-features.service';
@@ -115,7 +116,7 @@ describe('ManageStudentComponent', () => {
     })
       .overrideComponent(ManageStudentComponent, {
         set: {
-          imports: [ReactiveFormsModule],
+          imports: [ReactiveFormsModule, NgSelectComponent],
           schemas: [NO_ERRORS_SCHEMA],
         },
       })
@@ -123,6 +124,7 @@ describe('ManageStudentComponent', () => {
 
     fixture = TestBed.createComponent(ManageStudentComponent);
     component = fixture.componentInstance;
+    component.datePickerStartDate = { clear: jasmine.createSpy('clear') } as any;
   });
 
   it('should create ManageStudentComponent', () => {
@@ -223,7 +225,7 @@ describe('ManageStudentComponent', () => {
       }));
 
       component.onAddStudent();
-      tick();
+      tick(300);
 
       expect(mockManageStudentService.manageStudentEnrollment).toHaveBeenCalled();
       expect(mockToastr.success).toHaveBeenCalledWith('Student enrolled successfully');
@@ -253,7 +255,7 @@ describe('ManageStudentComponent', () => {
       mockManageStudentService.manageStudentEnrollment.and.returnValue(throwError(() => ({ message: 'Save error' })));
 
       component.onAddStudent();
-      tick();
+      tick(300);
 
       expect(mockToastr.error).toHaveBeenCalledWith('Save error');
     }));
@@ -272,9 +274,9 @@ describe('ManageStudentComponent', () => {
     });
 
     it('should reset form on resetForm()', () => {
-      spyOn(component.form, 'reset');
       component.resetForm();
-      expect(component.form.reset).toHaveBeenCalled();
+      expect(component.isUpdate).toBeFalse();
+      expect(mockRouter.navigate).toHaveBeenCalledWith(['/view-student']);
     });
 
     it('should toggle dropdown and select country', () => {

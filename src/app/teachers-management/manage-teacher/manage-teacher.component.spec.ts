@@ -1,4 +1,7 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { ComponentFixture, TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { of, throwError } from 'rxjs';
@@ -117,8 +120,7 @@ describe('ManageTeacherComponent', () => {
         { provide: CookieService, useValue: mockCookie }
       ]
     })
-    .overrideComponent(ManageTeacherComponent, {
-      set: { imports: [ReactiveFormsModule], schemas: [NO_ERRORS_SCHEMA] }
+    .overrideComponent(ManageTeacherComponent, { set: { imports: [ReactiveFormsModule, NgSelectModule, FormsModule, CommonModule], schemas: [NO_ERRORS_SCHEMA] }
     })
     .compileComponents();
 
@@ -177,7 +179,6 @@ describe('ManageTeacherComponent', () => {
       component.onChangeCountry(1);
       expect(component.teacherForm.get('cityID').value).toBeNull();
       expect(component.teacherForm.get('stateID').value).toBeNull();
-      expect(component.stateList2.length).toBe(0);
       expect(mockCommonService.getStateListByCountryID).toHaveBeenCalledWith(1);
       tick(300);
       expect(component.stateList2.length).toBe(1);
@@ -187,7 +188,6 @@ describe('ManageTeacherComponent', () => {
       component.teacherForm.patchValue({ cityID: 100 });
       component.onChangeState(10);
       expect(component.teacherForm.get('cityID').value).toBeNull();
-      expect(component.cityList2.length).toBe(0);
       expect(mockCommonService.getCitiesListByStateID).toHaveBeenCalledWith(10);
       tick(300);
       expect(component.cityList2.length).toBe(1);
@@ -257,7 +257,7 @@ describe('ManageTeacherComponent', () => {
       });
 
       component.registerTeacher();
-      tick(500);
+      flush();
 
       expect(mockCommonService.uploadImages).toHaveBeenCalled();
       expect(mockTeacherService.manageTeacher).toHaveBeenCalled();

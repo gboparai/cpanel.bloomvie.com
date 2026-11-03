@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { JobPortalComponent } from './job-portal.component';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { NgSelectModule } from '@ng-select/ng-select';
 import { CookieService } from 'ngx-cookie-service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { DatePipe } from '@angular/common';
@@ -76,7 +78,7 @@ describe('JobPortalComponent', () => {
     });
 
     await TestBed.configureTestingModule({
-      imports: [JobPortalComponent, ReactiveFormsModule],
+      imports: [JobPortalComponent, ReactiveFormsModule, FormsModule, CommonModule, NgSelectModule],
       providers: [
         FormBuilder,
         DatePipe,
@@ -92,7 +94,7 @@ describe('JobPortalComponent', () => {
     })
       .overrideComponent(JobPortalComponent, {
         set: {
-          imports: [ReactiveFormsModule],
+          imports: [ReactiveFormsModule, FormsModule, CommonModule, NgSelectModule],
           schemas: [NO_ERRORS_SCHEMA],
         },
       })
@@ -101,6 +103,14 @@ describe('JobPortalComponent', () => {
     fixture = TestBed.createComponent(JobPortalComponent);
     component = fixture.componentInstance;
     component.jobType = { nativeElement: { checked: false } } as ElementRef;
+    const mockDetails = {
+      getAllJobPostings: jasmine.createSpy('getAllJobPostings'),
+    };
+    Object.defineProperty(component, 'JobPortalDetailsComponent', {
+      get: () => mockDetails,
+      set: () => {},
+      configurable: true,
+    });
   });
 
   it('should create JobPortalComponent', () => {
@@ -181,9 +191,6 @@ describe('JobPortalComponent', () => {
     });
 
     it('should submit successfully when form and salary are valid', () => {
-      component.JobPortalDetailsComponent = {
-        getAllJobPostings: jasmine.createSpy('getAllJobPostings'),
-      } as any;
 
       component.jobsForm.patchValue({
         jobTitle: 'ECE Educator',
