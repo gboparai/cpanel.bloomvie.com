@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild, effect } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, OnInit, ViewChild, effect, Optional } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 import { BreadcrumbComponent } from '../../common-component/breadcrumb/breadcrumb.component';
 import { DcAppointmentsListService } from './dc-appointments-list.service';
 import { CommonModule, NgFor } from '@angular/common';
@@ -92,7 +92,8 @@ export class DcAppointmentsListComponent implements OnInit {
     private cookie: CookieService,
     private Appservice: ApplicationsSettingsService,
     private route: ActivatedRoute,
-    private commonservice: CommonService
+    private commonservice: CommonService,
+    @Optional() private router?: Router
   ) {
     this.Form = fb.group({
       id: [0],
@@ -184,6 +185,8 @@ export class DcAppointmentsListComponent implements OnInit {
   // Commented on 29/04/25
   getAllDayCareAppointments(status?: any, searchItem?: any) {
     this.skeletonShow = 'Skelton';
+    const offsetHours = this.region?.offsetHours ?? 0;
+    const offsetMinutes = this.region?.offsetMinutes ?? 0;
     if (status == 'Accepted') {
       this.pendingSearchItem = '';
       this.statusId = 6;
@@ -191,20 +194,27 @@ export class DcAppointmentsListComponent implements OnInit {
         .getDayCareAppointments(
           this.statusId,
           searchItem,
-          this.region.offsetHours,
-          this.region.offsetMinutes
+          offsetHours,
+          offsetMinutes
         )
-        .subscribe((data: any) => {
-          this.DayCareAppointmentsAcceptedData = data.result;
-          this.AppointmentListAcceptedLength =
-            this.DayCareAppointmentsAcceptedData.length;
-          this.filteredAcceptbyCounsellor =
-            this.DayCareAppointmentsAcceptedData.filter(
-              (appointment: { counsellorID: any }) =>
-                appointment.counsellorID === this.UserID
-            );
-          this.skeletonShow = '';
-          this.getNotifications();
+        .subscribe({
+          next: (data: any) => {
+            this.DayCareAppointmentsAcceptedData = data?.result || [];
+            this.AppointmentListAcceptedLength =
+              this.DayCareAppointmentsAcceptedData.length;
+            this.filteredAcceptbyCounsellor =
+              this.DayCareAppointmentsAcceptedData.filter(
+                (appointment: { counsellorID: any }) =>
+                  appointment.counsellorID === this.UserID
+              );
+            this.skeletonShow = '';
+            this.getNotifications();
+          },
+          error: () => {
+            this.DayCareAppointmentsAcceptedData = [];
+            this.AppointmentListAcceptedLength = 0;
+            this.skeletonShow = '';
+          },
         });
     } else {
       this.acceptedSearchItem = '';
@@ -213,43 +223,57 @@ export class DcAppointmentsListComponent implements OnInit {
         .getDayCareAppointments(
           this.statusId,
           searchItem,
-          this.region.offsetHours,
-          this.region.offsetMinutes
+          offsetHours,
+          offsetMinutes
         )
-        .subscribe((data: any) => {
-          if (data.message == 'Success') {
-            let pendingList = data.result;
-            if (this.userRoleID != 1) {
-              const obj = {
-                counsellorID: this.UserID,
-                list: pendingList,
-              };
+        .subscribe({
+          next: (data: any) => {
+            if (data?.message == 'Success') {
+              let pendingList = data?.result || [];
+              if (this.userRoleID != 1) {
+                const obj = {
+                  counsellorID: this.UserID,
+                  list: pendingList,
+                };
 
-              this.service.getFilteredData(obj).subscribe((filtered: any) => {
-                if (filtered.message == 'Success') {
-                  pendingList = filtered.result;
-                  this.DayCareAppointmentsPendingData = pendingList.filter(
-                    (res: any) => res.counsellorID !== this.UserID
-                  );
-
-                  this.skeletonShow = '';
-                }
-              });
-            } else {
+                this.service.getFilteredData(obj).subscribe({
+                  next: (filtered: any) => {
+                    if (filtered?.message == 'Success') {
+                      pendingList = filtered?.result || [];
+                      this.DayCareAppointmentsPendingData = pendingList.filter(
+                        (res: any) => res.counsellorID !== this.UserID
+                      );
+                    }
+                    this.skeletonShow = '';
+                  },
+                  error: () => {
+                    this.skeletonShow = '';
+                  },
+                });
+              } else {
+                this.skeletonShow = '';
+                this.DayCareAppointmentsPendingData = pendingList;
+              }
+              this.AppointmentListPendingLength =
+                this.DayCareAppointmentsPendingData?.length || 0;
+              this.filteredAcceptbyCounsellor =
+                this.DayCareAppointmentsPendingData?.filter(
+                  (appointment: { counsellorID: any }) =>
+                    appointment.counsellorID === this.UserID
+                ) || [];
               this.skeletonShow = '';
-              this.DayCareAppointmentsPendingData = pendingList;
+              this.getNotifications();
+            } else {
+              this.DayCareAppointmentsPendingData = [];
+              this.AppointmentListPendingLength = 0;
+              this.skeletonShow = '';
             }
-            this.AppointmentListPendingLength =
-              this.DayCareAppointmentsPendingData.length;
-            this.filteredAcceptbyCounsellor =
-              this.DayCareAppointmentsPendingData.filter(
-                (appointment: { counsellorID: any }) =>
-                  appointment.counsellorID === this.UserID
-              );
+          },
+          error: () => {
+            this.DayCareAppointmentsPendingData = [];
+            this.AppointmentListPendingLength = 0;
             this.skeletonShow = '';
-
-            this.getNotifications();
-          }
+          },
         });
     }
   }
@@ -571,7 +595,18 @@ export class DcAppointmentsListComponent implements OnInit {
               this.acceptedSearchItem = '';
               this.getAllDayCareAppointments('Accepted', '');
               this.pageControlAcceptedList();
-              Swal.fire('Meeting Completed successfully!', '', 'success');
+              Swal.fire({
+                title: 'Meeting Completed successfully!',
+                text: 'You can now assign and send the subscription plan in Application Status.',
+                icon: 'success',
+                showCancelButton: true,
+                confirmButtonText: 'Go to Application Status',
+                cancelButtonText: 'Close',
+              }).then((swalResult) => {
+                if (swalResult?.isConfirmed && this.router) {
+                  this.router.navigate(['/application-Status']);
+                }
+              });
             }
           });
         }

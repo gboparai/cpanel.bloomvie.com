@@ -104,7 +104,7 @@ export class ApplicationStatusComponent implements OnInit {
   // regionID: number = 0;
   skeletonShow = 'Skelton';
   hoveredRow: any = null;
-  regionResponse: any;
+  regionResponse: any = { offsetHours: 0, offsetMinutes: 0, offsetString: '' };
   constructor(
     private fb: FormBuilder,
     private toastr: ToastrService,
@@ -134,9 +134,9 @@ export class ApplicationStatusComponent implements OnInit {
     });
     effect(() => {
       let region = this.commonService.regionResponseSignal();
-      if (region.offsetString != '') {
-        this.regionResponse = this.commonService.regionResponseSignal();
-        this.getAllDayCareAppointments('Reschedule');
+      if (region && region.offsetString != '') {
+        this.regionResponse = region;
+        this.getAllDayCareAppointments(this.statusId === 8 ? 'Completed' : 'Reschedule');
       }
     });
   }
@@ -219,6 +219,10 @@ export class ApplicationStatusComponent implements OnInit {
     // let region = this.commonService.findRegion();
     let searchValue = !searchItem ? '' : searchItem;
     this.skeletonShow = 'Skelton';
+    const region = this.regionResponse || this.commonService.regionResponseSignal();
+    const offsetHours = region?.offsetHours ?? 0;
+    const offsetMinutes = region?.offsetMinutes ?? 0;
+
     if (status == 'Reschedule') {
       this.statusId = 7;
       this.completeSearchItem = '';
@@ -226,17 +230,27 @@ export class ApplicationStatusComponent implements OnInit {
         .getAppointmentList(
           this.statusId,
           searchValue,
-          this.regionResponse.offsetHours,
-          this.regionResponse.offsetMinutes
+          offsetHours,
+          offsetMinutes
         )
-        .subscribe((data: any) => {
-          this.isMeetAttempList = data.result;
-          this.skeletonShow = '';
-          this.filteredAcceptbyCounsellor = this.isMeetAttempList.filter(
-            (appointment: { counsellorID: any }) =>
-              appointment.counsellorID === this.UserID
-          );
-          this.getNotifications();
+        .subscribe({
+          next: (data: any) => {
+            this.isMeetAttempList = data?.result || [];
+            this.skeletonShow = '';
+            this.filteredAcceptbyCounsellor = Array.isArray(this.isMeetAttempList)
+              ? this.isMeetAttempList.filter(
+                  (appointment: { counsellorID: any }) =>
+                    appointment.counsellorID === this.UserID
+                )
+              : [];
+            this.getNotifications();
+          },
+          error: (err: any) => {
+            console.error('Error fetching reschedule appointments:', err);
+            this.isMeetAttempList = [];
+            this.filteredAcceptbyCounsellor = [];
+            this.skeletonShow = '';
+          },
         });
     } else {
       this.statusId = 8;
@@ -245,17 +259,27 @@ export class ApplicationStatusComponent implements OnInit {
         .getAppointmentList(
           this.statusId,
           searchValue,
-          this.regionResponse.offsetHours,
-          this.regionResponse.offsetMinutes
+          offsetHours,
+          offsetMinutes
         )
-        .subscribe((data: any) => {
-          this.completeList = data.result;
-          this.skeletonShow = '';
-          this.filteredAcceptbyCounsellor = this.completeList.filter(
-            (appointment: { counsellorID: any }) =>
-              appointment.counsellorID === this.UserID
-          );
-          this.getNotifications();
+        .subscribe({
+          next: (data: any) => {
+            this.completeList = data?.result || [];
+            this.skeletonShow = '';
+            this.filteredAcceptbyCounsellor = Array.isArray(this.completeList)
+              ? this.completeList.filter(
+                  (appointment: { counsellorID: any }) =>
+                    appointment.counsellorID === this.UserID
+                )
+              : [];
+            this.getNotifications();
+          },
+          error: (err: any) => {
+            console.error('Error fetching completed appointments:', err);
+            this.completeList = [];
+            this.filteredAcceptbyCounsellor = [];
+            this.skeletonShow = '';
+          },
         });
     }
   }
@@ -397,8 +421,8 @@ export class ApplicationStatusComponent implements OnInit {
               link: convertedResult.join_url,
               hostLink: convertedResult.start_url,
               // regionID: this.regionID,
-              regionHours: this.regionResponse.offsetHours,
-              regionMinutes: this.regionResponse.offsetMinutes,
+              regionHours: this.regionResponse?.offsetHours ?? 0,
+              regionMinutes: this.regionResponse?.offsetMinutes ?? 0,
             };
           } else {
             obj = {
@@ -407,8 +431,8 @@ export class ApplicationStatusComponent implements OnInit {
               link: convertedResult.join_url,
               hostLink: convertedResult.start_url,
               counsellorID: this.rescheduleForm.value.counsellorID,
-              regionHours: this.regionResponse.offsetHours,
-              regionMinutes: this.regionResponse.offsetMinutes,
+              regionHours: this.regionResponse?.offsetHours ?? 0,
+              regionMinutes: this.regionResponse?.offsetMinutes ?? 0,
             };
           }
 
@@ -445,8 +469,8 @@ export class ApplicationStatusComponent implements OnInit {
       .getAvailableSlots(
         this.UserID,
         this.selectedDate,
-        this.regionResponse.offsetHours,
-        this.regionResponse.offsetMinutes
+        this.regionResponse?.offsetHours ?? 0,
+        this.regionResponse?.offsetMinutes ?? 0
       )
       .subscribe({
         next: (data) => {
