@@ -270,11 +270,29 @@ export class LoginComponent implements OnInit {
   }
 
   deleteCookie(name: string) {
+    this.cookie.delete(name, '/');
     const domain = environment.cookiesDomain;
     if (domain) {
       this.cookie.delete(name, '/', domain);
-    } else {
-      this.cookie.delete(name, '/');
+    }
+  }
+
+  clearAuthCookies() {
+    const keys = [
+      'UserId',
+      'UserInfo',
+      'RefreshToken',
+      'UserRoleId',
+      'CentreID',
+      'CentreAdminID',
+      'StudentID',
+      'email',
+      'AdminName',
+      'isSlotAccepted',
+      'jobPostCount',
+    ];
+    for (const key of keys) {
+      this.deleteCookie(key);
     }
   }
 
@@ -475,6 +493,7 @@ export class LoginComponent implements OnInit {
 
       if (authResponse.message === 'Success' && authResponse.result) {
         this.toastr.success('Login Successful');
+        this.clearAuthCookies();
         this.UserId = authResponse.result.id;
 
         //Added on 30/06/25
@@ -489,10 +508,8 @@ export class LoginComponent implements OnInit {
           this.isSlotAccepted = data?.message?.toLowerCase() === 'ok';
           this.setCookie('isSlotAccepted', String(this.isSlotAccepted));
         } else {
-          if (!this.cookie.check('CentreID')) {
-            this.centreID = authResponse.result.centreID;
-            this.setCookie('CentreID', this.centreID);
-          }
+          this.centreID = authResponse.result.centreID;
+          this.setCookie('CentreID', this.centreID);
         }
 
         this.setCookie('UserId', this.UserId);

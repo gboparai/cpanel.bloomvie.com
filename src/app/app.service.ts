@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { CommonService } from './common-component/common.service';
 import { LoginService } from './login/login.service';
+import { environment } from '../environments/environment';
 @Injectable({
   providedIn: 'root',
 })
@@ -48,13 +49,17 @@ export class AppService {
           if (jwtToken && response.result) {
             response.result['token'] = jwtToken;
             let userInfo = JSON.stringify(response);
-            this.cookie.set('UserInfo', userInfo);
+            const domain = environment.cookiesDomain;
+            const cookieOptions = domain ? { path: '/', domain: domain } : { path: '/' };
+            this.cookie.set('UserInfo', userInfo, cookieOptions);
           }
           if (response?.result) {
-            this.cookie.set('CentreID', response.result.centreID);
-            this.cookie.set('UserId', response.result.id);
-            this.cookie.set('UserRoleId', response.result.userRoleID);
-            this.cookie.set('email', response.result.email);
+            const domain = environment.cookiesDomain;
+            const cookieOptions = domain ? { path: '/', domain: domain } : { path: '/' };
+            this.cookie.set('CentreID', response.result.centreID, cookieOptions);
+            this.cookie.set('UserId', response.result.id, cookieOptions);
+            this.cookie.set('UserRoleId', response.result.userRoleID, cookieOptions);
+            this.cookie.set('email', response.result.email, cookieOptions);
           }
           resolve();
         },

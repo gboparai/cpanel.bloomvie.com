@@ -58,7 +58,12 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
                   userInfoJson.result.token = jwtToken;
                   userInfoJson.token = jwtToken;
                   const convertToString = JSON.stringify(userInfoJson);
-                  cookieService.set('UserInfo', convertToString);
+                  const domain = environment.cookiesDomain;
+                  if (domain) {
+                    cookieService.set('UserInfo', convertToString, { path: '/', domain: domain });
+                  } else {
+                    cookieService.set('UserInfo', convertToString, { path: '/' });
+                  }
 
                   // Retry the original request with new token
                   const newReq = req.clone({
