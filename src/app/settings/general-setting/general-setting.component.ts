@@ -48,6 +48,7 @@ export class GeneralSettingComponent implements OnInit {
   public ageGroupForm: any;
   public facilityForm: any;
   public activityForm: any;
+  public isSubmittingActivity: boolean = false;
   public form: any;
   public loginUserID: number = 0;
   public trackForm: boolean = true;
@@ -513,31 +514,52 @@ export class GeneralSettingComponent implements OnInit {
     }
   }
 
+  openAddActivityModal() {
+    this.activityForm.reset({
+      id: 0,
+      activityName: '',
+      activityDescription: '',
+      createdBy: this.loginUserID || 0,
+    });
+    this.activityForm.markAsPristine();
+    this.activityForm.markAsUntouched();
+  }
+
   async manageMasterActivities() {
-    
+    if (this.isSubmittingActivity) return;
     if (this.activityForm.valid) {
+      this.isSubmittingActivity = true;
       this.spinner.show();
-      // commented on 19/03/25
-      // this.activityForm.patchValue({
-      //   createdBy: this.centreID,
-      // });
+      try {
+        const payload = {
+          id: this.activityForm.get('id')?.value || 0,
+          activityName: (this.activityForm.get('activityName')?.value || '').trim(),
+          activityDescription: (this.activityForm.get('activityDescription')?.value || '').trim(),
+          createdBy: this.loginUserID || 0,
+        };
 
-      this.activityForm.patchValue({
-        createdBy: this.loginUserID,
-      });
+        const response = await this.genralSettingService
+          .manageMasterActivites(payload)
+          .toPromise();
 
-      let response = await this.genralSettingService
-        .manageMasterActivites(this.activityForm.value)
-        .toPromise();
-      if (response.message == 'Success') {
-        this.activityForm.reset();
-        $('#exampleModal3').modal('hide');
+        if (response && response.message === 'Success') {
+          this.toastr.success(response.activity || 'Activity added successfully');
+          this.openAddActivityModal();
+          $('#exampleModal3').modal('hide');
+          $('body').removeClass('modal-open');
+          $('.modal-backdrop').remove();
+          await this.loadAllLists();
+        } else {
+          this.toastr.warning(response?.message || 'Failed to save activity');
+        }
+      } catch (err: any) {
+        this.toastr.error(err?.message || 'An error occurred while saving activity');
+      } finally {
+        this.isSubmittingActivity = false;
         this.spinner.hide();
-        this.toastr.success(response.activity);
-        await this.loadAllLists();
-      } else {
-        this.spinner.hide();
-        this.toastr.warning(response.message);
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 300);
       }
     } else {
       this.activityForm.markAllAsTouched();

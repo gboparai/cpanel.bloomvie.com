@@ -290,6 +290,7 @@ export class LoginComponent implements OnInit {
       'AdminName',
       'isSlotAccepted',
       'jobPostCount',
+      'MustChangePassword',
     ];
     for (const key of keys) {
       this.deleteCookie(key);
@@ -527,6 +528,14 @@ export class LoginComponent implements OnInit {
           this.setCookie('email', email);
           const adminName = `${firstName} ${lastName ?? ''}`;
           this.setCookie('AdminName', adminName);
+        }
+
+        if (!authResponse.result.lastChangedPasswordDate) {
+          this.setCookie('MustChangePassword', 'true');
+          this.router.navigate(['/change-the-password']);
+          return;
+        } else {
+          this.deleteCookie('MustChangePassword');
         }
 
         const userRoleId = authResponse.result.userRoleID;

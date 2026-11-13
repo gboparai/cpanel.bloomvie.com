@@ -201,6 +201,7 @@ describe('LoginComponent', () => {
           lastName: 'Doe',
           email: 'admin@bloomvie.com',
           isOnBoarded: true,
+          lastChangedPasswordDate: '2026-01-01',
         },
       };
       mockLoginService.Login.and.returnValue(of(authResponse));
@@ -216,6 +217,34 @@ describe('LoginComponent', () => {
       expect(mockRouter.navigate).toHaveBeenCalledWith(['/dashboard']);
     });
 
+    it('should force password change and route to /change-the-password on first login when lastChangedPasswordDate is null', async () => {
+      component.loginForm.patchValue({ email: 'newuser@bloomvie.com', password: 'password123' });
+      const authResponse = {
+        message: 'Success',
+        refreshToken: 'refresh-token',
+        result: {
+          id: 105,
+          centreID: 10,
+          userRoleID: 4,
+          firstName: 'New',
+          lastName: 'Teacher',
+          email: 'newuser@bloomvie.com',
+          isOnBoarded: true,
+          lastChangedPasswordDate: null,
+        },
+      };
+      mockLoginService.Login.and.returnValue(of(authResponse));
+      mockCookieService.get.and.callFake((key: string) => {
+        if (key === 'UserInfo') return JSON.stringify(authResponse);
+        return '';
+      });
+
+      await component.login();
+
+      expect(mockCookieService.set).toHaveBeenCalledWith('MustChangePassword', 'true', jasmine.any(Object));
+      expect(mockRouter.navigate).toHaveBeenCalledWith(['/change-the-password']);
+    });
+
     it('should navigate to onboarding if daycare admin (role 3) is not onboarded', async () => {
       component.loginForm.patchValue({ email: 'daycare@bloomvie.com', password: 'password123' });
       const authResponse = {
@@ -229,6 +258,7 @@ describe('LoginComponent', () => {
           lastName: 'Admin',
           email: 'daycare@bloomvie.com',
           isOnBoarded: false,
+          lastChangedPasswordDate: '2026-01-01',
         },
       };
       mockLoginService.Login.and.returnValue(of(authResponse));
@@ -251,6 +281,7 @@ describe('LoginComponent', () => {
           lastName: 'User',
           email: 'parent@bloomvie.com',
           isOnBoarded: false,
+          lastChangedPasswordDate: '2026-01-01',
           studentID: [{ id: 50, centreID: 20 }],
         },
       };

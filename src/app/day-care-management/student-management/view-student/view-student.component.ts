@@ -397,6 +397,7 @@ export class ViewStudentComponent implements OnInit {
           next: (response) => {
             if (response.message === 'Success') {
               this.toastr.success(response.activity);
+              this.getStudentList();
             }
             setTimeout(() => {
               this.spinner.hide();

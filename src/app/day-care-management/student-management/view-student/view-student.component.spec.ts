@@ -163,8 +163,9 @@ describe('ViewStudentComponent', () => {
   });
 
   describe('Active/Inactive toggle and Actions', () => {
-    it('should toggle student status with Swal confirmation', fakeAsync(() => {
+    it('should toggle student status with Swal confirmation and reload list', fakeAsync(() => {
       spyOn(Swal, 'fire').and.returnValue(Promise.resolve({ isConfirmed: true } as any));
+      spyOn(component, 'getStudentList');
       mockManageStudentService.activeInactiveEnrolledStudent.and.returnValue(of({ message: 'Success', activity: 'Status updated' }));
       const event = { checked: false };
 
@@ -173,6 +174,7 @@ describe('ViewStudentComponent', () => {
 
       expect(mockManageStudentService.activeInactiveEnrolledStudent).toHaveBeenCalledWith(15);
       expect(mockToastr.success).toHaveBeenCalledWith('Status updated');
+      expect(component.getStudentList).toHaveBeenCalled();
     }));
 
     it('should send email to parent and teacher for password', () => {

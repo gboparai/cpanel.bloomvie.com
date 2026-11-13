@@ -155,7 +155,7 @@ describe('WorkTimingsComponent', () => {
       const dummySpan = { classList: { remove: jasmine.createSpy('remove'), add: jasmine.createSpy('add') } };
       const eventChecked = { target: { checked: true, parentNode: dummySpan } };
       component.enableInputWithTime(eventChecked, 'mon');
-      expect(component.ClientWorkingDaysForm.get('monStartTime')?.value).toBe('09:00');
+      expect(component.ClientWorkingDaysForm.get('monStartTime')?.value).toBe('07:00');
       expect(dummySpan.classList.remove).toHaveBeenCalledWith('uncheck');
 
       const eventUnchecked = { target: { checked: false, parentNode: dummySpan } };
@@ -254,6 +254,45 @@ describe('WorkTimingsComponent', () => {
 
       const futureDate = '2099-01-01';
       expect(component.isExpiredHoliday(futureDate)).toBeFalse();
+    });
+  });
+
+  describe('Apply to All and Weekend Toggle (Item 8)', () => {
+    it('should copy Monday timings across all weekdays (Tue-Fri)', () => {
+      component.ClientWorkingDaysForm.get('mon')?.setValue(true);
+      component.ClientWorkingDaysForm.get('monStartTime')?.setValue('08:00');
+      component.ClientWorkingDaysForm.get('monEndTime')?.setValue('17:00');
+
+      component.applyMondayToWeekdays();
+
+      const weekdays = ['mon', 'tues', 'wed', 'thu', 'fri'];
+      weekdays.forEach(prefix => {
+        expect(component.ClientWorkingDaysForm.get(prefix)?.value).toBeTrue();
+        expect(component.ClientWorkingDaysForm.get(prefix + 'StartTime')?.value).toBe('08:00');
+        expect(component.ClientWorkingDaysForm.get(prefix + 'EndTime')?.value).toBe('17:00');
+      });
+      expect(mockToastr.info).toHaveBeenCalledWith('Applied 08:00 - 17:00 to all weekdays (Monday - Friday).');
+    });
+
+    it('should clear weekend hours (Sat-Sun)', () => {
+      component.ClientWorkingDaysForm.get('sat')?.setValue(true);
+      component.ClientWorkingDaysForm.get('satStartTime')?.setValue('09:00');
+      component.ClientWorkingDaysForm.get('satEndTime')?.setValue('17:00');
+      component.ClientWorkingDaysForm.get('sun')?.setValue(true);
+      component.ClientWorkingDaysForm.get('sunStartTime')?.setValue('09:00');
+      component.ClientWorkingDaysForm.get('sunEndTime')?.setValue('17:00');
+
+      component.clearWeekendHours();
+
+      expect(component.ClientWorkingDaysForm.get('sat')?.value).toBeFalse();
+      expect(component.ClientWorkingDaysForm.get('satStartTime')?.value).toBe('');
+      expect(component.ClientWorkingDaysForm.get('satEndTime')?.value).toBe('');
+      expect(component.ClientWorkingDaysForm.get('sun')?.value).toBeFalse();
+      expect(component.ClientWorkingDaysForm.get('sunStartTime')?.value).toBe('');
+      expect(component.ClientWorkingDaysForm.get('sunEndTime')?.value).toBe('');
+      expect(component.isSaturday).toBeTrue();
+      expect(component.isSunday).toBeTrue();
+      expect(mockToastr.info).toHaveBeenCalledWith('Weekend hours removed.');
     });
   });
 });

@@ -763,12 +763,25 @@ export class ManageClassroomComponent {
         this.displayDayName.splice(insertIndex, 0, day);
         const [startKey, endKey] = dayMap[dayID!]; //add dayName to the fixed key based on the dayID in the array
 
+        const rawStart = this.startTimeOrEndTimeWorkCalendar ? this.startTimeOrEndTimeWorkCalendar[startKey] : null;
+        const rawEnd = this.startTimeOrEndTimeWorkCalendar ? this.startTimeOrEndTimeWorkCalendar[endKey] : null;
+
         this.displayDayCareTiming.splice(insertIndex, 0, {
-          startTime: this.commonService.convertTimeStringToDate(this.startTimeOrEndTimeWorkCalendar[startKey]),
-          endTime: this.commonService.convertTimeStringToDate(this.startTimeOrEndTimeWorkCalendar[endKey])
-        }) // adding timing to displayDayCareTiming array in sequence with displayDayName array
+          startTime: this.commonService.convertTimeStringToDate(rawStart),
+          endTime: this.commonService.convertTimeStringToDate(rawEnd)
+        });
 
         const newSection = this.createSection();
+        if (rawStart) {
+          const parts = String(rawStart).split(':');
+          const hhmmStart = `${parts[0].padStart(2, '0')}:${(parts[1] || '00').padStart(2, '0')}`;
+          newSection.get('startTime')?.setValue(hhmmStart);
+        }
+        if (rawEnd) {
+          const parts = String(rawEnd).split(':');
+          const hhmmEnd = `${parts[0].padStart(2, '0')}:${(parts[1] || '00').padStart(2, '0')}`;
+          newSection.get('endTime')?.setValue(hhmmEnd);
+        }
         this.sections.insert(insertIndex, newSection);
 
         const section = this.classForm.get('classSlot') as FormArray;

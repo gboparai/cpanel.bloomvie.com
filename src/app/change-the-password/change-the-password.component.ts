@@ -12,6 +12,7 @@ import { CommonModule, NgFor, NgIf } from '@angular/common';
 import { CookieService } from 'ngx-cookie-service';
 import { ToastrService } from 'ngx-toastr';
 import { LoginService } from '../login/login.service';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-change-the-password',
@@ -28,6 +29,7 @@ import { LoginService } from '../login/login.service';
 })
 export class ChangeThePasswordComponent {
   userId: number = 0;
+  isMustChangePassword: boolean = false;
   changePasswordForm: any;
   verifyNewPassword: string = '';
   // passwordField: string = 'password';
@@ -56,6 +58,7 @@ export class ChangeThePasswordComponent {
   }
 
   ngOnInit() {
+    this.isMustChangePassword = this.cookie.get('MustChangePassword') === 'true';
     const userId = parseInt(this.cookie.get('UserId'));
     if (userId) {
       this.userId = userId;
@@ -77,6 +80,11 @@ export class ChangeThePasswordComponent {
         if (data.message == 'Success') {
           this.spinner.hide();
           this.toastr.success(data.message);
+          this.cookie.delete('MustChangePassword', '/');
+          const domain = environment.cookiesDomain;
+          if (domain) {
+            this.cookie.delete('MustChangePassword', '/', domain);
+          }
           this.loginService.logOut();
         } else {
           this.spinner.hide();
