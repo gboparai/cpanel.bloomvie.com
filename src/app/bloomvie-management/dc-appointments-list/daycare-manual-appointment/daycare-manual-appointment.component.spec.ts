@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA, signal, ChangeDetectorRef } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { DaycareManualAppointmentComponent } from './daycare-manual-appointment.component';
 import { CommonService } from '../../../common-component/common.service';
@@ -10,6 +11,7 @@ import { DaycareManualAppointmentService } from './daycare-manual-appointment.se
 import { CookieService } from 'ngx-cookie-service';
 import { AssignUserPermissionService } from '../../../settings/Permission/assign-user-permission/assign-user-permission.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import Swal from 'sweetalert2';
 
 describe('DaycareManualAppointmentComponent', () => {
   let component: DaycareManualAppointmentComponent;
@@ -22,13 +24,16 @@ describe('DaycareManualAppointmentComponent', () => {
   let cookieServiceSpy: jasmine.SpyObj<CookieService>;
   let assignUserPermissionServiceSpy: jasmine.SpyObj<AssignUserPermissionService>;
   let spinnerSpy: jasmine.SpyObj<NgxSpinnerService>;
+  let routerSpy: jasmine.SpyObj<Router>;
 
   beforeEach(async () => {
+    routerSpy = jasmine.createSpyObj('Router', ['navigate']);
     commonServiceSpy = jasmine.createSpyObj('CommonService', [
       'getCountriesFlag',
       'getDefaultCountryFlag',
       'formatPhoneNumber',
       'formatPostalCode',
+      'encrypt',
     ]);
     dcServiceSpy = jasmine.createSpyObj('DcAppointmentsListService', [
       'CheckInterestedEmailExist',
@@ -38,6 +43,8 @@ describe('DaycareManualAppointmentComponent', () => {
       'getAllCentreTypes',
       'manageForDayCareInterestedUsers',
       'getAvailableSlots',
+      'directAddDaycare',
+      'getPlansForDaycare',
     ]);
     toastrSpy = jasmine.createSpyObj('ToastrService', ['success', 'error', 'warning', 'info']);
     cookieServiceSpy = jasmine.createSpyObj('CookieService', ['get']);
@@ -63,6 +70,7 @@ describe('DaycareManualAppointmentComponent', () => {
     });
     commonServiceSpy.formatPhoneNumber.and.callFake((val: string) => `123 456 7890`);
     commonServiceSpy.formatPostalCode.and.callFake((val: string) => `K1A 0B1`);
+    commonServiceSpy.encrypt.and.callFake((val: string) => `enc-${val}`);
 
     cookieServiceSpy.get.and.callFake((key: string) => {
       if (key === 'UserId') return '50';
@@ -79,12 +87,26 @@ describe('DaycareManualAppointmentComponent', () => {
     daycareManualAppointmentServiceSpy.getAvailableSlots.and.returnValue(
       of({ message: 'OK', result: [{ id: 100, startTime: '09:00', endTime: '10:00' }] })
     );
+    daycareManualAppointmentServiceSpy.directAddDaycare.and.returnValue(
+      of({
+        message: 'Success',
+        result: {
+          centreId: 10,
+          onboardingLink: 'http://link',
+          encryptedCentreId: 'enc-10',
+        },
+      })
+    );
+    daycareManualAppointmentServiceSpy.getPlansForDaycare.and.returnValue(
+      of({ message: 'OK', result: [{ id: 1, planName: 'Silver Plan' }] })
+    );
     dcServiceSpy.dayCareAssignmentToCounsellor.and.returnValue(of({ message: 'Success' }));
 
     // Mock window.$
     (window as any).$ = jasmine.createSpy('$').and.returnValue({
       show: jasmine.createSpy('show'),
       hide: jasmine.createSpy('hide'),
+      modal: jasmine.createSpy('modal'),
     });
 
     await TestBed.configureTestingModule({
@@ -92,6 +114,7 @@ describe('DaycareManualAppointmentComponent', () => {
       providers: [
         FormBuilder,
         ChangeDetectorRef,
+        { provide: Router, useValue: routerSpy },
         { provide: CommonService, useValue: commonServiceSpy },
         { provide: DcAppointmentsListService, useValue: dcServiceSpy },
         { provide: DaycareManualAppointmentService, useValue: daycareManualAppointmentServiceSpy },
@@ -349,6 +372,76 @@ describe('DaycareManualAppointmentComponent', () => {
     it('should initialize flatpickr in ngAfterViewInit', () => {
       component.ngAfterViewInit();
       expect(component.selectDateFlatPicker).toBeDefined();
+    });
+  });
+
+  describe('Direct Daycare Addition (Item 18)', () => {
+    it('should toggle direct mode, clear date/slot validators, and fetch subscription plans', () => {
+      component.setDirectModeActive(true);
+
+      expect(component.isDirectModeActive).toBeTrue();
+      expect(component.addAppointmentForm.get('date')?.validator).toBeNull();
+      expect(component.addAppointmentForm.get('slotID')?.validator).toBeNull();
+      expect(daycareManualAppointmentServiceSpy.getPlansForDaycare).toHaveBeenCalled();
+      expect(component.availablePlans).toEqual([{ id: 1, planName: 'Silver Plan' }]);
+    });
+
+    it('should submit directAddDaycare and show SweetAlert when form is valid', async () => {
+      spyOn(Swal, 'fire').and.returnValue(Promise.resolve({ isConfirmed: false, isDenied: false } as any));
+      spyOn(component.Update, 'emit');
+
+      component.setDirectModeActive(true);
+      component.addAppointmentForm.patchValue({
+        name: 'Direct Daycare Admin',
+        email: 'direct@bloomvie.com',
+        enrollmentCapacity: '20-50',
+        centreName: 'Direct Daycare',
+        mobile: '123 456 7890',
+        pinCode: 'K1A 0B1',
+        country: 'Canada',
+        state: 'ON',
+        city: 'Ottawa',
+        DaycareTypeID: 1,
+        isTrial: true,
+        trialDays: 14,
+      });
+
+      await component.onSubmit();
+
+      expect(daycareManualAppointmentServiceSpy.directAddDaycare).toHaveBeenCalled();
+      expect(Swal.fire).toHaveBeenCalled();
+      expect(component.Update.emit).toHaveBeenCalled();
+    });
+
+    it('should navigate to onboarding if admin confirms in Swal', async () => {
+      spyOn(Swal, 'fire').and.returnValue(Promise.resolve({ isConfirmed: true } as any));
+
+      component.setDirectModeActive(true);
+      component.addAppointmentForm.patchValue({
+        name: 'Direct Daycare Admin',
+        email: 'direct@bloomvie.com',
+        enrollmentCapacity: '20-50',
+        centreName: 'Direct Daycare',
+        mobile: '123 456 7890',
+        pinCode: 'K1A 0B1',
+        country: 'Canada',
+        state: 'ON',
+        city: 'Ottawa',
+        DaycareTypeID: 1,
+      });
+
+      await component.onSubmit();
+
+      expect(routerSpy.navigate).toHaveBeenCalledWith(['/onboarding'], {
+        queryParams: { enc_id: 'enc-10' },
+      });
+    });
+
+    it('should initialize direct mode when isDirectMode input is true', () => {
+      component.isDirectMode = true;
+      component.ngOnInit();
+
+      expect(component.isDirectModeActive).toBeTrue();
     });
   });
 });

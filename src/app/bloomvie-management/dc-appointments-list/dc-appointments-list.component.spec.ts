@@ -1,9 +1,10 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
-import { NO_ERRORS_SCHEMA, signal } from '@angular/core';
+import { Component, NO_ERRORS_SCHEMA, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 import { of, throwError } from 'rxjs';
 import { DcAppointmentsListComponent } from './dc-appointments-list.component';
 import { DcAppointmentsListService } from './dc-appointments-list.service';
@@ -12,6 +13,9 @@ import { CookieService } from 'ngx-cookie-service';
 import { ApplicationsSettingsService } from '../../settings/application-settings/applications-settings/applications-settings.service';
 import { CommonService } from '../../common-component/common.service';
 import Swal from 'sweetalert2';
+
+@Component({ template: '' })
+class DummyStatusComponent {}
 
 describe('DcAppointmentsListComponent', () => {
   let component: DcAppointmentsListComponent;
@@ -82,7 +86,13 @@ describe('DcAppointmentsListComponent', () => {
     );
 
     await TestBed.configureTestingModule({
-      imports: [DcAppointmentsListComponent, HttpClientTestingModule],
+      imports: [
+        DcAppointmentsListComponent,
+        HttpClientTestingModule,
+        RouterTestingModule.withRoutes([
+          { path: 'application-Status', component: DummyStatusComponent },
+        ]),
+      ],
       providers: [
         DatePipe,
         FormBuilder,
@@ -376,8 +386,38 @@ describe('DcAppointmentsListComponent', () => {
     }));
 
     it('should close manual add appointment modal', () => {
+      component.isManualDirectMode = true;
       component.closingManualAddAppointmentModal();
       expect(modalSpy).toHaveBeenCalledWith('hide');
+      expect(component.isManualDirectMode).toBeFalse();
+    });
+
+    it('should open direct add daycare modal and set direct mode on child', () => {
+      const childSpy = jasmine.createSpyObj('DaycareManualAppointmentComponent', [
+        'resetConsullorSelectedValue',
+        'setDirectModeActive',
+      ]);
+      component.daycareManualAppointmentChildComponent = childSpy as any;
+
+      component.openAddAppointmentModal(true);
+
+      expect(component.isManualDirectMode).toBeTrue();
+      expect(childSpy.resetConsullorSelectedValue).toHaveBeenCalled();
+      expect(childSpy.setDirectModeActive).toHaveBeenCalledWith(true);
+    });
+
+    it('should open appointment modal in standard mode', () => {
+      const childSpy = jasmine.createSpyObj('DaycareManualAppointmentComponent', [
+        'resetConsullorSelectedValue',
+        'setDirectModeActive',
+      ]);
+      component.daycareManualAppointmentChildComponent = childSpy as any;
+
+      component.openAddAppointmentModal(false);
+
+      expect(component.isManualDirectMode).toBeFalse();
+      expect(childSpy.resetConsullorSelectedValue).toHaveBeenCalled();
+      expect(childSpy.setDirectModeActive).toHaveBeenCalledWith(false);
     });
 
     it('should delegate resetConsullorSelectedValue to child component', () => {

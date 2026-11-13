@@ -147,6 +147,11 @@ describe('ViewDaycareComponent', () => {
       expect(mockToastr.success).toHaveBeenCalledWith('Centre updated successfully');
     }));
 
+    it('should navigate to add-daycare on navigateToAddDaycare', () => {
+      component.navigateToAddDaycare();
+      expect(mockRouter.navigate).toHaveBeenCalledWith(['/add-daycare']);
+    });
+
     it('should check shouldDisablePayment logic', () => {
       const futureDate = '2099-01-01';
       expect(component.shouldDisablePayment(futureDate, false)).toBeTrue();

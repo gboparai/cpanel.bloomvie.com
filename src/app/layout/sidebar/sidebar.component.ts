@@ -400,6 +400,33 @@ export class SidebarComponent implements OnInit {
           }
         }
 
+        if (this.UserRoleId == 1) {
+          const daycareMgmt = this.rawMenus.find((m: any) =>
+            m.value === 'Daycare Management' || m.id === 9
+          );
+          if (daycareMgmt) {
+            if (!daycareMgmt.childList) {
+              daycareMgmt.childList = [];
+            }
+            const hasAddDaycare = daycareMgmt.childList.some((c: any) =>
+              c.menuUrl === 'add-daycare' || c.menuUrl === '/add-daycare' || c.value === 'Add Daycare'
+            );
+            if (!hasAddDaycare) {
+              daycareMgmt.childList.unshift({
+                id: 10,
+                parent_id: 9,
+                value: 'Add Daycare',
+                menuUrl: 'add-daycare',
+                MenuUrl: 'add-daycare',
+                icon: 'feather-plus-circle',
+                Icon: 'feather-plus-circle',
+                isOpen: false,
+                childList: []
+              });
+            }
+          }
+        }
+
         this.applyMenuFilter();
 
         this.dashboardMenu = data.result.find((menu: any) =>

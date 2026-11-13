@@ -13,12 +13,23 @@
               <button
                 data-bs-toggle="modal"
                 data-bs-target="#addapoint"
-                (click)="resetConsullorSelectedValue()"
+                (click)="openAddAppointmentModal(false)"
                 id="btnsubmit"
                 type="submit"
                 class="btn btn-primary"
               >
                 <i class="fa fa-plus me-1"></i> Add Appointment
+              </button>
+              <button
+                *ngIf="loginUserRoleId == 1"
+                data-bs-toggle="modal"
+                data-bs-target="#addapoint"
+                (click)="openAddAppointmentModal(true)"
+                id="btnDirectDaycare"
+                type="button"
+                class="btn btn-success ms-2"
+              >
+                <i class="fa fa-building me-1"></i> Add Daycare Directly
               </button>
             </div>
           </div>
@@ -942,7 +953,7 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Add Appoinment</h5>
+        <h5 class="modal-title">{{ isManualDirectMode ? 'Add Daycare Directly' : 'Add Appoinment' }}</h5>
         <button
           type="button"
           class="btn-close"
@@ -952,9 +963,10 @@
 
       <div class="modal-body">
         <app-daycare-manual-appointment
+          [isDirectMode]="isManualDirectMode"
+          [directMode]="isManualDirectMode"
           (Update)="closingManualAddAppointmentModal()"
         ></app-daycare-manual-appointment>
-        <!-- <app-daycare-manual-appointment (closingParentAddAppointmentModal)="closingManualAddAppointmentModal()"></app-daycare-manual-appointment> -->
       </div>
     </div>
   </div>

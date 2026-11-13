@@ -770,8 +770,19 @@ export class DcAppointmentsListComponent implements OnInit {
     }
   }
 
+  public isManualDirectMode: boolean = false;
+
+  openAddAppointmentModal(isDirect: boolean = false) {
+    this.isManualDirectMode = isDirect;
+    this.resetConsullorSelectedValue();
+    if (this.daycareManualAppointmentChildComponent) {
+      this.daycareManualAppointmentChildComponent.setDirectModeActive(isDirect);
+    }
+  }
+
   closingManualAddAppointmentModal() {
     $('#addapoint').modal('hide');
+    this.isManualDirectMode = false;
   }
   resetConsullorSelectedValue() {
     // call child method here

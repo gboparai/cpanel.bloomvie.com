@@ -8,6 +8,28 @@
 
 
     <form [formGroup]="addAppointmentForm">
+        <div class="row mb-4" *ngIf="UserRoleID === 1 && !isDirectMode">
+            <div class="col-12">
+                <div class="card p-3 mb-0" style="background-color: #f8f9fa; border: 1px solid #e2e8f0; border-radius: 8px;">
+                    <div class="d-flex align-items-center flex-wrap" style="gap: 20px;">
+                        <span class="fw-bold text-dark"><i class="fa fa-sliders me-1"></i> Mode:</span>
+                        <div class="form-check form-check-inline mb-0">
+                            <input class="form-check-input" type="radio" id="modeAppointment" name="formMode"
+                                [checked]="!isDirectModeActive" (change)="onModeChange(false)">
+                            <label class="form-check-label" for="modeAppointment">Book Appointment</label>
+                        </div>
+                        <div class="form-check form-check-inline mb-0">
+                            <input class="form-check-input" type="radio" id="modeDirect" name="formMode"
+                                [checked]="isDirectModeActive" (change)="onModeChange(true)">
+                            <label class="form-check-label fw-bold text-primary" for="modeDirect">
+                                <i class="fa fa-bolt me-1"></i> Add Daycare Directly (Without Appointment)
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="row">
             <div class="col-md-6 mb-4">
                 <div class="local-forms form-group">
@@ -156,28 +178,34 @@
 
                 </div>
             </div>
-            <div class="col-md-6 mb-4">
+            <div class="col-md-6 mb-4" *ngIf="!isDirectModeActive">
                 <div class="class d-flex justify-content-start align-items-center" style="gap: 10px;">
                     <input type="checkbox" formControlName="isCurrentAppointment"
                         (change)="onCheckOrUncheckToHideSlotDateAndSlotsDropdown($event)" />
                     <label for="vehicle1" class="mb-0">Is Meet Now?</label>
                 </div>
             </div>
-
-
-            <!--sahib start-->
-
-            <!--sahib end-->
-
-
-
-
-            <!--formControlName="CounsellorName"-->
-
-
-
         </div>
-        <div class="row">
+
+        <!-- Direct Mode: Subscription Plan & Trial Duration -->
+        <div class="row" *ngIf="isDirectModeActive">
+            <div class="col-md-6 mb-4">
+                <div class="local-forms form-group">
+                    <label>Subscription Plan</label>
+                    <ng-select [items]="availablePlans" bindLabel="planName" bindValue="id" formControlName="planID"
+                        placeholder="14-Day Free Trial (Default)">
+                    </ng-select>
+                </div>
+            </div>
+            <div class="col-md-6 mb-4" *ngIf="!addAppointmentForm.get('planID')?.value">
+                <div class="local-forms form-group">
+                    <label>Free Trial Duration (Days)</label>
+                    <input type="number" class="form-control" formControlName="trialDays" min="1" max="90" placeholder="14">
+                </div>
+            </div>
+        </div>
+
+        <div class="row" *ngIf="!isDirectModeActive">
             <div id="selectDateDiv" class="col-md-6 mb-4">
                 <div class="local-forms form-group">
                     <label> Date <span class="text-danger">*</span></label>
@@ -203,12 +231,6 @@
                         *ngIf="addAppointmentForm.controls['slotID']?.invalid && addAppointmentForm.controls['slotID']?.touched">
                         <span class="text-danger">This field is required</span>
                     </div>
-
-
-                    <!-- @if(addAppointmentForm.controls['slotID']?.invalid &&
-                addAppointmentForm.controls['slotID'].touched){
-                <span class="text-danger">This field is required</span>
-                } -->
                 </div>
             </div>
             <div class="col-md-6 mb-4" *ngIf="UserRoleID === 1">
@@ -233,9 +255,13 @@
 
     <div class="row">
         <div class="col-12 col-md-12">
-            <div class="student-submit text-end"><button id="btnsubmit" type="submit" class="btn btn-primary me-2"
-                    (click)="onSubmit() "> Submit </button><button type="button" class="btn btn-secondary"
-                    (click)="ResetForm()"> Cancel </button></div>
+            <div class="student-submit text-end">
+                <button id="btnsubmit" type="submit" class="btn btn-primary me-2" (click)="onSubmit()">
+                    <i [class]="isDirectModeActive ? 'fa fa-bolt me-1' : ''"></i>
+                    {{ isDirectModeActive ? 'Add Daycare Directly' : 'Submit' }}
+                </button>
+                <button type="button" class="btn btn-secondary" (click)="ResetForm()"> Cancel </button>
+            </div>
         </div>
     </div>
 

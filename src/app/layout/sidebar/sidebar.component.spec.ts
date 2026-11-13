@@ -298,5 +298,28 @@ describe('SidebarComponent', () => {
 
       expect(component.isDataFullyLoaded).toBeTrue();
     });
+
+    it('should inject Add Daycare into Daycare Management menu for role 1 (Admin)', () => {
+      component.UserRoleId = 1;
+      mockSideBarService.getUserPermissionByUserID.and.returnValue(
+        of({
+          message: 'ok',
+          result: [
+            {
+              id: 9,
+              value: 'Daycare Management',
+              menuUrl: '',
+              childList: [{ id: 11, value: 'View Daycare', menuUrl: 'view-daycare' }],
+            },
+          ],
+        })
+      );
+
+      component.getPermissions();
+
+      const daycareMgmt = component.rawMenus.find((m: any) => m.id === 9);
+      expect(daycareMgmt).toBeDefined();
+      expect(daycareMgmt.childList.some((c: any) => c.menuUrl === 'add-daycare')).toBeTrue();
+    });
   });
 });
