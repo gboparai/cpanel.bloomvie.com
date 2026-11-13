@@ -188,7 +188,7 @@ export class ProfileComponent implements AfterViewInit {
           Validators.pattern('[a-zA-Z0-9.*%±]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}'),
         ],
       ],
-      dob: [new Date(), Validators.required],
+      dob: [''],
       address: ['', Validators.required],
       gender: ['', Validators.required],
       mobile: [
@@ -334,10 +334,18 @@ export class ProfileComponent implements AfterViewInit {
       today.getMonth(),
       today.getDate()
     );
-    (document.getElementById('dob') as any).flatpickr({
-      dateFormat: 'd-m-Y',
-      maxDate: maxDate,
-    });
+    const dobEl = document.getElementById('dob');
+    if (dobEl) {
+      (dobEl as any).flatpickr({
+        dateFormat: 'd-m-Y',
+        maxDate: maxDate,
+        onChange: (selectedDates: any, dateStr: string) => {
+          this.profileform.get('dob')?.setValue(dateStr);
+          this.profileform.get('dob')?.markAsTouched();
+          this.profileform.get('dob')?.markAsDirty();
+        }
+      });
+    }
   }
 
   getDayCareByID(DayCareId: any) {
@@ -1075,12 +1083,13 @@ export class ProfileComponent implements AfterViewInit {
               ? this.profilevalue.lastName
               : '',
             // name: fullName,
-            name:
-              this.profilevalue.firstName +
-              ' ' +
-              this.profilevalue.middleName +
-              ' ' +
-              this.profilevalue.lastName,
+            name: [
+              this.profilevalue.firstName,
+              this.profilevalue.middleName,
+              this.profilevalue.lastName
+            ]
+              .filter((x: any) => x && x !== 'undefined' && x !== 'null')
+              .join(' '),
             email: this.profilevalue.email,
             dob: this.formatDateForDisplay(user.dob || ''),
 

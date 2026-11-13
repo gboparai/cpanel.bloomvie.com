@@ -71,9 +71,9 @@ export class LeaveManagementComponent implements OnInit {
     this.daycareLeaveForm = fb.group({
       id: [0],
       // leaveTypeId: [null, [Validators.required]],
-      leaveType: ['', [Validators.required]],
-      description: ['', [Validators.required, Validators.maxLength(500)]],
-      leaveCount: [null, [Validators.required, Validators.min(1), Validators.max(20)]],
+      leaveType: [''],
+      description: ['', [Validators.maxLength(500)]],
+      leaveCount: [null, [Validators.min(1), Validators.max(20)]],
     })
 
   }
@@ -205,7 +205,7 @@ export class LeaveManagementComponent implements OnInit {
   }
 
   get isValid(): boolean {
-    return this.assignedLeaveList.length > 0;
+    return true;
   }
 
   proceedToOnboarding() {

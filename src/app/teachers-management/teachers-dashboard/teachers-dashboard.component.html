@@ -117,7 +117,7 @@
           <div class="col-xl-3 col-sm-6 col-12 d-flex">
             <div class="card bg-comman dashboard-widget1 w-100 hvr-float-shadow mb-2 logo-third-color">
               <div class="card-body">
-                <div class="db-widgets d-flex justify-content-between align-items-center">
+                <div class="db-widgets d-flex justify-content-between align-items-center" (click)="scrollToPendingActions()" style="cursor: pointer;" title="View Pending Actions">
                   <div class="db-info">
                     <h6>Pending Actions</h6>
                     @if (skalatonShowCard === 'skalatonShowCard') {
@@ -212,7 +212,7 @@
   </div>
 </div>
 
-<div class="row">
+<div class="row" id="pending-actions-section">
   <div class="col-md-12 col-lg-6 colum">
     <div class="card flex-fill comman-shadow dasboard-main-color">
       <div class="card-header d-flex align-items-center dasboard-header">
@@ -230,7 +230,7 @@
 
             } @else if (pendingActivityDetails.length > 0){
 
-            <div class="activity-awards hvr-forward" *ngFor="let item of pendingActivityDetails">
+            <div class="activity-awards hvr-forward" *ngFor="let item of pendingActivityDetails" [routerLink]="'/manage-student-activity'" style="cursor: pointer;" title="Manage Activity">
               <div class="award-boxs">
                 <img src="assets/img/puzzle.png" alt="Award" />
               </div>
@@ -269,7 +269,7 @@
 
             } @else if (pendingAttendanceDetails.length > 0){
 
-            <div class="activity-awards hvr-forward" *ngFor="let item of pendingAttendanceDetails">
+            <div class="activity-awards hvr-forward" *ngFor="let item of pendingAttendanceDetails" [routerLink]="'/attendance-dashboard'" style="cursor: pointer;" title="Mark Attendance">
               <div class="award-boxs">
                 <img src="assets/img/expired.png" alt="Award" />
               </div>
@@ -333,83 +333,5 @@
 <div class="row">
   <div class="col-12">
     <app-recent-announcements></app-recent-announcements>
-  </div>
-</div>
-
-<div id="AgrrementLetter" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-bs-backdrop="static">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header radius0 bg-light">
-        <h4>Documents</h4>
-      </div>
-      <div class="modal-body">
-        <div class="row">
-          <div class="col-md-12">
-            <div class="hedi">
-              <h4>Please review and download the Offer Letter</h4>
-            </div>
-          </div>
-        </div>
-        <div class="pdf-container">
-          <iframe *ngIf="teacherid && filePath" [src]="filePath" width="100%" height="500px" frameborder="0" type="application/pdf">
-          </iframe>
-        </div>
-
-        <div class="row">
-          <div class="col-md-12 mt-5">
-            <div class="review-head">
-              <!-- <div class="headingbox btn btn-blue">
-                <a>
-                  <i class="mdi mdi-download"></i> Offer Letter
-                </a>
-              </div> -->
-            </div>
-            <h5 class="note-offer" style="font-size: 13px">
-              <strong style="font-size: 15px">Note:</strong> Accept button is at
-              the bottom
-            </h5>
-            <div id="pdfContainer2" class="qwert"></div>
-            <div class="row mt-4">
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="exampleCheckbox" [(ngModel)]="letterAccepted" />
-                    <label class="form-check-label" for="exampleCheckbox">
-                      I, hereby, accept this offer letter.
-                    </label>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6 mt-4">
-                <label class="form-label">Signature<i>(Type your full name)</i></label>
-                <div class="input-group">
-                  <input type="text" class="form-control" id="signature" placeholder="Signature"
-                    [(ngModel)]="letterSignature" />
-                </div>
-              </div>
-
-              <!-- <div class="col-md-4 mt-4">
-                <label class="form-label">Acceptance Date:</label>
-                <div class="input-group">
-                  <input type="text" mwlFlatpickr class="form-control"id="acceptanceDate" value="" readonly placeholder="Date">
-                </div>
-              </div> -->
-              <div class="col-md-6 mt-4">
-                <div class="d-flex justify-content-end mt-4 align-items-center gap-2">
-                  <button type="button" class="btn btn-primary" (click)="employeeJoiningDocuments('accept')"
-                    [disabled]="!letterAccepted || !letterSignature">
-                    <i class="mdi mdi-check-all me-1"></i> Accept
-                  </button>
-
-                  <button type="button" class="btn btn-sm btn-danger" (click)="employeeJoiningDocuments('reject')">
-                    <i class="mdi mdi-close me-1"></i> Reject
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 </div>

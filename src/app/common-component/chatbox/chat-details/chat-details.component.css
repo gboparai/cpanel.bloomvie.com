@@ -791,10 +791,12 @@ ul li h5
 .check-msg-seen img {
   width: 14px;
   margin: 0;
+  filter: grayscale(100%) opacity(0.55);
+  transition: filter 0.2s ease-in-out;
 }
 
 .check-msg-seen img.chat__check--read {
-  filter: brightness(0) saturate(100%) invert(43%) sepia(80%) saturate(470%) hue-rotate(86deg) brightness(92%) contrast(88%);
+  filter: none;
 }
 
 /* Receiver attachments aligned left */
@@ -867,4 +869,10 @@ li::after {
   height: 16px;
   vertical-align: middle;
   margin-right: 4px;
+}
+
+
+.chat__message--undecryptable {
+  font-style: italic;
+  opacity: 0.85;
 }

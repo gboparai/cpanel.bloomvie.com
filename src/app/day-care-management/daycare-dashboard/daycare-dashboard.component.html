@@ -355,7 +355,7 @@
       </div>
     </div>
   </div>
-  <div id="jobListContainer" class="row" #jobListContainer>
+  <div id="jobListContainer" class="row" #jobListContainer style="scroll-margin-top: 100px;">
     <div class="col-md-12">
       <div class="card">
         <div class="card-header d-flex align-items-center">
@@ -605,13 +605,14 @@
                                 data-bs-toggle="modal"
                                 (click)="SelectedTeacher(staff.id)"
                                 data-bs-target="#exampleModal46"
+                                title="View Details"
                               >
                                 <i class="feather-eye"></i>
                               </a>
 
                                 <a
                                   data-bs-toggle="modal"
-                                  title="Assign-Class"
+                                  title="Assign Class"
                                   data-bs-target="#exampleModal45"
                                   (click)="setDefaultValue(staff)"
                                   class="action-btn bg-danger-light"
@@ -619,7 +620,7 @@
                                   <i class="fa-chalkboard-teacher fas"></i>
                                 </a>
 
-                              <!-- <a *ngIf="item.status == 'Approved'" data-bs-toggle="modal" title="Assign-Class"
+                              <!-- <a *ngIf="item.status == 'Approved'" data-bs-toggle="modal" title="Assign Class"
                                 data-bs-target="#exampleModal2" class="action-btn bg-danger-light"
                                 (click)="setDefaultValue(student)"><i class="fa-chalkboard-teacher fas"></i>
                               </a> -->
@@ -778,6 +779,7 @@
                                 class="approve-rec"
                                 [id]="'checkBoxAinA' + staff?.employeeID"
                                 (click)="teacherApproved(staff?.employeeID)"
+                                title="Approve Teacher Transfer"
                               >
                                 <svg
                                   xmlns="http://www.w3.org/2000/svg"
@@ -948,7 +950,7 @@
                             <div class="actions">
                               <a
                                 data-bs-toggle="modal"
-                                title="View-Student"
+                                title="View Student"
                                 (click)="getStudentRecords(enrollment)"
                                 class="action-btn bg-danger-light me-2"
                                 ><i class="feather-eye"></i>
@@ -2192,12 +2194,14 @@
                           <a
                             class="action-btn bg-danger-light me-2"
                             (click)="updateDiscountRecord(i)"
+                            title="Edit Discount"
                           >
                             <i class="feather-edit"></i>
                           </a>
                           <a
                             class="action-btn bg-danger-light me-2"
                             (click)="deleteDiscountRecord(i)"
+                            title="Delete Discount"
                           >
                             <i class="fa fa-trash"></i>
                           </a>

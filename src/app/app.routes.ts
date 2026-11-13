@@ -226,6 +226,7 @@ export const routes: Routes = [
       { path: 'health-report', component: HealthReportComponent },
       { path: 'bloomvie-settings', component: BloomvieSettingsComponent },
       { path: 'manage-student-activity', component: ManageStudentActivitiesComponent },
+      { path: 'personal-activities', redirectTo: 'manage-student-activity', pathMatch: 'full' },
       { path: 'manage-qualification', component: ManageQualificationComponent },
       { path: 'manage-event', component: ManageEventComponent },
 

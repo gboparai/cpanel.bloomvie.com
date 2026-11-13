@@ -37,7 +37,7 @@
                   </div> -->
 
                   <div class="mb-3">
-                    <label class="form-label">Leave Type <span class="text-danger">* </span></label><br />
+                    <label class="form-label">Leave Type</label><br />
                     <input type="text" class="form-control" [ngClass]="{
       'is-invalid':
         daycareLeaveForm.controls['leaveType'].invalid &&
@@ -48,16 +48,14 @@
     daycareLeaveForm.controls['leaveType'].invalid &&
     daycareLeaveForm.controls['leaveType'].touched
   ">
-                      <div *ngIf="daycareLeaveForm.controls['leaveType'].errors?.['required']">
-                        This field is required.
-                      </div>
+
                     </div>
                   </div>
 
                 </div>
                 <div class>
                   <div class="mb-3">
-                    <label class="form-label">Leave Per Year <span class="text-danger">* </span></label><br />
+                    <label class="form-label">Leave Per Year</label><br />
                     <input [ngClass]="{
                         'is-invalid':
                           daycareLeaveForm.controls['leaveCount'].invalid &&
@@ -67,9 +65,7 @@
                         daycareLeaveForm.controls['leaveCount'].invalid &&
                         daycareLeaveForm.controls['leaveCount'].touched
                       ">
-                      <div *ngIf="daycareLeaveForm.controls['leaveCount'].errors?.['required']">
-                        Leave Count is required.
-                      </div>
+
                       <div *ngIf="daycareLeaveForm.controls['leaveCount'].errors?.['min']">
                         Leave Count must be at least 1.
                       </div>
@@ -82,7 +78,7 @@
               </div>
               <div class="col-md-6">
                 <div class="mb-3">
-                  <label class="form-label">Description <span class="text-danger">* </span></label><br />
+                  <label class="form-label">Description</label><br />
                   <!-- <app-text-counter [control]="groupControl" [maxLength]="50"></app-text-counter> -->
 
                   <textarea [ngClass]="{
@@ -95,9 +91,7 @@
                       daycareLeaveForm.controls['description'].invalid &&
                       daycareLeaveForm.controls['description'].touched
                     ">
-                    <div *ngIf="daycareLeaveForm.controls['description'].errors?.['required']">
-                      Description is required.
-                    </div>
+
                     <div *ngIf="daycareLeaveForm.controls['description'].errors?.['maxlength']">
                       Description cannot exceed 500 characters.
                     </div>

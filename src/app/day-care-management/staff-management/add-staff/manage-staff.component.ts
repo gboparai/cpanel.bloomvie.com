@@ -199,9 +199,9 @@ export class ManageStaffComponent implements OnInit {
       email: [null, [Validators.required, Validators.email]],
       assignDaycare: [[]],
       roleSpecializationID: [null],
-      salary: ['', Validators.min(1)],
-      wages: ['', Validators.min(1)],
-      workingHours: ['', Validators.min(1)],
+      salary: [''],
+      wages: [''],
+      workingHours: [''],
       salaryUnit: [],
       qualification: [[]],
       isActive: [null],
@@ -503,25 +503,19 @@ export class ManageStaffComponent implements OnInit {
       'yyyy-MM-dd'
     );
     if (isTeacherOrAdmin) {
-      if (this.teacherAvailabilityList.length === 0) {
-        this.availabilityValidationMessage = true;
-        return;
-      }
+
 
       if (formValue.userRoleID === 8) {
         const assignmentList = this.buildTOCTeacherAssignments();
         formValue.teacherAvailabiltyList = assignmentList;
       } else {
-        formValue.teacherAvailabiltyList = this.teacherAvailabilityList.value;
+        formValue.teacherAvailabiltyList = this.teacherAvailabilityList.value || [];
       }
     } else {
       formValue.teacherAvailability = formValue.teacherAvailability?.toString();
     }
 
-    if (isTeacherOrAdmin && !(formValue.wages || formValue.salary)) {
-      this.toastr.error('Please select wages or salary first !!');
-      return;
-    }
+
 
     this.spinner.show();
     this.manageStaffSerivece.manageStaff(formValue, this.UserRoleID).subscribe({

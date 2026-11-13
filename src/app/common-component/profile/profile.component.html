@@ -655,11 +655,8 @@
                   <div class="col-md-4">
                     <div class="local-forms col-md-12 p-0">
                       <div class="form-group">
-                        <label>DOB<span class="star-red">*</span></label>
-                        <input id="dob" type="text" class="form-control" formControlName="dob" name="dob" />
-                        @if(input.dob.touched){ @if(input.dob.errors?.required){
-                        <span class="text-danger">This field is required.</span>
-                        } }
+                        <label>DOB</label>
+                        <input id="dob" type="text" class="form-control" formControlName="dob" name="dob" style="background-color: #fff !important; cursor: pointer;" placeholder="-Select DOB-" />
                       </div>
                     </div>
                   </div>

@@ -111,14 +111,6 @@ export class TeachersDashboardComponent implements OnInit {
     this.getDayCareActivities();
     this.getAllEventManagementType();
     this.getAllHolidayList();
-
-    if (this.teacherid) {
-      if (this.teacherid.isOfferLetterAccepted == 1) {
-        $('#AgrrementLetter').modal('hide');
-      }
-    } else {
-      this.getEmployeeJoiningDocuments();
-    }
   }
 
   constructor(
@@ -134,6 +126,19 @@ export class TeachersDashboardComponent implements OnInit {
     public onBoardingService: OnboardingService,
     private loginService: LoginService
   ) { }
+
+  scrollToPendingActions() {
+    const el = document.getElementById('pending-actions-section');
+    if (el) {
+      const headerOffset = 90;
+      const elementPosition = el.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth',
+      });
+    }
+  }
 
   getTeacherDashboardCount() {
     this.userID = this.cookie.get('UserId');
@@ -213,9 +218,6 @@ export class TeachersDashboardComponent implements OnInit {
           this.filePath = data.result.s3ImageUrl
             ? this.getPdfUrl(data.result.s3ImageUrl)
             : '';
-          if (this.teacherid.isOfferLetterAccepted == null) {
-            $('#AgrrementLetter').modal('show');
-          }
         }
       });
   }

@@ -677,11 +677,50 @@ export class SidebarComponent implements OnInit {
     return cloned;
   }
 
+  organizeStaffAttendanceMenu(menus: any[]): any[] {
+    const cloned: any[] = JSON.parse(JSON.stringify(menus));
+    const attIndex = cloned.findIndex((m: any) => {
+      const val = (m.value || '').toLowerCase().trim();
+      return val === 'attendance';
+    });
+
+    if (attIndex !== -1 && cloned[attIndex].childList?.length) {
+      const attMenu = cloned[attIndex];
+      const studentAttIndex = attMenu.childList.findIndex((c: any) => {
+        const val = (c.value || '').toLowerCase().trim();
+        const url = (c.menuUrl || c.MenuUrl || '').toLowerCase().trim();
+        return val.includes('student attendance') || url.includes('attendance-dashboard');
+      });
+
+      if (studentAttIndex !== -1) {
+        const [studentAtt] = attMenu.childList.splice(studentAttIndex, 1);
+        const rawUrl = studentAtt.menuUrl || studentAtt.MenuUrl || '/attendance-dashboard';
+        const finalUrl = rawUrl.startsWith('/') ? rawUrl : `/${rawUrl}`;
+        const topLevelStudentAtt = {
+          ...studentAtt,
+          value: 'Student Attendance',
+          menuUrl: finalUrl,
+          MenuUrl: finalUrl,
+          icon: studentAtt.icon || studentAtt.Icon || 'feather-calendar',
+          Icon: studentAtt.Icon || studentAtt.icon || 'feather-calendar',
+          childList: [],
+          isOpen: false
+        };
+        cloned.splice(attIndex, 0, topLevelStudentAtt);
+      }
+    }
+
+    return cloned;
+  }
+
   applyMenuFilter() {
     if (!this.rawMenus || this.rawMenus.length === 0) return;
     let processed = JSON.parse(JSON.stringify(this.rawMenus));
     if (this.UserRoleId == 3 || this.UserRoleId == 1 || this.UserRoleId == 2) {
       processed = this.organizeStudentManagementMenu(processed);
+    }
+    if (this.UserRoleId == 4) {
+      processed = this.organizeStaffAttendanceMenu(processed);
     }
     if (this.isExternalBilling) {
       this.menus = this.filterExternalBillingMenus(processed);

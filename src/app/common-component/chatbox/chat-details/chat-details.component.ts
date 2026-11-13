@@ -1199,6 +1199,18 @@ export class ChatDetailsComponent implements OnInit {
         this.updateMessageStatus(receiverId);
       }
     });
+
+    this.chatService.getClassroomMessagesSeen().subscribe((data: any) => {
+      const currentThreadId = this.receiverData?.threadId || (this.receiverData?.isStudentThread && this.receiverData?.studentId ? `STUDENT-${this.receiverData.studentId}` : null);
+      if (currentThreadId && currentThreadId === data?.threadId) {
+        this.updateClassroomMessageStatus();
+      }
+    });
+  }
+
+  updateClassroomMessageStatus(): void {
+    const senderChats = this.chatList.filter(x => x.type === 'sender' && !x.data.isRead);
+    senderChats.forEach(x => x.data.isRead = true);
   }
 
   updateMessageStatus(receiverId: number): void {

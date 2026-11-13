@@ -242,6 +242,32 @@ describe('SidebarComponent', () => {
     });
   });
 
+  describe('organizeStaffAttendanceMenu', () => {
+    it('should separate Student Attendance out of Attendance dropdown into a top-level item', () => {
+      const menus = component.organizeStaffAttendanceMenu([
+        {
+          id: 10,
+          value: 'Attendance',
+          menuUrl: null,
+          childList: [
+            { id: 11, value: 'View Leaves', menuUrl: '/view-leaves' },
+            { id: 12, value: 'Student Attendance', menuUrl: 'attendance-dashboard' },
+            { id: 13, value: 'Staff Attendance', menuUrl: '/staff-attendance' },
+          ],
+        },
+      ]);
+
+      const topLevelStudentAtt = menus.find((m: any) => m.value === 'Student Attendance');
+      expect(topLevelStudentAtt).toBeTruthy();
+      expect(topLevelStudentAtt.menuUrl).toBe('/attendance-dashboard');
+
+      const attendanceMenu = menus.find((m: any) => m.value === 'Attendance');
+      expect(attendanceMenu).toBeTruthy();
+      expect(attendanceMenu.childList.some((c: any) => c.value === 'Student Attendance')).toBeFalse();
+      expect(attendanceMenu.childList.length).toBe(2);
+    });
+  });
+
   describe('getPermissions', () => {
     it('should handle role 8 TOC user correctly', () => {
       component.UserRoleId = 8;
