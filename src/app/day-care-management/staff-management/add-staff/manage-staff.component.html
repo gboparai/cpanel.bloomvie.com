@@ -180,7 +180,7 @@
 
               <div
                 class="col-md-4 mb-4"
-                *ngIf="UserRoleID == 3 && isQualification == true"
+                *ngIf="isQualification == true"
               >
                 <div class="form-group local-forms">
                   <label>Qualification</label>
@@ -200,7 +200,7 @@
               </div>
               <div
                 class="col-md-3 mb-4"
-                *ngIf="UserRoleID == 3 && isQualification == true"
+                *ngIf="UserRoleID != 3 && isQualification == true"
               >
                 <div class="form-group local-forms">
                   <label style="left: 10px !important"
@@ -231,7 +231,7 @@
 
               <div
                 class="col-md-3 mb-4"
-                *ngIf="UserRoleID == 3 && isQualification == true"
+                *ngIf="UserRoleID != 3 && isQualification == true"
               >
                 <div class="form-group local-forms">
                   <label style="left: 10px !important">Wages (Per Hour)</label>
@@ -263,7 +263,7 @@
 
               <div
                 class="col-md-6 mb-4"
-                *ngIf="UserRoleID == 3 && isQualification == true"
+                *ngIf="UserRoleID != 3 && isQualification == true"
               >
                 <div class="form-group local-forms">
                   <label style="left: 10px !important">Salary</label>
@@ -429,7 +429,7 @@
             </div>
           </form>
 
-          <div *ngIf="isAssignmentVisible" class="row">
+          <div *ngIf="isAssignmentVisible && UserRoleID != 3" class="row">
             <!-- <ng-container
               [ngTemplateOutlet]="assignment_section"
             ></ng-container> -->

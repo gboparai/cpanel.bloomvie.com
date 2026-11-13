@@ -16,6 +16,8 @@ export class ChatSocketService {
   private messageReceivedSubject = new Subject<any>();
   messageReceived$ = this.messageReceivedSubject.asObservable();
   private messagesSeenSubject = new Subject<number>();
+  private classroomMessagesSeenSubject = new Subject<{ threadId: string; studentId: number; readByUserId: number }>();
+  public classroomMessagesSeen$ = this.classroomMessagesSeenSubject.asObservable();
   private activeUsersSubject: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
   public activeUsers$: Observable<string[]> = this.activeUsersSubject.asObservable();
 
@@ -120,6 +122,13 @@ export class ChatSocketService {
     this.hubConnection?.on('MessagesSeen', (receiverId: number) => {
       this.messagesSeenSubject.next(receiverId);
     });
+    this.hubConnection?.on('ClassroomMessagesSeen', (data: any) => {
+      this.classroomMessagesSeenSubject.next(data);
+    });
+  }
+
+  getClassroomMessagesSeen(): Observable<any> {
+    return this.classroomMessagesSeenSubject.asObservable();
   }
 
   public fetchActiveUsers(): void {

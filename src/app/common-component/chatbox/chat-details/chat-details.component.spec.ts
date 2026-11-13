@@ -29,6 +29,7 @@ describe('ChatDetailsComponent', () => {
 
     mockChatService = {
       getMessagesSeen: jasmine.createSpy('getMessagesSeen').and.returnValue(of(1)),
+      getClassroomMessagesSeen: jasmine.createSpy('getClassroomMessagesSeen').and.returnValue(of({ threadId: 'STUDENT-1', studentId: 1 })),
       loadChat: jasmine.createSpy('loadChat').and.returnValue(of({ message: 'OK', result: [] })),
       loadClassroomChat: jasmine.createSpy('loadClassroomChat').and.returnValue(of({ message: 'Success', result: [] })),
       sendMessage: jasmine.createSpy('sendMessage'),
@@ -122,7 +123,7 @@ describe('ChatDetailsComponent', () => {
       .toBe('Teachers');
     const statuses: HTMLElement[] = Array.from(fixture.nativeElement.querySelectorAll('.chat-member__status'));
     const visibleStatus = statuses.find(el => !el.classList.contains('hide'));
-    expect(visibleStatus?.textContent?.trim()).toBe('Busy Bees');
+    expect(visibleStatus?.textContent?.trim()).toBe('Busy Bees Classroom');
   });
 
   describe('ngOnInit', () => {

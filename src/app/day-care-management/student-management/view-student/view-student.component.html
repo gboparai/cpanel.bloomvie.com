@@ -156,11 +156,11 @@
                       data-toggle="tooltip" title="Send Credentials" class="action-btn bg-danger-light me-2">
                       <i class="fa fa-envelope" aria-hidden="true"></i>
                     </a>
-                    <a (click)="selectItem(item)" class="action-btn bg-danger-light me-2">
+                    <a (click)="selectItem(item)" class="action-btn bg-danger-light me-2" title="Edit Student">
                       <i class="feather-edit"></i>
                     </a>
                     @if(item.id>0){
-                    <label class="switch mb-0" *ngIf="userRoleId == 3">
+                    <label class="switch mb-0" *ngIf="userRoleId == 3" title="Toggle Student Status">
                       <input id="check{{ item.id }}" (change)="activeInactive(item.id, $event.target)"
                         [checked]="item.isActive" type="checkbox" />
                       <div class="slider">

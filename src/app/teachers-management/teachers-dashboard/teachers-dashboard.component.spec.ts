@@ -192,10 +192,10 @@ describe('TeachersDashboardComponent', () => {
     expect(url).toBe('test.pdf' as any);
   });
 
-  it('should handle employee joining document check and show modal if pending acceptance', async () => {
+  it('should handle employee joining document check without showing offer letter modal', async () => {
     await component.getEmployeeJoiningDocuments();
     expect(component.teacherid.isOfferLetterAccepted).toBeNull();
-    expect((window as any).$).toHaveBeenCalledWith('#AgrrementLetter');
+    expect((window as any).$).not.toHaveBeenCalledWith('#AgrrementLetter');
   });
 
   describe('employeeJoiningDocuments', () => {

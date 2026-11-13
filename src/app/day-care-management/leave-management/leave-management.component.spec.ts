@@ -91,11 +91,18 @@ describe('LeaveManagementComponent', () => {
       expect(component.daycareLeaveForm.get('leaveCount')?.value).toBeNull();
     });
 
-    it('should validate invalid form controls', () => {
+    it('should allow optional form controls and validate range when provided', () => {
       component.daycareLeaveForm.patchValue({
         leaveType: '',
         description: '',
         leaveCount: null,
+      });
+      expect(component.daycareLeaveForm.valid).toBeTrue();
+
+      component.daycareLeaveForm.patchValue({
+        leaveType: 'Sick Leave',
+        description: 'Valid description',
+        leaveCount: 25,
       });
       expect(component.daycareLeaveForm.valid).toBeFalse();
 
@@ -242,7 +249,7 @@ describe('LeaveManagementComponent', () => {
 
   describe('onSubmit', () => {
     it('should mark all touched and not submit when form is invalid', () => {
-      component.daycareLeaveForm.patchValue({ leaveType: '' });
+      component.daycareLeaveForm.patchValue({ leaveCount: 99 });
 
       component.onSubmit();
 
@@ -290,9 +297,9 @@ describe('LeaveManagementComponent', () => {
       expect(component.isEditing).toBeFalse();
     });
 
-    it('should return isValid based on assignedLeaveList length', () => {
+    it('should return isValid as true since leave is optional during onboarding', () => {
       component.assignedLeaveList = [];
-      expect(component.isValid).toBeFalse();
+      expect(component.isValid).toBeTrue();
 
       component.assignedLeaveList = [{ id: 1 } as any];
       expect(component.isValid).toBeTrue();

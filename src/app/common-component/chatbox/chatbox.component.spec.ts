@@ -33,7 +33,7 @@ describe('ChatboxComponent', () => {
         message: 'Success',
         result: [
           { id: 1, studentId: 1, threadId: 'STUDENT-1', name: 'Avery Jones', classId: 2, className: 'Toddlers', isStudentThread: true },
-          { id: 1, studentId: 1, threadId: 'ADMIN-1', name: 'Avery Jones', classId: 2, className: 'Toddlers', isStudentThread: true, isAdminOnly: true }
+          { id: 2, studentId: 2, threadId: 'STUDENT-2', name: 'Riley Smith', classId: 3, className: 'Pre-K', isStudentThread: true }
         ]
       })),
       fetchActiveUsers: jasmine.createSpy('fetchActiveUsers'),
@@ -97,6 +97,22 @@ describe('ChatboxComponent', () => {
       expect(component.skeletonShow).toBe('');
     });
 
+    it('defaults selectedClassId to null and renders All classrooms without preselecting a class', () => {
+      mockCookieService.get.and.callFake((key: string) => {
+        if (key === 'UserId') return '10';
+        if (key === 'userRoleID') return '3';
+        return '';
+      });
+
+      component.ngOnInit();
+      fixture.detectChanges();
+
+      expect(component.selectedClassId).toBeNull();
+      const select = fixture.nativeElement.querySelector('select[aria-label="Filter chats by classroom"]') as HTMLSelectElement;
+      expect(select).not.toBeNull();
+      expect(select.options[0].text.trim()).toBe('All classrooms');
+    });
+
     it('filters classroom threads by the selected classroom', () => {
       component.clientList = [
         { id: 1, name: 'Avery Jones', classId: 2 },
@@ -136,7 +152,7 @@ describe('ChatboxComponent', () => {
       expect(mockChatService.bindClients).not.toHaveBeenCalled();
     });
 
-    it('does not mark a classroom thread as read merely because it was auto-selected', () => {
+    it('does not preselect a classroom thread on initial load until selected', () => {
       mockCookieService.get.and.callFake((key: string) => {
         if (key === 'UserId') return '10';
         if (key === 'userRoleID') return '4';
@@ -146,21 +162,19 @@ describe('ChatboxComponent', () => {
       component.ngOnInit();
       fixture.detectChanges();
 
-      expect(component.receiverData.threadId).toBe('STUDENT-1');
+      expect(component.receiverData.threadId).toBeUndefined();
       expect(mockChatService.markClassroomThreadRead).not.toHaveBeenCalled();
       const threadName = fixture.nativeElement.querySelector('.messaging-member__name');
       expect(threadName.textContent.trim()).toBe('Avery Jones');
       expect(threadName.textContent).not.toContain('Student:');
     });
 
-    it('shows only the active parent profile’s classroom and admin conversations', () => {
+    it('shows only the active parent profile’s classroom conversation', () => {
       mockChatService.classroomThreads.and.returnValue(of({
         message: 'Success',
         result: [
           { id: 1, studentId: 1, threadId: 'STUDENT-1', name: 'Avery Jones', className: 'Toddlers', isStudentThread: true },
-          { id: 1, studentId: 1, threadId: 'ADMIN-1', name: 'Avery Jones', adminName: 'Willow Admin', className: 'Toddlers', isStudentThread: true, isAdminOnly: true },
-          { id: 2, studentId: 2, threadId: 'STUDENT-2', name: 'Riley Smith', isStudentThread: true },
-          { id: 2, studentId: 2, threadId: 'ADMIN-2', name: 'Riley Smith', isStudentThread: true, isAdminOnly: true }
+          { id: 2, studentId: 2, threadId: 'STUDENT-2', name: 'Riley Smith', isStudentThread: true }
         ]
       }));
       mockCookieService.get.and.callFake((key: string) => {
@@ -179,19 +193,16 @@ describe('ChatboxComponent', () => {
       expect(mockChatService.classroomThreads).toHaveBeenCalledWith(undefined, 1);
       expect(mockChatService.bindClients).not.toHaveBeenCalled();
       expect(component.filteredClientList.map(thread => thread.threadId))
-        .toEqual(['STUDENT-1', 'ADMIN-1']);
+        .toEqual(['STUDENT-1']);
 
       fixture.detectChanges();
       expect(fixture.nativeElement.querySelector('select[aria-label="Select student"]')).toBeNull();
       expect(fixture.nativeElement.querySelector('select[aria-label="Filter chats by classroom"]')).toBeNull();
       const parentConversationList = fixture.nativeElement.querySelector('.messages-page__list');
-      expect(parentConversationList.textContent).toContain('Teachers');
       expect(parentConversationList.textContent).toContain('Toddlers');
-      expect(parentConversationList.textContent).toContain('Willow Admin');
-      expect(parentConversationList.textContent).toContain('Private chat with daycare admin');
       expect(parentConversationList.textContent).not.toContain('Avery Jones');
       expect(parentConversationList.textContent).not.toContain('Riley Smith');
-      expect(component.receiverData.name).toBe('Teachers');
+      expect(component.receiverData.name).toBeUndefined();
     });
 
     it('reloads parent conversations when the active profile changes', fakeAsync(() => {

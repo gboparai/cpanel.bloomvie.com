@@ -175,7 +175,7 @@
                 <!-- <td>{{item.assignmentList[0]?.className}}</td> -->
                 <td>
                   <div class="actions">
-                    <a data-bs-toggle="modal" class="action-btn bg-danger-light me-2"
+                    <a data-bs-toggle="modal" class="action-btn bg-danger-light me-2" title="View Staff Details"
                       (click)="viewTeacherDetail(item.id)"><i class="fa fa-eye "></i></a>
 
                     <!-- <a *ngIf="item.assignmentList?.length == 0" (click)="selectItem(item)"
@@ -184,7 +184,7 @@
                     </a> -->
 
                       <a  (click)="selectItem(item)"
-                      class="action-btn bg-danger-light me-2">
+                      class="action-btn bg-danger-light me-2" title="Edit Staff">
                       <i class="feather-edit"></i>
                     </a>
                     <!--  [attr.data-bs-target]="
@@ -192,11 +192,11 @@
                          data-bs-toggle="modal"
                       " -->
 
-                    <a *ngIf="!onBoardingService.isOnboarding" class="action-btn bg-danger-light me-2"
+                    <a *ngIf="!onBoardingService.isOnboarding" class="action-btn bg-danger-light me-2" title="Staff Journey"
                       (click)="employeeJourneyDetails(item.id)">
                       <i class="fa-solid fa-sitemap"></i>
                     </a>
-                    <label class="switch mb-0 me-2" *ngIf="item.id > 0">
+                    <label class="switch mb-0 me-2" *ngIf="item.id > 0" title="Toggle Staff Status">
                       <input id="check{{ item.id }}" [checked]="item.isActive"
                         (change)="activeInactive(item.id, item.isActive)" type="checkbox" />
 
@@ -466,14 +466,14 @@
                   <div class="actions">
                     <!-- <a data-bs-toggle="modal" (click)="viewTeacherDetail(item.id)" class="action-btn bg-danger-light me-2"><i class="fa fa-eye"></i></a> -->
 
-                    <a (click)="selectItem(item)" class="action-btn bg-danger-light me-2">
+                    <a (click)="selectItem(item)" class="action-btn bg-danger-light me-2" title="Edit Staff">
                       <i class="feather-edit"></i>
                     </a>
                     <!--  [attr.data-bs-target]="
                         item.isActive ? '#exampleModal' : '#exampleModal1'
                          data-bs-toggle="modal"
                       " -->
-                    <label class="switch mb-0 me-2" *ngIf="item.id > 0">
+                    <label class="switch mb-0 me-2" *ngIf="item.id > 0" title="Toggle Staff Status">
                       <input id="check{{ item.id }}" [checked]="item.isActive"
                         (change)="activeInactiveBloomvieStaff(item)" type="checkbox" />
 

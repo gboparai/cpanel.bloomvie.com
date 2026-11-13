@@ -70,11 +70,7 @@
               <span [ngClass]="{'hide':!receiverData.isStudentThread}"
                 class="chat-member__status">
                 {{
-                  receiverData.isAdminOnly
-                    ? (receiverData.isParent ? 'Private conversation' : 'Private student conversation with daycare admin')
-                    : receiverData.isParent
-                      ? (receiverData.className || 'Classroom')
-                      : 'Student conversation shared with classroom teachers'
+                  receiverData.className ? (receiverData.className + ' Classroom') : 'Classroom conversation'
                 }}
               </span>
               <span [ngClass]="{'hide':!receiverData.isGroup}"
@@ -239,7 +235,7 @@
                   class="chat__sender-name">
                   {{ chat.data.senderName }}
                 </span>
-                <span>{{ chat.data.message }}</span>
+                <span [class.chat__message--undecryptable]="chat.data.message === '[Unable to decrypt message]'">{{ chat.data.message }}</span>
               </div>
               <!-- Receiver attachments -->
               <ng-container *ngFor="let file of chat.data.chatFiles">
@@ -474,7 +470,7 @@
               <!-- Sender text -->
               <div [ngClass]="{'hide': !chat.data.message}"
                 class="chat__bubble chat__bubble--me">
-                {{ chat.data.message }}
+                <span [class.chat__message--undecryptable]="chat.data.message === '[Unable to decrypt message]'">{{ chat.data.message }}</span>
               </div>
 
               <!-- Sender attachments -->

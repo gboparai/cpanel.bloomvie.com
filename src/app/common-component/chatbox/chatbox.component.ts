@@ -69,7 +69,8 @@ export class ChatboxComponent implements OnInit, OnDestroy {
           this.currentStudentId = Number.isFinite(studentId) && studentId > 0
             ? studentId
             : null;
-          this.bindClients();
+          this.receiverData = {};
+          this.bindClients(false);
         }
       }
     });
@@ -93,7 +94,8 @@ export class ChatboxComponent implements OnInit, OnDestroy {
         this.centreId = parseInt(this.cookie.get('CentreID'));
       }
 
-      this.bindClients();
+      this.selectedClassId = null;
+      this.bindClients(false);
       // this.loadChatHistory();
       this.listenForMessages();
       this.listenClientStatus();
@@ -111,6 +113,8 @@ export class ChatboxComponent implements OnInit, OnDestroy {
 
   get filteredClientList(): any[] {
     return this.clientList.filter((x) =>
+      !x.isAdminOnly &&
+      (x.threadId ? !x.threadId.startsWith('ADMIN-') : true) &&
       (x.name || '').toLocaleLowerCase().includes(this.searchTerm.toLocaleLowerCase()) &&
       (this.userRoleID !== 5 || x.studentId === this.currentStudentId) &&
       (this.selectedClassId === null || x.classId === this.selectedClassId)
@@ -123,6 +127,10 @@ export class ChatboxComponent implements OnInit, OnDestroy {
 
   get canFilterClassrooms(): boolean {
     return [3, 4, 8].includes(this.userRoleID);
+  }
+
+  onClassroomFilterChange(): void {
+    this.bindClients(true);
   }
 
   receiveFromChild(event: { type: string; data: any }) {
@@ -214,7 +222,7 @@ export class ChatboxComponent implements OnInit, OnDestroy {
     }
   }
 
-  bindClients(canswitch: boolean = true) {
+  bindClients(canswitch: boolean = false) {
     // this.spinner.show();
     this.skeletonShow = 'Skelton';
 
@@ -237,32 +245,33 @@ export class ChatboxComponent implements OnInit, OnDestroy {
     request.subscribe({
       next: (response) => {
         if (response.message === 'Success') {
-          this.clientList = (response.result ?? []).map((thread: any) => ({
-            ...thread,
-            name: this.userRoleID === 5
-              ? thread.isAdminOnly
-                ? thread.adminName || 'Daycare admin'
-                : 'Teachers'
-              : thread.name,
-            isParent: this.userRoleID === 5,
-          }));
+          this.clientList = (response.result ?? [])
+            .filter((thread: any) => !thread.isAdminOnly && (!thread.threadId || !thread.threadId.startsWith('ADMIN-')))
+            .map((thread: any) => ({
+              ...thread,
+              name: this.userRoleID === 5 ? (thread.className || 'Classroom') : thread.name,
+              isParent: this.userRoleID === 5,
+            }));
           this.roleType = response.result?.roleType;
-          this.classroomClasses = this.canFilterClassrooms
-            ? this.clientList
-                .filter((thread: any) => thread.classId != null)
-                .reduce((classes: { id: number; name: string }[], thread: any) => {
-                  if (!classes.some(item => item.id === thread.classId)) {
-                    classes.push({ id: thread.classId, name: thread.className || 'Classroom' });
-                  }
-                  return classes;
-                }, [])
-            : [];
+          if (this.canFilterClassrooms && (this.selectedClassId === null || this.classroomClasses.length === 0)) {
+            const availableClasses = this.clientList
+              .filter((thread: any) => thread.classId != null)
+              .reduce((classes: { id: number; name: string }[], thread: any) => {
+                if (!classes.some(item => item.id === thread.classId)) {
+                  classes.push({ id: thread.classId, name: thread.className || 'Classroom' });
+                }
+                return classes;
+              }, []);
+            if (availableClasses.length > 0) {
+              this.classroomClasses = availableClasses;
+            }
+          }
           if (canswitch && this.clientList.length) {
             const initialThread = this.userRoleID === 5
               ? this.clientList.find(thread => thread.studentId === this.currentStudentId)
               : this.clientList[0];
-            if (initialThread) this.onClientSwitch(initialThread, false);
-          } else if (!canswitch) {
+            if (initialThread) this.onClientSwitch(initialThread, true);
+          } else if (!canswitch && (this.receiverData?.threadId || this.receiverData?.id)) {
             const switchedUser = this.clientList.find(
               (x: any) => x.threadId === this.receiverData.threadId || x.id === this.receiverData.id
             );

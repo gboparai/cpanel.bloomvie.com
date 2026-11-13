@@ -30,11 +30,12 @@
                     <select
                       *ngIf="canFilterClassrooms"
                       [(ngModel)]="selectedClassId"
-                      (ngModelChange)="bindClients()"
+                      (ngModelChange)="onClassroomFilterChange()"
                       class="form-select mb-2"
                       aria-label="Filter chats by classroom"
+                      autocomplete="off"
                     >
-                      <option [ngValue]="null">All classrooms</option>
+                      <option [ngValue]="null" [selected]="selectedClassId === null">All classrooms</option>
                       <option *ngFor="let classroom of classroomClasses" [ngValue]="classroom.id">
                         {{ classroom.name }}
                       </option>
@@ -138,13 +139,7 @@
                             client.roleType
                           }}</span>
                           <span class="role-type" *ngIf="client.isStudentThread">
-                            {{
-                              client.isAdminOnly
-                                ? (userRoleID === 5 ? "Private chat with daycare admin" : "Private conversation with daycare admin")
-                                : userRoleID === 5
-                                  ? client.className || "Classroom"
-                                  : client.className || "Classroom"
-                            }}
+                            {{ client.className || "Classroom" }}
                           </span>
                         </div>
                         <!-- <span class="messaging-member__message" [innerText]="client.lastMessage"></span> -->
@@ -191,11 +186,25 @@
                   class="chat col-12 col-8 col-md-8 col-lg-7 col-xl-9 px-0 pl-md-1"
                 >
                   <app-chat-details
+                    *ngIf="receiverData && (receiverData.id || receiverData.threadId)"
                     (dataForParent)="receiveFromChild($event)"
                     [receiverData]="receiverData"
                     [newChat]="newChat"
                     [senderId]="senderId"
                   ></app-chat-details>
+                  <div
+                    *ngIf="!receiverData || (!receiverData.id && !receiverData.threadId)"
+                    class="d-flex flex-column align-items-center justify-content-center h-100 p-4 text-center text-muted"
+                    style="min-height: 450px;"
+                  >
+                    <div class="no-data">
+                      <img
+                        src="assets/img/no-data-img.png"
+                        alt="Select a conversation"
+                      />
+                      <span>Select a conversation to start chatting</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

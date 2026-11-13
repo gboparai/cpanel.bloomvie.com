@@ -1786,9 +1786,13 @@ export class DaycareDashboardComponent {
 
   scrollToPendingApproval(): void {
     if (this.jobListContainer) {
-      this.jobListContainer.nativeElement.scrollIntoView({
-        behavior: 'smooth', // Enables smooth scrolling
-        block: 'start', // Scroll to the top of the element
+      const el = this.jobListContainer.nativeElement;
+      const headerOffset = 90;
+      const elementPosition = el.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth',
       });
     }
   }
