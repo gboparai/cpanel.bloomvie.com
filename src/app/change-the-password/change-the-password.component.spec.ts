@@ -21,7 +21,7 @@ describe('ChangeThePasswordComponent', () => {
   beforeEach(async () => {
     mockChangeService = jasmine.createSpyObj('ChangeThePasswordService', ['managePasswordChange']);
     mockSpinner = jasmine.createSpyObj('NgxSpinnerService', ['show', 'hide']);
-    mockCookie = jasmine.createSpyObj('CookieService', ['get']);
+    mockCookie = jasmine.createSpyObj('CookieService', ['get', 'delete']);
     mockToastr = jasmine.createSpyObj('ToastrService', ['success', 'warning', 'error']);
     mockLoginService = jasmine.createSpyObj('LoginService', ['logOut']);
 
@@ -89,6 +89,13 @@ describe('ChangeThePasswordComponent', () => {
       mockCookie.get.and.returnValue('');
       component.ngOnInit();
       expect(component.userId).toBe(0);
+      expect(component.isMustChangePassword).toBeFalse();
+    });
+
+    it('should set isMustChangePassword to true when MustChangePassword cookie is true', () => {
+      mockCookie.get.and.callFake((key: string) => (key === 'MustChangePassword' ? 'true' : ''));
+      component.ngOnInit();
+      expect(component.isMustChangePassword).toBeTrue();
     });
   });
 
@@ -139,6 +146,7 @@ describe('ChangeThePasswordComponent', () => {
       });
       expect(mockSpinner.hide).toHaveBeenCalled();
       expect(mockToastr.success).toHaveBeenCalledWith('Success');
+      expect(mockCookie.delete).toHaveBeenCalledWith('MustChangePassword', '/');
       expect(mockLoginService.logOut).toHaveBeenCalled();
     });
 

@@ -94,7 +94,7 @@
 
                 }
                 <div class="selectBox add-btn-check">
-                  <label data-bs-toggle="modal" data-bs-target="#exampleModal3">
+                  <label data-bs-toggle="modal" data-bs-target="#exampleModal3" (click)="openAddActivityModal()">
                     Add More
                   </label>
                 </div>
@@ -432,7 +432,7 @@
 
       <div class="modal-footer" style="border: none">
         <div class="student-submit">
-          <button type="submit" class="btn btn-primary me-2" (click)="manageMasterActivities()">
+          <button type="submit" class="btn btn-primary me-2" [disabled]="isSubmittingActivity" (click)="manageMasterActivities()">
             Submit
           </button>
           <button type="reset" class="btn btn-secondary" data-bs-dismiss="modal">

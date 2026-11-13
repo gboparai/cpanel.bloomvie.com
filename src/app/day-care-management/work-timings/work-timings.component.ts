@@ -263,6 +263,60 @@ export class WorkTimingsComponent implements OnInit, AfterViewInit {
     return this.seasonalBreakForm.controls;
   }
 
+  applyMondayToWeekdays() {
+    const monStart = this.ClientWorkingDaysForm.get('monStartTime')?.value || '07:00';
+    const monEnd = this.ClientWorkingDaysForm.get('monEndTime')?.value || '17:30';
+
+    const weekdays = ['mon', 'tues', 'wed', 'thu', 'fri'];
+
+    weekdays.forEach((prefix) => {
+      this.ClientWorkingDaysForm.get(prefix)?.setValue(true);
+      const startControl = this.ClientWorkingDaysForm.get(prefix + 'StartTime');
+      const endControl = this.ClientWorkingDaysForm.get(prefix + 'EndTime');
+      if (startControl && endControl) {
+        startControl.setValidators(Validators.required);
+        endControl.setValidators(Validators.required);
+        startControl.setValue(monStart);
+        endControl.setValue(monEnd);
+        startControl.updateValueAndValidity();
+        endControl.updateValueAndValidity();
+      }
+    });
+
+    this.isMonday = false;
+    this.isTuesday = false;
+    this.isWednesday = false;
+    this.isThursday = false;
+    this.isFriday = false;
+
+    this.updateSelectedDaysCount();
+    this.toastr.info(`Applied ${monStart} - ${monEnd} to all weekdays (Monday - Friday).`);
+  }
+
+  clearWeekendHours() {
+    const weekends = ['sat', 'sun'];
+
+    weekends.forEach((prefix) => {
+      this.ClientWorkingDaysForm.get(prefix)?.setValue(false);
+      const startControl = this.ClientWorkingDaysForm.get(prefix + 'StartTime');
+      const endControl = this.ClientWorkingDaysForm.get(prefix + 'EndTime');
+      if (startControl && endControl) {
+        startControl.clearValidators();
+        endControl.clearValidators();
+        startControl.setValue('');
+        endControl.setValue('');
+        startControl.updateValueAndValidity();
+        endControl.updateValueAndValidity();
+      }
+    });
+
+    this.isSaturday = true;
+    this.isSunday = true;
+
+    this.updateSelectedDaysCount();
+    this.toastr.info('Weekend hours removed.');
+  }
+
   enableInputWithTime(e: any, controlName: any) {
     const isChecked = e.target.checked;
     const daySpan = e.target.parentNode;
@@ -273,6 +327,16 @@ export class WorkTimingsComponent implements OnInit, AfterViewInit {
       } else {
         daySpan.classList.add('uncheck');
       }
+    }
+
+    switch (controlName) {
+      case 'mon': this.isMonday = !isChecked; break;
+      case 'tues': this.isTuesday = !isChecked; break;
+      case 'wed': this.isWednesday = !isChecked; break;
+      case 'thu': this.isThursday = !isChecked; break;
+      case 'fri': this.isFriday = !isChecked; break;
+      case 'sat': this.isSaturday = !isChecked; break;
+      case 'sun': this.isSunday = !isChecked; break;
     }
 
     const cnameStart = this.ClientWorkingDaysForm.get(
@@ -288,8 +352,10 @@ export class WorkTimingsComponent implements OnInit, AfterViewInit {
     if (isChecked) {
       cnameStart.setValidators(Validators.required);
       cnameEnd.setValidators(Validators.required);
-      cnameStart.setValue('09:00');
-      cnameEnd.setValue('17:00');
+      const monStart = this.ClientWorkingDaysForm.get('monStartTime')?.value;
+      const monEnd = this.ClientWorkingDaysForm.get('monEndTime')?.value;
+      cnameStart.setValue(monStart || '07:00');
+      cnameEnd.setValue(monEnd || '17:30');
     } else {
       cnameStart.clearValidators();
       cnameEnd.clearValidators();
