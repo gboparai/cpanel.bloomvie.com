@@ -23,6 +23,20 @@ export class DaycareManualAppointmentService {
     );
   }
 
+  directAddDaycare(obj: any): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(
+      this.rootURL + '/SlotTimeTable/directAddDaycare',
+      obj
+    );
+  }
+
+  getPlansForDaycare(userRoleId: number = 1): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(
+      this.rootURL + '/SubscriptionPlans/getPlansForDaycare',
+      { params: { userRoleId } }
+    );
+  }
+
   getAvailableSlots(
     counsellorId: any,
     date: any,

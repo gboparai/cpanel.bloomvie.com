@@ -1,4 +1,5 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter, Input } from '@angular/core';
+import { Router } from '@angular/router';
 import { NgSelectModule } from '@ng-select/ng-select';
 import Swal from 'sweetalert2';
 import { DcAppointmentsListService } from '../dc-appointments-list.service';
@@ -27,12 +28,18 @@ declare var $: any;
 @Component({
   selector: 'app-daycare-manual-appointment',
   standalone: true,
-  imports: [ReactiveFormsModule, NgSelectModule, CommonModule, TimeFormatPipe],
+  imports: [ReactiveFormsModule, FormsModule, NgSelectModule, CommonModule, TimeFormatPipe],
   templateUrl: './daycare-manual-appointment.component.html',
   styleUrl: './daycare-manual-appointment.component.css',
 })
 export class DaycareManualAppointmentComponent {
   @Output() Update: EventEmitter<any> = new EventEmitter();
+  @Input() isDirectMode: boolean = false;
+  @Input() set directMode(value: boolean) {
+    this.setDirectModeActive(value);
+  }
+  public isDirectModeActive: boolean = false;
+  public availablePlans: any[] = [];
   public addAppointmentForm: any;
   AllCenterTypes: any;
   availableSlots: any[] = [];
@@ -70,7 +77,8 @@ export class DaycareManualAppointmentComponent {
     private assignuserservice: AssignUserPermissionService,
     private Dcservice: DcAppointmentsListService,
     private cdr: ChangeDetectorRef,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private router: Router
   ) {
     this.addAppointmentForm = this.fb.group({
       id: 0,
@@ -104,6 +112,9 @@ export class DaycareManualAppointmentComponent {
       DaycareTypeID: [null, Validators.required],
       latitude: [0],
       longitude: [0],
+      planID: [null],
+      isTrial: [true],
+      trialDays: [14],
 
       //availableCount:['']
     });
@@ -125,6 +136,55 @@ export class DaycareManualAppointmentComponent {
     this.getActiveCounsellors();
     //this.getAvailableSlots()
     this.getAllCentreTypes();
+
+    if (this.isDirectMode) {
+      this.setDirectModeActive(true);
+    }
+  }
+
+  setDirectModeActive(active: boolean) {
+    this.isDirectModeActive = active;
+    if (active) {
+      this.addAppointmentForm.get('date')?.clearValidators();
+      this.addAppointmentForm.get('date')?.updateValueAndValidity();
+      this.addAppointmentForm.get('slotID')?.clearValidators();
+      this.addAppointmentForm.get('slotID')?.updateValueAndValidity();
+      this.selectedCounsellorControl.clearValidators();
+      this.selectedCounsellorControl.updateValueAndValidity();
+      if (this.availablePlans.length === 0) {
+        this.getSubscriptionPlans();
+      }
+      setTimeout(() => {
+        $('#selectDateDiv').hide();
+        $('#selectSlotDiv').hide();
+      });
+    } else {
+      if (!this.addAppointmentForm.get('isCurrentAppointment')?.value) {
+        this.addAppointmentForm.get('date')?.setValidators([Validators.required]);
+        this.addAppointmentForm.get('date')?.updateValueAndValidity();
+        this.addAppointmentForm.get('slotID')?.setValidators([Validators.required]);
+        this.addAppointmentForm.get('slotID')?.updateValueAndValidity();
+        setTimeout(() => {
+          $('#selectDateDiv').show();
+          $('#selectSlotDiv').show();
+        });
+      }
+    }
+  }
+
+  onModeChange(isDirect: boolean) {
+    this.setDirectModeActive(isDirect);
+  }
+
+  getSubscriptionPlans() {
+    this.service.getPlansForDaycare(this.UserRoleID || 1).subscribe({
+      next: (res) => {
+        if (res && res.result) {
+          this.availablePlans = res.result;
+        }
+      },
+      error: () => {}
+    });
   }
 
   getAllCentreTypes() {
@@ -188,12 +248,83 @@ export class DaycareManualAppointmentComponent {
   }
 
   async onSubmit() {
-
     if (this.addAppointmentForm.valid) {
-      // Display the spinner
       this.spinner.show();
-
       const formValue = this.addAppointmentForm.getRawValue();
+
+      if (this.isDirectModeActive) {
+        const directPayload = {
+          id: 0,
+          name: formValue.name,
+          email: formValue.email,
+          enrollmentCapacity: formValue.enrollmentCapacity,
+          centreName: formValue.centreName,
+          mobile: formValue.mobile,
+          country: formValue.country,
+          state: formValue.state,
+          city: formValue.city,
+          pinCode: formValue.pinCode,
+          daycareTypeID: formValue.DaycareTypeID,
+          latitude: formValue.latitude ? formValue.latitude.toString() : '0',
+          longitude: formValue.longitude ? formValue.longitude.toString() : '0',
+          isDirectAddDaycare: true,
+          isTrial: formValue.isTrial !== false,
+          trialDays: formValue.trialDays || 14,
+          planID: formValue.planID || null,
+          counsellorID: this.UserID || 0,
+        };
+
+        this.service.directAddDaycare(directPayload).subscribe({
+          next: (data) => {
+            this.spinner.hide();
+            if (data.message === 'Success') {
+              const result = data.result || {};
+              const encryptedCentreId =
+                result.encryptedCentreId ||
+                (result.centreId
+                  ? this.commonService.encrypt(result.centreId.toString())
+                  : '');
+
+              Swal.fire({
+                title: 'Daycare Added Successfully!',
+                html: `Daycare <b>${formValue.centreName}</b> and admin account have been created directly without booking an appointment.<br><br>An onboarding link has been sent to <b>${formValue.email}</b>.`,
+                icon: 'success',
+                showCancelButton: true,
+                confirmButtonText:
+                  '<i class="fa fa-external-link me-1"></i> Go to Daycare Onboarding',
+                cancelButtonText: 'Done',
+                showDenyButton: !!result.onboardingLink,
+                denyButtonText: '<i class="fa fa-copy me-1"></i> Copy Link',
+              }).then((choice) => {
+                if (choice.isConfirmed && encryptedCentreId) {
+                  this.router.navigate(['/onboarding'], {
+                    queryParams: { enc_id: encryptedCentreId },
+                  });
+                } else if (choice.isDenied && result.onboardingLink) {
+                  navigator.clipboard?.writeText(result.onboardingLink);
+                  this.toastr.success('Onboarding link copied to clipboard!');
+                }
+              });
+
+              this.ResetForm();
+              this.Update.emit();
+              $('#addapoint').modal('hide');
+            } else {
+              this.toastr.error(data.message || 'Failed to add daycare directly.');
+            }
+          },
+          error: (err) => {
+            this.spinner.hide();
+            console.error('Error adding daycare directly:', err);
+            this.toastr.error(
+              err?.error?.message ||
+                'An error occurred while adding the daycare directly.'
+            );
+          },
+        });
+        return;
+      }
+
       const mobile = formValue.mobile;
       const addAppointmentFormBO = {
         id: 0,
@@ -242,15 +373,26 @@ export class DaycareManualAppointmentComponent {
         });
     } else {
       this.addAppointmentForm.markAllAsTouched();
-      // this.toastr.warning('Please fill in all required fields before submitting the form.');
     }
   }
 
   ResetForm() {
-    this.addAppointmentForm.reset();
+    this.addAppointmentForm.reset({
+      id: 0,
+      mode: 'offline',
+      statusID: 6,
+      slotID: 0,
+      isTrial: true,
+      trialDays: 14,
+      latitude: 0,
+      longitude: 0,
+    });
     this.addAppointmentForm.markAsUntouched();
     if (this.selectDateFlatPicker) {
       this.selectDateFlatPicker.clear();
+    }
+    if (this.isDirectMode) {
+      this.setDirectModeActive(true);
     }
   }
 

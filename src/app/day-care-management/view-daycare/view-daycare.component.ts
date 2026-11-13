@@ -128,6 +128,10 @@ export class ViewDaycareComponent implements OnInit {
     this.getDaycareCenterList();
   }
 
+  navigateToAddDaycare() {
+    this.router.navigate(['/add-daycare']);
+  }
+
   onEdit(item: any) {
     const enc_id = this.commonservice.encrypt(item.id.toString());
     const centreAdminID = this.commonservice.encrypt(item.adminInfo.id);
