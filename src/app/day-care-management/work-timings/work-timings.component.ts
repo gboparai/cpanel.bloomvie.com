@@ -575,6 +575,30 @@ export class WorkTimingsComponent implements OnInit, AfterViewInit {
     });
   }
 
+  uploadStandardHolidays(country: 'Canada' | 'US') {
+    this.spinner.show();
+    this.workTimingsService.uploadStandardHolidays({
+      centreID: Number(this.centreID),
+      country: country,
+      year: Number(this.currentYear) || new Date().getFullYear()
+    }).subscribe({
+      next: (response) => {
+        this.spinner.hide();
+        if (response.message === 'Success' && response.result) {
+          const countryLabel = country === 'Canada' ? 'Canadian (CAD)' : 'US';
+          this.toastr.success(`${countryLabel} statutory holidays uploaded successfully.`);
+          this.holidays = this.formatHolidayList(response.result);
+        } else {
+          this.getHolidayList();
+        }
+      },
+      error: (err) => {
+        this.spinner.hide();
+        this.toastr.error(err?.error?.message || err.message || 'Failed to upload standard holidays.');
+      }
+    });
+  }
+
   formatHolidayList(
     list: {
       id: number;
