@@ -402,13 +402,36 @@
             <!-- right duv -->
             <div class="col-md-12 bdr-col" style="background: #8080800f">
               <div class="lfter">
-                <div>
+                <div class="d-flex justify-content-between align-items-center flex-wrap mb-3" style="gap: 12px;">
                   <h5
                     class="mb-0"
-                    style="font-size: 15px; margin-bottom: 23px !important"
+                    style="font-size: 15px;"
                   >
                     Holidays List For {{ currentYear }}
                   </h5>
+                  <div class="dropdown">
+                    <button
+                      type="button"
+                      class="btn btn-outline-primary btn-sm dropdown-toggle"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                      id="btnPreloadHolidaysTop"
+                    >
+                      <i class="fa fa-cloud-download me-1"></i> Preload Stat Holidays
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="btnPreloadHolidaysTop">
+                      <li>
+                        <button class="dropdown-item py-2" type="button" (click)="uploadStandardHolidays('Canada')">
+                          <span class="me-2">🇨🇦</span> Canadian (CAD) Statutory Holidays
+                        </button>
+                      </li>
+                      <li>
+                        <button class="dropdown-item py-2" type="button" (click)="uploadStandardHolidays('US')">
+                          <span class="me-2">🇺🇸</span> US Statutory Holidays
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
                 <div class="row">
                   @if (holidaySkeleton === 'holidays') {
@@ -470,12 +493,61 @@
                     </div>
                   </div>
 
-                  } }
+                  } } @else {
+                  <div class="col-12">
+                    <div class="card p-4 text-center my-2" style="background: #ffffff; border: 1px dashed #cbd5e1; border-radius: 8px;">
+                      <div class="mb-2">
+                        <i class="fa fa-calendar-check-o text-primary" style="font-size: 32px;"></i>
+                      </div>
+                      <h6 class="fw-bold mb-1">No holidays listed for {{ currentYear }}</h6>
+                      <p class="text-muted small mb-3">Preload standard Canadian or US statutory holidays for your daycare calendar, or add custom holidays.</p>
+                      <div class="d-flex justify-content-center flex-wrap" style="gap: 10px;">
+                        <button type="button" class="btn btn-outline-primary btn-sm" (click)="uploadStandardHolidays('Canada')">
+                          <span class="me-1">🇨🇦</span> Upload Canadian (CAD) Holidays
+                        </button>
+                        <button type="button" class="btn btn-outline-primary btn-sm" (click)="uploadStandardHolidays('US')">
+                          <span class="me-1">🇺🇸</span> Upload US Holidays
+                        </button>
+                        <button
+                          type="button"
+                          class="btn btn-primary btn-sm"
+                          data-bs-toggle="modal"
+                          data-bs-target="#exampleModal"
+                        >
+                          <i class="fa fa-plus me-1"></i> Add Custom Holiday
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  }
                 </div>
               </div>
 
               <div class="row">
-                <div class="col-md-12 text-end mt-4">
+                <div class="col-md-12 text-end mt-4 d-flex justify-content-end align-items-center flex-wrap" style="gap: 10px;">
+                  <div class="dropdown">
+                    <button
+                      type="button"
+                      class="btn btn-outline-secondary dropdown-toggle"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                      id="btnPreloadHolidaysBottom"
+                    >
+                      <i class="fa fa-cloud-download me-1"></i> Preload Stat Holidays
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="btnPreloadHolidaysBottom">
+                      <li>
+                        <button class="dropdown-item py-2" type="button" (click)="uploadStandardHolidays('Canada')">
+                          <span class="me-2">🇨🇦</span> Canadian (CAD) Statutory Holidays
+                        </button>
+                      </li>
+                      <li>
+                        <button class="dropdown-item py-2" type="button" (click)="uploadStandardHolidays('US')">
+                          <span class="me-2">🇺🇸</span> US Statutory Holidays
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
                   <button
                     type="button"
                     class="btn btn-primary"

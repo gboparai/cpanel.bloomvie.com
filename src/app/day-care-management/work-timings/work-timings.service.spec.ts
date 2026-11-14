@@ -86,4 +86,16 @@ describe('WorkTimingService', () => {
     expect(req.request.method).toBe('DELETE');
     req.flush({ success: true });
   });
+
+  it('should post uploadStandardHolidays', () => {
+    const payload = { centreID: 5, country: 'Canada', year: 2026 };
+    service.uploadStandardHolidays(payload).subscribe();
+
+    const req = httpTestingController.expectOne(
+      `${environment.apiUrl}/Centre/uploadStandardHolidays`
+    );
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual(payload);
+    req.flush({ message: 'Success', result: [] });
+  });
 });

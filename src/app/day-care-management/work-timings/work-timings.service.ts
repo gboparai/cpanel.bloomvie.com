@@ -26,6 +26,9 @@ export class WorkTimingService {
   getCentreHolidayList(dayCareID: number): Observable<ApiResponse<DaycareHolidayItem[]>> {
     return this.http.get<ApiResponse<DaycareHolidayItem[]>>(this.URL + '/Centre/getDaycareCentreHolidayList', { params: { dayCareID } });
   }
+  uploadStandardHolidays(payload: { centreID: number; country?: string; year?: number }): Observable<ApiResponse<DaycareHolidayItem[]>> {
+    return this.http.post<ApiResponse<DaycareHolidayItem[]>>(this.URL + '/Centre/uploadStandardHolidays', payload);
+  }
   activeInactiveHolidays(dayCareID: number, holidayListID: number[]): Observable<ApiResponse<any>> {
     return this.http.post<ApiResponse<any>>(this.URL + '/Centre/activeInactiveHolidays', holidayListID, { params: { dayCareID } });
   }

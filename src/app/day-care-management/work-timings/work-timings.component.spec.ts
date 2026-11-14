@@ -36,6 +36,7 @@ describe('WorkTimingsComponent', () => {
       'manageSeasonalBreaks',
       'activeInactiveSeasonalHoliday',
       'activeInactiveHolidays',
+      'uploadStandardHolidays',
     ]);
     mockToastr = jasmine.createSpyObj('ToastrService', ['success', 'warning', 'error', 'info']);
     mockSpinner = jasmine.createSpyObj('NgxSpinnerService', ['show', 'hide']);
@@ -293,6 +294,66 @@ describe('WorkTimingsComponent', () => {
       expect(component.isSaturday).toBeTrue();
       expect(component.isSunday).toBeTrue();
       expect(mockToastr.info).toHaveBeenCalledWith('Weekend hours removed.');
+    });
+  });
+
+  describe('Preload Standard Holidays (Item 15)', () => {
+    it('should upload Canadian standard holidays and update holiday list on success', () => {
+      component.centreID = 10;
+      const mockResult = [
+        { id: 101, holidayName: 'New Year\'s Day', holidayDate: '2026-01-01', isActive: true, isDefaultHoliday: true },
+        { id: 102, holidayName: 'Canada Day', holidayDate: '2026-07-01', isActive: true, isDefaultHoliday: true }
+      ];
+      mockWorkTimingsService.uploadStandardHolidays.and.returnValue(of({
+        message: 'Success',
+        result: mockResult
+      } as any));
+
+      component.uploadStandardHolidays('Canada');
+
+      expect(mockSpinner.show).toHaveBeenCalled();
+      expect(mockWorkTimingsService.uploadStandardHolidays).toHaveBeenCalledWith({
+        centreID: 10,
+        country: 'Canada',
+        year: jasmine.any(Number)
+      });
+      expect(mockSpinner.hide).toHaveBeenCalled();
+      expect(mockToastr.success).toHaveBeenCalledWith('Canadian (CAD) statutory holidays uploaded successfully.');
+      expect(component.holidays.length).toBeGreaterThan(0);
+    });
+
+    it('should upload US standard holidays and update holiday list on success', () => {
+      component.centreID = 10;
+      const mockResult = [
+        { id: 201, holidayName: 'Martin Luther King Jr. Day', holidayDate: '2026-01-19', isActive: true, isDefaultHoliday: true },
+        { id: 202, holidayName: 'Independence Day', holidayDate: '2026-07-04', isActive: true, isDefaultHoliday: true }
+      ];
+      mockWorkTimingsService.uploadStandardHolidays.and.returnValue(of({
+        message: 'Success',
+        result: mockResult
+      } as any));
+
+      component.uploadStandardHolidays('US');
+
+      expect(mockSpinner.show).toHaveBeenCalled();
+      expect(mockWorkTimingsService.uploadStandardHolidays).toHaveBeenCalledWith({
+        centreID: 10,
+        country: 'US',
+        year: jasmine.any(Number)
+      });
+      expect(mockSpinner.hide).toHaveBeenCalled();
+      expect(mockToastr.success).toHaveBeenCalledWith('US statutory holidays uploaded successfully.');
+      expect(component.holidays.length).toBeGreaterThan(0);
+    });
+
+    it('should handle error when uploading standard holidays', () => {
+      mockWorkTimingsService.uploadStandardHolidays.and.returnValue(throwError(() => new Error('Server error')));
+
+      component.uploadStandardHolidays('Canada');
+
+      expect(mockSpinner.show).toHaveBeenCalled();
+      expect(mockSpinner.hide).toHaveBeenCalled();
+      expect(mockToastr.error).toHaveBeenCalledWith('Server error');
     });
   });
 });
